@@ -9,11 +9,10 @@ documentclass: book
 
 # Preface
 
-Tidyverse R code for the book, [Quantitative Social Science: An Introduction](http://press.princeton.edu/titles/11025.html), by Kosuke Imai, to
+This is tidyverse R code to supplement the book, [Quantitative Social Science: An Introduction](http://press.princeton.edu/titles/11025.html), by Kosuke Imai, to
 be published by Princeton University Press in March 2017.
-Supplementary materials for the book are available at  [kosukeimai/qss](https://github.com/kosukeimai/qss). 
 
-The R code in the text and the supplementary materials relies mostly on base R functions. 
+The R code included with the text of QSS and the supplementary materials relies mostly on base R functions. 
 This translates the code examples provided with QSS to tidyverse R code. 
 [Tidyverse](https://github.com/tidyverse/tidyverse) refers to a set of packages (**ggplot2**, **dplyr**, **tidyr**, **readr**, **purrr**, **tibble**,  and a few others) that share common data representations, especially the use of data frames for return values. The book [R for Data Science](http://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemond is an introduction.
 

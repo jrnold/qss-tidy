@@ -1,0 +1,484 @@
+# Measurement
+
+## Prerequisites
+
+```{r}
+library("tidyverse")
+library("forcats")
+library("broom")
+```
+
+## Measuring Civilian Victimization during Wartime
+
+```{r message=FALSE}
+afghan_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/MEASUREMENT/afghan.csv"
+afghan <- read_csv(afghan_url)
+```
+
+Summarize the variables of interest
+```{r}
+afghan %>%
+  select(age, educ.years, employed, income) %>%
+  summary()
+```
+
+With `income`, `read_csv` never converts strings to factors by default.
+To get a summary of the different levels, either convert it to a factor (R4DS Ch 15), or use `count()`
+```{r}
+afghan %>%
+  count(income)
+```
+
+Count the number a proportion of respondents who answer that they were harmed by the ISF (`violent.exp.ISAF`) and (`violent.exp.taliban`) respectively,
+```{r}
+afghan %>%
+  group_by(violent.exp.ISAF, violent.exp.taliban) %>%
+  count() %>%
+  ungroup() %>%
+  mutate(prop = n / sum(n))
+```
+We need to use `ungroup()` in order to ensure that `sum(n)` sums over the entire
+dataset as opposed to only within categories of `violent.exp.ISAF`.
+
+
+Unlike `prop.table`, the code above does not drop missing values.
+We can drop those values by adding a `filter` verb and using `!is.na()` to test
+for missing values in those variables:
+```{r}
+afghan %>%
+  filter(!is.na(violent.exp.ISAF), !is.na(violent.exp.taliban)) %>%
+  group_by(violent.exp.ISAF, violent.exp.taliban) %>%
+  count() %>%
+  ungroup() %>%
+  mutate(prop = n / sum(n))
+```
+
+### Handling Missing Data in R
+
+We already observed the issues with `NA` values in calculating the proportion
+answering the "experienced violence" questions.
+
+You can filter rows with specific variables having missing values using `filter`
+as shown above.
+
+Howeer, `na.omit` works with tibbles just like any other data frame.
+```{r}
+na.omit(afghan)
+```
+
+## Visualizing the Univariate Distribution 
+
+### Barplot
+
+```{r}
+library(forcats)
+afghan <-
+  afghan %>%
+  mutate(violent.exp.ISAF.fct = 
+           fct_explicit_na(fct_recode(factor(violent.exp.ISAF),
+                                      Harm = "1", "No Harm" = "0"),
+                           "No response"))
+ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
+  geom_bar() +
+  xlab("Response category") +
+  ylab("Proportion of respondents") +
+  ggtitle("Civilian Victimization by the ISAF")
+```
+
+```{r}
+afghan <-
+  afghan %>%
+  mutate(violent.exp.taliban.fct = 
+           fct_explicit_na(fct_recode(factor(violent.exp.taliban),
+                                      Harm = "1", "No Harm" = "0"),
+                           "No response"))
+ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
+  geom_bar() +
+  xlab("Response category") +
+  ylab("Proportion of respondents") +
+  ggtitle("Civilian Victimization by the Taliban")
+```
+
+
+**TODO** This plot could improved by plotting the two values simultaneously to be able to better compare them.
+
+- dodged bar plot
+- dot-plot
+
+This will require creating a data frame that has the following columns: perpetrator (`ISAF`, `Taliban`), response (`No Harm`, `Harm`, `No response`). 
+See the section on Tidy Data and spread gather.
+
+**TODO** Compare them by region, ? 
+
+### Boxplot
+
+```{r}
+ggplot(afghan, aes(x = 1, y = age)) +
+  geom_boxplot() +
+  labs(y = "Age", x = "") +
+  ggtitle("Distribution of Age")
+```
+
+
+```{r}
+ggplot(afghan, aes(y = educ.years, x = province)) +
+  geom_boxplot() +
+  labs(x = "Province", y = "Years of education") +
+  ggtitle("Education by Provice")
+
+```
+
+Helmand and Uruzgan have much lower levels of education than the other
+provicnces, and also report higher levels of violence.
+```{r}
+afghan %>%
+  group_by(province) %>%
+  summarise(educ.years = mean(educ.years, na.rm = TRUE),
+            violent.exp.taliban =
+              mean(violent.exp.taliban, na.rm = TRUE),
+            violent.exp.ISAF =
+              mean(violent.exp.ISAF, na.rm = TRUE)) %>%
+  arrange(educ.years)
+```
+
+### Printing and saving graphics
+
+Use the function `ggsave()` to save ggplot graphics. 
+
+Also, RMarkdown files have their own means of creating and saving plots
+created by code-chunks.
+
+
+## Survey Sampling
+
+### The Role of Randomization
+
+## load village data
+
+```{r}
+afghan_village_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/MEASUREMENT/afghan-village.csv"
+afghan.village <- read_csv(afghan_village_url)
+```
+
+Box-plots of altitude
+```{r}
+ggplot(afghan.village, aes(x = factor(village.surveyed,
+                                      labels = c("sampled", "non-sampled")),
+                           y = altitude)) +
+  geom_boxplot() +
+  labs(y = "Altitude (meter)", x = "")
+
+```
+
+Boxplots log-population values of sampled and non-sampled
+```{r}
+ggplot(afghan.village, aes(x = factor(village.surveyed,
+                                      labels = c("sampled", "non-sampled")),
+                           y = log(population))) +
+  geom_boxplot() +
+  labs(y = "log(population)", x = "")
+```
+
+You can also compare these distributions by plotting their densities:
+```{r}
+ggplot(afghan.village, aes(colour = factor(village.surveyed,
+                                      labels = c("sampled", "non-sampled")),
+                           x = log(population))) +
+  geom_density() +
+  geom_rug() +
+  labs(x = "log(population)", colour = "")
+```
+
+### Non-response and other sources of bias
+
+Calculate the rates of non-response by province to `violent.exp.ISAF` and
+`violent.exp.taliban`:
+```{r}
+afghan %>%
+  group_by(province) %>%
+  summarise(ISAF = mean(is.na(violent.exp.ISAF)),
+            taliban = mean(is.na(violent.exp.taliban))) %>%
+  arrange(-ISAF)
+```
+
+
+Calculat the proportion who support the ISAF using the difference in means
+between the ISAF and control groups:
+```{r}
+(mean(filter(afghan, list.group == "ISAF")$list.response) -
+  mean(filter(afghan, list.group == "control")$list.response))
+```
+
+
+To calculate the table responses to the list expriment in the control, ISAF,
+and taliban groups>
+```{r}
+afghan %>%
+  group_by(list.response, list.group) %>%
+  count() %T>%
+  glimpse() %>%
+  spread(list.group, n, fill = 0)
+```
+
+## Measuring Political Polarization
+
+```{r}
+congress_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/MEASUREMENT/congress.csv"
+congress <- read_csv(congress_url)
+```
+
+```{r}
+glimpse(congress)
+```
+
+To create the scatterplot in 3.6, we can 
+
+```{r}
+congress %>%
+  filter(congress %in% c(80, 112), 
+         party %in% c("Democrat", "Republican")) %>%
+  ggplot(aes(x = dwnom1, y = dwnom2, colour = party)) +
+  geom_point() +
+  facet_wrap(~ congress) +
+  coord_fixed() +
+  scale_y_continuous("racial liberalism/conservatism",
+                     limits = c(-1.5, 1.5)) +
+  scale_x_continuous("economic liberalism/conservatism",
+                     limits = c(-1.5, 1.5))
+
+```
+
+```{r}
+congress %>%
+  ggplot(aes(x = dwnom1, y = dwnom2, colour = party)) +
+  geom_point() +
+  facet_wrap(~ congress) +
+  coord_fixed() +
+  scale_y_continuous("racial liberalism/conservatism",
+                     limits = c(-1.5, 1.5)) +
+  scale_x_continuous("economic liberalism/conservatism",
+                     limits = c(-1.5, 1.5))
+```
+
+
+```{r}
+```
+
+```{r}
+congress %>%
+  group_by(congress, party) %>%
+  summarise(dwnom1 = mean(dwnom1)) %>%
+  filter(party %in% c("Democrat", "Republican")) %>%
+  ggplot(aes(x = congress, y = dwnom1, 
+             colour = fct_reorder2(party, congress, dwnom1))) +
+  geom_line() +
+  labs(y = "DW-NOMINATE score (1st Dimension)", x = "Congress",
+       colour = "Party")
+```
+
+
+### Correlation
+
+Let's plot the Gini coefficient
+```{r}
+usgini_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/MEASUREMENT/USGini.csv"
+USGini <- read_csv(usgini_url)
+```
+
+```{r}
+ggplot(USGini, aes(x = year, y = gini)) +
+  geom_point() +
+  labs(x = "Year", y = "Gini coefficient") +
+  ggtitle("Income Inequality")
+```
+
+To calculate a measure of party polarization take the code used in the plot of Republican and Democratic party median ideal points and adapt it to calculate the difference in the party medians:
+```{r}
+party_polarization <- 
+  congress %>%
+  group_by(congress, party) %>%
+  summarise(dwnom1 = mean(dwnom1)) %>%
+  filter(party %in% c("Democrat", "Republican")) %>%
+  spread(party, dwnom1) %>%
+  mutate(polarization = Republican - Democrat)
+party_polarization
+```
+
+```{r}
+ggplot(party_polarization, aes(x = congress, y = polarization)) +
+  geom_point() +
+  ggtitle("Political Polarization") +
+  labs(x = "Year", y = "Republican median − Democratic median")
+```
+
+
+
+
+
+### Quantile-Quantile Plot
+
+To create histogram plots similar 
+
+```{r}
+congress %>%
+  filter(congress == 112, party %in% c("Republican", "Democrat")) %>%
+  ggplot(aes(x = dwnom2, y = ..density..)) +
+  geom_histogram() +
+  facet_grid(. ~ party) + 
+  labs(x = "racial liberalism/conservatism dimension")
+```
+
+*ggplot2* includes a `stat_qq` which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distibution, usually the normal one.
+However, we can calculate one by hand, which may give more insight into exactly what the qq-plot is doing.
+
+
+```{r}
+party_qtiles <- tibble(
+  probs = seq(0, 1, by = 0.01),
+  Democrat = quantile(filter(congress, congress == 112, party == "Democrat")$dwnom2,
+         probs = probs),
+  Republican = quantile(filter(congress, congress == 112, party == "Republican")$dwnom2,
+         probs = probs)
+)
+party_qtiles
+```
+
+The plot looks different than the one in the text since the x- and y-scales are in the original values instead of z-scores (see the next section).
+```{r}
+party_qtiles %>%
+  ggplot(aes(x = Democrat, y = Republican)) + 
+  geom_point() +
+  geom_abline() +
+  coord_fixed()
+```
+
+## Clustering
+
+
+### Matrices
+
+While matrices are great for numerical computations, such as when you are 
+implementing algorithms, generally keeping data in data frames is more convenient for data wrangling.
+
+### Lists 
+
+See R4DS [Chapter 20: Vectors](http://r4ds.had.co.nz/vectors.html),  [Chapter 21: Iteration](http://r4ds.had.co.nz/iteration.html) and the **purrr** package for more powerful methods of computing on lists.
+
+### k-means algorithms
+
+**TODO** A good visualization of the k-means algorithm and a simple, naive implementation in R.
+
+Calculate the clusters by the 80th and 112th congresses,
+```{r}
+k80two.out <- 
+  kmeans(select(filter(congress, congress == 80),
+                     dwnom1, dwnom2),
+              centers = 2, nstart = 5)
+```
+
+Add the cluster ids to datasets
+```{r}
+congress80 <- 
+  congress %>%
+  filter(congress == 80) %>%
+  mutate(cluster2 = factor(k80two.out$cluster))
+```
+
+We will also create a data sets with the cluster centroids.
+These are in the `centers` element of the cluster object.
+```{r}
+k80two.out$centers
+```
+To make it easier to use with ggplot, we need to convert this to a data frame.
+The `tidy` function from the **broom** package:
+```{r}
+k80two.clusters <- tidy(k80two.out)
+k80two.clusters
+```
+
+
+Plot the ideal points and clusters
+```{r}
+ggplot() +
+  geom_point(data = congress80,
+             aes(x = dwnom1, y = dwnom2, colour = cluster2)) +
+  geom_point(data = k80two.clusters, mapping = aes(x = x1, y = x2))
+
+```
+
+We can also plot,
+```{r}
+congress80 %>%
+  group_by(party, cluster2) %>%
+  count()
+```
+
+And now we can repeat these steps for the 112th congress:
+```{r}
+k112two.out <-
+  kmeans(select(filter(congress, congress == 112),
+                dwnom1, dwnom2),
+         centers = 2, nstart = 5)
+
+congress112 <-
+  filter(congress, congress == 112) %>%
+  mutate(cluster2 = factor(k112two.out$cluster))
+
+k112two.clusters <- tidy(k112two.out)
+
+ggplot() +
+  geom_point(data = congress112,
+             mapping = aes(x = dwnom1, y = dwnom2, colour = cluster2)) +
+  geom_point(data = k112two.clusters,
+             mapping = aes(x = x1, y = x2))
+
+```
+
+```{r}
+congress112 %>%
+  group_by(party, cluster2) %>%
+  count()
+```
+
+Now repeat the same with four clusters on the 80th congress:
+```{r}
+k80four.out <-
+  kmeans(select(filter(congress, congress == 80),
+                dwnom1, dwnom2),
+         centers = 4, nstart = 5)
+
+congress80 <-
+  filter(congress, congress == 80) %>%
+  mutate(cluster2 = factor(k80four.out$cluster))
+
+k80four.clusters <- tidy(k80four.out)
+
+ggplot() +
+  geom_point(data = congress80,
+             mapping = aes(x = dwnom1, y = dwnom2, colour = cluster2)) +
+  geom_point(data = k80four.clusters,
+             mapping = aes(x = x1, y = x2), size = 3)
+
+```
+
+and on the 112th congress:
+```{r}
+k112four.out <-
+  kmeans(select(filter(congress, congress == 112),
+                dwnom1, dwnom2),
+         centers = 4, nstart = 5)
+
+congress112 <-
+  filter(congress, congress == 112) %>%
+  mutate(cluster2 = factor(k112four.out$cluster))
+
+k112four.clusters <- tidy(k112four.out)
+
+ggplot() +
+  geom_point(data = congress112,
+             mapping = aes(x = dwnom1, y = dwnom2, colour = cluster2)) +
+  geom_point(data = k112four.clusters,
+             mapping = aes(x = x1, y = x2), size = 3)
+
+```
+

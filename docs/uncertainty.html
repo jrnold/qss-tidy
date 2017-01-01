@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>QSS Tidyverse Code</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <meta name="description" content="QSS Tidyverse Code">
+  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
+
+  <meta property="og:title" content="QSS Tidyverse Code" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  <meta name="github-repo" content="jrnold/qss-tidy" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="QSS Tidyverse Code" />
+  
+  
+  
+
+<meta name="author" content="Jeffrey B. Arnold">
+
+
+<meta name="date" content="2016-12-31">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="probability.html">
+
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+</head>
+
+<body>
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i><b>2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#introduction-to-r"><i class="fa fa-check"></i><b>2.2</b> Introduction to R</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="introduction.html"><a href="introduction.html#data-files"><i class="fa fa-check"></i><b>2.2.1</b> Data Files</a></li>
+<li class="chapter" data-level="2.2.2" data-path="introduction.html"><a href="introduction.html#saving-objects"><i class="fa fa-check"></i><b>2.2.2</b> Saving Objects</a></li>
+<li class="chapter" data-level="2.2.3" data-path="introduction.html"><a href="introduction.html#packages"><i class="fa fa-check"></i><b>2.2.3</b> Packages</a></li>
+<li class="chapter" data-level="2.2.4" data-path="introduction.html"><a href="introduction.html#style-guide"><i class="fa fa-check"></i><b>2.2.4</b> Style Guide</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="causality.html"><a href="causality.html"><i class="fa fa-check"></i><b>3</b> Causality</a><ul>
+<li class="chapter" data-level="3.1" data-path="causality.html"><a href="causality.html#prerequistes"><i class="fa fa-check"></i><b>3.1</b> Prerequistes</a></li>
+<li class="chapter" data-level="3.2" data-path="causality.html"><a href="causality.html#racial-discrimination-in-the-labor-market"><i class="fa fa-check"></i><b>3.2</b> Racial Discrimination in the Labor Market</a></li>
+<li class="chapter" data-level="3.3" data-path="causality.html"><a href="causality.html#subsetting-data-in-r"><i class="fa fa-check"></i><b>3.3</b> Subsetting Data in R</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="causality.html"><a href="causality.html#subsetting"><i class="fa fa-check"></i><b>3.3.1</b> Subsetting</a></li>
+<li class="chapter" data-level="3.3.2" data-path="causality.html"><a href="causality.html#simple-conditional-statements"><i class="fa fa-check"></i><b>3.3.2</b> Simple conditional statements</a></li>
+<li class="chapter" data-level="3.3.3" data-path="causality.html"><a href="causality.html#factor-variables"><i class="fa fa-check"></i><b>3.3.3</b> Factor Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="causality.html"><a href="causality.html#causal-affects-and-the-counterfactual"><i class="fa fa-check"></i><b>3.4</b> Causal Affects and the Counterfactual</a></li>
+<li class="chapter" data-level="3.5" data-path="causality.html"><a href="causality.html#observational-studies"><i class="fa fa-check"></i><b>3.5</b> Observational Studies</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="causality.html"><a href="causality.html#confounding-bias"><i class="fa fa-check"></i><b>3.5.1</b> Confounding Bias</a></li>
+<li class="chapter" data-level="3.5.2" data-path="causality.html"><a href="causality.html#before-and-after-and-difference-in-difference-designs"><i class="fa fa-check"></i><b>3.5.2</b> Before and After and Difference-in-Difference Designs</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="causality.html"><a href="causality.html#descriptive-statistics-for-a-single-variable"><i class="fa fa-check"></i><b>3.6</b> Descriptive Statistics for a Single Variable</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="measurement.html"><a href="measurement.html"><i class="fa fa-check"></i><b>4</b> Measurement</a><ul>
+<li class="chapter" data-level="4.1" data-path="measurement.html"><a href="measurement.html#prerequisites-1"><i class="fa fa-check"></i><b>4.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="4.2" data-path="measurement.html"><a href="measurement.html#measuring-civilian-victimization-during-wartime"><i class="fa fa-check"></i><b>4.2</b> Measuring Civilian Victimization during Wartime</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="measurement.html"><a href="measurement.html#handling-missing-data-in-r"><i class="fa fa-check"></i><b>4.2.1</b> Handling Missing Data in R</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="measurement.html"><a href="measurement.html#visualizing-the-univariate-distribution"><i class="fa fa-check"></i><b>4.3</b> Visualizing the Univariate Distribution</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="measurement.html"><a href="measurement.html#barplot"><i class="fa fa-check"></i><b>4.3.1</b> Barplot</a></li>
+<li class="chapter" data-level="4.3.2" data-path="measurement.html"><a href="measurement.html#boxplot"><i class="fa fa-check"></i><b>4.3.2</b> Boxplot</a></li>
+<li class="chapter" data-level="4.3.3" data-path="measurement.html"><a href="measurement.html#printing-and-saving-graphics"><i class="fa fa-check"></i><b>4.3.3</b> Printing and saving graphics</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="measurement.html"><a href="measurement.html#survey-sampling"><i class="fa fa-check"></i><b>4.4</b> Survey Sampling</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="measurement.html"><a href="measurement.html#the-role-of-randomization"><i class="fa fa-check"></i><b>4.4.1</b> The Role of Randomization</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="measurement.html"><a href="measurement.html#load-village-data"><i class="fa fa-check"></i><b>4.5</b> load village data</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="measurement.html"><a href="measurement.html#non-response-and-other-sources-of-bias"><i class="fa fa-check"></i><b>4.5.1</b> Non-response and other sources of bias</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="measurement.html"><a href="measurement.html#measuring-political-polarization"><i class="fa fa-check"></i><b>4.6</b> Measuring Political Polarization</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="measurement.html"><a href="measurement.html#correlation"><i class="fa fa-check"></i><b>4.6.1</b> Correlation</a></li>
+<li class="chapter" data-level="4.6.2" data-path="measurement.html"><a href="measurement.html#quantile-quantile-plot"><i class="fa fa-check"></i><b>4.6.2</b> Quantile-Quantile Plot</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="measurement.html"><a href="measurement.html#clustering"><i class="fa fa-check"></i><b>4.7</b> Clustering</a><ul>
+<li class="chapter" data-level="4.7.1" data-path="measurement.html"><a href="measurement.html#matrices"><i class="fa fa-check"></i><b>4.7.1</b> Matrices</a></li>
+<li class="chapter" data-level="4.7.2" data-path="measurement.html"><a href="measurement.html#lists"><i class="fa fa-check"></i><b>4.7.2</b> Lists</a></li>
+<li class="chapter" data-level="4.7.3" data-path="measurement.html"><a href="measurement.html#k-means-algorithms"><i class="fa fa-check"></i><b>4.7.3</b> k-means algorithms</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>5</b> Prediction</a><ul>
+<li class="chapter" data-level="5.1" data-path="prediction.html"><a href="prediction.html#prerequisites-2"><i class="fa fa-check"></i><b>5.1</b> Prerequisites</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="discovery.html"><a href="discovery.html"><i class="fa fa-check"></i><b>6</b> Discovery</a><ul>
+<li class="chapter" data-level="6.1" data-path="discovery.html"><a href="discovery.html#prerequisites-3"><i class="fa fa-check"></i><b>6.1</b> Prerequisites</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="probability.html"><a href="probability.html"><i class="fa fa-check"></i><b>7</b> Probability</a><ul>
+<li class="chapter" data-level="7.1" data-path="probability.html"><a href="probability.html#prerequisites-4"><i class="fa fa-check"></i><b>7.1</b> Prerequisites</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="uncertainty.html"><a href="uncertainty.html"><i class="fa fa-check"></i><b>8</b> Uncertainty</a><ul>
+<li class="chapter" data-level="8.1" data-path="uncertainty.html"><a href="uncertainty.html#prerequisites-5"><i class="fa fa-check"></i><b>8.1</b> Prerequisites</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">QSS Tidyverse Code</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="uncertainty" class="section level1">
+<h1><span class="header-section-number">8</span> Uncertainty</h1>
+<div id="prerequisites-5" class="section level2">
+<h2><span class="header-section-number">8.1</span> Prerequisites</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)
+<span class="co">#&gt; Loading tidyverse: ggplot2</span>
+<span class="co">#&gt; Loading tidyverse: tibble</span>
+<span class="co">#&gt; Loading tidyverse: tidyr</span>
+<span class="co">#&gt; Loading tidyverse: readr</span>
+<span class="co">#&gt; Loading tidyverse: purrr</span>
+<span class="co">#&gt; Loading tidyverse: dplyr</span>
+<span class="co">#&gt; Conflicts with tidy packages ----------------------------------------------</span>
+<span class="co">#&gt; filter(): dplyr, stats</span>
+<span class="co">#&gt; lag():    dplyr, stats</span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="probability.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/jrnold/qss-tidy/edit/master/uncertainty.Rmd",
+"text": "Edit"
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

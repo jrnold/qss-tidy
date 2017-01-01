@@ -3,13 +3,10 @@
 *_cache
 *_files
 _main.rds
-_book
-*.md
-*.html
-search_index.json
-libs
 *.rds
 _main.*
-bookdown*
 tmp-pdfcrop-*
 figures
+*.utf8.md
+*.knit.md
+_book

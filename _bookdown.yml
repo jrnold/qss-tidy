@@ -9,3 +9,4 @@ rmd_files:
   - probability.Rmd
   - uncertainty.Rmd
 before_chapter_script: "_common.R"
+output_dir: docs

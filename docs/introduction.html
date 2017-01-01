@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>QSS Tidyverse Code</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <meta name="description" content="QSS Tidyverse Code">
+  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
+
+  <meta property="og:title" content="QSS Tidyverse Code" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  <meta name="github-repo" content="jrnold/qss-tidy" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="QSS Tidyverse Code" />
+  
+  
+  
+
+<meta name="author" content="Jeffrey B. Arnold">
+
+
+<meta name="date" content="2016-12-31">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="index.html">
+<link rel="next" href="causality.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+</head>
+
+<body>
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i><b>2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#introduction-to-r"><i class="fa fa-check"></i><b>2.2</b> Introduction to R</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="introduction.html"><a href="introduction.html#data-files"><i class="fa fa-check"></i><b>2.2.1</b> Data Files</a></li>
+<li class="chapter" data-level="2.2.2" data-path="introduction.html"><a href="introduction.html#saving-objects"><i class="fa fa-check"></i><b>2.2.2</b> Saving Objects</a></li>
+<li class="chapter" data-level="2.2.3" data-path="introduction.html"><a href="introduction.html#packages"><i class="fa fa-check"></i><b>2.2.3</b> Packages</a></li>
+<li class="chapter" data-level="2.2.4" data-path="introduction.html"><a href="introduction.html#style-guide"><i class="fa fa-check"></i><b>2.2.4</b> Style Guide</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="causality.html"><a href="causality.html"><i class="fa fa-check"></i><b>3</b> Causality</a><ul>
+<li class="chapter" data-level="3.1" data-path="causality.html"><a href="causality.html#prerequistes"><i class="fa fa-check"></i><b>3.1</b> Prerequistes</a></li>
+<li class="chapter" data-level="3.2" data-path="causality.html"><a href="causality.html#racial-discrimination-in-the-labor-market"><i class="fa fa-check"></i><b>3.2</b> Racial Discrimination in the Labor Market</a></li>
+<li class="chapter" data-level="3.3" data-path="causality.html"><a href="causality.html#subsetting-data-in-r"><i class="fa fa-check"></i><b>3.3</b> Subsetting Data in R</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="causality.html"><a href="causality.html#subsetting"><i class="fa fa-check"></i><b>3.3.1</b> Subsetting</a></li>
+<li class="chapter" data-level="3.3.2" data-path="causality.html"><a href="causality.html#simple-conditional-statements"><i class="fa fa-check"></i><b>3.3.2</b> Simple conditional statements</a></li>
+<li class="chapter" data-level="3.3.3" data-path="causality.html"><a href="causality.html#factor-variables"><i class="fa fa-check"></i><b>3.3.3</b> Factor Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="causality.html"><a href="causality.html#causal-affects-and-the-counterfactual"><i class="fa fa-check"></i><b>3.4</b> Causal Affects and the Counterfactual</a></li>
+<li class="chapter" data-level="3.5" data-path="causality.html"><a href="causality.html#observational-studies"><i class="fa fa-check"></i><b>3.5</b> Observational Studies</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="causality.html"><a href="causality.html#confounding-bias"><i class="fa fa-check"></i><b>3.5.1</b> Confounding Bias</a></li>
+<li class="chapter" data-level="3.5.2" data-path="causality.html"><a href="causality.html#before-and-after-and-difference-in-difference-designs"><i class="fa fa-check"></i><b>3.5.2</b> Before and After and Difference-in-Difference Designs</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="causality.html"><a href="causality.html#descriptive-statistics-for-a-single-variable"><i class="fa fa-check"></i><b>3.6</b> Descriptive Statistics for a Single Variable</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="measurement.html"><a href="measurement.html"><i class="fa fa-check"></i><b>4</b> Measurement</a><ul>
+<li class="chapter" data-level="4.1" data-path="measurement.html"><a href="measurement.html#prerequisites-1"><i class="fa fa-check"></i><b>4.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="4.2" data-path="measurement.html"><a href="measurement.html#measuring-civilian-victimization-during-wartime"><i class="fa fa-check"></i><b>4.2</b> Measuring Civilian Victimization during Wartime</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="measurement.html"><a href="measurement.html#handling-missing-data-in-r"><i class="fa fa-check"></i><b>4.2.1</b> Handling Missing Data in R</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="measurement.html"><a href="measurement.html#visualizing-the-univariate-distribution"><i class="fa fa-check"></i><b>4.3</b> Visualizing the Univariate Distribution</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="measurement.html"><a href="measurement.html#barplot"><i class="fa fa-check"></i><b>4.3.1</b> Barplot</a></li>
+<li class="chapter" data-level="4.3.2" data-path="measurement.html"><a href="measurement.html#boxplot"><i class="fa fa-check"></i><b>4.3.2</b> Boxplot</a></li>
+<li class="chapter" data-level="4.3.3" data-path="measurement.html"><a href="measurement.html#printing-and-saving-graphics"><i class="fa fa-check"></i><b>4.3.3</b> Printing and saving graphics</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="measurement.html"><a href="measurement.html#survey-sampling"><i class="fa fa-check"></i><b>4.4</b> Survey Sampling</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="measurement.html"><a href="measurement.html#the-role-of-randomization"><i class="fa fa-check"></i><b>4.4.1</b> The Role of Randomization</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="measurement.html"><a href="measurement.html#load-village-data"><i class="fa fa-check"></i><b>4.5</b> load village data</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="measurement.html"><a href="measurement.html#non-response-and-other-sources-of-bias"><i class="fa fa-check"></i><b>4.5.1</b> Non-response and other sources of bias</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="measurement.html"><a href="measurement.html#measuring-political-polarization"><i class="fa fa-check"></i><b>4.6</b> Measuring Political Polarization</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="measurement.html"><a href="measurement.html#correlation"><i class="fa fa-check"></i><b>4.6.1</b> Correlation</a></li>
+<li class="chapter" data-level="4.6.2" data-path="measurement.html"><a href="measurement.html#quantile-quantile-plot"><i class="fa fa-check"></i><b>4.6.2</b> Quantile-Quantile Plot</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="measurement.html"><a href="measurement.html#clustering"><i class="fa fa-check"></i><b>4.7</b> Clustering</a><ul>
+<li class="chapter" data-level="4.7.1" data-path="measurement.html"><a href="measurement.html#matrices"><i class="fa fa-check"></i><b>4.7.1</b> Matrices</a></li>
+<li class="chapter" data-level="4.7.2" data-path="measurement.html"><a href="measurement.html#lists"><i class="fa fa-check"></i><b>4.7.2</b> Lists</a></li>
+<li class="chapter" data-level="4.7.3" data-path="measurement.html"><a href="measurement.html#k-means-algorithms"><i class="fa fa-check"></i><b>4.7.3</b> k-means algorithms</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>5</b> Prediction</a><ul>
+<li class="chapter" data-level="5.1" data-path="prediction.html"><a href="prediction.html#prerequisites-2"><i class="fa fa-check"></i><b>5.1</b> Prerequisites</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="discovery.html"><a href="discovery.html"><i class="fa fa-check"></i><b>6</b> Discovery</a><ul>
+<li class="chapter" data-level="6.1" data-path="discovery.html"><a href="discovery.html#prerequisites-3"><i class="fa fa-check"></i><b>6.1</b> Prerequisites</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="probability.html"><a href="probability.html"><i class="fa fa-check"></i><b>7</b> Probability</a><ul>
+<li class="chapter" data-level="7.1" data-path="probability.html"><a href="probability.html#prerequisites-4"><i class="fa fa-check"></i><b>7.1</b> Prerequisites</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="uncertainty.html"><a href="uncertainty.html"><i class="fa fa-check"></i><b>8</b> Uncertainty</a><ul>
+<li class="chapter" data-level="8.1" data-path="uncertainty.html"><a href="uncertainty.html#prerequisites-5"><i class="fa fa-check"></i><b>8.1</b> Prerequisites</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">QSS Tidyverse Code</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">2</span> Introduction</h1>
+<div id="prerequisites" class="section level2">
+<h2><span class="header-section-number">2.1</span> Prerequisites</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)
+<span class="co">#&gt; Loading tidyverse: ggplot2</span>
+<span class="co">#&gt; Loading tidyverse: tibble</span>
+<span class="co">#&gt; Loading tidyverse: tidyr</span>
+<span class="co">#&gt; Loading tidyverse: readr</span>
+<span class="co">#&gt; Loading tidyverse: purrr</span>
+<span class="co">#&gt; Loading tidyverse: dplyr</span>
+<span class="co">#&gt; Conflicts with tidy packages ----------------------------------------------</span>
+<span class="co">#&gt; filter(): dplyr, stats</span>
+<span class="co">#&gt; lag():    dplyr, stats</span></code></pre></div>
+<p>We also load the <strong>haven</strong> package to load Stata <code>dta</code> files,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;haven&quot;</span>)</code></pre></div>
+<p>and the <strong>rio</strong> package to load multiple types of files,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;rio&quot;</span>)</code></pre></div>
+</div>
+<div id="introduction-to-r" class="section level2">
+<h2><span class="header-section-number">2.2</span> Introduction to R</h2>
+<div id="data-files" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Data Files</h3>
+<p>Don’t use <code>setwd()</code> within scripts. It is much better to organize your code in projects.</p>
+<p>When reading from csv files use <code>readr::read_csv</code> instead of the base R function <code>read.csv</code>. It is slightly faster, and returns a <code>tibble</code> instead of a data frame. See r4ds <a href="http://r4ds.had.co.nz/tibbles.html#introduction-4">Ch 11: Data Import</a> for more dicussion.</p>
+<p>We also can load it directly from a URL.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/jrnold/qss/master/INTRO/UNpop.csv&quot;</span>)
+<span class="co">#&gt; Parsed with column specification:</span>
+<span class="co">#&gt; cols(</span>
+<span class="co">#&gt;   year = col_integer(),</span>
+<span class="co">#&gt;   world.pop = col_integer()</span>
+<span class="co">#&gt; )</span>
+<span class="kw">class</span>(UNpop)
+<span class="co">#&gt; [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</span>
+UNpop
+<span class="co">#&gt; # A tibble: 7 × 2</span>
+<span class="co">#&gt;    year world.pop</span>
+<span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span>
+<span class="co">#&gt; 1  1950   2525779</span>
+<span class="co">#&gt; 2  1960   3026003</span>
+<span class="co">#&gt; 3  1970   3691173</span>
+<span class="co">#&gt; 4  1980   4449049</span>
+<span class="co">#&gt; 5  1990   5320817</span>
+<span class="co">#&gt; 6  2000   6127700</span>
+<span class="co">#&gt; # ... with 1 more rows</span></code></pre></div>
+<p>The single bracket, <code>[</code>, is useful to select rows and columns in simple cases, but the <strong>dplyr</strong> functions <code>slice()</code> to select rows by number, <code>filter</code> to select by certain criteria, or <code>select()</code> to select columns.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), ]
+<span class="co">#&gt; # A tibble: 3 × 2</span>
+<span class="co">#&gt;    year world.pop</span>
+<span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span>
+<span class="co">#&gt; 1  1950   2525779</span>
+<span class="co">#&gt; 2  1960   3026003</span>
+<span class="co">#&gt; 3  1970   3691173</span></code></pre></div>
+<p>is equivalent to</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop %&gt;%<span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span>:<span class="dv">3</span>)
+<span class="co">#&gt; # A tibble: 3 × 2</span>
+<span class="co">#&gt;    year world.pop</span>
+<span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span>
+<span class="co">#&gt; 1  1950   2525779</span>
+<span class="co">#&gt; 2  1960   3026003</span>
+<span class="co">#&gt; 3  1970   3691173</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[, <span class="st">&quot;world.pop&quot;</span>]
+<span class="co">#&gt; # A tibble: 7 × 1</span>
+<span class="co">#&gt;   world.pop</span>
+<span class="co">#&gt;       &lt;int&gt;</span>
+<span class="co">#&gt; 1   2525779</span>
+<span class="co">#&gt; 2   3026003</span>
+<span class="co">#&gt; 3   3691173</span>
+<span class="co">#&gt; 4   4449049</span>
+<span class="co">#&gt; 5   5320817</span>
+<span class="co">#&gt; 6   6127700</span>
+<span class="co">#&gt; # ... with 1 more rows</span></code></pre></div>
+<p>is almost equivalent to</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">select</span>(UNpop, world.pop)
+<span class="co">#&gt; # A tibble: 7 × 1</span>
+<span class="co">#&gt;   world.pop</span>
+<span class="co">#&gt;       &lt;int&gt;</span>
+<span class="co">#&gt; 1   2525779</span>
+<span class="co">#&gt; 2   3026003</span>
+<span class="co">#&gt; 3   3691173</span>
+<span class="co">#&gt; 4   4449049</span>
+<span class="co">#&gt; 5   5320817</span>
+<span class="co">#&gt; 6   6127700</span>
+<span class="co">#&gt; # ... with 1 more rows</span></code></pre></div>
+<p>However, note that <code>select()</code> <strong>always</strong> returns a tibble, and never a vector, even if only one column is selected. Also, note that since <code>world.pop</code> is a tibble, using <code>[</code> also returns tibbles rather than a vector if it is only one column.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[<span class="dv">1</span>:<span class="dv">3</span>, <span class="st">&quot;year&quot;</span>]
+<span class="co">#&gt; # A tibble: 3 × 1</span>
+<span class="co">#&gt;    year</span>
+<span class="co">#&gt;   &lt;int&gt;</span>
+<span class="co">#&gt; 1  1950</span>
+<span class="co">#&gt; 2  1960</span>
+<span class="co">#&gt; 3  1970</span></code></pre></div>
+<p>is almost equivalent to</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop %&gt;%
+<span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span>:<span class="dv">3</span>) %&gt;%
+<span class="st">  </span><span class="kw">select</span>(year)
+<span class="co">#&gt; # A tibble: 3 × 1</span>
+<span class="co">#&gt;    year</span>
+<span class="co">#&gt;   &lt;int&gt;</span>
+<span class="co">#&gt; 1  1950</span>
+<span class="co">#&gt; 2  1960</span>
+<span class="co">#&gt; 3  1970</span></code></pre></div>
+<p>For this example using these functions and <code>%&gt;%</code> to chain them together may seem a little excessive, but later we will see how chaining simple functions togther like that becomes a very powerful way to build up complicated logic.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop$world.pop[<span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">1</span>, <span class="dt">to =</span> <span class="kw">nrow</span>(UNpop), <span class="dt">by =</span> <span class="dv">2</span>)]
+<span class="co">#&gt; [1] 2525779 3691173 5320817 6916183</span></code></pre></div>
+<p>can be rewritten as</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop %&gt;%
+<span class="st">  </span><span class="kw">slice</span>(<span class="kw">seq</span>(<span class="dv">1</span>, <span class="kw">n</span>(), <span class="dt">by =</span> <span class="dv">2</span>)) %&gt;%
+<span class="st">  </span><span class="kw">select</span>(world.pop) 
+<span class="co">#&gt; # A tibble: 4 × 1</span>
+<span class="co">#&gt;   world.pop</span>
+<span class="co">#&gt;       &lt;int&gt;</span>
+<span class="co">#&gt; 1   2525779</span>
+<span class="co">#&gt; 2   3691173</span>
+<span class="co">#&gt; 3   5320817</span>
+<span class="co">#&gt; 4   6916183</span></code></pre></div>
+<p>The function <code>n()</code> when used in a dplyr functions returns the number of rows in the data frame (or the number of rows in the group if used with <code>group_by</code>).</p>
+</div>
+<div id="saving-objects" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Saving Objects</h3>
+<p><strong>Do not save</strong> the workspace using <code>save.image</code>. This is an extremely bad idea for reproducibility. See r4ds <a href="http://r4ds.had.co.nz/workflow-projects.html">Ch 8</a>. You should uncheck the options in RStudio to avoid saving and rstoring from <code>.RData</code> files. This will help ensure that your R code runs the way you think it does, instead of depending on some long forgotten code that is only saved in the workspace image.</p>
+<p>Everything important should be in a script. Anything saved or loaded from file should be done explicitly.</p>
+<p>As with reading CSVs, use the <strong>readr</strong> package functions. In this case, <code>write_csv</code> writes a csv file</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write_csv</span>(UNpop, <span class="st">&quot;UNpop.csv&quot;</span>)</code></pre></div>
+</div>
+<div id="packages" class="section level3">
+<h3><span class="header-section-number">2.2.3</span> Packages</h3>
+<p>Instead of <strong>foreign</strong> for reading and writing Stata and SPSS files, use <strong>haven</strong>. One reason to do so is that it is better maintained. The R function <code>read.dta</code> does not read files created by the most recent versions of Stata (13+).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">read_dta</span>(<span class="st">&quot;https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.dta&quot;</span>)
+<span class="co">#&gt; # A tibble: 7 × 2</span>
+<span class="co">#&gt;    year world_pop</span>
+<span class="co">#&gt;   &lt;dbl&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  1950      2526</span>
+<span class="co">#&gt; 2  1960      3026</span>
+<span class="co">#&gt; 3  1970      3691</span>
+<span class="co">#&gt; 4  1980      4449</span>
+<span class="co">#&gt; 5  1990      5321</span>
+<span class="co">#&gt; 6  2000      6128</span>
+<span class="co">#&gt; # ... with 1 more rows</span></code></pre></div>
+<p>There is also the equivalent <code>write_dta</code> function to create Stata datasets.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write_dta</span>(UNpop, <span class="st">&quot;UNpop.dta&quot;</span>)</code></pre></div>
+<p>Also see the <a href="https://cran.r-project.org/package=rio">rio</a> package which makes loading data even easier with smart defaults.</p>
+<p>You can use the <code>import</code> function to load many types of files:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">import</span>(<span class="st">&quot;https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.csv&quot;</span>)
+<span class="co">#&gt;   year world.pop</span>
+<span class="co">#&gt; 1 1950   2525779</span>
+<span class="co">#&gt; 2 1960   3026003</span>
+<span class="co">#&gt; 3 1970   3691173</span>
+<span class="co">#&gt; 4 1980   4449049</span>
+<span class="co">#&gt; 5 1990   5320817</span>
+<span class="co">#&gt; 6 2000   6127700</span>
+<span class="co">#&gt; 7 2010   6916183</span>
+<span class="kw">import</span>(<span class="st">&quot;https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.RData&quot;</span>)
+<span class="co">#&gt;   year world.pop</span>
+<span class="co">#&gt; 1 1950   2525779</span>
+<span class="co">#&gt; 2 1960   3026003</span>
+<span class="co">#&gt; 3 1970   3691173</span>
+<span class="co">#&gt; 4 1980   4449049</span>
+<span class="co">#&gt; 5 1990   5320817</span>
+<span class="co">#&gt; 6 2000   6127700</span>
+<span class="co">#&gt; 7 2010   6916183</span>
+<span class="kw">import</span>(<span class="st">&quot;https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.dta&quot;</span>)
+<span class="co">#&gt;   year world_pop</span>
+<span class="co">#&gt; 1 1950      2526</span>
+<span class="co">#&gt; 2 1960      3026</span>
+<span class="co">#&gt; 3 1970      3691</span>
+<span class="co">#&gt; 4 1980      4449</span>
+<span class="co">#&gt; 5 1990      5321</span>
+<span class="co">#&gt; 6 2000      6128</span>
+<span class="co">#&gt; 7 2010      6916</span></code></pre></div>
+</div>
+<div id="style-guide" class="section level3">
+<h3><span class="header-section-number">2.2.4</span> Style Guide</h3>
+<p>Follow <a href="http://adv-r.had.co.nz/Style.html">Hadley Wickham’s Style Guide</a> not the Google R style guide.</p>
+<p>In addition to <strong>lintr</strong>, the R package <a href="https://cran.r-project.org/package=formatR">formatR</a> has methods to clean up your code.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="causality.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/jrnold/qss-tidy/edit/master/introduction.Rmd",
+"text": "Edit"
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

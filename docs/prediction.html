@@ -26,7 +26,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2016-12-31">
+<meta name="date" content="2017-01-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -153,6 +153,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="5" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>5</b> Prediction</a><ul>
 <li class="chapter" data-level="5.1" data-path="prediction.html"><a href="prediction.html#prerequisites-2"><i class="fa fa-check"></i><b>5.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="5.2" data-path="prediction.html"><a href="prediction.html#loops-in-r"><i class="fa fa-check"></i><b>5.2</b> Loops in R</a></li>
+<li class="chapter" data-level="5.3" data-path="prediction.html"><a href="prediction.html#general-conditional-statements-in-r"><i class="fa fa-check"></i><b>5.3</b> General Conditional Statements in R</a></li>
+<li class="chapter" data-level="5.4" data-path="prediction.html"><a href="prediction.html#poll-predictions"><i class="fa fa-check"></i><b>5.4</b> Poll Predictions</a></li>
+<li class="chapter" data-level="5.5" data-path="prediction.html"><a href="prediction.html#linear-regression"><i class="fa fa-check"></i><b>5.5</b> Linear Regression</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="prediction.html"><a href="prediction.html#facial-appearance-and-election-outcomes"><i class="fa fa-check"></i><b>5.5.1</b> Facial Appearance and Election Outcomes</a></li>
+<li class="chapter" data-level="5.5.2" data-path="prediction.html"><a href="prediction.html#correlation-1"><i class="fa fa-check"></i><b>5.5.2</b> Correlation</a></li>
+<li class="chapter" data-level="5.5.3" data-path="prediction.html"><a href="prediction.html#least-squares"><i class="fa fa-check"></i><b>5.5.3</b> Least Squares</a></li>
+<li class="chapter" data-level="5.5.4" data-path="prediction.html"><a href="prediction.html#regresion-towards-the-mean"><i class="fa fa-check"></i><b>5.5.4</b> Regresion towards the mean</a></li>
+<li class="chapter" data-level="5.5.5" data-path="prediction.html"><a href="prediction.html#merging-data-sets-in-r"><i class="fa fa-check"></i><b>5.5.5</b> Merging Data Sets in R</a></li>
+<li class="chapter" data-level="5.5.6" data-path="prediction.html"><a href="prediction.html#model-fit"><i class="fa fa-check"></i><b>5.5.6</b> Model Fit</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="discovery.html"><a href="discovery.html"><i class="fa fa-check"></i><b>6</b> Discovery</a><ul>
 <li class="chapter" data-level="6.1" data-path="discovery.html"><a href="discovery.html#prerequisites-3"><i class="fa fa-check"></i><b>6.1</b> Prerequisites</a></li>
@@ -184,17 +195,503 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">5</span> Prediction</h1>
 <div id="prerequisites-2" class="section level2">
 <h2><span class="header-section-number">5.1</span> Prerequisites</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)
-<span class="co">#&gt; Loading tidyverse: ggplot2</span>
-<span class="co">#&gt; Loading tidyverse: tibble</span>
-<span class="co">#&gt; Loading tidyverse: tidyr</span>
-<span class="co">#&gt; Loading tidyverse: readr</span>
-<span class="co">#&gt; Loading tidyverse: purrr</span>
-<span class="co">#&gt; Loading tidyverse: dplyr</span>
-<span class="co">#&gt; Conflicts with tidy packages ----------------------------------------------</span>
-<span class="co">#&gt; filter(): dplyr, stats</span>
-<span class="co">#&gt; lag():    dplyr, stats</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</code></pre></div>
+<p>We will use the package <a href="https://cran.r-project.org/package=lubridate">lubridate</a> to work with dates.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;lubridate&quot;</span>)
+<span class="co">#&gt; Loading required package: methods</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: &#39;lubridate&#39;</span>
+<span class="co">#&gt; The following object is masked from &#39;package:base&#39;:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     date</span></code></pre></div>
+<p>The packages <a href="https://cran.r-project.org/package=modelr">modelr</a> and <a href="https://cran.r-project.org/package=broom">broom</a> are used to wrangle the results of linear regressions,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;broom&quot;</span>)
+<span class="kw">library</span>(<span class="st">&quot;modelr&quot;</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: &#39;modelr&#39;</span>
+<span class="co">#&gt; The following object is masked from &#39;package:broom&#39;:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     bootstrap</span></code></pre></div>
+</div>
+<div id="loops-in-r" class="section level2">
+<h2><span class="header-section-number">5.2</span> Loops in R</h2>
+<p>For more on looping and iteration in R see the <em>R for Data Science</em> chapter <a href="http://r4ds.had.co.nz/data-visualisation.html">Iteration</a>.</p>
+<p>RStudio provides many features to help debugging, which will be useful in for loops and function: see <a href="https://support.rstudio.com/hc/en-us/articles/205612627-Debugging-with-RStudio">this</a> article for an example.</p>
+</div>
+<div id="general-conditional-statements-in-r" class="section level2">
+<h2><span class="header-section-number">5.3</span> General Conditional Statements in R</h2>
+<p><strong>TODO</strong> Is this in R4DS, find good cites.</p>
+<p>If you are using conditional statements to assign values for data frame, see the <strong>dplyr</strong> functions <a href="https://www.rdocumentation.org/packages/dplyr/topics/if_else">if_else</a>, <a href="https://www.rdocumentation.org/packages/dplyr/topics/recode">recode</a>, and <a href="https://www.rdocumentation.org/packages/dplyr/topics/case_when">case_when</a></p>
+</div>
+<div id="poll-predictions" class="section level2">
+<h2><span class="header-section-number">5.4</span> Poll Predictions</h2>
+<p>Load the election polls and election results for 2008,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">polls08 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;UNCERTAINTY&quot;</span>, <span class="st">&quot;polls08.csv&quot;</span>))
+<span class="kw">glimpse</span>(polls08)
+<span class="co">#&gt; Observations: 1,332</span>
+<span class="co">#&gt; Variables: 5</span>
+<span class="co">#&gt; $ state    &lt;chr&gt; &quot;AL&quot;, &quot;AL&quot;, &quot;AL&quot;, &quot;AL&quot;, &quot;AL&quot;, &quot;AL&quot;, &quot;AL&quot;, &quot;AL&quot;, &quot;AL&quot;,...</span>
+<span class="co">#&gt; $ Pollster &lt;chr&gt; &quot;SurveyUSA-2&quot;, &quot;Capital Survey-2&quot;, &quot;SurveyUSA-2&quot;, &quot;Ca...</span>
+<span class="co">#&gt; $ Obama    &lt;int&gt; 36, 34, 35, 35, 39, 34, 36, 25, 35, 34, 37, 36, 36, 3...</span>
+<span class="co">#&gt; $ McCain   &lt;int&gt; 61, 54, 62, 55, 60, 64, 58, 52, 55, 47, 55, 51, 49, 5...</span>
+<span class="co">#&gt; $ middate  &lt;date&gt; 2008-10-27, 2008-10-15, 2008-10-08, 2008-10-06, 2008...</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres08 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;UNCERTAINTY&quot;</span>, <span class="st">&quot;pres08.csv&quot;</span>))
+<span class="kw">glimpse</span>(pres08)
+<span class="co">#&gt; Observations: 51</span>
+<span class="co">#&gt; Variables: 5</span>
+<span class="co">#&gt; $ state.name &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;Califo...</span>
+<span class="co">#&gt; $ state      &lt;chr&gt; &quot;AL&quot;, &quot;AK&quot;, &quot;AZ&quot;, &quot;AR&quot;, &quot;CA&quot;, &quot;CO&quot;, &quot;CT&quot;, &quot;DC&quot;, &quot;DE...</span>
+<span class="co">#&gt; $ Obama      &lt;int&gt; 39, 38, 45, 39, 61, 54, 61, 92, 62, 51, 47, 72, 36,...</span>
+<span class="co">#&gt; $ McCain     &lt;int&gt; 60, 59, 54, 59, 37, 45, 38, 7, 37, 48, 52, 27, 62, ...</span>
+<span class="co">#&gt; $ EV         &lt;int&gt; 9, 3, 10, 6, 55, 9, 7, 3, 3, 27, 15, 4, 4, 21, 11, ...</span></code></pre></div>
+<p>Compute Obama’s margin in polls and final election</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">polls08 &lt;-
+<span class="st">  </span>polls08 %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">margin =</span> Obama -<span class="st"> </span>McCain)
+pres08 &lt;-<span class="st"> </span>
+<span class="st">  </span>pres08 %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">margin =</span> Obama -<span class="st"> </span>McCain)</code></pre></div>
+<p>To work with dates, the R package <a href="https://cran.r-project.org/package=lubridate">lubridate</a> makes wrangling them much easier. See the <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/dates-and-times.html">Dates and Times</a>.</p>
+<p>The function <a href="https://www.rdocumentation.org/packages/lubridate/topics/ymd">ymd</a> will convert character strings like <code>year-month-day</code> and more into dates, as long as the order is (year, month, day). See <a href="https://www.rdocumentation.org/packages/lubridate/topics/dmy">dmy</a>, <a href="https://www.rdocumentation.org/packages/lubridate/topics/ymd">ymd</a>, and others for other ways to convert strings to dates.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="st">&quot;2008-11-04&quot;</span>)
+y &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="st">&quot;2008/9/1&quot;</span>)
+x -<span class="st"> </span>y
+<span class="co">#&gt; Time difference of 64 days</span></code></pre></div>
+<p>However, note that in <code>polls08</code>, the date <code>middate</code> is <em>already</em> a <code>date</code> object,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(polls08$middate)
+<span class="co">#&gt; [1] &quot;Date&quot;</span></code></pre></div>
+<p>The function <a href="https://www.rdocumentation.org/packages/readr/topics/read_csv">read_csv</a> by default will check character vectors to see if they have patterns that appear to be dates, and if so, will parse those columns as dates.</p>
+<p>We’ll create a variable for election day</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ELECTION_DAY &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="st">&quot;2008-11-04&quot;</span>)</code></pre></div>
+<p>and add a new column to <code>poll08</code> with the days to the election</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">polls08 &lt;-
+<span class="st">  </span><span class="kw">mutate</span>(polls08, ELECTION_DAY -<span class="st"> </span>middate)</code></pre></div>
+<p>Although the code in the chapter uses a <code>for</code> loop, there is no reason to do so. We can accomplish the same task by merging the election results data to the polling data by <code>state</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">polls_w_results &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">left_join</span>(polls08,
+            <span class="kw">select</span>(pres08, state, <span class="dt">elec_margin =</span> margin),
+            <span class="dt">by =</span> <span class="st">&quot;state&quot;</span>) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">error =</span> elec_margin -<span class="st"> </span>margin)
+<span class="kw">glimpse</span>(polls_w_results)
+<span class="co">#&gt; Observations: 1,332</span>
+<span class="co">#&gt; Variables: 9</span>
+<span class="co">#&gt; $ state                  &lt;chr&gt; &quot;AL&quot;, &quot;AL&quot;, &quot;AL&quot;, &quot;AL&quot;, &quot;AL&quot;, &quot;AL&quot;, &quot;AL...</span>
+<span class="co">#&gt; $ Pollster               &lt;chr&gt; &quot;SurveyUSA-2&quot;, &quot;Capital Survey-2&quot;, &quot;Sur...</span>
+<span class="co">#&gt; $ Obama                  &lt;int&gt; 36, 34, 35, 35, 39, 34, 36, 25, 35, 34,...</span>
+<span class="co">#&gt; $ McCain                 &lt;int&gt; 61, 54, 62, 55, 60, 64, 58, 52, 55, 47,...</span>
+<span class="co">#&gt; $ middate                &lt;date&gt; 2008-10-27, 2008-10-15, 2008-10-08, 20...</span>
+<span class="co">#&gt; $ margin                 &lt;int&gt; -25, -20, -27, -20, -21, -30, -22, -27,...</span>
+<span class="co">#&gt; $ ELECTION_DAY - middate &lt;time&gt; 8 days, 20 days, 27 days, 29 days, 43 ...</span>
+<span class="co">#&gt; $ elec_margin            &lt;int&gt; -21, -21, -21, -21, -21, -21, -21, -21,...</span>
+<span class="co">#&gt; $ error                  &lt;int&gt; 4, -1, 6, -1, 0, 9, 1, 6, -1, -8, -3, -...</span></code></pre></div>
+<p>To get the last poll in each state, arrange and filter on middate</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">last_polls &lt;-<span class="st"> </span>
+<span class="st">  </span>polls_w_results %&gt;%
+<span class="st">  </span><span class="kw">arrange</span>(state, <span class="kw">desc</span>(middate)) %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(state) %&gt;%
+<span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span>)
+last_polls
+<span class="co">#&gt; Source: local data frame [51 x 9]</span>
+<span class="co">#&gt; Groups: state [51]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   state        Pollster Obama McCain    middate margin</span>
+<span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt; &lt;int&gt;  &lt;int&gt;     &lt;date&gt;  &lt;int&gt;</span>
+<span class="co">#&gt; 1    AK Research 2000-3    39     58 2008-10-29    -19</span>
+<span class="co">#&gt; 2    AL     SurveyUSA-2    36     61 2008-10-27    -25</span>
+<span class="co">#&gt; 3    AR           ARG-4    44     51 2008-10-29     -7</span>
+<span class="co">#&gt; 4    AZ           ARG-3    46     50 2008-10-29     -4</span>
+<span class="co">#&gt; 5    CA     SurveyUSA-3    60     36 2008-10-30     24</span>
+<span class="co">#&gt; 6    CO           ARG-3    52     45 2008-10-29      7</span>
+<span class="co">#&gt; # ... with 45 more rows, and 3 more variables: `ELECTION_DAY -</span>
+<span class="co">#&gt; #   middate` &lt;time&gt;, elec_margin &lt;int&gt;, error &lt;int&gt;</span></code></pre></div>
+<p><strong>Challenge:</strong> Instead of using the last poll, use the average of polls in the last week? Last month? How do the margins on the polls change over the election period?</p>
+<p>To simplify things for later, let’s define a function <code>rmse</code> which calculates the root mean squared error, as defined in the book. See the <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/functions.html">Functions</a> for more on writing functions.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rmse &lt;-<span class="st"> </span>function(actual, pred) {
+  <span class="kw">sqrt</span>(<span class="kw">mean</span>((actual -<span class="st"> </span>pred) ^<span class="st"> </span><span class="dv">2</span>))
+}</code></pre></div>
+<p>Now we can use <code>rmse()</code> to calculate the RMSE for all the final polls:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rmse</span>(last_polls$margin, last_polls$elec_margin)
+<span class="co">#&gt; [1] 5.88</span></code></pre></div>
+<p>Or since we already have a variable <code>error</code>,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sqrt</span>(<span class="kw">mean</span>(last_polls$error ^<span class="st"> </span><span class="dv">2</span>))
+<span class="co">#&gt; [1] 5.88</span></code></pre></div>
+<p>The mean prediction error is</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(last_polls$error)
+<span class="co">#&gt; [1] 1.08</span></code></pre></div>
+<p>This is slightly different than what is in the book due to the difference in the poll used as the final poll; many states have many polls on the last day.</p>
+<p>I’ll choose binwidths of 1%, since that is fairly interpretable:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(last_polls, <span class="kw">aes</span>(<span class="dt">x =</span> error)) +
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="dv">1</span>, <span class="dt">boundary =</span> <span class="dv">0</span>)</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-15-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>The text uses bindwidths of 5%:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(last_polls, <span class="kw">aes</span>(<span class="dt">x =</span> error)) +
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="dv">5</span>, <span class="dt">boundary =</span> <span class="dv">0</span>)</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><strong>Challenge:</strong> What other ways could you visualize the results? How would you show all states? What about plotting the absolute or squared errors instead of the errors?</p>
+<p><strong>Challenge:</strong> What happens to prediction error if you average polls? Consider averaging back over time? What happens if you take the averages of the state poll average and average of <strong>all</strong> polls - does that improve prediction?</p>
+<p>To create a scatterplot using the state abbreviations instead of points use <a href="http://docs.ggplot2.org/current/geom_text.html">geom_text</a> instead of <a href="http://docs.ggplot2.org/current/geom_point.html">geom_point</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(last_polls, <span class="kw">aes</span>(<span class="dt">x =</span> margin, <span class="dt">y =</span> elec_margin, <span class="dt">label =</span> state)) +
+<span class="st">  </span><span class="kw">geom_text</span>() +
+<span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">col =</span> <span class="st">&quot;red&quot;</span>) +
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>) +
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>) +
+<span class="st">  </span><span class="kw">coord_fixed</span>() +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Poll Results&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Actual Election Results&quot;</span>)</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>We can create a confusion matrix as follow.</p>
+<p>Create a new columns <code>classification</code> which shows whether how the poll’s classification was related to the actual election outcome (“true positive”, “false positive”, “false negative”, “false positive”). This can be accomplished easily with the <a href="https://cran.r-project.org/package=dplyr">dplyr</a> funtion <a href="https://www.rdocumentation.org/packages/dplyr/topics/case_when">case_when</a>. <em>Note:</em> You need to use <code>.</code> to refer to the data frame when using <code>case_when</code> with a <code>mutate</code> function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">last_polls &lt;-
+<span class="st">  </span>last_polls %&gt;%
+<span class="st">  </span><span class="kw">ungroup</span>() %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">classification =</span> 
+           <span class="kw">case_when</span>(
+             (.$margin &gt;<span class="st"> </span><span class="dv">0</span> &amp;<span class="st"> </span>.$elec_margin &gt;<span class="st"> </span><span class="dv">0</span>) ~<span class="st"> &quot;true positive&quot;</span>,
+             (.$margin &gt;<span class="st"> </span><span class="dv">0</span> &amp;<span class="st"> </span>.$elec_margin &lt;<span class="st"> </span><span class="dv">0</span>) ~<span class="st"> &quot;false positive&quot;</span>,
+             (.$margin &lt;<span class="st"> </span><span class="dv">0</span> &amp;<span class="st"> </span>.$elec_margin &lt;<span class="st"> </span><span class="dv">0</span>) ~<span class="st"> &quot;true negative&quot;</span>,
+             (.$margin &lt;<span class="st"> </span><span class="dv">0</span> &amp;<span class="st"> </span>.$elec_margin &gt;<span class="st"> </span><span class="dv">0</span>) ~<span class="st"> &quot;false negative&quot;</span>
+           ))</code></pre></div>
+<p>No simply count the</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">last_polls %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(classification) %&gt;%
+<span class="st">  </span><span class="kw">count</span>()
+<span class="co">#&gt; # A tibble: 4 × 2</span>
+<span class="co">#&gt;   classification     n</span>
+<span class="co">#&gt;            &lt;chr&gt; &lt;int&gt;</span>
+<span class="co">#&gt; 1 false negative     2</span>
+<span class="co">#&gt; 2 false positive     1</span>
+<span class="co">#&gt; 3  true negative    21</span>
+<span class="co">#&gt; 4  true positive    27</span></code></pre></div>
+<p>Which states were incorrectly predicted?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">last_polls %&gt;%
+<span class="st">  </span><span class="kw">filter</span>(classification %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;false positive&quot;</span>, <span class="st">&quot;false negative&quot;</span>)) %&gt;%
+<span class="st">  </span><span class="kw">select</span>(state, margin, elec_margin, classification) %&gt;%
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(elec_margin))
+<span class="co">#&gt; # A tibble: 3 × 4</span>
+<span class="co">#&gt;   state margin elec_margin classification</span>
+<span class="co">#&gt;   &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;          &lt;chr&gt;</span>
+<span class="co">#&gt; 1    IN     -5           1 false negative</span>
+<span class="co">#&gt; 2    NC     -1           1 false negative</span>
+<span class="co">#&gt; 3    MO      1          -1 false positive</span></code></pre></div>
+<p>What was the difference in the poll prediction of electoral votes and actual electoral votes. We hadn’t included the variable <code>EV</code> when we first merged, but that’s no problem, we’ll just merge again in order to grab that variable:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">last_polls %&gt;%
+<span class="st">  </span><span class="kw">left_join</span>(<span class="kw">select</span>(pres08, state, EV), <span class="dt">by =</span> <span class="st">&quot;state&quot;</span>) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">EV_pred =</span> <span class="kw">sum</span>((margin &gt;<span class="st"> </span><span class="dv">0</span>) *<span class="st"> </span>EV),
+            <span class="dt">EV_actual =</span> <span class="kw">sum</span>((elec_margin &gt;<span class="st"> </span><span class="dv">0</span>) *<span class="st"> </span>EV))
+<span class="co">#&gt; # A tibble: 1 × 2</span>
+<span class="co">#&gt;   EV_pred EV_actual</span>
+<span class="co">#&gt;     &lt;int&gt;     &lt;int&gt;</span>
+<span class="co">#&gt; 1     349       364</span></code></pre></div>
+<p>To look at predictions of the</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># load the data</span>
+pollsUS08 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;prediction&quot;</span>, <span class="st">&quot;pollsUS08.csv&quot;</span>)) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">DaysToElection =</span> ELECTION_DAY -<span class="st"> </span>middate)</code></pre></div>
+<p>We’ll produce the seven-day averages slightly differently than the method used in the text. For all dates in the data, we’ll calculate the moving average.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all_dates &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="kw">min</span>(polls08$middate), ELECTION_DAY,
+                 <span class="dt">by =</span> <span class="st">&quot;days&quot;</span>)
 
+<span class="co"># Number of poll days to use</span>
+POLL_DAYS &lt;-<span class="st"> </span><span class="dv">7</span>
+
+pop_vote_avg &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="kw">length</span>(all_dates), <span class="dt">mode =</span> <span class="st">&quot;list&quot;</span>)
+for (i in <span class="kw">seq_along</span>(all_dates)) {
+  date &lt;-<span class="st"> </span>all_dates[i]
+  <span class="co"># summarise the seven day</span>
+  week_data &lt;-
+<span class="st">     </span>pollsUS08 %&gt;%
+<span class="st">     </span><span class="kw">filter</span>(<span class="kw">as.integer</span>(middate -<span class="st"> </span>date) &lt;=<span class="st"> </span><span class="dv">0</span>,
+            <span class="kw">as.integer</span>(middate -<span class="st"> </span>date) &gt;<span class="st"> </span>-POLL_DAYS) %&gt;%
+<span class="st">     </span><span class="kw">summarise</span>(<span class="dt">Obama =</span> <span class="kw">mean</span>(Obama, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+               <span class="dt">McCain =</span> <span class="kw">mean</span>(McCain, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))
+  <span class="co"># add date for the observation</span>
+  week_data$date &lt;-<span class="st"> </span>date
+  pop_vote_avg[[i]] &lt;-<span class="st"> </span>week_data
+}
+
+pop_vote_avg &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(pop_vote_avg)</code></pre></div>
+<p>It is easier to plot this if the data are tidy, with <code>Obama</code> and <code>McCain</code> as categories of a column <code>candidate</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pop_vote_avg_tidy &lt;-
+<span class="st">  </span>pop_vote_avg %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(candidate, share, -date, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+pop_vote_avg_tidy
+<span class="co">#&gt; # A tibble: 598 × 3</span>
+<span class="co">#&gt;         date candidate share</span>
+<span class="co">#&gt; *     &lt;date&gt;     &lt;chr&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 2008-01-09     Obama    49</span>
+<span class="co">#&gt; 2 2008-01-10     Obama    46</span>
+<span class="co">#&gt; 3 2008-01-11     Obama    45</span>
+<span class="co">#&gt; 4 2008-01-12     Obama    45</span>
+<span class="co">#&gt; 5 2008-01-13     Obama    45</span>
+<span class="co">#&gt; 6 2008-01-14     Obama    45</span>
+<span class="co">#&gt; # ... with 592 more rows</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(pop_vote_avg_tidy, <span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> share,
+                              <span class="dt">colour =</span> forcats::<span class="kw">fct_reorder2</span>(candidate,
+                                                             date, share))) +
+<span class="st">  </span><span class="kw">geom_point</span>() +
+<span class="st">  </span><span class="kw">geom_line</span>()</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><strong>Challenge</strong> read <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/iteration.html#the-map-functions">Iteration</a> and use the function <a href="https://www.rdocumentation.org/packages/purrr/topics/map_df">map_df</a> instead of a for loop.</p>
+<p>The 7-day average is similar to the simple method used by <a href="http://www.realclearpolitics.com/epolls/2016/president/us/general_election_trump_vs_clinton-5491.html">Real Clear Politics</a>. The RCP average is simply the average of all polls in their data for the last seven days. Sites like 538 and the Huffington Post on the other hand, also use what amounts to averaging polls, but using more sophisticated statistical methods to assign different weights to different polls.</p>
+<p><strong>Challenge</strong> Why do we need to use different polls for the popular vote data? Why not simply average all the state polls? What would you have to do? Would the overall popular vote be useful in predicting state-level polling, or vice-versa? How would you use them?</p>
+</div>
+<div id="linear-regression" class="section level2">
+<h2><span class="header-section-number">5.5</span> Linear Regression</h2>
+<div id="facial-appearance-and-election-outcomes" class="section level3">
+<h3><span class="header-section-number">5.5.1</span> Facial Appearance and Election Outcomes</h3>
+<p>Load the <code>face</code> dataset:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">face &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;prediction&quot;</span>, <span class="st">&quot;face.csv&quot;</span>))</code></pre></div>
+<p>Add Democrat and Republican vote shares, and the difference in shares:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">face &lt;-
+<span class="st">  </span>face %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">d.share =</span> d.votes /<span class="st"> </span>(d.votes +<span class="st"> </span>r.votes),
+         <span class="dt">r.share =</span> r.votes /<span class="st"> </span>(d.votes +<span class="st"> </span>r.votes),
+         <span class="dt">diff.share =</span> d.share -<span class="st"> </span>r.share)</code></pre></div>
+<p>Plot facial competence vs. vote share:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(face, <span class="kw">aes</span>(<span class="dt">x =</span> d.comp, <span class="dt">y =</span> diff.share, <span class="dt">colour =</span> w.party)) +
+<span class="st">  </span><span class="kw">geom_point</span>() +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Competence scores for Democrats&quot;</span>,
+       <span class="dt">y =</span> <span class="st">&quot;Democratic margin in vote share&quot;</span>)</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-26-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="correlation-1" class="section level3">
+<h3><span class="header-section-number">5.5.2</span> Correlation</h3>
+</div>
+<div id="least-squares" class="section level3">
+<h3><span class="header-section-number">5.5.3</span> Least Squares</h3>
+<p>Run the linear regression</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">lm</span>(diff.share ~<span class="st"> </span>d.comp, <span class="dt">data =</span> face)
+<span class="kw">summary</span>(fit)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = diff.share ~ d.comp, data = face)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residuals:</span>
+<span class="co">#&gt;    Min     1Q Median     3Q    Max </span>
+<span class="co">#&gt; -0.675 -0.166  0.014  0.177  0.743 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="co">#&gt; (Intercept)   -0.312      0.066   -4.73  6.2e-06 ***</span>
+<span class="co">#&gt; d.comp         0.660      0.127    5.19  8.9e-07 ***</span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residual standard error: 0.266 on 117 degrees of freedom</span>
+<span class="co">#&gt; Multiple R-squared:  0.187,  Adjusted R-squared:  0.18 </span>
+<span class="co">#&gt; F-statistic:   27 on 1 and 117 DF,  p-value: 8.85e-07</span></code></pre></div>
+<p>There are many functions to get data out of the <code>lm</code> model.</p>
+<p>In addition to these, the <strong>broom</strong> package provides three functions: <code>glance</code>, <code>tidy</code>, and <code>augment</code> that always return data frames.</p>
+<p>The function <a href="https://www.rdocumentation.org/packages/broom/topics/glance.lm">glance</a> returns a one-row data-frame summary of the model,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glance</span>(fit)
+<span class="co">#&gt;   r.squared adj.r.squared sigma statistic  p.value df logLik AIC  BIC</span>
+<span class="co">#&gt; 1     0.187          0.18 0.266        27 8.85e-07  2  -10.5  27 35.3</span>
+<span class="co">#&gt;   deviance df.residual</span>
+<span class="co">#&gt; 1     8.31         117</span></code></pre></div>
+<p>The function <a href="https://www.rdocumentation.org/packages/broom/topics/tidy.lm">tidy</a> returns a data frame in which each row is a coefficient,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tidy</span>(fit)
+<span class="co">#&gt;          term estimate std.error statistic  p.value</span>
+<span class="co">#&gt; 1 (Intercept)   -0.312     0.066     -4.73 6.24e-06</span>
+<span class="co">#&gt; 2      d.comp    0.660     0.127      5.19 8.85e-07</span></code></pre></div>
+<p>The function <a href="https://www.rdocumentation.org/packages/broom/topics/augment.lm">augment</a> returns the original data with fitted values, residuals, and other observation level stats from the model appended to it.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">augment</span>(fit) %&gt;%<span class="st"> </span><span class="kw">head</span>()
+<span class="co">#&gt;   diff.share d.comp .fitted .se.fit  .resid    .hat .sigma  .cooksd</span>
+<span class="co">#&gt; 1     0.2101  0.565  0.0606  0.0266  0.1495 0.00996  0.267 0.001600</span>
+<span class="co">#&gt; 2     0.1194  0.342 -0.0864  0.0302  0.2059 0.01286  0.267 0.003938</span>
+<span class="co">#&gt; 3     0.0499  0.612  0.0922  0.0295 -0.0423 0.01229  0.268 0.000158</span>
+<span class="co">#&gt; 4     0.1965  0.542  0.0454  0.0256  0.1511 0.00922  0.267 0.001510</span>
+<span class="co">#&gt; 5     0.4958  0.680  0.1370  0.0351  0.3588 0.01737  0.266 0.016307</span>
+<span class="co">#&gt; 6    -0.3495  0.321 -0.1006  0.0319 -0.2490 0.01433  0.267 0.006436</span>
+<span class="co">#&gt;   .std.resid</span>
+<span class="co">#&gt; 1      0.564</span>
+<span class="co">#&gt; 2      0.778</span>
+<span class="co">#&gt; 3     -0.160</span>
+<span class="co">#&gt; 4      0.570</span>
+<span class="co">#&gt; 5      1.358</span>
+<span class="co">#&gt; 6     -0.941</span></code></pre></div>
+<p>We can plot the results of the bivariate linear regression as follows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>() +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> face, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> d.comp, <span class="dt">y =</span> diff.share)) +
+<span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope =</span> <span class="kw">coef</span>(fit)[<span class="st">&quot;d.comp&quot;</span>],
+              <span class="dt">intercept =</span> <span class="kw">coef</span>(fit)[<span class="st">&quot;(Intercept)&quot;</span>])</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>A more general way to plot the predictions of the model against the data is to use the methods described in <a href="http://r4ds.had.co.nz/model-basics.html#visualising-models">Ch 23.3.3</a> of R4DS. Create an evenly spaced grid of values of <code>d.comp</code>, and add predictions of the model to it.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grid &lt;-<span class="st"> </span>face %&gt;%
+<span class="st">  </span><span class="kw">data_grid</span>(d.comp) %&gt;%
+<span class="st">  </span><span class="kw">add_predictions</span>(fit)
+<span class="kw">head</span>(grid)
+<span class="co">#&gt; # A tibble: 6 × 2</span>
+<span class="co">#&gt;   d.comp   pred</span>
+<span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 0.0640 -0.270</span>
+<span class="co">#&gt; 2 0.0847 -0.256</span>
+<span class="co">#&gt; 3 0.0893 -0.253</span>
+<span class="co">#&gt; 4 0.1145 -0.237</span>
+<span class="co">#&gt; 5 0.1148 -0.236</span>
+<span class="co">#&gt; 6 0.1639 -0.204</span></code></pre></div>
+<p>Now we can plot the regression line and the original data just like any other plot.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>() +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> face, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> d.comp, <span class="dt">y =</span> diff.share)) +
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> grid, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> d.comp, <span class="dt">y =</span> pred))</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-33-1.png" width="70%" style="display: block; margin: auto;" /> This method is more complicated than the <code>geom_abline</code> method for a bivariate regerssion, but will work for more complicated models, while the <code>geom_abline</code> method won’t.</p>
+<p>Note that <a href="http://docs.ggplot2.org/current/geom_smooth.html">geom_smooth</a> can be used to add a regression line to a data-set.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> face, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> d.comp, <span class="dt">y =</span> diff.share)) +
+<span class="st">  </span><span class="kw">geom_point</span>() +
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-34-1.png" width="70%" style="display: block; margin: auto;" /> The argument <code>method = &quot;lm&quot;</code> specifies that the function <code>lm</code> is to be used to generate fitted values. It is equivalent to running the regression <code>lm(y ~ x)</code> and plotting the regression line, where <code>y</code> and <code>x</code> are the aesthetics specified by the mappings. The argument <code>se = FALSE</code> tells the function not to plot the confidence interval of the regresion (discussed later).</p>
+</div>
+<div id="regresion-towards-the-mean" class="section level3">
+<h3><span class="header-section-number">5.5.4</span> Regresion towards the mean</h3>
+</div>
+<div id="merging-data-sets-in-r" class="section level3">
+<h3><span class="header-section-number">5.5.5</span> Merging Data Sets in R</h3>
+<p>See the <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/relational-data.html">Relational data</a>.</p>
+<p>Merge - or intter join the data frames by state:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres12 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;prediction&quot;</span>, <span class="st">&quot;pres12.csv&quot;</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">full_join</span>(pres08, pres12, <span class="dt">by =</span> <span class="st">&quot;state&quot;</span>)
+<span class="co">#&gt; # A tibble: 51 × 9</span>
+<span class="co">#&gt;   state.name state Obama.x McCain  EV.x margin Obama.y Romney  EV.y</span>
+<span class="co">#&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;int&gt;  &lt;int&gt; &lt;int&gt;  &lt;int&gt;   &lt;int&gt;  &lt;int&gt; &lt;int&gt;</span>
+<span class="co">#&gt; 1    Alabama    AL      39     60     9    -21      38     61     9</span>
+<span class="co">#&gt; 2     Alaska    AK      38     59     3    -21      41     55     3</span>
+<span class="co">#&gt; 3    Arizona    AZ      45     54    10     -9      45     54    11</span>
+<span class="co">#&gt; 4   Arkansas    AR      39     59     6    -20      37     61     6</span>
+<span class="co">#&gt; 5 California    CA      61     37    55     24      60     37    55</span>
+<span class="co">#&gt; 6   Colorado    CO      54     45     9      9      51     46     9</span>
+<span class="co">#&gt; # ... with 45 more rows</span></code></pre></div>
+<p><em>Note: this could be a question. How would you change the .x, .y suffixes to something more informative</em> To avoid the duplicate names, or change them, you can rename before merging, or use the <code>suffix</code> argument:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres &lt;-<span class="st"> </span><span class="kw">full_join</span>(pres08, pres12, <span class="dt">by =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">suffix =</span> <span class="kw">c</span>(<span class="st">&quot;_08&quot;</span>, <span class="st">&quot;_12&quot;</span>))
+pres
+<span class="co">#&gt; # A tibble: 51 × 9</span>
+<span class="co">#&gt;   state.name state Obama_08 McCain EV_08 margin Obama_12 Romney EV_12</span>
+<span class="co">#&gt;        &lt;chr&gt; &lt;chr&gt;    &lt;int&gt;  &lt;int&gt; &lt;int&gt;  &lt;int&gt;    &lt;int&gt;  &lt;int&gt; &lt;int&gt;</span>
+<span class="co">#&gt; 1    Alabama    AL       39     60     9    -21       38     61     9</span>
+<span class="co">#&gt; 2     Alaska    AK       38     59     3    -21       41     55     3</span>
+<span class="co">#&gt; 3    Arizona    AZ       45     54    10     -9       45     54    11</span>
+<span class="co">#&gt; 4   Arkansas    AR       39     59     6    -20       37     61     6</span>
+<span class="co">#&gt; 5 California    CA       61     37    55     24       60     37    55</span>
+<span class="co">#&gt; 6   Colorado    CO       54     45     9      9       51     46     9</span>
+<span class="co">#&gt; # ... with 45 more rows</span></code></pre></div>
+<p>The <strong>dplyr</strong> equivalent functions for <a href="https://www.rdocumentation.org/packages/base/topics/cbind">cbind</a> is <a href="https://www.rdocumentation.org/packages/dplyr/topics/bind_cols">bind_cols</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres &lt;-<span class="st"> </span>pres %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Obama2008.z =</span> <span class="kw">scale</span>(Obama_08),
+         <span class="dt">Obama2012.z =</span> <span class="kw">scale</span>(Obama_12))</code></pre></div>
+<p>Scatterplot of states with vote shares in 2008 and 2012</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(pres, <span class="kw">aes</span>(<span class="dt">x =</span> Obama2008.z, <span class="dt">y =</span> Obama2012.z, <span class="dt">label =</span> state)) +
+<span class="st">  </span><span class="kw">geom_text</span>() +
+<span class="st">  </span><span class="kw">geom_abline</span>() +
+<span class="st">  </span><span class="kw">coord_fixed</span>() +
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Obama&#39;s standardized vote share in 2008&quot;</span>,
+                     <span class="dt">limits =</span> <span class="kw">c</span>(-<span class="dv">4</span>, <span class="dv">4</span>)) +<span class="st">  </span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Obama&#39;s standardized vote share in 2012&quot;</span>,
+                     <span class="dt">limits =</span> <span class="kw">c</span>(-<span class="dv">4</span>, <span class="dv">4</span>))</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-38-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>To calcualte the bottom and top quartiles</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres %&gt;%
+<span class="st">  </span><span class="kw">filter</span>(Obama2008.z &lt;<span class="st"> </span><span class="kw">quantile</span>(Obama2008.z, <span class="fl">0.25</span>)) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">improve =</span> <span class="kw">mean</span>(Obama2012.z &gt;<span class="st"> </span>Obama2008.z))
+<span class="co">#&gt; # A tibble: 1 × 1</span>
+<span class="co">#&gt;   improve</span>
+<span class="co">#&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1   0.583</span>
+
+pres %&gt;%
+<span class="st">  </span><span class="kw">filter</span>(Obama2008.z &lt;<span class="st"> </span><span class="kw">quantile</span>(Obama2008.z, <span class="fl">0.75</span>)) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">improve =</span> <span class="kw">mean</span>(Obama2012.z &gt;<span class="st"> </span>Obama2008.z))
+<span class="co">#&gt; # A tibble: 1 × 1</span>
+<span class="co">#&gt;   improve</span>
+<span class="co">#&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     0.5</span></code></pre></div>
+<p><strong>Challenge:</strong> Why is it important to standardize the vote shares?</p>
+</div>
+<div id="model-fit" class="section level3">
+<h3><span class="header-section-number">5.5.6</span> Model Fit</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">florida &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;prediction&quot;</span>, <span class="st">&quot;florida.csv&quot;</span>))
+<span class="co">#&gt; Parsed with column specification:</span>
+<span class="co">#&gt; cols(</span>
+<span class="co">#&gt;   county = col_character(),</span>
+<span class="co">#&gt;   Clinton96 = col_integer(),</span>
+<span class="co">#&gt;   Dole96 = col_integer(),</span>
+<span class="co">#&gt;   Perot96 = col_integer(),</span>
+<span class="co">#&gt;   Bush00 = col_integer(),</span>
+<span class="co">#&gt;   Gore00 = col_integer(),</span>
+<span class="co">#&gt;   Buchanan00 = col_integer()</span>
+<span class="co">#&gt; )</span>
+fit2 &lt;-<span class="st"> </span><span class="kw">lm</span>(Buchanan00 ~<span class="st"> </span>Perot96, <span class="dt">data =</span> florida)
+<span class="kw">summary</span>(fit2)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = Buchanan00 ~ Perot96, data = florida)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residuals:</span>
+<span class="co">#&gt;    Min     1Q Median     3Q    Max </span>
+<span class="co">#&gt; -612.7  -66.0    1.9   32.9 2301.7 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="co">#&gt; (Intercept)  1.34575   49.75931    0.03     0.98    </span>
+<span class="co">#&gt; Perot96      0.03592    0.00434    8.28  9.5e-12 ***</span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residual standard error: 316 on 65 degrees of freedom</span>
+<span class="co">#&gt; Multiple R-squared:  0.513,  Adjusted R-squared:  0.506 </span>
+<span class="co">#&gt; F-statistic: 68.5 on 1 and 65 DF,  p-value: 9.47e-12</span></code></pre></div>
+<p>In addition to,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(fit2)$r.squared
+<span class="co">#&gt; [1] 0.513</span></code></pre></div>
+<p>we can get the R2 squared value from the data frame <a href="https://www.rdocumentation.org/packages/broom/topics/glance.lm">glance</a> returns:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glance</span>(fit2)
+<span class="co">#&gt;   r.squared adj.r.squared sigma statistic  p.value df logLik AIC BIC</span>
+<span class="co">#&gt; 1     0.513         0.506   316      68.5 9.47e-12  2   -480 966 972</span>
+<span class="co">#&gt;   deviance df.residual</span>
+<span class="co">#&gt; 1  6506118          65</span></code></pre></div>
+<p>We can get predictions and residuals on the original data frame using the <a href="https://cran.r-project.org/package=modelr">modelr</a> functions <a href="https://www.rdocumentation.org/packages/modelr/topics/add_residuals">add_residuals</a> and <a href="https://www.rdocumentation.org/packages/modelr/topics/add_predictions">add_predictions</a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">florida &lt;-
+<span class="st">  </span>florida %&gt;%
+<span class="st">  </span><span class="kw">add_predictions</span>(fit2) %&gt;%
+<span class="st">  </span><span class="kw">add_residuals</span>(fit2)
+<span class="kw">glimpse</span>(florida)
+<span class="co">#&gt; Observations: 67</span>
+<span class="co">#&gt; Variables: 9</span>
+<span class="co">#&gt; $ county     &lt;chr&gt; &quot;Alachua&quot;, &quot;Baker&quot;, &quot;Bay&quot;, &quot;Bradford&quot;, &quot;Brevard&quot;, &quot;...</span>
+<span class="co">#&gt; $ Clinton96  &lt;int&gt; 40144, 2273, 17020, 3356, 80416, 320736, 1794, 2712...</span>
+<span class="co">#&gt; $ Dole96     &lt;int&gt; 25303, 3684, 28290, 4038, 87980, 142834, 1717, 2783...</span>
+<span class="co">#&gt; $ Perot96    &lt;int&gt; 8072, 667, 5922, 819, 25249, 38964, 630, 7783, 7244...</span>
+<span class="co">#&gt; $ Bush00     &lt;int&gt; 34124, 5610, 38637, 5414, 115185, 177323, 2873, 354...</span>
+<span class="co">#&gt; $ Gore00     &lt;int&gt; 47365, 2392, 18850, 3075, 97318, 386561, 2155, 2964...</span>
+<span class="co">#&gt; $ Buchanan00 &lt;int&gt; 263, 73, 248, 65, 570, 788, 90, 182, 270, 186, 122,...</span>
+<span class="co">#&gt; $ pred       &lt;dbl&gt; 291.3, 25.3, 214.0, 30.8, 908.2, 1400.7, 24.0, 280....</span>
+<span class="co">#&gt; $ resid      &lt;dbl&gt; -2.83e+01, 4.77e+01, 3.40e+01, 3.42e+01, -3.38e+02,...</span></code></pre></div>
+<p>There are now two new columns in <code>florida</code>, <code>pred</code> with the fitted values (predictions), and <code>resid</code> with the residuals.</p>
+<p>Use <code>fit2_augment</code> to create a residual plot:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit2_resid_plot &lt;-
+<span class="st">  </span><span class="kw">ggplot</span>(florida, <span class="kw">aes</span>(<span class="dt">x =</span> pred, <span class="dt">y =</span> resid)) +
+<span class="st">  </span><span class="kw">geom_ref_line</span>(<span class="dt">h =</span> <span class="dv">0</span>) +
+<span class="st">  </span><span class="kw">geom_point</span>() +<span class="st">  </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Fitted values&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;residuals&quot;</span>)
+fit2_resid_plot</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" /> Note, we use the function <a href="https://www.rdocumentation.org/packages/modelr/topics/geom_refline">geom_refline</a> to add a reference line at 0.</p>
+<p>Let’s add some labels to points, who is that outlier?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit2_resid_plot +
+<span class="st">  </span><span class="kw">geom_label</span>(<span class="kw">aes</span>(<span class="dt">label =</span> county))</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>The outlier county is “Palm Beach”</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(florida) %&gt;%
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(<span class="kw">abs</span>(resid))) %&gt;%
+<span class="st">  </span><span class="kw">select</span>(county, resid) %&gt;%
+<span class="st">  </span><span class="kw">head</span>()
+<span class="co">#&gt; # A tibble: 6 × 2</span>
+<span class="co">#&gt;       county resid</span>
+<span class="co">#&gt;        &lt;chr&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  PalmBeach  2302</span>
+<span class="co">#&gt; 2    Broward  -613</span>
+<span class="co">#&gt; 3        Lee  -357</span>
+<span class="co">#&gt; 4    Brevard  -338</span>
+<span class="co">#&gt; 5 Miami-Dade  -329</span>
+<span class="co">#&gt; 6   Pinellas  -317</span></code></pre></div>
+<div class="figure">
+<img src="images/hanging-chad.png" alt="Ted Mosby dressed as a Hanging Chad in How I Met Your Mother" />
+<p class="caption">Ted Mosby dressed as a Hanging Chad in “How I Met Your Mother”</p>
+</div>
+
+</div>
 </div>
 </div>
             </section>

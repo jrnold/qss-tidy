@@ -1,9 +1,167 @@
 # Probability
 
-
 ## Prerequisites
 
 ```{r}
 library("tidyverse")
+```
+
+## Probability
+
+```{r}
+birthday <- function(k) {
+  logdenom <- k * log(365) + lfactorial(365 - k)
+  lognumer <- lfactorial(365)
+  pr <- 1 -   exp(lognumer - logdenom)
+  pr
+}
+
+bday <- tibble(k = 1:50,
+               pr = birthday(k))
+ggplot(bday, aes(x = k , y = pr)) +
+  geom_hline(yintercept = 0.5, colour = "gray") +
+  geom_point() +
+  scale_y_continuous("Probability that at least two\n people have the same birthday", limits = c(0, 1)) +
+  labs(x = "Number of people")
+```
+
+**Note:** The logarithm is used for numerical stability. Basically,  "floating-point" numbers are approximations of numbers. If you perform arithmetic with numbers that are very large, very small, or vary differently in magnitudes, you could have problems. Logarithms help with some of those issues.
+See "Falling Into the Floating Point Trap" in [The R Inforno](http://www.burns-stat.com/pages/Tutor/R_inferno.pdf) for a summary of floating point numbers.
+See these John Fox posts [1](http://www.johndcook.com/blog/2008/09/26/comparing-three-methods-of-computing-standard-deviation/) [2](http://www.johndcook.com/blog/2008/09/28/theoretical-explanation-for-numerical-results/) for an example of numerical stability gone wrong.
+Also see: http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/.
+
+
+Instead of using a for-loop, we could do the simulations using a functional
+as described in R for Data Science.
+Define the function `sim_bdays` to randomly sample k birthdays, and returns
+`TRUE` if there are any duplicates.
+```{r}
+sim_bdays <- function(k) {
+  days <- sample(1:365, k, replace = TRUE)
+  length(unique(days)) < k
+}
+```
+Set the parameters for 1,000 simulations, and 23 individuals.
+We use `map_lgl` since `sim_bdays` returns a logical value (`TRUE`, `FALSE`):
+```{r}
+sims <- 1000
+k <- 23
+map_lgl(seq_len(sims), ~ sim_bdays(k)) %>%
+  mean()
+```
+
+```{r}
+FLVoters <- read_csv(qss_data_url("probability", "FLVoters.csv"))
+dim(FLVoters)
+FLVoters <- FLVoters %>%
+  na.omit()
+```
+
+```{r}
+margin.race <-
+  FLVoters %>%
+  count(race) %>%
+  mutate(prop = n / sum(n))
+margin.race
+```
+
+```{r}
+margin.gender <- FLVoters %>%
+  count(gender) %>%
+  mutate(prop = n / sum(n))
+margin.gender
+```
+
+```{r}
+FLVoters %>% 
+  filter(gender == "f") %>%
+  count(race) %>%
+  mutate(prop = n / sum(n))
+```
+
+```{r}
+joint.p <-
+  FLVoters %>%
+  count(gender, race) %>%
+  # needed because it is still grouped by gender
+  ungroup() %>%
+  mutate(prop = n / sum(n))
+joint.p
+```
+or 
+```{r}
+joint.p %>%
+  ungroup() %>%
+  select(-n) %>%
+  spread(gender, prop)
+  
+```
+
+```{r}
+joint.p %>%
+  group_by(race) %>%
+  summarise(prop = sum(prop))
+```
+
+```{r}
+joint.p %>%
+  group_by(gender) %>%
+  summarise(prop = sum(prop))
+```
+
+
+```{r}
+FLVoters <-
+  FLVoters %>%
+  mutate(age_group = 
+           case_when(
+             .$age <= 20 ~ 1,
+             .$age > 20 & .$age <= 40 ~ 2,
+             .$age > 40 & .$age <= 60 ~ 3,
+             .$age > 60 ~ 4
+           ))
+```
+
+```{r}
+joint3 <-
+  FLVoters %>%
+  count(race, age_group, gender) %>%
+  ungroup() %>%
+  mutate(prop = n / sum(n))
+joint3
+```
+
+Marginal probabilities by age groups
+```{r}
+margin_age <- 
+  FLVoters %>%
+  count(age_group) %>%
+  mutate(prop = n / sum(n))
+margin_age
+```
+
+Calculate the probabilities that each group is in a given age group.
+```{r}
+left_join(joint3, 
+          select(margin_age, age_group, margin_age = prop),
+          by = "age_group") %>%
+  mutate(prob_age_group = prop / margin_age) %>%
+  filter(race == "black", gender == "f", age_group == 4)
+```
+
+
+```{r}
+prop <- function(x, ..., wt = NULL, sort = FALSE) {
+    vars <- lazyeval::lazy_dots(...)
+    wt <- substitute(wt)
+    prop_(x, vars, wt, sort = sort)  
+}
+
+prop_ <- function(x, vars, wt = NULL, sort = FALSE) {
+  df <- ungroup(count_(x, vars, wt = wt, sort = sort))
+  df <- mutate_(df, .prop = ~ n / sum(n))
+  df <- select_(df, ~ -n)
+  df
+}
 ```
 

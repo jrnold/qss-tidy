@@ -26,7 +26,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2017-01-02">
+<meta name="date" content="2017-01-03">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -170,6 +170,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="7" data-path="probability.html"><a href="probability.html"><i class="fa fa-check"></i><b>7</b> Probability</a><ul>
 <li class="chapter" data-level="7.1" data-path="probability.html"><a href="probability.html#prerequisites-4"><i class="fa fa-check"></i><b>7.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="7.2" data-path="probability.html"><a href="probability.html#probability-1"><i class="fa fa-check"></i><b>7.2</b> Probability</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="uncertainty.html"><a href="uncertainty.html"><i class="fa fa-check"></i><b>8</b> Uncertainty</a><ul>
 <li class="chapter" data-level="8.1" data-path="uncertainty.html"><a href="uncertainty.html#prerequisites-5"><i class="fa fa-check"></i><b>8.1</b> Prerequisites</a></li>
@@ -205,6 +206,217 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co">#&gt; Conflicts with tidy packages ----------------------------------------------</span>
 <span class="co">#&gt; filter(): dplyr, stats</span>
 <span class="co">#&gt; lag():    dplyr, stats</span></code></pre></div>
+</div>
+<div id="probability-1" class="section level2">
+<h2><span class="header-section-number">7.2</span> Probability</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">birthday &lt;-<span class="st"> </span>function(k) {
+  logdenom &lt;-<span class="st"> </span>k *<span class="st"> </span><span class="kw">log</span>(<span class="dv">365</span>) +<span class="st"> </span><span class="kw">lfactorial</span>(<span class="dv">365</span> -<span class="st"> </span>k)
+  lognumer &lt;-<span class="st"> </span><span class="kw">lfactorial</span>(<span class="dv">365</span>)
+  pr &lt;-<span class="st"> </span><span class="dv">1</span> -<span class="st">   </span><span class="kw">exp</span>(lognumer -<span class="st"> </span>logdenom)
+  pr
+}
+
+bday &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">k =</span> <span class="dv">1</span>:<span class="dv">50</span>,
+               <span class="dt">pr =</span> <span class="kw">birthday</span>(k))
+<span class="kw">ggplot</span>(bday, <span class="kw">aes</span>(<span class="dt">x =</span> k , <span class="dt">y =</span> pr)) +
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="fl">0.5</span>, <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>) +
+<span class="st">  </span><span class="kw">geom_point</span>() +
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Probability that at least two</span><span class="ch">\n</span><span class="st"> people have the same birthday&quot;</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Number of people&quot;</span>)</code></pre></div>
+<p><img src="probability_files/figure-html/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><strong>Note:</strong> The logarithm is used for numerical stability. Basically, “floating-point” numbers are approximations of numbers. If you perform arithmetic with numbers that are very large, very small, or vary differently in magnitudes, you could have problems. Logarithms help with some of those issues. See “Falling Into the Floating Point Trap” in <a href="http://www.burns-stat.com/pages/Tutor/R_inferno.pdf">The R Inforno</a> for a summary of floating point numbers. See these John Fox posts <a href="http://www.johndcook.com/blog/2008/09/26/comparing-three-methods-of-computing-standard-deviation/">1</a> <a href="http://www.johndcook.com/blog/2008/09/28/theoretical-explanation-for-numerical-results/">2</a> for an example of numerical stability gone wrong. Also see: <a href="http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/" class="uri">http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/</a>.</p>
+<p>Instead of using a for-loop, we could do the simulations using a functional as described in R for Data Science. Define the function <code>sim_bdays</code> to randomly sample k birthdays, and returns <code>TRUE</code> if there are any duplicates.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim_bdays &lt;-<span class="st"> </span>function(k) {
+  days &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span>:<span class="dv">365</span>, k, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
+  <span class="kw">length</span>(<span class="kw">unique</span>(days)) &lt;<span class="st"> </span>k
+}</code></pre></div>
+<p>Set the parameters for 1,000 simulations, and 23 individuals. We use <code>map_lgl</code> since <code>sim_bdays</code> returns a logical value (<code>TRUE</code>, <code>FALSE</code>):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sims &lt;-<span class="st"> </span><span class="dv">1000</span>
+k &lt;-<span class="st"> </span><span class="dv">23</span>
+<span class="kw">map_lgl</span>(<span class="kw">seq_len</span>(sims), ~<span class="st"> </span><span class="kw">sim_bdays</span>(k)) %&gt;%
+<span class="st">  </span><span class="kw">mean</span>()
+<span class="co">#&gt; [1] 0.52</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLVoters &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;probability&quot;</span>, <span class="st">&quot;FLVoters.csv&quot;</span>))
+<span class="co">#&gt; Parsed with column specification:</span>
+<span class="co">#&gt; cols(</span>
+<span class="co">#&gt;   surname = col_character(),</span>
+<span class="co">#&gt;   county = col_integer(),</span>
+<span class="co">#&gt;   VTD = col_integer(),</span>
+<span class="co">#&gt;   age = col_integer(),</span>
+<span class="co">#&gt;   gender = col_character(),</span>
+<span class="co">#&gt;   race = col_character()</span>
+<span class="co">#&gt; )</span>
+<span class="kw">dim</span>(FLVoters)
+<span class="co">#&gt; [1] 10000     6</span>
+FLVoters &lt;-<span class="st"> </span>FLVoters %&gt;%
+<span class="st">  </span><span class="kw">na.omit</span>()</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">margin.race &lt;-
+<span class="st">  </span>FLVoters %&gt;%
+<span class="st">  </span><span class="kw">count</span>(race) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n /<span class="st"> </span><span class="kw">sum</span>(n))
+margin.race
+<span class="co">#&gt; # A tibble: 6 × 3</span>
+<span class="co">#&gt;       race     n    prop</span>
+<span class="co">#&gt;      &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1    asian   175 0.01920</span>
+<span class="co">#&gt; 2    black  1194 0.13102</span>
+<span class="co">#&gt; 3 hispanic  1192 0.13080</span>
+<span class="co">#&gt; 4   native    29 0.00318</span>
+<span class="co">#&gt; 5    other   310 0.03402</span>
+<span class="co">#&gt; 6    white  6213 0.68177</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">margin.gender &lt;-<span class="st"> </span>FLVoters %&gt;%
+<span class="st">  </span><span class="kw">count</span>(gender) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n /<span class="st"> </span><span class="kw">sum</span>(n))
+margin.gender
+<span class="co">#&gt; # A tibble: 2 × 3</span>
+<span class="co">#&gt;   gender     n  prop</span>
+<span class="co">#&gt;    &lt;chr&gt; &lt;int&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1      f  4883 0.536</span>
+<span class="co">#&gt; 2      m  4230 0.464</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLVoters %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(gender ==<span class="st"> &quot;f&quot;</span>) %&gt;%
+<span class="st">  </span><span class="kw">count</span>(race) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n /<span class="st"> </span><span class="kw">sum</span>(n))
+<span class="co">#&gt; # A tibble: 6 × 3</span>
+<span class="co">#&gt;       race     n    prop</span>
+<span class="co">#&gt;      &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1    asian    83 0.01700</span>
+<span class="co">#&gt; 2    black   678 0.13885</span>
+<span class="co">#&gt; 3 hispanic   666 0.13639</span>
+<span class="co">#&gt; 4   native    17 0.00348</span>
+<span class="co">#&gt; 5    other   158 0.03236</span>
+<span class="co">#&gt; 6    white  3281 0.67192</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">joint.p &lt;-
+<span class="st">  </span>FLVoters %&gt;%
+<span class="st">  </span><span class="kw">count</span>(gender, race) %&gt;%
+<span class="st">  </span><span class="co"># needed because it is still grouped by gender</span>
+<span class="st">  </span><span class="kw">ungroup</span>() %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n /<span class="st"> </span><span class="kw">sum</span>(n))
+joint.p
+<span class="co">#&gt; # A tibble: 12 × 4</span>
+<span class="co">#&gt;   gender     race     n    prop</span>
+<span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1      f    asian    83 0.00911</span>
+<span class="co">#&gt; 2      f    black   678 0.07440</span>
+<span class="co">#&gt; 3      f hispanic   666 0.07308</span>
+<span class="co">#&gt; 4      f   native    17 0.00187</span>
+<span class="co">#&gt; 5      f    other   158 0.01734</span>
+<span class="co">#&gt; 6      f    white  3281 0.36004</span>
+<span class="co">#&gt; # ... with 6 more rows</span></code></pre></div>
+<p>or</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">joint.p %&gt;%
+<span class="st">  </span><span class="kw">ungroup</span>() %&gt;%
+<span class="st">  </span><span class="kw">select</span>(-n) %&gt;%
+<span class="st">  </span><span class="kw">spread</span>(gender, prop)
+<span class="co">#&gt; # A tibble: 6 × 3</span>
+<span class="co">#&gt;       race       f       m</span>
+<span class="co">#&gt; *    &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1    asian 0.00911 0.01010</span>
+<span class="co">#&gt; 2    black 0.07440 0.05662</span>
+<span class="co">#&gt; 3 hispanic 0.07308 0.05772</span>
+<span class="co">#&gt; 4   native 0.00187 0.00132</span>
+<span class="co">#&gt; 5    other 0.01734 0.01668</span>
+<span class="co">#&gt; 6    white 0.36004 0.32174</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">joint.p %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(race) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop =</span> <span class="kw">sum</span>(prop))
+<span class="co">#&gt; # A tibble: 6 × 2</span>
+<span class="co">#&gt;       race    prop</span>
+<span class="co">#&gt;      &lt;chr&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1    asian 0.01920</span>
+<span class="co">#&gt; 2    black 0.13102</span>
+<span class="co">#&gt; 3 hispanic 0.13080</span>
+<span class="co">#&gt; 4   native 0.00318</span>
+<span class="co">#&gt; 5    other 0.03402</span>
+<span class="co">#&gt; 6    white 0.68177</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">joint.p %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(gender) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop =</span> <span class="kw">sum</span>(prop))
+<span class="co">#&gt; # A tibble: 2 × 2</span>
+<span class="co">#&gt;   gender  prop</span>
+<span class="co">#&gt;    &lt;chr&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1      f 0.536</span>
+<span class="co">#&gt; 2      m 0.464</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLVoters &lt;-
+<span class="st">  </span>FLVoters %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age_group =</span> 
+           <span class="kw">case_when</span>(
+             .$age &lt;=<span class="st"> </span><span class="dv">20</span> ~<span class="st"> </span><span class="dv">1</span>,
+             .$age &gt;<span class="st"> </span><span class="dv">20</span> &amp;<span class="st"> </span>.$age &lt;=<span class="st"> </span><span class="dv">40</span> ~<span class="st"> </span><span class="dv">2</span>,
+             .$age &gt;<span class="st"> </span><span class="dv">40</span> &amp;<span class="st"> </span>.$age &lt;=<span class="st"> </span><span class="dv">60</span> ~<span class="st"> </span><span class="dv">3</span>,
+             .$age &gt;<span class="st"> </span><span class="dv">60</span> ~<span class="st"> </span><span class="dv">4</span>
+           ))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">joint3 &lt;-
+<span class="st">  </span>FLVoters %&gt;%
+<span class="st">  </span><span class="kw">count</span>(race, age_group, gender) %&gt;%
+<span class="st">  </span><span class="kw">ungroup</span>() %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n /<span class="st"> </span><span class="kw">sum</span>(n))
+joint3
+<span class="co">#&gt; # A tibble: 47 × 5</span>
+<span class="co">#&gt;    race age_group gender     n     prop</span>
+<span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;  &lt;chr&gt; &lt;int&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 asian         1      f     1 0.000110</span>
+<span class="co">#&gt; 2 asian         1      m     2 0.000219</span>
+<span class="co">#&gt; 3 asian         2      f    24 0.002634</span>
+<span class="co">#&gt; 4 asian         2      m    26 0.002853</span>
+<span class="co">#&gt; 5 asian         3      f    38 0.004170</span>
+<span class="co">#&gt; 6 asian         3      m    47 0.005157</span>
+<span class="co">#&gt; # ... with 41 more rows</span></code></pre></div>
+<p>Marginal probabilities by age groups</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">margin_age &lt;-<span class="st"> </span>
+<span class="st">  </span>FLVoters %&gt;%
+<span class="st">  </span><span class="kw">count</span>(age_group) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n /<span class="st"> </span><span class="kw">sum</span>(n))
+margin_age
+<span class="co">#&gt; # A tibble: 4 × 3</span>
+<span class="co">#&gt;   age_group     n   prop</span>
+<span class="co">#&gt;       &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt; 1         1   161 0.0177</span>
+<span class="co">#&gt; 2         2  2469 0.2709</span>
+<span class="co">#&gt; 3         3  3285 0.3605</span>
+<span class="co">#&gt; 4         4  3198 0.3509</span></code></pre></div>
+<p>Calculate the probabilities that each group is in a given age group.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">left_join</span>(joint3, 
+          <span class="kw">select</span>(margin_age, age_group, <span class="dt">margin_age =</span> prop),
+          <span class="dt">by =</span> <span class="st">&quot;age_group&quot;</span>) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prob_age_group =</span> prop /<span class="st"> </span>margin_age) %&gt;%
+<span class="st">  </span><span class="kw">filter</span>(race ==<span class="st"> &quot;black&quot;</span>, gender ==<span class="st"> &quot;f&quot;</span>, age_group ==<span class="st"> </span><span class="dv">4</span>)
+<span class="co">#&gt; # A tibble: 1 × 7</span>
+<span class="co">#&gt;    race age_group gender     n   prop margin_age prob_age_group</span>
+<span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;  &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 black         4      f   172 0.0189      0.351         0.0538</span></code></pre></div>
+<p>Two-way joint probability table for age group and gender</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">joint2 &lt;-<span class="st"> </span>FLVoters %&gt;%
+<span class="st">  </span><span class="kw">count</span>(age_group, gender) %&gt;%
+<span class="st">  </span><span class="kw">ungroup</span>() %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prob_age_gender =</span> n /<span class="st"> </span><span class="kw">sum</span>(n)) 
+joint2
+<span class="co">#&gt; # A tibble: 8 × 4</span>
+<span class="co">#&gt;   age_group gender     n prob_age_gender</span>
+<span class="co">#&gt;       &lt;dbl&gt;  &lt;chr&gt; &lt;int&gt;           &lt;dbl&gt;</span>
+<span class="co">#&gt; 1         1      f    88         0.00966</span>
+<span class="co">#&gt; 2         1      m    73         0.00801</span>
+<span class="co">#&gt; 3         2      f  1304         0.14309</span>
+<span class="co">#&gt; 4         2      m  1165         0.12784</span>
+<span class="co">#&gt; 5         3      f  1730         0.18984</span>
+<span class="co">#&gt; 6         3      m  1555         0.17064</span>
+<span class="co">#&gt; # ... with 2 more rows</span></code></pre></div>
+<p>Conditional probablities <span class="math inline">\(P(race | gender, age)\)</span>,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">left_join</span>(joint3, <span class="kw">select</span>(joint2, -n), <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;age_group&quot;</span>, <span class="st">&quot;gender&quot;</span>)) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prob_race =</span> prop /<span class="st"> </span>prob_age_gender) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(age_group, gender) %&gt;%
+<span class="st">  </span><span class="kw">select</span>(age_group, gender, race, prob_race)
+<span class="co">#&gt; # A tibble: 47 × 4</span>
+<span class="co">#&gt;   age_group gender     race prob_race</span>
+<span class="co">#&gt;       &lt;dbl&gt;  &lt;chr&gt;    &lt;chr&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1         1      f    asian    0.0114</span>
+<span class="co">#&gt; 2         1      f    black    0.1705</span>
+<span class="co">#&gt; 3         1      f hispanic    0.1591</span>
+<span class="co">#&gt; 4         1      f   native    0.0114</span>
+<span class="co">#&gt; 5         1      f    other    0.0341</span>
+<span class="co">#&gt; 6         1      f    white    0.6136</span>
+<span class="co">#&gt; # ... with 41 more rows</span></code></pre></div>
+<p>Each row is the <span class="math inline">\(P(race | age_group, gender)\)</span>.</p>
 
 </div>
 </div>
@@ -244,6 +456,17 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

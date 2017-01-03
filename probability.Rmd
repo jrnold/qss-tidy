@@ -149,19 +149,21 @@ left_join(joint3,
   filter(race == "black", gender == "f", age_group == 4)
 ```
 
-
+Two-way joint probability table for age group and gender
 ```{r}
-prop <- function(x, ..., wt = NULL, sort = FALSE) {
-    vars <- lazyeval::lazy_dots(...)
-    wt <- substitute(wt)
-    prop_(x, vars, wt, sort = sort)  
-}
-
-prop_ <- function(x, vars, wt = NULL, sort = FALSE) {
-  df <- ungroup(count_(x, vars, wt = wt, sort = sort))
-  df <- mutate_(df, .prop = ~ n / sum(n))
-  df <- select_(df, ~ -n)
-  df
-}
+joint2 <- FLVoters %>%
+  count(age_group, gender) %>%
+  ungroup() %>%
+  mutate(prob_age_gender = n / sum(n)) 
+joint2
 ```
+
+Conditional probablities $P(race | gender, age)$,
+```{r}
+left_join(joint3, select(joint2, -n), by = c("age_group", "gender")) %>%
+  mutate(prob_race = prop / prob_age_gender) %>% 
+  arrange(age_group, gender) %>%
+  select(age_group, gender, race, prob_race)
+```
+Each row is the $P(race | age_group, gender)$.
 

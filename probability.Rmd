@@ -167,3 +167,98 @@ left_join(joint3, select(joint2, -n), by = c("age_group", "gender")) %>%
 ```
 Each row is the $P(race | age_group, gender)$.
 
+
+### Independence
+
+
+
+### Predicting Race Using Surname and Residence Location
+
+Start with the Census names files:
+```{r}
+cnames <- read_csv(qss_data_url("probability", "names.csv"))
+glimpse(cnames)
+```
+
+For each surname, contains variables with the probability that it belongs to an individual of a given race (`pctwhite`, `pctblack`, ...).
+We want to find the most-likely race for a given surname, by finding the race with the maximum proportion.
+Instead of dealing with multiple variables, it is easier to use `max` on a single variable, so we will rearrange the data to in order to use a grouped summarise, and then merge the new variable back to the original datasets.
+
+```{r}
+library("forcats")
+most_likely <-
+  cnames %>%
+  select(-count) %>%
+  gather(race_pred, pct, -surname) %>%
+  # remove pct prefix
+  mutate(race_pred = stringr::str_replace(race_pred, "^pct", "")) %>%
+  # group by surname
+  group_by(surname) %>%
+  filter(pct == max(pct)) %>%
+  # if there are ties, keep only one obs
+  slice(1) %>%
+  # don't need pct anymore
+  select(-pct) %>%
+  # Need to make equivalent to levels in FLVoters
+  mutate(race_pred = fct_recode(race_pred, asian = "api", other = "others"))
+```
+Now merge that back to the original cnames
+```{r}
+cnames <- left_join(cnames, most_likely, by = "surname")
+```
+
+
+Intead of using `match`, use `inner_join` to merge the surnames to FLVoters 
+```{r}
+FLVoters <- inner_join(FLVoters, cnames, by = "surname")
+dim(FLVoters)
+```
+`FLVoters` also includes a "native" category that the surname dataset does not.
+```{r}
+FLVoters <- FLVoters %>%
+  mutate(race2 = fct_recode(race, other = "native"))
+```
+
+Check that the levels of `race` and `race_pred` are the same:
+```{r}
+FLVoters %>%
+  count(race2)
+```
+```{r}
+FLVoters %>%
+  count(race_pred)
+```
+
+
+Now we can calculate *True positive rate* for *all* races
+```{r}
+FLVoters %>%
+  group_by(race2) %>%
+  summarise(tp = mean(race2 == race_pred)) %>%
+  arrange(desc(tp))
+```
+and the *False dicsovery rate* for *all* races,
+```{r}
+FLVoters %>%
+  group_by(race_pred) %>%
+  summarise(fp = mean(race2 != race_pred)) %>%
+  arrange(desc(fp))
+```
+
+Now add get residence data
+```{r}
+FLCensus <- read_csv(qss_data_url("probability", "FLCensusVTD.csv"))
+```
+
+$P(race)$ in Florida:
+```{r}
+race.prop <- 
+  FLCensus %>%
+  select(total.pop, white, black, api, hispanic, others) %>%
+  gather(race, pct, -total.pop) %>%
+  group_by(race) %>%
+  summarise(mean = weighted.mean(pct, weights = total.pop)) %>%
+  arrange(desc(mean))
+race.prop
+```
+

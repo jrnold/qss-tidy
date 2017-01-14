@@ -8,7 +8,7 @@
   <title>QSS Tidyverse Code</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.3.6 and GitBook 2.6.7">
 
   <meta property="og:title" content="QSS Tidyverse Code" />
   <meta property="og:type" content="book" />
@@ -26,7 +26,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2017-01-03">
+<meta name="date" content="2017-01-14">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -92,6 +92,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </head>
 
 <body>
+
 
 
   <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
@@ -164,13 +165,21 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.5.5" data-path="prediction.html"><a href="prediction.html#merging-data-sets-in-r"><i class="fa fa-check"></i><b>5.5.5</b> Merging Data Sets in R</a></li>
 <li class="chapter" data-level="5.5.6" data-path="prediction.html"><a href="prediction.html#model-fit"><i class="fa fa-check"></i><b>5.5.6</b> Model Fit</a></li>
 </ul></li>
+<li class="chapter" data-level="5.6" data-path="prediction.html"><a href="prediction.html#regression-and-causation"><i class="fa fa-check"></i><b>5.6</b> Regression and Causation</a><ul>
+<li class="chapter" data-level="5.6.1" data-path="prediction.html"><a href="prediction.html#regression-with-multiple-predictors"><i class="fa fa-check"></i><b>5.6.1</b> Regression with multiple predictors</a></li>
+<li class="chapter" data-level="5.6.2" data-path="prediction.html"><a href="prediction.html#heterogenous-treatment-effects"><i class="fa fa-check"></i><b>5.6.2</b> Heterogenous Treatment Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="prediction.html"><a href="prediction.html#regression-discontinuity-design"><i class="fa fa-check"></i><b>5.7</b> Regression Discontinuity Design</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="discovery.html"><a href="discovery.html"><i class="fa fa-check"></i><b>6</b> Discovery</a><ul>
 <li class="chapter" data-level="6.1" data-path="discovery.html"><a href="discovery.html#prerequisites-3"><i class="fa fa-check"></i><b>6.1</b> Prerequisites</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="probability.html"><a href="probability.html"><i class="fa fa-check"></i><b>7</b> Probability</a><ul>
 <li class="chapter" data-level="7.1" data-path="probability.html"><a href="probability.html#prerequisites-4"><i class="fa fa-check"></i><b>7.1</b> Prerequisites</a></li>
-<li class="chapter" data-level="7.2" data-path="probability.html"><a href="probability.html#probability-1"><i class="fa fa-check"></i><b>7.2</b> Probability</a></li>
+<li class="chapter" data-level="7.2" data-path="probability.html"><a href="probability.html#probability-1"><i class="fa fa-check"></i><b>7.2</b> Probability</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="probability.html"><a href="probability.html#independence"><i class="fa fa-check"></i><b>7.2.1</b> Independence</a></li>
+<li class="chapter" data-level="7.2.2" data-path="probability.html"><a href="probability.html#predicting-race-using-surname-and-residence-location"><i class="fa fa-check"></i><b>7.2.2</b> Predicting Race Using Surname and Residence Location</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="uncertainty.html"><a href="uncertainty.html"><i class="fa fa-check"></i><b>8</b> Uncertainty</a><ul>
 <li class="chapter" data-level="8.1" data-path="uncertainty.html"><a href="uncertainty.html#prerequisites-5"><i class="fa fa-check"></i><b>8.1</b> Prerequisites</a></li>
@@ -196,23 +205,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">5</span> Prediction</h1>
 <div id="prerequisites-2" class="section level2">
 <h2><span class="header-section-number">5.1</span> Prerequisites</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</code></pre></div>
-<p>We will use the package <a href="https://cran.r-project.org/package=lubridate">lubridate</a> to work with dates.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;lubridate&quot;</span>)
-<span class="co">#&gt; Loading required package: methods</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: &#39;lubridate&#39;</span>
-<span class="co">#&gt; The following object is masked from &#39;package:base&#39;:</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     date</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)
+<span class="kw">library</span>(<span class="st">&quot;lubridate&quot;</span>)
+<span class="kw">library</span>(<span class="st">&quot;stringr&quot;</span>)
+<span class="kw">library</span>(<span class="st">&quot;forcats&quot;</span>)</code></pre></div>
 <p>The packages <a href="https://cran.r-project.org/package=modelr">modelr</a> and <a href="https://cran.r-project.org/package=broom">broom</a> are used to wrangle the results of linear regressions,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;broom&quot;</span>)
-<span class="kw">library</span>(<span class="st">&quot;modelr&quot;</span>)
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: &#39;modelr&#39;</span>
-<span class="co">#&gt; The following object is masked from &#39;package:broom&#39;:</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     bootstrap</span></code></pre></div>
+<span class="kw">library</span>(<span class="st">&quot;modelr&quot;</span>)</code></pre></div>
 </div>
 <div id="loops-in-r" class="section level2">
 <h2><span class="header-section-number">5.2</span> Loops in R</h2>
@@ -321,11 +320,11 @@ last_polls
 <p>I’ll choose binwidths of 1%, since that is fairly interpretable:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(last_polls, <span class="kw">aes</span>(<span class="dt">x =</span> error)) +
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="dv">1</span>, <span class="dt">boundary =</span> <span class="dv">0</span>)</code></pre></div>
-<p><img src="prediction_files/figure-html/unnamed-chunk-15-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="prediction_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>The text uses bindwidths of 5%:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(last_polls, <span class="kw">aes</span>(<span class="dt">x =</span> error)) +
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="dv">5</span>, <span class="dt">boundary =</span> <span class="dv">0</span>)</code></pre></div>
-<p><img src="prediction_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="prediction_files/figure-html/unnamed-chunk-15-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><strong>Challenge:</strong> What other ways could you visualize the results? How would you show all states? What about plotting the absolute or squared errors instead of the errors?</p>
 <p><strong>Challenge:</strong> What happens to prediction error if you average polls? Consider averaging back over time? What happens if you take the averages of the state poll average and average of <strong>all</strong> polls - does that improve prediction?</p>
 <p>To create a scatterplot using the state abbreviations instead of points use <a href="http://docs.ggplot2.org/current/geom_text.html">geom_text</a> instead of <a href="http://docs.ggplot2.org/current/geom_point.html">geom_point</a>.</p>
@@ -336,7 +335,7 @@ last_polls
 <span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>) +
 <span class="st">  </span><span class="kw">coord_fixed</span>() +
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Poll Results&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Actual Election Results&quot;</span>)</code></pre></div>
-<p><img src="prediction_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="prediction_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>We can create a confusion matrix as follow.</p>
 <p>Create a new columns <code>classification</code> which shows whether how the poll’s classification was related to the actual election outcome (“true positive”, “false positive”, “false negative”, “false positive”). This can be accomplished easily with the <a href="https://cran.r-project.org/package=dplyr">dplyr</a> funtion <a href="https://www.rdocumentation.org/packages/dplyr/topics/case_when">case_when</a>. <em>Note:</em> You need to use <code>.</code> to refer to the data frame when using <code>case_when</code> with a <code>mutate</code> function.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">last_polls &lt;-
@@ -427,7 +426,7 @@ pop_vote_avg_tidy
                                                              date, share))) +
 <span class="st">  </span><span class="kw">geom_point</span>() +
 <span class="st">  </span><span class="kw">geom_line</span>()</code></pre></div>
-<p><img src="prediction_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="prediction_files/figure-html/unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><strong>Challenge</strong> read <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/iteration.html#the-map-functions">Iteration</a> and use the function <a href="https://www.rdocumentation.org/packages/purrr/topics/map_df">map_df</a> instead of a for loop.</p>
 <p>The 7-day average is similar to the simple method used by <a href="http://www.realclearpolitics.com/epolls/2016/president/us/general_election_trump_vs_clinton-5491.html">Real Clear Politics</a>. The RCP average is simply the average of all polls in their data for the last seven days. Sites like 538 and the Huffington Post on the other hand, also use what amounts to averaging polls, but using more sophisticated statistical methods to assign different weights to different polls.</p>
 <p><strong>Challenge</strong> Why do we need to use different polls for the popular vote data? Why not simply average all the state polls? What would you have to do? Would the overall popular vote be useful in predicting state-level polling, or vice-versa? How would you use them?</p>
@@ -449,7 +448,7 @@ pop_vote_avg_tidy
 <span class="st">  </span><span class="kw">geom_point</span>() +
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Competence scores for Democrats&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Democratic margin in vote share&quot;</span>)</code></pre></div>
-<p><img src="prediction_files/figure-html/unnamed-chunk-26-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="prediction_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="correlation-1" class="section level3">
 <h3><span class="header-section-number">5.5.2</span> Correlation</h3>
@@ -511,7 +510,7 @@ pop_vote_avg_tidy
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> face, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> d.comp, <span class="dt">y =</span> diff.share)) +
 <span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope =</span> <span class="kw">coef</span>(fit)[<span class="st">&quot;d.comp&quot;</span>],
               <span class="dt">intercept =</span> <span class="kw">coef</span>(fit)[<span class="st">&quot;(Intercept)&quot;</span>])</code></pre></div>
-<p><img src="prediction_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="prediction_files/figure-html/unnamed-chunk-30-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>A more general way to plot the predictions of the model against the data is to use the methods described in <a href="http://r4ds.had.co.nz/model-basics.html#visualising-models">Ch 23.3.3</a> of R4DS. Create an evenly spaced grid of values of <code>d.comp</code>, and add predictions of the model to it.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grid &lt;-<span class="st"> </span>face %&gt;%
 <span class="st">  </span><span class="kw">data_grid</span>(d.comp) %&gt;%
@@ -530,12 +529,12 @@ pop_vote_avg_tidy
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>() +
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> face, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> d.comp, <span class="dt">y =</span> diff.share)) +
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> grid, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> d.comp, <span class="dt">y =</span> pred))</code></pre></div>
-<p><img src="prediction_files/figure-html/unnamed-chunk-33-1.png" width="70%" style="display: block; margin: auto;" /> This method is more complicated than the <code>geom_abline</code> method for a bivariate regerssion, but will work for more complicated models, while the <code>geom_abline</code> method won’t.</p>
+<p><img src="prediction_files/figure-html/unnamed-chunk-32-1.png" width="70%" style="display: block; margin: auto;" /> This method is more complicated than the <code>geom_abline</code> method for a bivariate regerssion, but will work for more complicated models, while the <code>geom_abline</code> method won’t.</p>
 <p>Note that <a href="http://docs.ggplot2.org/current/geom_smooth.html">geom_smooth</a> can be used to add a regression line to a data-set.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> face, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> d.comp, <span class="dt">y =</span> diff.share)) +
 <span class="st">  </span><span class="kw">geom_point</span>() +
 <span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="prediction_files/figure-html/unnamed-chunk-34-1.png" width="70%" style="display: block; margin: auto;" /> The argument <code>method = &quot;lm&quot;</code> specifies that the function <code>lm</code> is to be used to generate fitted values. It is equivalent to running the regression <code>lm(y ~ x)</code> and plotting the regression line, where <code>y</code> and <code>x</code> are the aesthetics specified by the mappings. The argument <code>se = FALSE</code> tells the function not to plot the confidence interval of the regresion (discussed later).</p>
+<p><img src="prediction_files/figure-html/unnamed-chunk-33-1.png" width="70%" style="display: block; margin: auto;" /> The argument <code>method = &quot;lm&quot;</code> specifies that the function <code>lm</code> is to be used to generate fitted values. It is equivalent to running the regression <code>lm(y ~ x)</code> and plotting the regression line, where <code>y</code> and <code>x</code> are the aesthetics specified by the mappings. The argument <code>se = FALSE</code> tells the function not to plot the confidence interval of the regresion (discussed later).</p>
 </div>
 <div id="regresion-towards-the-mean" class="section level3">
 <h3><span class="header-section-number">5.5.4</span> Regresion towards the mean</h3>
@@ -582,7 +581,7 @@ pres
                      <span class="dt">limits =</span> <span class="kw">c</span>(-<span class="dv">4</span>, <span class="dv">4</span>)) +<span class="st">  </span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Obama&#39;s standardized vote share in 2012&quot;</span>,
                      <span class="dt">limits =</span> <span class="kw">c</span>(-<span class="dv">4</span>, <span class="dv">4</span>))</code></pre></div>
-<p><img src="prediction_files/figure-html/unnamed-chunk-38-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="prediction_files/figure-html/unnamed-chunk-37-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>To calcualte the bottom and top quartiles</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres %&gt;%
 <span class="st">  </span><span class="kw">filter</span>(Obama2008.z &lt;<span class="st"> </span><span class="kw">quantile</span>(Obama2008.z, <span class="fl">0.25</span>)) %&gt;%
@@ -668,11 +667,11 @@ fit2 &lt;-<span class="st"> </span><span class="kw">lm</span>(Buchanan00 ~<span 
 <span class="st">  </span><span class="kw">geom_point</span>() +<span class="st">  </span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Fitted values&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;residuals&quot;</span>)
 fit2_resid_plot</code></pre></div>
-<p><img src="prediction_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" /> Note, we use the function <a href="https://www.rdocumentation.org/packages/modelr/topics/geom_refline">geom_refline</a> to add a reference line at 0.</p>
+<p><img src="prediction_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" /> Note, we use the function <a href="https://www.rdocumentation.org/packages/modelr/topics/geom_refline">geom_refline</a> to add a reference line at 0.</p>
 <p>Let’s add some labels to points, who is that outlier?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit2_resid_plot +
 <span class="st">  </span><span class="kw">geom_label</span>(<span class="kw">aes</span>(<span class="dt">label =</span> county))</code></pre></div>
-<p><img src="prediction_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="prediction_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>The outlier county is “Palm Beach”</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(florida) %&gt;%
 <span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(<span class="kw">abs</span>(resid))) %&gt;%
@@ -691,8 +690,574 @@ fit2_resid_plot</code></pre></div>
 <img src="images/hanging-chad.png" alt="Ted Mosby dressed as a Hanging Chad in How I Met Your Mother" />
 <p class="caption">Ted Mosby dressed as a Hanging Chad in “How I Met Your Mother”</p>
 </div>
-
+<p>Data without Palm Beach</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">florida_pb &lt;-<span class="st"> </span><span class="kw">filter</span>(florida, county !=<span class="st"> &quot;PalmBeach&quot;</span>)
+fit3 &lt;-<span class="st"> </span><span class="kw">lm</span>(Buchanan00 ~<span class="st"> </span>Perot96, <span class="dt">data =</span> florida_pb)
+<span class="kw">summary</span>(fit3)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = Buchanan00 ~ Perot96, data = florida_pb)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residuals:</span>
+<span class="co">#&gt;    Min     1Q Median     3Q    Max </span>
+<span class="co">#&gt; -206.7  -43.5  -16.0   26.9  269.0 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="co">#&gt; (Intercept) 45.84193   13.89275     3.3   0.0016 ** </span>
+<span class="co">#&gt; Perot96      0.02435    0.00127    19.1   &lt;2e-16 ***</span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residual standard error: 87.7 on 64 degrees of freedom</span>
+<span class="co">#&gt; Multiple R-squared:  0.851,  Adjusted R-squared:  0.849 </span>
+<span class="co">#&gt; F-statistic:  366 on 1 and 64 DF,  p-value: &lt;2e-16</span></code></pre></div>
+<p><span class="math inline">\(R^2\)</span> or coefficient of determination</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glance</span>(fit3)
+<span class="co">#&gt;   r.squared adj.r.squared sigma statistic  p.value df logLik AIC BIC</span>
+<span class="co">#&gt; 1     0.851         0.849  87.7       366 3.61e-28  2   -388 782 788</span>
+<span class="co">#&gt;   deviance df.residual</span>
+<span class="co">#&gt; 1   492803          64</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">florida_pb %&gt;%
+<span class="st">  </span><span class="kw">add_residuals</span>(fit3) %&gt;%
+<span class="st">  </span><span class="kw">add_predictions</span>(fit3) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> pred, <span class="dt">y =</span> resid)) +
+<span class="st">  </span><span class="kw">geom_ref_line</span>(<span class="dt">h =</span> <span class="dv">0</span>) +
+<span class="st">  </span><span class="kw">geom_point</span>() +
+<span class="st">  </span><span class="kw">ylim</span>(-<span class="dv">750</span>, <span class="dv">2500</span>) +
+<span class="st">  </span><span class="kw">xlim</span>(<span class="dv">0</span>, <span class="dv">1500</span>) +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Fitted values&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;residuals&quot;</span>)</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>Create predictions for both models using <a href="https://www.rdocumentation.org/packages/modelr/topics/data_grid">data_grid</a> and <a href="https://www.rdocumentation.org/packages/modelr/topics/gather_predictions">gather_predictions</a>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">florida_grid &lt;-
+<span class="st">  </span>florida %&gt;%
+<span class="st">  </span><span class="kw">data_grid</span>(Perot96) %&gt;%
+<span class="st">  </span><span class="kw">gather_predictions</span>(fit2, fit3) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span>
+           <span class="kw">fct_recode</span>(model,
+                      <span class="st">&quot;Regression</span><span class="ch">\n</span><span class="st"> with Palm Beach&quot;</span> =<span class="st"> &quot;fit2&quot;</span>,
+                      <span class="st">&quot;Regression</span><span class="ch">\n</span><span class="st"> without Palm Beach&quot;</span> =<span class="st"> &quot;fit3&quot;</span>))</code></pre></div>
+<p>Note this is an example of using non-syntactic column names in a tibble, as discussed in Chapter 10 of <a href="http://r4ds.had.co.nz/tibbles.html">R for data science</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>() +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> florida, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> Perot96, <span class="dt">y =</span> Buchanan00)) +
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> florida_grid, 
+             <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> Perot96, <span class="dt">y =</span> pred, 
+                           <span class="dt">colour =</span> model)) +
+<span class="st">  </span><span class="kw">geom_label</span>(<span class="dt">data =</span> <span class="kw">filter</span>(florida, county ==<span class="st"> &quot;PalmBeach&quot;</span>),
+             <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> Perot96, <span class="dt">y =</span> Buchanan00, <span class="dt">label =</span> county),
+                           <span class="dt">vjust =</span> <span class="st">&quot;top&quot;</span>, <span class="dt">hjust =</span> <span class="st">&quot;right&quot;</span>) +
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> <span class="kw">tibble</span>(<span class="dt">label =</span> <span class="kw">unique</span>(florida_grid$model),
+                           <span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">20000</span>, <span class="dv">31000</span>),
+                           <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">1000</span>, <span class="dv">300</span>)),
+             <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y, <span class="dt">label =</span> label, <span class="dt">colour =</span> label)) +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Perot&#39;s Vote in 1996&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Buchanan&#39;s Votes in 1996&quot;</span>) +
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" /> See <a href="http://r4ds.had.co.nz/graphics-for-communication.html#label">Graphics for communication</a> in <em>R for Data Science</em> on labels and annotations in plots.</p>
 </div>
+</div>
+<div id="regression-and-causation" class="section level2">
+<h2><span class="header-section-number">5.6</span> Regression and Causation</h2>
+<p>Load data</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">women &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;prediction&quot;</span>, <span class="st">&quot;women.csv&quot;</span>))
+<span class="co">#&gt; Parsed with column specification:</span>
+<span class="co">#&gt; cols(</span>
+<span class="co">#&gt;   GP = col_integer(),</span>
+<span class="co">#&gt;   village = col_integer(),</span>
+<span class="co">#&gt;   reserved = col_integer(),</span>
+<span class="co">#&gt;   female = col_integer(),</span>
+<span class="co">#&gt;   irrigation = col_integer(),</span>
+<span class="co">#&gt;   water = col_integer()</span>
+<span class="co">#&gt; )</span></code></pre></div>
+<p>proportion of female politicians in reserved GP vs. unreserved GP</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">women %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(reserved) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_female =</span> <span class="kw">mean</span>(female))
+<span class="co">#&gt; # A tibble: 2 × 2</span>
+<span class="co">#&gt;   reserved prop_female</span>
+<span class="co">#&gt;      &lt;int&gt;       &lt;dbl&gt;</span>
+<span class="co">#&gt; 1        0      0.0748</span>
+<span class="co">#&gt; 2        1      1.0000</span></code></pre></div>
+<p>The diff in diff estimator</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## drinking-water facilities
+ 
+## irrigation facilities
+<span class="kw">mean</span>(women$irrigation[women$reserved ==<span class="st"> </span><span class="dv">1</span>]) -
+<span class="st">    </span><span class="kw">mean</span>(women$irrigation[women$reserved ==<span class="st"> </span><span class="dv">0</span>])
+<span class="co">#&gt; [1] -0.369</span></code></pre></div>
+<p>Mean values of <code>irrigation</code> and <code>water</code> in reserved and non-reserved districts.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">women %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(reserved) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">irrigation =</span> <span class="kw">mean</span>(irrigation), 
+            <span class="dt">water =</span> <span class="kw">mean</span>(water))
+<span class="co">#&gt; # A tibble: 2 × 3</span>
+<span class="co">#&gt;   reserved irrigation water</span>
+<span class="co">#&gt;      &lt;int&gt;      &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1        0       3.39  14.7</span>
+<span class="co">#&gt; 2        1       3.02  24.0</span></code></pre></div>
+<p>The difference between the two groups can be calculated with the function <a href="https://www.rdocumentation.org/packages/base/topics/diff">diff</a>, which calculates the difference between subsequent observations. This works as long as we are careful about which group is first or second.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">women %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(reserved) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">irrigation =</span> <span class="kw">mean</span>(irrigation), 
+            <span class="dt">water =</span> <span class="kw">mean</span>(water)) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">diff_irrigation =</span> <span class="kw">diff</span>(irrigation),
+            <span class="dt">diff_water =</span> <span class="kw">diff</span>(water))
+<span class="co">#&gt; # A tibble: 1 × 2</span>
+<span class="co">#&gt;   diff_irrigation diff_water</span>
+<span class="co">#&gt;             &lt;dbl&gt;      &lt;dbl&gt;</span>
+<span class="co">#&gt; 1          -0.369       9.25</span></code></pre></div>
+<p>The other way uses tidyr <a href="https://www.rdocumentation.org/packages/tidyr/topics/spread.lm">spread</a> and <a href="https://www.rdocumentation.org/packages/tidyr/topics/gather.lm">gather</a>,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">women %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(reserved) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">irrigation =</span> <span class="kw">mean</span>(irrigation), 
+            <span class="dt">water =</span> <span class="kw">mean</span>(water)) %&gt;%
+<span class="st">  </span><span class="kw">gather</span>(variable, value, -reserved) %&gt;%
+<span class="st">  </span><span class="kw">spread</span>(reserved, value) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diff =</span> <span class="st">`</span><span class="dt">1</span><span class="st">`</span> -<span class="st"> `</span><span class="dt">0</span><span class="st">`</span>)
+<span class="co">#&gt; # A tibble: 2 × 4</span>
+<span class="co">#&gt;     variable   `0`   `1`   diff</span>
+<span class="co">#&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 irrigation  3.39  3.02 -0.369</span>
+<span class="co">#&gt; 2      water 14.74 23.99  9.252</span></code></pre></div>
+<p>Now each row is an outcome variable of interest, and there are columns for the treatment (<code>1</code>) and control (<code>0</code>) groups, and the difference (<code>diff</code>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lm</span>(water ~<span class="st"> </span>reserved, <span class="dt">data =</span> women) %&gt;%<span class="st"> </span><span class="kw">summary</span>()
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = water ~ reserved, data = women)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residuals:</span>
+<span class="co">#&gt;    Min     1Q Median     3Q    Max </span>
+<span class="co">#&gt; -23.99 -14.74  -7.86   2.26 316.01 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="co">#&gt; (Intercept)    14.74       2.29    6.45  4.2e-10 ***</span>
+<span class="co">#&gt; reserved        9.25       3.95    2.34     0.02 *  </span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residual standard error: 33.4 on 320 degrees of freedom</span>
+<span class="co">#&gt; Multiple R-squared:  0.0169, Adjusted R-squared:  0.0138 </span>
+<span class="co">#&gt; F-statistic: 5.49 on 1 and 320 DF,  p-value: 0.0197</span>
+<span class="kw">lm</span>(irrigation ~<span class="st"> </span>reserved, <span class="dt">data =</span> women) %&gt;%<span class="st"> </span><span class="kw">summary</span>()
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = irrigation ~ reserved, data = women)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residuals:</span>
+<span class="co">#&gt;    Min     1Q Median     3Q    Max </span>
+<span class="co">#&gt;  -3.39  -3.39  -3.02  -1.02  86.61 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="co">#&gt; (Intercept)    3.388      0.650    5.21  3.3e-07 ***</span>
+<span class="co">#&gt; reserved      -0.369      1.122   -0.33     0.74    </span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residual standard error: 9.51 on 320 degrees of freedom</span>
+<span class="co">#&gt; Multiple R-squared:  0.000338,   Adjusted R-squared:  -0.00279 </span>
+<span class="co">#&gt; F-statistic: 0.108 on 1 and 320 DF,  p-value: 0.742</span></code></pre></div>
+<div id="regression-with-multiple-predictors" class="section level3">
+<h3><span class="header-section-number">5.6.1</span> Regression with multiple predictors</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">social &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;prediction&quot;</span>, <span class="st">&quot;social.csv&quot;</span>))
+<span class="co">#&gt; Parsed with column specification:</span>
+<span class="co">#&gt; cols(</span>
+<span class="co">#&gt;   sex = col_character(),</span>
+<span class="co">#&gt;   yearofbirth = col_integer(),</span>
+<span class="co">#&gt;   primary2004 = col_integer(),</span>
+<span class="co">#&gt;   messages = col_character(),</span>
+<span class="co">#&gt;   primary2008 = col_integer(),</span>
+<span class="co">#&gt;   hhsize = col_integer()</span>
+<span class="co">#&gt; )</span>
+<span class="kw">glimpse</span>(social)
+<span class="co">#&gt; Observations: 305,866</span>
+<span class="co">#&gt; Variables: 6</span>
+<span class="co">#&gt; $ sex         &lt;chr&gt; &quot;male&quot;, &quot;female&quot;, &quot;male&quot;, &quot;female&quot;, &quot;female&quot;, &quot;mal...</span>
+<span class="co">#&gt; $ yearofbirth &lt;int&gt; 1941, 1947, 1951, 1950, 1982, 1981, 1959, 1956, 19...</span>
+<span class="co">#&gt; $ primary2004 &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0,...</span>
+<span class="co">#&gt; $ messages    &lt;chr&gt; &quot;Civic Duty&quot;, &quot;Civic Duty&quot;, &quot;Hawthorne&quot;, &quot;Hawthorn...</span>
+<span class="co">#&gt; $ primary2008 &lt;int&gt; 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1,...</span>
+<span class="co">#&gt; $ hhsize      &lt;int&gt; 2, 2, 3, 3, 3, 3, 3, 3, 2, 2, 1, 2, 2, 1, 2, 2, 1,...</span>
+<span class="kw">levels</span>(social$messages)
+<span class="co">#&gt; NULL</span>
+fit &lt;-<span class="st"> </span><span class="kw">lm</span>(primary2008 ~<span class="st"> </span>messages, <span class="dt">data =</span> social)
+fit
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = primary2008 ~ messages, data = social)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;       (Intercept)    messagesControl  messagesHawthorne  </span>
+<span class="co">#&gt;           0.31454           -0.01790            0.00784  </span>
+<span class="co">#&gt; messagesNeighbors  </span>
+<span class="co">#&gt;           0.06341</span></code></pre></div>
+<p>Create indicator variables</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">social &lt;-
+<span class="st">  </span>social %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Control =</span> <span class="kw">as.integer</span>(messages ==<span class="st"> &quot;Control&quot;</span>),
+         <span class="dt">Hawthorne =</span> <span class="kw">as.integer</span>(messages ==<span class="st"> &quot;Hawthorne&quot;</span>),
+         <span class="dt">Neighbors =</span> <span class="kw">as.integer</span>(messages ==<span class="st"> &quot;Neighbors&quot;</span>))</code></pre></div>
+<p>alternatively, create these using a for loop. This is easier to understand and less prone to typo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">for (i in <span class="kw">unique</span>(social$messages)) {
+  social[[i]] &lt;-<span class="st"> </span><span class="kw">as.integer</span>(social[[<span class="st">&quot;messages&quot;</span>]] ==<span class="st"> </span>i)
+}</code></pre></div>
+<p>We created a variable for each level of <code>messages</code> even though we will exclude one of them.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lm</span>(primary2008 ~<span class="st"> </span>Control +<span class="st"> </span>Hawthorne +<span class="st"> </span>Neighbors, <span class="dt">data =</span> social)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = primary2008 ~ Control + Hawthorne + Neighbors, data = social)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt; (Intercept)      Control    Hawthorne    Neighbors  </span>
+<span class="co">#&gt;     0.31454     -0.01790      0.00784      0.06341</span></code></pre></div>
+<p>Create predictions for each unique value of <code>messages</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">unique_messages &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">data_grid</span>(social, messages) %&gt;%
+<span class="st">  </span><span class="kw">add_predictions</span>(fit)
+unique_messages
+<span class="co">#&gt; # A tibble: 4 × 2</span>
+<span class="co">#&gt;     messages  pred</span>
+<span class="co">#&gt;        &lt;chr&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Civic Duty 0.315</span>
+<span class="co">#&gt; 2    Control 0.297</span>
+<span class="co">#&gt; 3  Hawthorne 0.322</span>
+<span class="co">#&gt; 4  Neighbors 0.378</span></code></pre></div>
+<p>Compare to the sample averages</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">social %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(messages) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="kw">mean</span>(primary2008))
+<span class="co">#&gt; # A tibble: 4 × 2</span>
+<span class="co">#&gt;     messages `mean(primary2008)`</span>
+<span class="co">#&gt;        &lt;chr&gt;               &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Civic Duty               0.315</span>
+<span class="co">#&gt; 2    Control               0.297</span>
+<span class="co">#&gt; 3  Hawthorne               0.322</span>
+<span class="co">#&gt; 4  Neighbors               0.378</span></code></pre></div>
+<p>Linear regression without intercept.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit.noint &lt;-<span class="st"> </span><span class="kw">lm</span>(primary2008 ~<span class="st"> </span>-<span class="dv">1</span> +<span class="st"> </span>messages, <span class="dt">data =</span> social)
+fit.noint
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = primary2008 ~ -1 + messages, data = social)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt; messagesCivic Duty     messagesControl   messagesHawthorne  </span>
+<span class="co">#&gt;              0.315               0.297               0.322  </span>
+<span class="co">#&gt;  messagesNeighbors  </span>
+<span class="co">#&gt;              0.378</span></code></pre></div>
+<p>Calculating the regression average effect is also easier if we make the control group the first level so all regression coefficients are comparisons to it. Use <a href="https://www.rdocumentation.org/packages/forcats/topics/fct_relevel">fct_relevel</a> to make “Control”</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit.control &lt;-<span class="st"> </span>
+<span class="st"> </span><span class="kw">mutate</span>(social, <span class="dt">messages =</span> <span class="kw">fct_relevel</span>(messages, <span class="st">&quot;Control&quot;</span>)) %&gt;%
+<span class="st"> </span><span class="kw">lm</span>(primary2008 ~<span class="st"> </span>messages, <span class="dt">data =</span> .)
+fit.control
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = primary2008 ~ messages, data = .)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;        (Intercept)  messagesCivic Duty   messagesHawthorne  </span>
+<span class="co">#&gt;             0.2966              0.0179              0.0257  </span>
+<span class="co">#&gt;  messagesNeighbors  </span>
+<span class="co">#&gt;             0.0813</span></code></pre></div>
+<p>Difference in means</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">social %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(messages) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">primary2008 =</span> <span class="kw">mean</span>(primary2008)) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Control =</span> primary2008[messages ==<span class="st"> &quot;Control&quot;</span>],
+         <span class="dt">diff =</span> primary2008 -<span class="st"> </span>Control)
+<span class="co">#&gt; # A tibble: 4 × 4</span>
+<span class="co">#&gt;     messages primary2008 Control   diff</span>
+<span class="co">#&gt;        &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Civic Duty       0.315   0.297 0.0179</span>
+<span class="co">#&gt; 2    Control       0.297   0.297 0.0000</span>
+<span class="co">#&gt; 3  Hawthorne       0.322   0.297 0.0257</span>
+<span class="co">#&gt; 4  Neighbors       0.378   0.297 0.0813</span></code></pre></div>
+<p>Adjusted R-squared is included in the output of <code>broom::glance()</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glance</span>(fit)
+<span class="co">#&gt;   r.squared adj.r.squared sigma statistic   p.value df  logLik    AIC</span>
+<span class="co">#&gt; 1   0.00328       0.00327 0.463       336 1.06e-217  4 -198247 396504</span>
+<span class="co">#&gt;      BIC deviance df.residual</span>
+<span class="co">#&gt; 1 396557    65468      305862</span>
+<span class="kw">glance</span>(fit)$adj.r.squared
+<span class="co">#&gt; [1] 0.00327</span></code></pre></div>
+</div>
+<div id="heterogenous-treatment-effects" class="section level3">
+<h3><span class="header-section-number">5.6.2</span> Heterogenous Treatment Effects</h3>
+<p>Average treatment effect (ate) among those who voted in 2004 primary</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ate &lt;-
+<span class="st">  </span>social %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(primary2004, messages) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">primary2008 =</span> <span class="kw">mean</span>(primary2008)) %&gt;%
+<span class="st">  </span><span class="kw">spread</span>(messages, primary2008) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ate_Neighbors =</span> Neighbors -<span class="st"> </span>Control) %&gt;%
+<span class="st">  </span><span class="kw">select</span>(primary2004, Neighbors, Control, ate_Neighbors)
+ate
+<span class="co">#&gt; Source: local data frame [2 x 4]</span>
+<span class="co">#&gt; Groups: primary2004 [2]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   primary2004 Neighbors Control ate_Neighbors</span>
+<span class="co">#&gt;         &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;         &lt;dbl&gt;</span>
+<span class="co">#&gt; 1           0     0.306   0.237        0.0693</span>
+<span class="co">#&gt; 2           1     0.482   0.386        0.0965</span></code></pre></div>
+<p>Difference in ATE in 2004 voters and non-voters</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">diff</span>(ate$ate_Neighbors)
+<span class="co">#&gt; [1] 0.0272</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">social.neighbor &lt;-<span class="st"> </span>social %&gt;%
+<span class="st">  </span><span class="kw">filter</span>((messages ==<span class="st"> &quot;Control&quot;</span>) |<span class="st"> </span>(messages ==<span class="st"> &quot;Neighbors&quot;</span>))
+
+fit.int &lt;-<span class="st"> </span><span class="kw">lm</span>(primary2008 ~<span class="st"> </span>primary2004 +<span class="st"> </span>messages +<span class="st"> </span>primary2004:messages,
+              <span class="dt">data =</span> social.neighbor)
+fit.int
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = primary2008 ~ primary2004 + messages + primary2004:messages, </span>
+<span class="co">#&gt;     data = social.neighbor)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;                   (Intercept)                    primary2004  </span>
+<span class="co">#&gt;                        0.2371                         0.1487  </span>
+<span class="co">#&gt;             messagesNeighbors  primary2004:messagesNeighbors  </span>
+<span class="co">#&gt;                        0.0693                         0.0272</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lm</span>(primary2008 ~<span class="st"> </span>primary2004 *<span class="st"> </span>messages, <span class="dt">data =</span> social.neighbor)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = primary2008 ~ primary2004 * messages, data = social.neighbor)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;                   (Intercept)                    primary2004  </span>
+<span class="co">#&gt;                        0.2371                         0.1487  </span>
+<span class="co">#&gt;             messagesNeighbors  primary2004:messagesNeighbors  </span>
+<span class="co">#&gt;                        0.0693                         0.0272</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">social.neighbor &lt;-<span class="st"> </span>
+<span class="st">  </span>social.neighbor %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age =</span> <span class="dv">2008</span> -<span class="st"> </span>yearofbirth)
+
+<span class="kw">summary</span>(social.neighbor$age)
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;    22.0    43.0    52.0    51.8    61.0   108.0</span>
+
+fit.age &lt;-<span class="st"> </span><span class="kw">lm</span>(primary2008 ~<span class="st"> </span>age *<span class="st"> </span>messages, <span class="dt">data =</span> social.neighbor)
+fit.age
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = primary2008 ~ age * messages, data = social.neighbor)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;           (Intercept)                    age      messagesNeighbors  </span>
+<span class="co">#&gt;              0.089477               0.003998               0.048573  </span>
+<span class="co">#&gt; age:messagesNeighbors  </span>
+<span class="co">#&gt;              0.000628</span></code></pre></div>
+<p>Calculate average treatment effects</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ate.age &lt;-
+<span class="st">  </span><span class="kw">crossing</span>(<span class="dt">age =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">25</span>, <span class="dt">to =</span> <span class="dv">85</span>, <span class="dt">by =</span> <span class="dv">20</span>),
+         <span class="dt">messages =</span> <span class="kw">c</span>(<span class="st">&quot;Neighbors&quot;</span>, <span class="st">&quot;Control&quot;</span>)) %&gt;%
+<span class="st">  </span><span class="kw">add_predictions</span>(fit.age) %&gt;%
+<span class="st">  </span><span class="kw">spread</span>(messages, pred) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diff =</span> Neighbors -<span class="st"> </span>Control)
+ate.age
+<span class="co">#&gt; # A tibble: 4 × 4</span>
+<span class="co">#&gt;     age Control Neighbors   diff</span>
+<span class="co">#&gt;   &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt; 1    25   0.189     0.254 0.0643</span>
+<span class="co">#&gt; 2    45   0.269     0.346 0.0768</span>
+<span class="co">#&gt; 3    65   0.349     0.439 0.0894</span>
+<span class="co">#&gt; 4    85   0.429     0.531 0.1020</span></code></pre></div>
+<p>You can use <a href="https://www.rdocumentation.org/packages/base/topics/poly">poly</a> for polynomials instead of <code>age + I(age ^ 2)</code>. Though note that the coefficients will be be different since by default <code>poly</code> calculates orthogonal polynomials instead of the natural (raw) polynomials. However, you really shouldn’t interpet the coefficients directly anyways, so this should matter.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit.age2 &lt;-<span class="st"> </span><span class="kw">lm</span>(primary2008 ~<span class="st"> </span><span class="kw">poly</span>(age, <span class="dv">2</span>) *<span class="st"> </span>messages,
+               <span class="dt">data =</span> social.neighbor)
+fit.age2
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = primary2008 ~ poly(age, 2) * messages, data = social.neighbor)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;                     (Intercept)                    poly(age, 2)1  </span>
+<span class="co">#&gt;                          0.2966                          27.6665  </span>
+<span class="co">#&gt;                   poly(age, 2)2                messagesNeighbors  </span>
+<span class="co">#&gt;                        -10.2832                           0.0816  </span>
+<span class="co">#&gt; poly(age, 2)1:messagesNeighbors  poly(age, 2)2:messagesNeighbors  </span>
+<span class="co">#&gt;                          4.5820                          -5.5124</span></code></pre></div>
+<p>Create a data frame of combinations of ages and messages using <a href="https://www.rdocumentation.org/packages/modelr/topics/data_grid">data_grid</a>, which means that we only need to specify the variables, and not the specific values,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y.hat &lt;-
+<span class="st">  </span><span class="kw">data_grid</span>(social.neighbor, age, messages) %&gt;%
+<span class="st">  </span><span class="kw">add_predictions</span>(fit.age2)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(y.hat, <span class="kw">aes</span>(<span class="dt">x =</span> age, <span class="dt">y =</span> pred, 
+                  <span class="dt">colour =</span> <span class="kw">str_c</span>(messages, <span class="st">&quot; condition&quot;</span>))) +
+<span class="st">  </span><span class="kw">geom_line</span>() +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">colour =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;predicted turnout rates&quot;</span>) +
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-76-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y.hat %&gt;%
+<span class="st">  </span><span class="kw">spread</span>(messages, pred) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ate =</span> Neighbors -<span class="st"> </span>Control) %&gt;%
+<span class="st">  </span><span class="kw">filter</span>(age &gt;<span class="st"> </span><span class="dv">20</span>, age &lt;<span class="st"> </span><span class="dv">90</span>) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> age, <span class="dt">y =</span> ate)) +
+<span class="st">  </span><span class="kw">geom_line</span>() +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;estimated average treatment effect&quot;</span>) +
+<span class="st">  </span><span class="kw">ylim</span>(<span class="dv">0</span>, <span class="fl">0.1</span>)</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-77-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="regression-discontinuity-design" class="section level2">
+<h2><span class="header-section-number">5.7</span> Regression Discontinuity Design</h2>
+<p><strong>Original code</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MPs &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;MPs.csv&quot;</span>)
+MPs.labour &lt;-<span class="st"> </span><span class="kw">subset</span>(MPs, <span class="dt">subset =</span> (party ==<span class="st"> &quot;labour&quot;</span>))
+MPs.tory &lt;-<span class="st"> </span><span class="kw">subset</span>(MPs, <span class="dt">subset =</span> (party ==<span class="st"> &quot;tory&quot;</span>))
+## two regressions for Labour: negative and positive margin
+labour.fit1 &lt;-<span class="st"> </span><span class="kw">lm</span>(ln.net ~<span class="st"> </span>margin, 
+                  <span class="dt">data =</span> MPs.labour[MPs.labour$margin &lt;<span class="st"> </span><span class="dv">0</span>, ])
+labour.fit2 &lt;-<span class="st"> </span><span class="kw">lm</span>(ln.net ~<span class="st"> </span>margin,
+<span class="dt">data =</span> MPs.labour[MPs.labour$margin &gt;<span class="st"> </span><span class="dv">0</span>, ]) ## two regressions for Tory: negative and positive margin
+tory.fit1 &lt;-<span class="st"> </span><span class="kw">lm</span>(ln.net ~<span class="st"> </span>margin, <span class="dt">data =</span> MPs.tory[MPs.tory$margin &lt;<span class="st"> </span><span class="dv">0</span>, ])
+tory.fit2 &lt;-<span class="st"> </span><span class="kw">lm</span>(ln.net ~<span class="st"> </span>margin, <span class="dt">data =</span> MPs.tory[MPs.tory$margin &gt;<span class="st"> </span><span class="dv">0</span>, ])</code></pre></div>
+<p><strong>Tidyverse</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MPs &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;prediction&quot;</span>, <span class="st">&quot;MPs.csv&quot;</span>))
+<span class="co">#&gt; Parsed with column specification:</span>
+<span class="co">#&gt; cols(</span>
+<span class="co">#&gt;   surname = col_character(),</span>
+<span class="co">#&gt;   firstname = col_character(),</span>
+<span class="co">#&gt;   party = col_character(),</span>
+<span class="co">#&gt;   ln.gross = col_double(),</span>
+<span class="co">#&gt;   ln.net = col_double(),</span>
+<span class="co">#&gt;   yob = col_integer(),</span>
+<span class="co">#&gt;   yod = col_integer(),</span>
+<span class="co">#&gt;   margin.pre = col_double(),</span>
+<span class="co">#&gt;   region = col_character(),</span>
+<span class="co">#&gt;   margin = col_double()</span>
+<span class="co">#&gt; )</span>
+
+MPs_labour &lt;-<span class="st"> </span><span class="kw">filter</span>(MPs, party ==<span class="st"> &quot;labour&quot;</span>)
+MPs_tory &lt;-<span class="st"> </span><span class="kw">filter</span>(MPs, party ==<span class="st"> &quot;tory&quot;</span>)
+
+labour_fit1 &lt;-<span class="st"> </span><span class="kw">lm</span>(ln.net ~<span class="st"> </span>margin,
+                 <span class="dt">data =</span> <span class="kw">filter</span>(MPs_labour, margin &lt;<span class="st"> </span><span class="dv">0</span>))
+labour_fit2 &lt;-<span class="st"> </span><span class="kw">lm</span>(ln.net ~<span class="st"> </span>margin, MPs_labour, margin &gt;<span class="st"> </span><span class="dv">0</span>)
+
+tory_fit1 &lt;-<span class="st"> </span><span class="kw">lm</span>(ln.net ~<span class="st"> </span>margin,
+                <span class="dt">data =</span> <span class="kw">filter</span>(MPs_tory, margin &lt;<span class="st"> </span><span class="dv">0</span>))
+tory_fit2 &lt;-<span class="st"> </span><span class="kw">lm</span>(ln.net ~<span class="st"> </span>margin, <span class="dt">data =</span> <span class="kw">filter</span>(MPs_tory, margin &gt;<span class="st"> </span><span class="dv">0</span>))</code></pre></div>
+<p><strong>Original code</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Labour: range of predictions
+y1l.range &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">min</span>(MPs.labour$margin), <span class="dv">0</span>) <span class="co"># min to 0</span>
+y2l.range &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(MPs.labour$margin)) <span class="co"># 0 to max</span>
+## prediction
+y1.labour &lt;-<span class="st"> </span><span class="kw">predict</span>(labour.fit1, <span class="dt">newdata =</span> <span class="kw">data.frame</span>(<span class="dt">margin =</span> y1l.range))
+y2.labour &lt;-<span class="st"> </span><span class="kw">predict</span>(labour.fit2, <span class="dt">newdata =</span> <span class="kw">data.frame</span>(<span class="dt">margin =</span> y2l.range)) ## Tory: range of predictions
+y1t.range &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">min</span>(MPs.tory$margin), <span class="dv">0</span>) <span class="co"># min to 0</span>
+y2t.range &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(MPs.tory$margin)) <span class="co"># 0 to max</span>
+## predict outcome
+y1.tory &lt;-<span class="st"> </span><span class="kw">predict</span>(tory.fit1, <span class="dt">newdata =</span> <span class="kw">data.frame</span>(<span class="dt">margin =</span> y1t.range))
+y2.tory &lt;-<span class="st"> </span><span class="kw">predict</span>(tory.fit2, <span class="dt">newdata =</span> <span class="kw">data.frame</span>(<span class="dt">margin =</span> y2t.range))</code></pre></div>
+<p><strong>Tidyverse code</strong></p>
+<p>Use <a href="https://www.rdocumentation.org/packages/modelr/topics/data_grid">data_grid</a> to generate a grid for predictions.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y1_labour &lt;-
+<span class="st">  </span><span class="kw">filter</span>(MPs_labour, margin &lt;<span class="st"> </span><span class="dv">0</span>) %&gt;%
+<span class="st">  </span><span class="kw">data_grid</span>(margin) %&gt;%
+<span class="st">  </span><span class="kw">add_predictions</span>(labour_fit1)
+y2_labour &lt;-
+<span class="st">  </span><span class="kw">filter</span>(MPs_labour, margin &gt;<span class="st"> </span><span class="dv">0</span>) %&gt;%
+<span class="st">  </span><span class="kw">data_grid</span>(margin) %&gt;%
+<span class="st">  </span><span class="kw">add_predictions</span>(labour_fit2)
+
+y1_tory &lt;-
+<span class="st">  </span><span class="kw">filter</span>(MPs_tory, margin &lt;<span class="st"> </span><span class="dv">0</span>) %&gt;%
+<span class="st">  </span><span class="kw">data_grid</span>(margin) %&gt;%
+<span class="st">  </span><span class="kw">add_predictions</span>(tory_fit1)
+
+y2_tory &lt;-
+<span class="st">  </span><span class="kw">filter</span>(MPs_tory, margin &gt;<span class="st"> </span><span class="dv">0</span>) %&gt;%
+<span class="st">  </span><span class="kw">data_grid</span>(margin) %&gt;%
+<span class="st">  </span><span class="kw">add_predictions</span>(tory_fit2)</code></pre></div>
+<p><strong>Original code</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## scatterplot with regression lines for labour
+<span class="kw">plot</span>(MPs.labour$margin, MPs.labour$ln.net, <span class="dt">main =</span> <span class="st">&quot;Labour&quot;</span>,
+     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">6</span>, <span class="dv">18</span>), <span class="dt">xlab =</span> <span class="st">&quot;margin of victory&quot;</span>,
+     <span class="dt">ylab =</span> <span class="st">&quot;log net wealth at death&quot;</span>)
+<span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>, <span class="dt">lty =</span> <span class="st">&quot;dashed&quot;</span>)
+## add regression lines
+<span class="kw">lines</span>(y1l.range, y1.labour, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)
+<span class="kw">lines</span>(y2l.range, y2.labour, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)
+## scatterplot with regression lines for tory
+<span class="kw">plot</span>(MPs.tory$margin, MPs.tory$ln.net, <span class="dt">main =</span> <span class="st">&quot;Tory&quot;</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="fl">0.5</span>, <span class="fl">0.5</span>),
+     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">6</span>, <span class="dv">18</span>), <span class="dt">xlab =</span> <span class="st">&quot;margin of victory&quot;</span>,
+<span class="dt">ylab =</span> <span class="st">&quot;log net wealth at death&quot;</span>) <span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>, <span class="dt">lty =</span> <span class="st">&quot;dashed&quot;</span>)
+## add regression lines
+<span class="kw">lines</span>(y1t.range, y1.tory, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)
+<span class="kw">lines</span>(y2t.range, y2.tory, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</code></pre></div>
+<p><strong>Tidyverse code</strong></p>
+<p>Labour politicians</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>() +
+<span class="st">  </span><span class="kw">geom_ref_line</span>(<span class="dt">v =</span> <span class="dv">0</span>) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> MPs_labour,
+            <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> margin, <span class="dt">y =</span> ln.net)) +
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> y1_labour,
+            <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> margin, <span class="dt">y =</span> pred), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) +
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> y2_labour,
+            <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> margin, <span class="dt">y =</span> pred), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;margin of victory&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;log net wealth at death&quot;</span>,
+       <span class="dt">title =</span> <span class="st">&quot;Labour&quot;</span>)</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-83-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>Tory politicians</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>() +
+<span class="st">  </span><span class="kw">geom_ref_line</span>(<span class="dt">v =</span> <span class="dv">0</span>) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> MPs_tory,
+             <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> margin, <span class="dt">y =</span> ln.net)) +
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> y1_tory,
+            <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> margin, <span class="dt">y =</span> pred), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) +
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> y2_tory,
+            <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> margin, <span class="dt">y =</span> pred), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;margin of victory&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;log net wealth at death&quot;</span>,
+       <span class="dt">title =</span> <span class="st">&quot;labour&quot;</span>)</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-84-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>We can actually produce this plot easily without running the regressions, by using <code>geom_smooth</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">mutate</span>(MPs, <span class="dt">winner =</span> (margin &gt;<span class="st"> </span><span class="dv">0</span>)),
+       <span class="kw">aes</span>(<span class="dt">x =</span> margin, <span class="dt">y =</span> ln.net)) +
+<span class="st">  </span><span class="kw">geom_ref_line</span>(<span class="dt">v =</span> <span class="dv">0</span>) +
+<span class="st">  </span><span class="kw">geom_point</span>() +
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> lm, <span class="dt">se =</span> <span class="ot">FALSE</span>, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">group =</span> winner)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(party ~<span class="st"> </span>.) +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;margin of victory&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;log net wealth at death&quot;</span>)</code></pre></div>
+<p><img src="prediction_files/figure-html/unnamed-chunk-85-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><strong>Original code</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## average net wealth for Tory MP
+tory.MP &lt;-<span class="st"> </span><span class="kw">exp</span>(y2.tory[<span class="dv">1</span>])
+tory.MP
+##        1
+## 533813.5
+## average net wealth for Tory non-MP
+tory.nonMP &lt;-<span class="st"> </span><span class="kw">exp</span>(y1.tory[<span class="dv">2</span>])
+tory.nonMP
+##        2
+## 278762.5
+## causal effect in pounds
+tory.MP -<span class="st"> </span>tory.nonMP
+##        1
+## 255050.9</code></pre></div>
+<p><strong>Tidyverse code</strong></p>
+<p>In the previous code, I didn’t directly compute the the average net wealth at 0, so I’ll need to do that here. I’ll use <a href="https://www.rdocumentation.org/packages/modelr/topics/gather_predictions">gather_predictions</a> to add predictions for multiple models:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spread_predictions</span>(<span class="kw">data_frame</span>(<span class="dt">margin =</span> <span class="dv">0</span>),
+                   tory_fit1, tory_fit2) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rd_est =</span> tory_fit2 -<span class="st"> </span>tory_fit1)
+<span class="co">#&gt; # A tibble: 1 × 4</span>
+<span class="co">#&gt;   margin tory_fit1 tory_fit2 rd_est</span>
+<span class="co">#&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt; 1      0      12.5      13.2   0.65</span></code></pre></div>
+<p><strong>Original code</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## two regressions for Tory: negative and positive margin
+tory.fit3 &lt;-<span class="st"> </span><span class="kw">lm</span>(margin.pre ~<span class="st"> </span>margin, <span class="dt">data =</span> MPs.tory[MPs.tory$margin &lt;<span class="st"> </span><span class="dv">0</span>, ])
+tory.fit4 &lt;-<span class="st"> </span><span class="kw">lm</span>(margin.pre ~<span class="st"> </span>margin, <span class="dt">data =</span> MPs.tory[MPs.tory$margin &gt;<span class="st"> </span><span class="dv">0</span>, ]) ## the difference between two intercepts is the estimated effect
+<span class="kw">coef</span>(tory.fit4)[<span class="dv">1</span>] -<span class="st"> </span><span class="kw">coef</span>(tory.fit3)[<span class="dv">1</span>]
+## (Intercept)
+## -0.01725578</code></pre></div>
+<p><strong>Tidyverse code</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tory_fit3 &lt;-<span class="st"> </span><span class="kw">lm</span>(margin.pre ~<span class="st"> </span>margin, <span class="dt">data =</span> <span class="kw">filter</span>(MPs_tory, margin &lt;<span class="st"> </span><span class="dv">0</span>))
+tory_fit4 &lt;-<span class="st"> </span><span class="kw">lm</span>(margin.pre ~<span class="st"> </span>margin, <span class="dt">data =</span> <span class="kw">filter</span>(MPs_tory, margin &gt;<span class="st"> </span><span class="dv">0</span>))
+
+(<span class="kw">filter</span>(<span class="kw">tidy</span>(tory_fit3), term ==<span class="st"> &quot;(Intercept)&quot;</span>)[[<span class="st">&quot;estimate&quot;</span>]] -
+<span class="st"> </span><span class="kw">filter</span>(<span class="kw">tidy</span>(tory_fit4), term ==<span class="st"> &quot;(Intercept)&quot;</span>)[[<span class="st">&quot;estimate&quot;</span>]])
+<span class="co">#&gt; [1] 0.0173</span></code></pre></div>
+
 </div>
 </div>
             </section>

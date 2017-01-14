@@ -4,10 +4,9 @@
 
 ```{r message = FALSE}
 library("tidyverse")
-```
-We will use the package `r pkg_link("lubridate")` to work with dates.
-```{r}
 library("lubridate")
+library("stringr")
+library("forcats")
 ```
 The packages `r pkg_link("modelr")` and `r pkg_link("broom")` are used to wrangle the results of linear regressions,
 ```{r}
@@ -464,3 +463,465 @@ arrange(florida) %>%
 ```
 
 ![Ted Mosby dressed as a Hanging Chad in "How I Met Your Mother"](./images/hanging-chad.png)
+
+Data without Palm Beach
+```{r}
+florida_pb <- filter(florida, county != "PalmBeach")
+fit3 <- lm(Buchanan00 ~ Perot96, data = florida_pb)
+summary(fit3)
+```
+
+$R^2$ or coefficient of determination
+```{r}
+glance(fit3)
+```
+
+```{r}
+florida_pb %>%
+  add_residuals(fit3) %>%
+  add_predictions(fit3) %>%
+  ggplot(aes(x = pred, y = resid)) +
+  geom_ref_line(h = 0) +
+  geom_point() +
+  ylim(-750, 2500) +
+  xlim(0, 1500) +
+  labs(x = "Fitted values", y = "residuals")
+```
+
+Create predictions for both models using `r rdoc("modelr", "data_grid")` and `r rdoc("modelr", "gather_predictions")`:
+```{r}
+florida_grid <-
+  florida %>%
+  data_grid(Perot96) %>%
+  gather_predictions(fit2, fit3) %>%
+  mutate(model =
+           fct_recode(model,
+                      "Regression\n with Palm Beach" = "fit2",
+                      "Regression\n without Palm Beach" = "fit3"))
+```
+Note this is an example of using non-syntactic column names in a tibble, as discussed in Chapter 10 of [R for data science](http://r4ds.had.co.nz/tibbles.html).
+
+```{r}
+ggplot() +
+  geom_point(data = florida, mapping = aes(x = Perot96, y = Buchanan00)) +
+  geom_line(data = florida_grid, 
+             mapping = aes(x = Perot96, y = pred, 
+                           colour = model)) +
+  geom_label(data = filter(florida, county == "PalmBeach"),
+             mapping = aes(x = Perot96, y = Buchanan00, label = county),
+                           vjust = "top", hjust = "right") +
+  geom_text(data = tibble(label = unique(florida_grid$model),
+                           x = c(20000, 31000),
+                           y = c(1000, 300)),
+             mapping = aes(x = x, y = y, label = label, colour = label)) +
+  labs(x = "Perot's Vote in 1996", y = "Buchanan's Votes in 1996") +
+  theme(legend.position = "none")
+```
+See [Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html#label) in *R for Data Science* on labels and annotations in plots.
+
+
+
+## Regression and Causation
+
+Load data
+```{r}
+women <- read_csv(qss_data_url("prediction", "women.csv"))
+```
+
+proportion of female politicians in reserved GP vs. unreserved GP
+```{r}
+women %>%
+  group_by(reserved) %>%
+  summarise(prop_female = mean(female))
+```
+
+The diff in diff estimator
+```{r}
+## drinking-water facilities
+ 
+## irrigation facilities
+mean(women$irrigation[women$reserved == 1]) -
+    mean(women$irrigation[women$reserved == 0])
+```
+
+Mean values of `irrigation` and `water` in reserved and non-reserved districts.
+```{r}
+women %>%
+  group_by(reserved) %>%
+  summarise(irrigation = mean(irrigation), 
+            water = mean(water))
+```
+
+The difference between the two groups can be calculated with the function `r rdoc("base", "diff")`, which calculates the difference between subsequent observations.
+This works as long as we are careful about which group is first or second.
+```{r}
+women %>%
+  group_by(reserved) %>%
+  summarise(irrigation = mean(irrigation), 
+            water = mean(water)) %>%
+  summarise(diff_irrigation = diff(irrigation),
+            diff_water = diff(water))
+```
+
+The other way uses tidyr `r rdoc("tidyr", "spread.lm", "spread")` and `r rdoc("tidyr", "gather.lm", "gather")`,
+```{r}
+women %>%
+  group_by(reserved) %>%
+  summarise(irrigation = mean(irrigation), 
+            water = mean(water)) %>%
+  gather(variable, value, -reserved) %>%
+  spread(reserved, value) %>%
+  mutate(diff = `1` - `0`)
+```
+Now each row is an outcome variable of interest, and there are columns for the treatment (`1`) and control (`0`) groups, and the difference (`diff`).
+
+```{r}
+lm(water ~ reserved, data = women) %>% summary()
+lm(irrigation ~ reserved, data = women) %>% summary()
+```
+
+### Regression with multiple predictors
+
+```{r}
+social <- read_csv(qss_data_url("prediction", "social.csv"))
+glimpse(social)
+levels(social$messages)
+fit <- lm(primary2008 ~ messages, data = social)
+fit
+```
+
+Create indicator variables
+```{r}
+social <-
+  social %>%
+  mutate(Control = as.integer(messages == "Control"),
+         Hawthorne = as.integer(messages == "Hawthorne"),
+         Neighbors = as.integer(messages == "Neighbors"))
+```
+alternatively, create these using a for loop.
+This is easier to understand and less prone to typo.
+```{r}
+for (i in unique(social$messages)) {
+  social[[i]] <- as.integer(social[["messages"]] == i)
+}
+```
+We created a variable for each level of `messages` even though we will exclude one of them.
+```{r}
+lm(primary2008 ~ Control + Hawthorne + Neighbors, data = social)
+```
+
+Create predictions for each unique value of `messages`
+```{r}
+unique_messages <- 
+  data_grid(social, messages) %>%
+  add_predictions(fit)
+unique_messages
+```
+
+Compare to the sample averages
+```{r}
+social %>%
+  group_by(messages) %>%
+  summarise(mean(primary2008))
+```
+
+Linear regression without intercept.
+```{r}
+fit.noint <- lm(primary2008 ~ -1 + messages, data = social)
+fit.noint
+```
+
+Calculating the regression average effect is also easier if we make the control group the first level so all regression coefficients are comparisons to it.
+Use `r rdoc("forcats", "fct_relevel")` to make "Control"
+```{r}
+fit.control <- 
+ mutate(social, messages = fct_relevel(messages, "Control")) %>%
+ lm(primary2008 ~ messages, data = .)
+fit.control
+```
+
+Difference in means
+```{r}
+social %>%
+  group_by(messages) %>%
+  summarise(primary2008 = mean(primary2008)) %>%
+  mutate(Control = primary2008[messages == "Control"],
+         diff = primary2008 - Control)
+```
+
+Adjusted R-squared is included in the output of `broom::glance()`
+```{r}
+glance(fit)
+glance(fit)$adj.r.squared
+```
+
+
+### Heterogenous Treatment Effects
+
+Average treatment effect (ate) among those who voted in 2004 primary
+```{r}
+ate <-
+  social %>%
+  group_by(primary2004, messages) %>%
+  summarise(primary2008 = mean(primary2008)) %>%
+  spread(messages, primary2008) %>%
+  mutate(ate_Neighbors = Neighbors - Control) %>%
+  select(primary2004, Neighbors, Control, ate_Neighbors)
+ate
+```
+Difference in ATE in 2004 voters and non-voters
+```{r}
+diff(ate$ate_Neighbors)
+```
+
+
+```{r}
+social.neighbor <- social %>%
+  filter((messages == "Control") | (messages == "Neighbors"))
+
+fit.int <- lm(primary2008 ~ primary2004 + messages + primary2004:messages,
+              data = social.neighbor)
+fit.int
+```
+
+```{r}
+lm(primary2008 ~ primary2004 * messages, data = social.neighbor)
+```
+
+```{r}
+social.neighbor <- 
+  social.neighbor %>%
+  mutate(age = 2008 - yearofbirth)
+
+summary(social.neighbor$age)
+
+fit.age <- lm(primary2008 ~ age * messages, data = social.neighbor)
+fit.age
+```
+
+Calculate average treatment effects
+```{r}
+ate.age <-
+  crossing(age = seq(from = 25, to = 85, by = 20),
+         messages = c("Neighbors", "Control")) %>%
+  add_predictions(fit.age) %>%
+  spread(messages, pred) %>%
+  mutate(diff = Neighbors - Control)
+ate.age
+```
+
+You can use `r rdoc("base", "poly")` for polynomials instead of `age + I(age ^ 2)`.
+Though note that the coefficients will be be different since by default `poly` calculates orthogonal polynomials instead of the natural (raw) polynomials.
+However, you really shouldn't interpet the coefficients directly anyways, so this should matter.
+```{r}
+fit.age2 <- lm(primary2008 ~ poly(age, 2) * messages,
+               data = social.neighbor)
+fit.age2
+```
+
+Create a data frame of combinations of ages and messages using `r rdoc("modelr", "data_grid")`, which means that we only need to specify the variables, and not the specific values,
+```{r}
+y.hat <-
+  data_grid(social.neighbor, age, messages) %>%
+  add_predictions(fit.age2)
+```
+
+```{r}
+ggplot(y.hat, aes(x = age, y = pred, 
+                  colour = str_c(messages, " condition"))) +
+  geom_line() +
+  labs(colour = "", y = "predicted turnout rates") +
+  theme(legend.position = "bottom")
+```
+
+```{r}
+y.hat %>%
+  spread(messages, pred) %>%
+  mutate(ate = Neighbors - Control) %>%
+  filter(age > 20, age < 90) %>%
+  ggplot(aes(x = age, y = ate)) +
+  geom_line() +
+  labs(y = "estimated average treatment effect") +
+  ylim(0, 0.1)
+```
+
+## Regression Discontinuity Design
+
+**Original code**
+```{r eval=FALSE}
+MPs <- read.csv("MPs.csv")
+MPs.labour <- subset(MPs, subset = (party == "labour"))
+MPs.tory <- subset(MPs, subset = (party == "tory"))
+## two regressions for Labour: negative and positive margin
+labour.fit1 <- lm(ln.net ~ margin, 
+                  data = MPs.labour[MPs.labour$margin < 0, ])
+labour.fit2 <- lm(ln.net ~ margin,
+data = MPs.labour[MPs.labour$margin > 0, ]) ## two regressions for Tory: negative and positive margin
+tory.fit1 <- lm(ln.net ~ margin, data = MPs.tory[MPs.tory$margin < 0, ])
+tory.fit2 <- lm(ln.net ~ margin, data = MPs.tory[MPs.tory$margin > 0, ])
+```
+
+**Tidyverse**
+```{r}
+MPs <- read_csv(qss_data_url("prediction", "MPs.csv"))
+
+MPs_labour <- filter(MPs, party == "labour")
+MPs_tory <- filter(MPs, party == "tory")
+
+labour_fit1 <- lm(ln.net ~ margin,
+                 data = filter(MPs_labour, margin < 0))
+labour_fit2 <- lm(ln.net ~ margin, MPs_labour, margin > 0)
+
+tory_fit1 <- lm(ln.net ~ margin,
+                data = filter(MPs_tory, margin < 0))
+tory_fit2 <- lm(ln.net ~ margin, data = filter(MPs_tory, margin > 0))
+```
+
+**Original code**
+```{r eval=FALSE}
+## Labour: range of predictions
+y1l.range <- c(min(MPs.labour$margin), 0) # min to 0
+y2l.range <- c(0, max(MPs.labour$margin)) # 0 to max
+## prediction
+y1.labour <- predict(labour.fit1, newdata = data.frame(margin = y1l.range))
+y2.labour <- predict(labour.fit2, newdata = data.frame(margin = y2l.range)) ## Tory: range of predictions
+y1t.range <- c(min(MPs.tory$margin), 0) # min to 0
+y2t.range <- c(0, max(MPs.tory$margin)) # 0 to max
+## predict outcome
+y1.tory <- predict(tory.fit1, newdata = data.frame(margin = y1t.range))
+y2.tory <- predict(tory.fit2, newdata = data.frame(margin = y2t.range))
+```
+
+**Tidyverse code**
+
+Use `r rdoc("modelr", "data_grid")` to generate a grid for predictions.
+```{r}
+y1_labour <-
+  filter(MPs_labour, margin < 0) %>%
+  data_grid(margin) %>%
+  add_predictions(labour_fit1)
+y2_labour <-
+  filter(MPs_labour, margin > 0) %>%
+  data_grid(margin) %>%
+  add_predictions(labour_fit2)
+
+y1_tory <-
+  filter(MPs_tory, margin < 0) %>%
+  data_grid(margin) %>%
+  add_predictions(tory_fit1)
+
+y2_tory <-
+  filter(MPs_tory, margin > 0) %>%
+  data_grid(margin) %>%
+  add_predictions(tory_fit2)
+```
+
+**Original code**
+```{r eval=FALSE}
+## scatterplot with regression lines for labour
+plot(MPs.labour$margin, MPs.labour$ln.net, main = "Labour",
+     xlim = c(-0.5, 0.5), ylim = c(6, 18), xlab = "margin of victory",
+     ylab = "log net wealth at death")
+abline(v = 0, lty = "dashed")
+## add regression lines
+lines(y1l.range, y1.labour, col = "red")
+lines(y2l.range, y2.labour, col = "red")
+## scatterplot with regression lines for tory
+plot(MPs.tory$margin, MPs.tory$ln.net, main = "Tory", xlim = c(-0.5, 0.5),
+     ylim = c(6, 18), xlab = "margin of victory",
+ylab = "log net wealth at death") abline(v = 0, lty = "dashed")
+## add regression lines
+lines(y1t.range, y1.tory, col = "red")
+lines(y2t.range, y2.tory, col = "red")
+```
+
+**Tidyverse code**
+
+Labour politicians
+```{r}
+ggplot() +
+  geom_ref_line(v = 0) +
+  geom_point(data = MPs_labour,
+            mapping = aes(x = margin, y = ln.net)) +
+  geom_line(data = y1_labour,
+            mapping = aes(x = margin, y = pred), colour = "red") +
+  geom_line(data = y2_labour,
+            mapping = aes(x = margin, y = pred), colour = "red") +
+  labs(x = "margin of victory", y = "log net wealth at death",
+       title = "Labour")
+```
+
+Tory politicians
+```{r}
+ggplot() +
+  geom_ref_line(v = 0) +
+  geom_point(data = MPs_tory,
+             mapping = aes(x = margin, y = ln.net)) +
+  geom_line(data = y1_tory,
+            mapping = aes(x = margin, y = pred), colour = "red") +
+  geom_line(data = y2_tory,
+            mapping = aes(x = margin, y = pred), colour = "red") +
+  labs(x = "margin of victory", y = "log net wealth at death",
+       title = "labour")
+```
+
+We can actually produce this plot easily without running the regressions, by using `geom_smooth`:
+
+```{r}
+ggplot(mutate(MPs, winner = (margin > 0)),
+       aes(x = margin, y = ln.net)) +
+  geom_ref_line(v = 0) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE, mapping = aes(group = winner)) + 
+  facet_grid(party ~ .) +
+  labs(x = "margin of victory", y = "log net wealth at death")
+```
+
+**Original code**
+```{r eval = FALSE}
+## average net wealth for Tory MP
+tory.MP <- exp(y2.tory[1])
+tory.MP
+##        1
+## 533813.5
+## average net wealth for Tory non-MP
+tory.nonMP <- exp(y1.tory[2])
+tory.nonMP
+##        2
+## 278762.5
+## causal effect in pounds
+tory.MP - tory.nonMP
+##        1
+## 255050.9
+```
+
+**Tidyverse code**
+
+In the previous code, I didn't directly compute the the average net wealth at 0, so I'll need to do that here.
+I'll use `r rdoc("modelr", "gather_predictions")` to add predictions for multiple models:
+```{r}
+spread_predictions(data_frame(margin = 0),
+                   tory_fit1, tory_fit2) %>%
+  mutate(rd_est = tory_fit2 - tory_fit1)
+```
+
+
+**Original code**
+```{r eval = FALSE}
+## two regressions for Tory: negative and positive margin
+tory.fit3 <- lm(margin.pre ~ margin, data = MPs.tory[MPs.tory$margin < 0, ])
+tory.fit4 <- lm(margin.pre ~ margin, data = MPs.tory[MPs.tory$margin > 0, ]) ## the difference between two intercepts is the estimated effect
+coef(tory.fit4)[1] - coef(tory.fit3)[1]
+## (Intercept)
+## -0.01725578
+```
+
+**Tidyverse code**
+```{r}
+tory_fit3 <- lm(margin.pre ~ margin, data = filter(MPs_tory, margin < 0))
+tory_fit4 <- lm(margin.pre ~ margin, data = filter(MPs_tory, margin > 0))
+
+(filter(tidy(tory_fit3), term == "(Intercept)")[["estimate"]] -
+ filter(tidy(tory_fit4), term == "(Intercept)")[["estimate"]])
+```
+

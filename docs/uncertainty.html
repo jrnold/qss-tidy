@@ -8,7 +8,7 @@
   <title>QSS Tidyverse Code</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.3.6 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
 
   <meta property="og:title" content="QSS Tidyverse Code" />
   <meta property="og:type" content="book" />
@@ -94,7 +94,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <body>
 
 
-
   <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
 
     <div class="book-summary">
@@ -177,8 +176,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7" data-path="probability.html"><a href="probability.html"><i class="fa fa-check"></i><b>7</b> Probability</a><ul>
 <li class="chapter" data-level="7.1" data-path="probability.html"><a href="probability.html#prerequisites-4"><i class="fa fa-check"></i><b>7.1</b> Prerequisites</a></li>
 <li class="chapter" data-level="7.2" data-path="probability.html"><a href="probability.html#probability-1"><i class="fa fa-check"></i><b>7.2</b> Probability</a><ul>
-<li class="chapter" data-level="7.2.1" data-path="probability.html"><a href="probability.html#independence"><i class="fa fa-check"></i><b>7.2.1</b> Independence</a></li>
-<li class="chapter" data-level="7.2.2" data-path="probability.html"><a href="probability.html#predicting-race-using-surname-and-residence-location"><i class="fa fa-check"></i><b>7.2.2</b> Predicting Race Using Surname and Residence Location</a></li>
+<li class="chapter" data-level="7.2.1" data-path="probability.html"><a href="probability.html#sampling-without-replacement"><i class="fa fa-check"></i><b>7.2.1</b> Sampling without replacement</a></li>
+<li class="chapter" data-level="7.2.2" data-path="probability.html"><a href="probability.html#combinations"><i class="fa fa-check"></i><b>7.2.2</b> Combinations</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="probability.html"><a href="probability.html#conditional-probability"><i class="fa fa-check"></i><b>7.3</b> Conditional Probability</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="probability.html"><a href="probability.html#conditional-marginal-and-joint-probabilities"><i class="fa fa-check"></i><b>7.3.1</b> Conditional, Marginal, and Joint Probabilities</a></li>
+<li class="chapter" data-level="7.3.2" data-path="probability.html"><a href="probability.html#independence"><i class="fa fa-check"></i><b>7.3.2</b> Independence</a></li>
+<li class="chapter" data-level="7.3.3" data-path="probability.html"><a href="probability.html#predicting-race-using-surname-and-residence-location"><i class="fa fa-check"></i><b>7.3.3</b> Predicting Race Using Surname and Residence Location</a></li>
+<li class="chapter" data-level="7.3.4" data-path="probability.html"><a href="probability.html#predicting-election-outcomes-with-uncertainty"><i class="fa fa-check"></i><b>7.3.4</b> Predicting Election Outcomes with Uncertainty</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="probability.html"><a href="probability.html#large-sample-theorems"><i class="fa fa-check"></i><b>7.4</b> Large Sample Theorems</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="probability.html"><a href="probability.html#law-of-large-numbers"><i class="fa fa-check"></i><b>7.4.1</b> Law of Large Numbers</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="uncertainty.html"><a href="uncertainty.html"><i class="fa fa-check"></i><b>8</b> Uncertainty</a><ul>
@@ -205,16 +213,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">8</span> Uncertainty</h1>
 <div id="prerequisites-5" class="section level2">
 <h2><span class="header-section-number">8.1</span> Prerequisites</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)
-<span class="co">#&gt; Loading tidyverse: ggplot2</span>
-<span class="co">#&gt; Loading tidyverse: tibble</span>
-<span class="co">#&gt; Loading tidyverse: tidyr</span>
-<span class="co">#&gt; Loading tidyverse: readr</span>
-<span class="co">#&gt; Loading tidyverse: purrr</span>
-<span class="co">#&gt; Loading tidyverse: dplyr</span>
-<span class="co">#&gt; Conflicts with tidy packages ----------------------------------------------</span>
-<span class="co">#&gt; filter(): dplyr, stats</span>
-<span class="co">#&gt; lag():    dplyr, stats</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</code></pre></div>
 
 </div>
 </div>

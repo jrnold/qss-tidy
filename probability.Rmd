@@ -2,12 +2,31 @@
 
 ## Prerequisites
 
-```{r}
+```{r message=FALSE}
 library("tidyverse")
+library("forcats")
+library("stringr")
 ```
 
 ## Probability
 
+**Original code**
+```{r eval=FALSE}
+k <- 23 # number of people
+sims <- 1000 # number of simulations event <- 0 # counter
+for (i in 1:sims) {
+days <- sample(1:365, k, replace = TRUE)
+days.unique <- unique(days) # unique birthdays
+## if there are duplicates, the number of unique birthdays ## will be less than the number of birthdays, which is `k' if (length(days.unique) < k) {
+        event <- event + 1
+    }
+}
+## fraction of trials where at least two bdays are the same
+answer <- event / sims
+answer
+```
+
+**tidyverse**
 ```{r}
 birthday <- function(k) {
   logdenom <- k * log(365) + lfactorial(365 - k)
@@ -19,7 +38,7 @@ birthday <- function(k) {
 bday <- tibble(k = 1:50,
                pr = birthday(k))
 ggplot(bday, aes(x = k , y = pr)) +
-  geom_hline(yintercept = 0.5, colour = "gray") +
+  geom_hline(yintercept = 0.5, colour = "white", size = 2) +
   geom_point() +
   scale_y_continuous("Probability that at least two\n people have the same birthday", limits = c(0, 1)) +
   labs(x = "Number of people")
@@ -31,9 +50,29 @@ See these John Fox posts [1](http://www.johndcook.com/blog/2008/09/26/comparing-
 Also see: http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/.
 
 
-Instead of using a for-loop, we could do the simulations using a functional
-as described in R for Data Science.
-Define the function `sim_bdays` to randomly sample k birthdays, and returns
+### Sampling without replacement
+
+**Original code:**
+```{r eval=FALSE}
+k <- 23 # number of people
+sims <- 1000 # number of simulations event <- 0 # counter
+for (i in 1:sims) {
+days <- sample(1:365, k, replace = TRUE)
+days.unique <- unique(days) # unique birthdays
+## if there are duplicates, the number of unique birthdays ## will be less than the number of birthdays, which is `k' if (length(days.unique) < k) {
+        event <- event + 1
+    }
+}
+## fraction of trials where at least two bdays are the same
+answer <- event / sims
+answer
+```
+
+
+**tidyverse code:**
+Instead of using a for loop, we could do the simulations using a functional
+as described in `r R4DS`.
+Define the function `sim_bdays` to randomly sample `k` birthdays, and returns
 `TRUE` if there are any duplicates.
 ```{r}
 sim_bdays <- function(k) {
@@ -50,6 +89,27 @@ map_lgl(seq_len(sims), ~ sim_bdays(k)) %>%
   mean()
 ```
 
+### Combinations
+
+**Original code**
+```{r}
+choose(84, 6)
+```
+
+## Conditional Probability
+
+### Conditional, Marginal, and Joint Probabilities
+
+
+**Original:**
+```{r, eval = FALSE}
+FLVoters <- read.csv("FLVoters.csv") dim(FLVoters) # before removal of missing data
+## [1] 10000     6
+FLVoters <- na.omit(FLVoters)
+dim(FLVoters) # after removal
+```
+
+**tidyverse**
 ```{r}
 FLVoters <- read_csv(qss_data_url("probability", "FLVoters.csv"))
 dim(FLVoters)
@@ -57,71 +117,121 @@ FLVoters <- FLVoters %>%
   na.omit()
 ```
 
-```{r}
-margin.race <-
-  FLVoters %>%
-  count(race) %>%
-  mutate(prop = n / sum(n))
+**original:** 
+```{r eval=FALSE}
+margin.race <- prop.table(table(FLVoters$race))
 margin.race
-```
-
-```{r}
-margin.gender <- FLVoters %>%
-  count(gender) %>%
-  mutate(prop = n / sum(n))
+margin.gender <- prop.table(table(FLVoters$gender))
 margin.gender
 ```
 
+**tidyverse:** 
+Instead of using `r rdoc("base", "prop.base")`, we calculate the probabilities
+with a data frame.
+Marginal probabilities of race,
 ```{r}
-FLVoters %>% 
+margin_race <-
+  FLVoters %>%
+  count(race) %>%
+  mutate(prop = n / sum(n))
+margin_race
+```
+
+Marginal probabilities of gender:
+```{r}
+margin_gender <- FLVoters %>%
+  count(gender) %>%
+  mutate(prop = n / sum(n))
+margin_gender
+```
+
+**Original:**
+```{r eval=FALSE}
+prop.table(table(FLVoters$race[FLVoters$gender == "f"]))
+```
+
+**tidyverse:**
+```{r}
+FLVoters %>%
   filter(gender == "f") %>%
   count(race) %>%
   mutate(prop = n / sum(n))
 ```
 
+
+**Original:**
 ```{r}
-joint.p <-
+joint.p <- prop.table(table(race = FLVoters$race, gender = FLVoters$gender))
+joint.p
+```
+
+**tidyverse:**
+```{r}
+joint_p <-
   FLVoters %>%
   count(gender, race) %>%
   # needed because it is still grouped by gender
   ungroup() %>%
   mutate(prop = n / sum(n))
-joint.p
+joint_p
 ```
-or 
+
+We can convert the data frame to have gender as columns:
 ```{r}
-joint.p %>%
+joint_p %>%
   ungroup() %>%
   select(-n) %>%
   spread(gender, prop)
-  
 ```
 
+**Original:**
+```{r eval=FALSE}
+rowSums(joint.p)
+```
+
+**tidyverse:** Sum over race:
 ```{r}
-joint.p %>%
+joint_p %>%
   group_by(race) %>%
   summarise(prop = sum(prop))
 ```
 
+**Original:**
+```{r eval=FALSE}
+colSums(joint.p)
+```
+
+**tidyverse:** Sum over gender
 ```{r}
-joint.p %>%
+joint_p %>%
   group_by(gender) %>%
   summarise(prop = sum(prop))
 ```
 
+**Original:**
+```{r eval=FALSE}
+FLVoters$age.group <- NA # initialize a variable
+FLVoters$age.group[FLVoters$age <= 20] <- 1
+FLVoters$age.group[FLVoters$age > 20 & FLVoters$age <= 40] <- 2 FLVoters$age.group[FLVoters$age > 40 & FLVoters$age <= 60] <- 3 FLVoters$age.group[FLVoters$age > 60] <- 4
+```
 
+**tidyverse:** Use the `r rdoc("base", "cut")`
 ```{r}
 FLVoters <-
   FLVoters %>%
-  mutate(age_group = 
-           case_when(
-             .$age <= 20 ~ 1,
-             .$age > 20 & .$age <= 40 ~ 2,
-             .$age > 40 & .$age <= 60 ~ 3,
-             .$age > 60 ~ 4
-           ))
+  mutate(age_group = cut(age, c(0, 20, 40, 60, Inf), right = TRUE,
+                         labels = c("<= 20", "20-40", "40-60", "> 60")))
 ```
 
+**Original:** 
+```{r eval=FALSE}
+joint3 <-
+    prop.table(table(race = FLVoters$race, age.group = FLVoters$age.group,
+                     gender = FLVoters$gender))
+joint3
+```
+
+**tidyverse:**
 ```{r}
 joint3 <-
   FLVoters %>%
@@ -131,48 +241,79 @@ joint3 <-
 joint3
 ```
 
+**original:** 
+```{r eval=FALSE}
+margin.age <- prop.table(table(FLVoters$age.group))
+margin.age
+joint3["black", 4, "f"] / margin.age[4]
+```
+
+
+**tidyverse:**
 Marginal probabilities by age groups
 ```{r}
-margin_age <- 
+margin_age <-
   FLVoters %>%
   count(age_group) %>%
   mutate(prop = n / sum(n))
 margin_age
 ```
 
-Calculate the probabilities that each group is in a given age group.
+
+Calculate the probabilities that each group is in a given age group, and show
+$P(\text{black} \land \text{female} | \text{"> 60""})
 ```{r}
-left_join(joint3, 
+left_join(joint3,
           select(margin_age, age_group, margin_age = prop),
           by = "age_group") %>%
   mutate(prob_age_group = prop / margin_age) %>%
-  filter(race == "black", gender == "f", age_group == 4)
+  filter(race == "black", gender == "f", age_group == "> 60") %>%
+  select(race, age_group, gender, prob_age_group)
 ```
 
+**Original:**
+```{r eval=FALSE}
+joint2 <- prop.table(table(age.group = FLVoters$age.group,
+                           gender = FLVoters$gender))
+joint2
+joint2[4, "f"]
+joint3["black", 4, "f"] / joint2[4, "f"]
+```
+
+**tidyverse:**
 Two-way joint probability table for age group and gender
 ```{r}
 joint2 <- FLVoters %>%
   count(age_group, gender) %>%
   ungroup() %>%
-  mutate(prob_age_gender = n / sum(n)) 
+  mutate(prob_age_gender = n / sum(n))
 joint2
 ```
 
-Conditional probablities $P(race | gender, age)$,
+The joint probability $P(\text{age} > 60 \land \text{female})$,
 ```{r}
-left_join(joint3, select(joint2, -n), by = c("age_group", "gender")) %>%
-  mutate(prob_race = prop / prob_age_gender) %>% 
+filter(joint2, age_group == "> 60", gender == "f")
+```
+
+The onditional probablities $P(race | gender, age)$,
+```{r}
+condprob_race <-
+  left_join(joint3, select(joint2, -n), by = c("age_group", "gender")) %>%
+  mutate(prob_race = prop / prob_age_gender) %>%
   arrange(age_group, gender) %>%
   select(age_group, gender, race, prob_race)
 ```
-Each row is the $P(race | age_group, gender)$.
+Each row is the $P(race | age_group, gender)$, so $P(\text{black} | \text{female} \land \text{age} > 60)$,
+```{r}
+filter(condprob_race, gender == "f", age_group == "> 60", race == "black")
+```
 
 
 ### Independence
 
 **Original code**
 ```{r eval=FALSE}
-plot(c(margin.race * margin.gender["f"]), # product of marginal probs. 
+plot(c(margin.race * margin.gender["f"]), # product of marginal probs.
      c(joint.p[, "f"]), # joint probabilities
 xlim = c(0, 0.4), ylim = c(0, 0.4),
 xlab = "P(race) * P(female)", ylab = "P(race and female)")
@@ -185,11 +326,11 @@ Create a table with the products of margins of race and age.
 Using the function `r rdoc("tidyr", "crossing")` to create a tibble with
 all combinations of race and gender and the indep prob
 ```{r}
-race_gender_indep <- 
-  crossing(select(margin.race, race, prob_race = prop),
-           select(margin.gender, gender, prob_gender = prop)) %>%
+race_gender_indep <-
+  crossing(select(margin_race, race, prob_race = prop),
+           select(margin_gender, gender, prob_gender = prop)) %>%
   mutate(prob_indep = prob_race * prob_gender) %>%
-  left_join(select(joint.p, gender, race, prob = prop),
+  left_join(select(joint_p, gender, race, prob = prop),
             by = c("gender", "race")) %>%
   select(race, gender, everything())
 race_gender_indep
@@ -227,7 +368,77 @@ plot(c(joint3[, 4, "f"]) / margin.gender["f"], # joint prob. given female
 abline(0, 1)
 ```
 
-**TODO**
+While the original code only calculates joint-independence value for values of
+age > 60, and female, this calculates the joint probabilities for all combinations
+of the three variables, and facets by age and gender.
+
+```{r}
+joint_indep <-
+  # all combinations of race, age, gender
+  crossing(select(margin_race, race, prob_race = prop),
+           select(margin_age, age_group, prob_age = prop),
+           select(margin_gender, gender, prob_gender = prop)) %>%
+  mutate(indep_prob = prob_race * prob_age * prob_gender) %>%
+  left_join(select(joint3, race, age_group, gender, prob = prop),
+            by = c("gender", "age_group", "race")) %>%
+  replace_na(list(prob = 0))
+  
+ggplot(joint_indep, aes(x = prob, y = indep_prob, colour = race)) +
+  geom_abline(intercept = 0, slope = 1, colour = "white", size = 2) +
+  geom_point() +
+  facet_grid(age_group ~ gender) +
+  coord_fixed() +
+  labs(x = "P(race and age and gender)",
+       y = "P(race) * P(age) * P(gender)",
+       title = "Joint Independence")
+    
+```
+
+
+The original code only calculates the conditional independence given female;
+this calculates conditional independence for all values of `gender`:
+```{r}
+cond_gender <- 
+  left_join(select(joint3, race, age_group, gender, joint_prob = prop),
+            select(margin_gender, gender, prob_gender = prop),
+            by = c("gender")) %>%
+  mutate(cond_prob = joint_prob / prob_gender)
+
+# P(race | gender)
+prob_race_gender <- 
+  left_join(select(joint_p, race, gender, prob_race_gender = prop),
+            select(margin_gender, gender, prob_gender = prop),
+            by = "gender") %>%
+  mutate(prob_race = prob_race_gender / prob_gender)
+# P(age | gender)
+prob_age_gender <- 
+  left_join(select(joint2, age_group, gender, prob_age_gender),
+            select(margin_gender, gender, prob_gender = prop),
+            by = "gender") %>%
+  mutate(prob_age = prob_age_gender / prob_gender)
+
+# indep prob of race and age    
+indep_cond_gender <-
+  full_join(select(prob_race_gender, race, gender, prob_race),
+            select(prob_age_gender, age_group, gender, prob_age),
+            by = "gender") %>%
+  mutate(indep_prob = prob_race * prob_age)
+
+inner_join(select(indep_cond_gender, race, age_group, gender, indep_prob),
+           select(cond_gender, race, age_group, gender, cond_prob),
+           by = c("gender", "age_group", "race")) %>%
+  ggplot(aes(x = cond_prob, y = indep_prob, colour = race)) +
+  geom_abline(intercept = 0, slope = 1, colour = "white", size = 2) +
+  geom_point() +
+  facet_grid(age_group ~ gender) +
+  coord_fixed() +
+  labs(x = "P(race and age | gender)",
+       y = "P(race | gender) * P(age | gender)",
+       title = "Marginal independence")
+
+```
+
+
 
 **Orginal code** for the Monty-Hall problem
 ```{r eval=FALSE}
@@ -248,7 +459,7 @@ mean(result.noswitch == "car")
 
 This code doesn't rely on any non-tidyverse code, but the following is another way to write it.
 
-First, create a function for a single iteration. 
+First, create a function for a single iteration.
 This will save the results as data frame.
 ```{r}
 choose_door <- function(.id) {
@@ -264,7 +475,7 @@ choose_door <- function(.id) {
   ret
 }
 ```
-Now use `r rdoc("purrr", "map_df")` to run `choose_door` multiple times, 
+Now use `r rdoc("purrr", "map_df")` to run `choose_door` multiple times,
 and then summarize the results:
 ```{r}
 sims <- 1000
@@ -290,17 +501,16 @@ For each surname, contains variables with the probability that it belongs to an 
 We want to find the most-likely race for a given surname, by finding the race with the maximum proportion.
 Instead of dealing with multiple variables, it is easier to use `max` on a single variable, so we will rearrange the data to in order to use a grouped summarise, and then merge the new variable back to the original datasets.
 
-<!-- This needs to be sped up. Possibly a  --> 
+<!-- This needs to be sped up. Possibly a  -->
 
 Note, this code takes a while.
 ```{r}
-library("forcats")
 most_likely <-
   cnames %>%
   select(-count) %>%
   gather(race_pred, pct, -surname) %>%
   # remove pct prefix
-  mutate(race_pred = stringr::str_replace(race_pred, "^pct", "")) %>%
+  mutate(race_pred = str_replace(race_pred, "^pct", "")) %>%
   # group by surname
   group_by(surname) %>%
   filter(pct == max(pct)) %>%
@@ -308,8 +518,10 @@ most_likely <-
   slice(1) %>%
   # don't need pct anymore
   select(-pct) %>%
-  # Need to make equivalent to levels in FLVoters
-  mutate(race_pred = fct_recode(race_pred, asian = "api", other = "others"))
+  mutate(race_pred = factor(race_pred),
+         # need to convert to factor first, else errors
+         race_pred = fct_recode(race_pred, 
+                                "asian" = "api", "other" = "others"))
 
 ```
 
@@ -319,7 +531,7 @@ cnames <- left_join(cnames, most_likely, by = "surname")
 ```
 
 
-Intead of using `match`, use `inner_join` to merge the surnames to FLVoters 
+Intead of using `match`, use `inner_join` to merge the surnames to FLVoters
 ```{r}
 FLVoters <- inner_join(FLVoters, cnames, by = "surname")
 dim(FLVoters)
@@ -348,7 +560,7 @@ FLVoters %>%
   summarise(tp = mean(race2 == race_pred)) %>%
   arrange(desc(tp))
 ```
-and the *False dicsovery rate* for *all* races,
+and the *False discovery rate* for *all* races,
 ```{r}
 FLVoters %>%
   group_by(race_pred) %>%
@@ -363,13 +575,13 @@ FLCensus <- read_csv(qss_data_url("probability", "FLCensusVTD.csv"))
 
 $P(race)$ in Florida:
 ```{r}
-race.prop <- 
+race.prop <-
   FLCensus %>%
   select(total.pop, white, black, api, hispanic, others) %>%
   gather(race, pct, -total.pop) %>%
   group_by(race) %>%
   summarise(mean = weighted.mean(pct, weights = total.pop)) %>%
-  arrange(desc(mean)) 
+  arrange(desc(mean))
 race.prop
 ```
 
@@ -411,11 +623,11 @@ Write a function to simulate the elections. `df` is the data frame (`pres08`)
 with the state, EV, and `p` columns. `n_draws` is the size of the binomial distribution to draw from. `.id` is the simulation number.
 ```{r}
 sim_election <- function(.id, df, n_draws = 1000) {
-  # For each state randomly sample 
+  # For each state randomly sample
   mutate(df,
          draws = rbinom(n(), n_draws, p)) %>%
   filter(draws > (n_draws / 2)) %>%
-  summarise(EV = sum(EV), 
+  summarise(EV = sum(EV),
             .id = .id)
 }
 ```
@@ -483,4 +695,3 @@ pres08 %>%
 ## Large Sample Theorems
 
 ### Law of Large Numbers
-

@@ -1,0 +1,1161 @@
+---
+title: "QSS Tidyverse Code"
+author: "Jeffrey B. Arnold"
+date: "`r Sys.Date()`"
+site: "bookdown::bookdown_site"
+documentclass: book
+output:
+  bookdown::gitbook: default
+  bookdown::pdf_book: default
+---
+
+Tidyverse R code for the book, [Quantitative Social Science: An Introduction](http://press.princeton.edu/titles/11025.html), by Kosuke Imai, to
+be published by Princeton University Press in March 2017.
+Supplementary materials for the book are available at  [kosukeimai/qss](https://github.com/kosukeimai/qss). 
+
+The R code in the text and the supplementary materials relies mostly on base R functions. 
+This translates the code examples provided with QSS to tidyverse R code. 
+[Tidyverse](https://github.com/tidyverse/tidyverse) refers to a set of packages (**ggplot2**, **dplyr**, **tidyr**, **readr**, **purrr**, **tibble**,  and a few others) that share common data representations, especially the use of data frames for return values. The book [R for Data Science](http://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemond is an introduction.
+
+I wrote this code while teaching course that employed both texts in order to make the excellent examples and statistical material in QSS more compatible with the modern data science R approach in R4DS.
+
+<!--chapter:end:index.Rmd-->
+
+# Chapter 1
+
+## Prerequisites
+
+```{r}
+library("tidyverse")
+```
+We also load the **haven** package to load Stata `dta` files,
+```{r}
+library("haven")
+```
+and the **rio** package to load multiple types of files,
+```{r}
+library("rio")
+```
+
+
+## Introduction to R
+
+### Data Files
+
+Don't use `setwd()` within scripts.
+It is much better to organize your code in projects.
+
+When reading from csv files use `readr::read_csv` instead of the base R function `read.csv`. 
+It is slightly faster, and returns a `tibble` instead of a data frame.
+See r4ds [Ch 11: Data Import](http://r4ds.had.co.nz/tibbles.html#introduction-4)
+for more dicussion.
+
+We also can load it directly from a URL.
+```{r}
+UNpop <- read_csv("https://raw.githubusercontent.com/jrnold/qss/master/INTRO/UNpop.csv")
+class(UNpop)
+UNpop
+```
+
+The single bracket, `[`, is useful to select rows and columns in simple cases,
+but the **dplyr** functions `slice()` to select rows by number, `filter` to select by certain criteria, or `select()` to select columns.
+
+```{r}
+UNpop[c(1, 2, 3), ]
+```
+is equivalent to 
+```{r}
+UNpop %>% slice(1:3)
+```
+
+```{r}
+UNpop[, "world.pop"]
+```
+is almost equivalent to 
+```{r}
+select(UNpop, world.pop)
+```
+However, note that `select()` **always** returns a tibble, and never a vector, 
+even if only one column is selected.
+Also, note that since `world.pop` is a tibble, using `[` also returns tibbles 
+rather than a vector if it is only one column.
+
+```{r}
+UNpop[1:3, "year"]
+```
+is almost equivalent to 
+```{r}
+UNpop %>%
+  slice(1:3) %>%
+  select(year)
+```
+For this example using these functions and `%>%` to chain them together may 
+seem a little excessive, but later we will see how chaining simple functions 
+togther like that becomes a very powerful way to build up complicated logic.
+
+
+```{r}
+UNpop$world.pop[seq(from = 1, to = nrow(UNpop), by = 2)]
+```
+can be rewritten as
+```{r}
+UNpop %>%
+  slice(seq(1, n(), by = 2)) %>%
+  select(world.pop) 
+```
+
+The function `n()` when used in a dplyr functions returns the number of rows
+in the data frame (or the number of rows in the group if used with `group_by`).
+
+### Saving Objects
+
+**Do not save** the workspace using `save.image`.
+This is an extremely bad idea for reproducibility.
+See r4ds [Ch 8](http://r4ds.had.co.nz/workflow-projects.html). 
+You should uncheck the options in RStudio to avoid saving and rstoring from `.RData` files. 
+This will help ensure that your R code runs the way you think it does, instead of depending on some long forgotten code that is only saved in the workspace image. 
+
+Everything important should be in a script. Anything saved or loaded from file
+should be done explicitly.
+
+As with reading CSVs, use the **readr** package functions. 
+In this case, `write_csv` writes a csv file
+
+```{r eval=FALSE}
+write_csv(UNpop, "UNpop.csv")
+```
+
+### Packages
+
+Instead of **foreign** for reading and writing Stata and SPSS files, use **haven**. 
+One reason to do so is that it is better maintained. 
+The R function `read.dta` does not read files created by the most recent versions of Stata (13+).
+
+```{r}
+read_dta("https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.dta")
+```
+
+There is also the equivalent `write_dta` function to create Stata datasets.
+```{r, eval=FALSE}
+write_dta(UNpop, "UNpop.dta")
+```
+
+Also see the [rio](https://cran.r-project.org/package=rio) package which makes loading data even easier with smart defaults.
+
+You can use the `import` function to load many types of files:
+```{r}
+import("https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.csv")
+import("https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.RData")
+import("https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.dta")
+```
+
+### Style Guide
+
+Follow [Hadley Wickham's Style Guide](http://adv-r.had.co.nz/Style.html) not the Google R style guide.
+
+In addition to **lintr**, the R package [formatR](https://cran.r-project.org/package=formatR) has methods to clean up your code.
+
+<!--chapter:end:Ch1.Rmd-->
+
+# Chapter 2: Measurements
+
+## Prerequistes
+
+```{r message=FALSE}
+library("tidyverse")
+```
+
+
+## Racial Discrimination in the Labor Market
+
+The code in the book uses `table` and `addmargins` to construct the table.
+However, this can be done easily with `dplyr` using grouping and summarizing.
+
+```{r}
+resume_url <- "https://raw.githubusercontent.com/jrnold/qss/master/CAUSALITY/resume.csv"
+resume <- read_csv(resume_url)
+```
+
+In addition to the functions shown in the text,
+```{r}
+dim(resume)
+summary(resume)
+head(resume)
+```
+we can also use `glimpse` to get a quick understanding of the variables in the data frame,
+```{r}
+glimpse(resume)
+```
+
+For each combination of `race` and `call` let's count the observations:
+```{r}
+race_call_tab <-
+  resume %>%
+  group_by(race, call) %>%
+  count()
+race_call_tab
+```
+
+If we want to calculate callback rates by race:
+```{r}
+race_call_rate <-
+  race_call_tab %>%
+  group_by(race) %>%
+  mutate(call_rate =  n / sum(n)) %>%
+  filter(call == 1) %>%
+  select(race, call_rate)
+race_call_rate
+```
+
+If we want the overall callback rate, we can calculate it from the original 
+data,
+```{r}
+resume %>%
+  summarise(call_back = mean(call))
+```
+
+## Subsetting Data in R
+
+
+### Subsetting
+
+The **dplyr** function `filter` is a much improved version of `subset`.
+
+To select black individuals in the data:
+```{r}
+resumeB <-
+  resume %>%
+  filter(race == "black")
+dim(resumeB)
+head(resumeB)
+```
+
+And to calculate the callback rate
+```{r}
+resumeB %>%
+  summarise(call_rate = mean(call))
+```
+
+To keep call and firstname variables and those with black-sounding first names.
+```{r}
+resumeBf <-
+  resume %>%
+  filter(race == "black", sex == "female") %>%
+  select(call, firstname)
+head(resumeBf)
+```
+
+Now we can calculate the gender gap by group. 
+
+One way to do this is to calculate the call back rates for both sexes of 
+black sounding names,
+```{r}
+resumeB <- resume %>%
+  filter(race == "black") %>%
+  group_by(sex) %>%
+  summarise(black_rate = mean(call))
+```
+and white-sounding names
+```{r}
+resumeW <- resume %>%
+  filter(race == "white") %>%
+  group_by(sex) %>%
+  summarise(white_rate = mean(call))
+resumeW
+```
+Then, merge `resumeB` and `resumeW` on `sex` and calculate the difference for both sexes.
+```{r}
+inner_join(resumeB, resumeW, by = "sex") %>%
+  mutate(race_gap = white_rate - black_rate)
+  
+```
+
+This seems to be a little more code, but we didn't duplicate as much as in QSS, and this would easily scale to more than two categories.
+
+A way to do this using the `spread` and gather functions from **tidy** are,
+First, caclulate the 
+```{r}
+resume_race_sex <-
+  resume %>%
+  group_by(race, sex) %>%
+  summarise(call = mean(call))
+head(resume_race_sex)
+```
+Now, use `spread()` to make each value of `race` a new column:
+```{r}
+library("tidyr")
+resume_sex <-
+  resume_race_sex %>%
+  ungroup() %>%
+  spread(race, call)
+resume_sex
+```
+Now we can calculate the race wage differences by sex as before,
+```{r}
+resume_sex %>%
+  mutate(call_diff = white - black)
+```
+
+This could be combined into a single chain with only six lines of code:
+```{r}
+resume %>%
+  group_by(race, sex) %>%
+  summarise(call = mean(call)) %>%
+  ungroup() %>%
+  spread(race, call) %>%
+  mutate(call_diff = white - black)
+```
+
+
+
+### Simple conditional statements
+
+See the **dlpyr** functions `if_else`, `recode` and `case_when`.
+The function `if_else` is like `ifelse` bue corrects for some weird behavior that `ifelse` has in certain cases.
+
+```{r}
+resume %>% 
+  mutate(BlackFemale = if_else(race == "black" & sex == "female", 1, 0)) %>%
+  group_by(BlackFemale, race, sex) %>%
+  count()
+```
+
+
+### Factor Variables
+
+See R4DS Chapter 15 "Factors" and the package **forcats**
+
+The code in this section works, but can be simplified by using the function
+`case_when` which works in exactly thease cases.
+```{r}
+resume %>%
+  mutate(type = as.factor(case_when(
+    .$race == "black" & .$sex == "female" ~ "BlackFemale",
+    .$race == "black" & .$sex == "male" ~ "BlackMale",
+    .$race == "white" & .$sex == "female" ~ "WhiteFemale",
+    .$race == "white" & .$sex == "male" ~ "WhiteMale",
+    TRUE ~ as.character(NA)
+  )))
+```
+
+Since the logic of this is so simple, we can create this variable by 
+using `str_c` to combine the vectors of `sex` and `race`, after using `str_to_title` to capitalize them first.
+```{r}
+library(stringr)
+resume <-
+  resume %>%
+  mutate(type = str_c(str_to_title(race), str_to_title(sex)))
+```
+
+Some of the reasons given for using factors in this chapter are not as important given the functionality in modern tidyverse packages.
+For example, there is no reason to use `tapply`, as that can use `group_by` and `summarise`,
+```{r}
+resume %>%
+  group_by(type) %>%
+  summarise(call = mean(call))
+```
+
+What's nice about this approach is that we wouldn't have needed to create the factor variable first,
+```{r}
+resume %>%
+  group_by(race, sex) %>%
+  summarise(call = mean(call))
+```
+
+
+We can use that same appraoch to calculate the mean of firstnames, and use
+`arrange` to sort in ascending order.
+```{r}
+resume %>%
+  group_by(firstname) %>%
+  summarise(call = mean(call)) %>%
+  arrange(call)
+```
+
+## Causal Affects and the Counterfactual
+ 
+Load the data using the **readr** function `read_csv`
+```{r}
+social_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/CAUSALITY/social.csv"
+social <- read_csv(social_url)
+summary(social)
+```
+
+Use a grouped summarize instead of `tapply`,
+```{r}
+gotv_by_group <-
+  social %>%
+  group_by(messages) %>%
+  summarize(turnout = mean(primary2006))
+gotv_by_group
+```
+
+Get the turnout for the control group
+```{r}
+gotv_control <-
+  (filter(gotv_by_group, messages == "Control"))[["turnout"]]
+```
+
+Subtract the control group turnout from all groups
+
+```{r}
+gotv_by_group %>%
+  mutate(diff_control = turnout - gotv_control)
+```
+
+We could have also done this in one step like,
+```{r}
+gotv_by_group %>%
+  mutate(control = mean(turnout[messages == "Control"]),
+         control_diff = turnout - control)
+```
+
+We can compare the differences of variables across the groups easily using a grouped summarize
+```{r}
+gotv_by_group %>%
+  mutate(control = mean(turnout[messages == "Control"]),
+         control_diff = turnout - control)
+```
+
+
+**Pro-tip** The `summarise_at` functions allows you summarize one-or-more columns with one-or-more functions.
+In addition to `age`, 2004 turnout, and household size, we'll also compare propotion female,
+```{r}
+social %>%
+  group_by(messages) %>%
+  mutate(age = 2006 - yearofbirth,
+         female = (sex == "female")) %>%
+  select(-age, -sex) %>%
+  summarise_all(mean)
+```
+
+## Observational Studies
+
+Load the `minwage` dataset from its URL using `readr::read_csv`:
+```{r}
+minwage_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/CAUSALITY/minwage.csv"
+minwage <- read_csv(minwage_url)
+glimpse(minwage)
+summary(minwage)
+```
+
+First, calcualte the proportion of restraunts by state whose hourly wages were less than the minimum wage in NJ, \$5.05, for `wageBefore` and `wageAfter`:
+
+Since the NJ minimum wage was \$5.05, we'll define a variable with that value.
+Even if you use them only once or twice, it is a good idea to put values like this in variables. 
+It makes your code closer to self-documenting.n
+```{r}
+NJ_MINWAGE <- 5.05
+```
+Later, it will be easier to understand `wageAfter < NJ_MINWAGE` without any comments than it would be to understand `wageAfter < 5.05`. 
+In the latter case you'd have to remember that the new NJ minimum wage was 5.05 and that's why you were using that value.
+This is an example of a [magic number](https://en.wikipedia.org/wiki/Magic_number_(programming)#Unnamed_numerical_constants): try to avoid them.
+
+Note that location has multiple values: PA and four regions of NJ.
+So we'll add a state variable to the data.
+```{r}
+minwage %>%
+  count(location)
+```
+
+We can extract the state from the final two characters of the location variable using the **stringr** function `str_sub` (R4DS Ch 14: Strings):
+```{r}
+library(stringr)
+minwage <-
+  mutate(minwage, state = str_sub(location, -2L))
+```
+Alternatively, since everything is either PA or NJ
+```{r eval=FALSE}
+minwage <-
+  mutate(minwage, state = if_else(location == "PA", "PA", "NJ"))
+```
+
+Let's confirm that the restraunts followed the law:
+```{r}
+minwage %>%
+  group_by(state) %>%
+  summarise(prop_after = mean(wageAfter < NJ_MINWAGE),
+            prop_Before = mean(wageBefore < NJ_MINWAGE))
+```
+
+Create a variable for the proportion of full-time employees in NJ and PA 
+```{r}
+minwage <-
+  minwage %>%
+  mutate(totalAfter = fullAfter + partAfter,
+        fullPropAfter = fullAfter / totalAfter)
+```
+
+Now calculate the average for each state:
+```{r}
+full_prop_by_state <-
+  minwage %>%
+  group_by(state) %>%
+  summarise(fullPropAfter = mean(fullPropAfter))
+full_prop_by_state
+```
+
+We could compute the difference by  
+```{r}
+(filter(full_prop_by_state, state == "NJ")[["fullPropAfter"]] - 
+  filter(full_prop_by_state, state == "PA")[["fullPropAfter"]])
+```
+or using **tidyr** functions `spread` (R4DS Ch 11: Tidy Data):
+```{r}
+spread(full_prop_by_state, state, fullPropAfter) %>%
+  mutate(diff = NJ - PA)
+```
+
+
+
+### Confounding Bias
+
+We can calculate the proportion of fast-food restraunts in each chain in each state:
+```{r}
+chains_by_state <-
+  minwage %>%
+  group_by(state) %>%
+  count(chain) %>%
+  mutate(prop = n / sum(n)) 
+```
+
+We can easily compare these using a simple dot-plot:
+```{r}
+ggplot(chains_by_state, aes(x = chain, y = prop, colour = state)) +
+  geom_point() + 
+  coord_flip()
+```
+
+In the QSS text, only Burger King restraunts are compared. 
+However, dplyr makes this easy.
+All we have to do is change the `group_by` statement we used last time,
+and add chain to it:
+
+```{r}
+full_prop_by_state_chain <-
+  minwage %>%
+  group_by(state, chain) %>%
+  summarise(fullPropAfter = mean(fullPropAfter))
+full_prop_by_state_chain
+```
+
+We can plot and compare the proportions easily in this format.
+In general, ordering categorical variables alphabetically is useless, so we'll order the chains by the average of the NJ and PA `fullPropAfter`, using `forcats::fct_reorder`:
+```{r}
+ggplot(full_prop_by_state_chain,
+       aes(x = forcats::fct_reorder(chain, fullPropAfter),
+           y = fullPropAfter, 
+           colour = state)) +
+  geom_point() +
+  coord_flip() +
+  labs(x = "chains")
+```
+
+To calculate the differences, we need to get the data frame 
+
+1. The join method.
+
+   1. Create New Jersey and Pennsylvania datasets with `chain` and prop full employed columns.
+   2. Merge the two datasets on `chain`.
+   
+```{r}
+chains_nj <- full_prop_by_state_chain %>%
+  ungroup() %>%
+  filter(state == "NJ") %>%
+  select(-state) %>%
+  rename(NJ = fullPropAfter)
+chains_pa <- full_prop_by_state_chain %>%
+  ungroup() %>%
+  filter(state == "PA") %>%
+  select(-state) %>%
+  rename(PA = fullPropAfter)
+
+full_prop_state_chain_diff <- 
+  full_join(chains_nj, chains_pa, by = "chain") %>%
+  mutate(diff = NJ - PA)
+full_prop_state_chain_diff
+```
+
+Q: In the code above why did I remove the `state` variable and rename the `fullPropAfter` variable before merging? What happens if I didn't?
+
+2. The spread/gather method. We can also use the `spread` and `gather` functions from **tidyr**. In this example it is much more compact code.
+
+```{r}
+full_prop_by_state_chain %>%
+  spread(state, fullPropAfter) %>%
+  mutate(diff = NJ - PA)
+```
+
+### Before and After and Difference-in-Difference Designs
+
+
+To compute the estimates in the before and after design first create a variable for the difference before and after the law passed.
+```{r}
+minwage <- 
+  minwage %>%
+  mutate(totalBefore = fullBefore + partBefore,
+         fullPropBefore = fullBefore / totalBefore)
+```
+
+The before-and-after analysis is the difference between the full-time employment before and after the minimum wage law passed looking only at NJ:
+```{r}
+filter(minwage, state == "NJ") %>%
+  summarise(diff = mean(fullPropAfter) - mean(fullPropBefore))
+```
+
+The difference-in-differences design uses the difference in the before-and-after differences for each state.
+```{r}
+diff_by_state <-
+  minwage %>%
+  group_by(state) %>%
+  summarise(diff = mean(fullPropAfter) - mean(fullPropBefore))
+
+filter(diff_by_state, state == "NJ")[["diff"]] -
+  filter(diff_by_state, state == "PA")[["diff"]]
+```
+
+Let's create a single dataset with the mean values of each state before and after to visually look at each of these designs:
+```{r}
+full_prop_by_state <-
+  minwage %>%
+  group_by(state) %>%
+  summarise_at(vars(fullPropAfter, fullPropBefore), mean) %>%
+  gather(period, fullProp, -state) %>%
+  mutate(period = recode(period, fullPropAfter = 1, fullPropBefore = 0))
+full_prop_by_state
+```
+
+```{r}
+ggplot(full_prop_by_state, aes(x = period, y = fullProp, colour = state)) +
+  geom_point() +
+  geom_line() +
+  scale_x_continuous(breaks = c(0, 1), labels = c("Before", "After"))
+```
+
+
+
+## Descriptive Statistics for a Single Variable
+
+
+To calculate the summary for the variables `wageBefore` and `wageAfter`:
+```{r}
+minwage %>%
+  filter(state == "NJ") %>%
+  select(wageBefore, wageAfter) %>%
+  summary()
+  
+```
+
+We calculate the IQR for each state's wages after the passage of the law using the same grouped summarise as we used before:
+```{r}
+minwage %>%
+  group_by(state) %>%
+  summarise(wageAfter = IQR(wageAfter),
+            wageBefore = IQR(wageBefore))
+```
+
+Calculate the variance and standard deviation of `wageAfter` and `wageBefore` for each state:
+
+```{r}
+minwage %>%
+  group_by(state) %>%
+  summarise(wageAfter_sd = sd(wageAfter),
+               wageAfter_var = var(wageAfter),
+               wageBefore_sd = sd(wageBefore),
+               wageBefore_var = var(wageBefore))
+
+```
+or, more compactly, using `summarise_at`:
+```{r}
+minwage %>%
+  group_by(state) %>%
+  summarise_at(vars(wageAfter, wageBefore), funs(sd, var))
+```
+
+
+<!--chapter:end:Ch2.Rmd-->
+
+# Chapter 3
+
+## Prerequisites
+
+```{r}
+library("tidyverse")
+library("forcats")
+```
+
+```{r message=FALSE}
+afghan_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/MEASUREMENT/afghan.csv"
+afghan <- read_csv(afghan_url)
+```
+
+Summarize the variables of interest
+```{r}
+afghan %>%
+  select(age, educ.years, employed, income) %>%
+  summary()
+```
+
+With `income`, `read_csv` never converts strings to factors by default.
+To get a summary of the different levels, either convert it to a factor (R4DS Ch 15), or use `count()`
+```{r}
+afghan %>%
+  count(income)
+```
+
+Count the number a proportion of respondents who answer that they were harmed by the ISF (`violent.exp.ISAF`) and (`violent.exp.taliban`) respectively,
+```{r}
+afghan %>%
+  group_by(violent.exp.ISAF, violent.exp.taliban) %>%
+  count() %>%
+  ungroup() %>%
+  mutate(prop = n / sum(n))
+```
+We need to use `ungroup()` in order to ensure that `sum(n)` sums over the entire
+dataset as opposed to only within categories of `violent.exp.ISAF`.
+
+
+Unlike `prop.table`, the code above does not drop missing values.
+We can drop those values by adding a `filter` verb and using `!is.na()` to test
+for missing values in those variables:
+```{r}
+afghan %>%
+  filter(!is.na(violent.exp.ISAF), !is.na(violent.exp.taliban)) %>%
+  group_by(violent.exp.ISAF, violent.exp.taliban) %>%
+  count() %>%
+  ungroup() %>%
+  mutate(prop = n / sum(n))
+```
+
+### Handling Missing Data in R
+
+We already observed the issues with `NA` values in calculating the proportion
+answering the "experienced violence" questions.
+
+You can filter rows with specific variables having missing values using `filter`
+as shown above.
+
+Howeer, `na.omit` works with tibbles just like any other data frame.
+```{r}
+na.omit(afghan)
+```
+
+## Visualizing the Univariate Distribution 
+
+### Barplot
+
+```{r}
+library(forcats)
+afghan <-
+  afghan %>%
+  mutate(violent.exp.ISAF.fct = 
+           fct_explicit_na(fct_recode(factor(violent.exp.ISAF),
+                                      Harm = "1", "No Harm" = "0"),
+                           "No response"))
+ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
+  geom_bar() +
+  xlab("Response category") +
+  ylab("Proportion of respondents") +
+  ggtitle("Civilian Victimization by the ISAF")
+```
+
+```{r}
+afghan <-
+  afghan %>%
+  mutate(violent.exp.taliban.fct = 
+           fct_explicit_na(fct_recode(factor(violent.exp.taliban),
+                                      Harm = "1", "No Harm" = "0"),
+                           "No response"))
+ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
+  geom_bar() +
+  xlab("Response category") +
+  ylab("Proportion of respondents") +
+  ggtitle("Civilian Victimization by the Taliban")
+```
+
+
+**TODO** This plot could improved by plotting the two values simultaneously to be able to better compare them.
+
+- dodged bar plot
+- dot-plot
+
+This will require creating a data frame that has the following columns: perpetrator (`ISAF`, `Taliban`), response (`No Harm`, `Harm`, `No response`). 
+See the section on Tidy Data and spread gather.
+
+**TODO** Compare them by region, ? 
+
+### Boxplot
+
+```{r}
+ggplot(afghan, aes(x = 1, y = age)) +
+  geom_boxplot() +
+  labs(y = "Age", x = "") +
+  ggtitle("Distribution of Age")
+```
+
+
+```{r}
+ggplot(afghan, aes(y = educ.years, x = province)) +
+  geom_boxplot() +
+  labs(x = "Province", y = "Years of education") +
+  ggtitle("Education by Provice")
+
+```
+
+Helmand and Uruzgan have much lower levels of education than the other
+provicnces, and also report higher levels of violence.
+```{r}
+afghan %>%
+  group_by(province) %>%
+  summarise(educ.years = mean(educ.years, na.rm = TRUE),
+            violent.exp.taliban =
+              mean(violent.exp.taliban, na.rm = TRUE),
+            violent.exp.ISAF =
+              mean(violent.exp.ISAF, na.rm = TRUE)) %>%
+  arrange(educ.years)
+```
+
+### Printing and saving graphics
+
+Use the function `ggsave()` to save ggplot graphics. 
+
+Also, RMarkdown files have their own means of creating and saving plots
+created by code-chunks.
+
+
+## Survey Sampling
+
+### The Role of Randomization
+
+## load village data
+
+```{r}
+afghan_village_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/MEASUREMENT/afghan-village.csv"
+afghan.village <- read_csv(afghan_village_url)
+```
+
+Box-plots of altitude
+```{r}
+ggplot(afghan.village, aes(x = factor(village.surveyed,
+                                      labels = c("sampled", "non-sampled")),
+                           y = altitude)) +
+  geom_boxplot() +
+  labs(y = "Altitude (meter)", x = "")
+
+```
+
+Boxplots log-population values of sampled and non-sampled
+```{r}
+ggplot(afghan.village, aes(x = factor(village.surveyed,
+                                      labels = c("sampled", "non-sampled")),
+                           y = log(population))) +
+  geom_boxplot() +
+  labs(y = "log(population)", x = "")
+```
+
+You can also compare these distributions by plotting their densities:
+```{r}
+ggplot(afghan.village, aes(colour = factor(village.surveyed,
+                                      labels = c("sampled", "non-sampled")),
+                           x = log(population))) +
+  geom_density() +
+  geom_rug() +
+  labs(x = "log(population)", colour = "")
+```
+
+### Non-response and other sources of bias
+
+Calculate the rates of non-response by province to `violent.exp.ISAF` and
+`violent.exp.taliban`:
+```{r}
+afghan %>%
+  group_by(province) %>%
+  summarise(ISAF = mean(is.na(violent.exp.ISAF)),
+            taliban = mean(is.na(violent.exp.taliban))) %>%
+  arrange(-ISAF)
+```
+
+
+Calculat the proportion who support the ISAF using the difference in means
+between the ISAF and control groups:
+```{r}
+(mean(filter(afghan, list.group == "ISAF")$list.response) -
+  mean(filter(afghan, list.group == "control")$list.response))
+```
+
+
+To calculate the table responses to the list expriment in the control, ISAF,
+and taliban groups>
+```{r}
+afghan %>%
+  group_by(list.response, list.group) %>%
+  count() %T>%
+  glimpse() %>%
+  spread(list.group, n, fill = 0)
+```
+
+## Measuring Political Polarization
+
+```{r}
+congress_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/MEASUREMENT/congress.csv"
+congress <- read_csv(congress_url)
+```
+
+```{r}
+glimpse(congress)
+```
+
+To create the scatterplot in 3.6, we can 
+
+```{r}
+congress %>%
+  filter(congress %in% c(80, 112), 
+         party %in% c("Democrat", "Republican")) %>%
+  ggplot(aes(x = dwnom1, y = dwnom2, colour = party)) +
+  geom_point() +
+  facet_wrap(~ congress) +
+  coord_fixed() +
+  scale_y_continuous("racial liberalism/conservatism",
+                     limits = c(-1.5, 1.5)) +
+  scale_x_continuous("economic liberalism/conservatism",
+                     limits = c(-1.5, 1.5))
+
+```
+
+```{r}
+congress %>%
+  ggplot(aes(x = dwnom1, y = dwnom2, colour = party)) +
+  geom_point() +
+  facet_wrap(~ congress) +
+  coord_fixed() +
+  scale_y_continuous("racial liberalism/conservatism",
+                     limits = c(-1.5, 1.5)) +
+  scale_x_continuous("economic liberalism/conservatism",
+                     limits = c(-1.5, 1.5))
+```
+
+
+```{r}
+```
+
+```{r}
+congress %>%
+  group_by(congress, party) %>%
+  summarise(dwnom1 = mean(dwnom1)) %>%
+  filter(party %in% c("Democrat", "Republican")) %>%
+  ggplot(aes(x = congress, y = dwnom1, 
+             colour = fct_reorder2(party, congress, dwnom1))) +
+  geom_line() +
+  labs(y = "DW-NOMINATE score (1st Dimension)", x = "Congress",
+       colour = "Party")
+```
+
+
+### Correlation
+
+Let's plot the Gini coefficient
+```{r}
+usgini_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/MEASUREMENT/USGini.csv"
+USGini <- read_csv(usgini_url)
+```
+
+```{r}
+ggplot(USGini, aes(x = year, y = gini)) +
+  geom_point() +
+  labs(x = "Year", y = "Gini coefficient") +
+  ggtitle("Income Inequality")
+```
+
+To calculate a measure of party polarization take the code used in the plot of Republican and Democratic party median ideal points and adapt it to calculate the difference in the party medians:
+```{r}
+party_polarization <- 
+  congress %>%
+  group_by(congress, party) %>%
+  summarise(dwnom1 = mean(dwnom1)) %>%
+  filter(party %in% c("Democrat", "Republican")) %>%
+  spread(party, dwnom1) %>%
+  mutate(polarization = Republican - Democrat)
+party_polarization
+```
+
+```{r}
+ggplot(party_polarization, aes(x = congress, y = polarization)) +
+  geom_point() +
+  ggtitle("Political Polarization") +
+  labs(x = "Year", y = "Republican median − Democratic median")
+```
+
+
+
+
+
+### Quantile-Quantile Plot
+
+To create histogram plots similar 
+
+```{r}
+congress %>%
+  filter(congress == 112, party %in% c("Republican", "Democrat")) %>%
+  ggplot(aes(x = dwnom2, y = ..density..)) +
+  geom_histogram() +
+  facet_grid(. ~ party) + 
+  labs(x = "racial liberalism/conservatism dimension")
+```
+
+*ggplot2* includes a `stat_qq` which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distibution, usually the normal one.
+However, we can calculate one by hand, which may give more insight into exactly what the qq-plot is doing.
+
+
+```{r}
+party_qtiles <- tibble(
+  probs = seq(0, 1, by = 0.01),
+  Democrat = quantile(filter(congress, congress == 112, party == "Democrat")$dwnom2,
+         probs = probs),
+  Republican = quantile(filter(congress, congress == 112, party == "Republican")$dwnom2,
+         probs = probs)
+)
+party_qtiles
+```
+
+The plot looks different than the one in the text since the x- and y-scales are in the original values instead of z-scores (see the next section).
+```{r}
+party_qtiles %>%
+  ggplot(aes(x = Democrat, y = Republican)) + 
+  geom_point() +
+  geom_abline() +
+  coord_fixed()
+```
+
+## Clustering
+
+
+### Matrices
+
+While matrices are great for numerical computations, such as when you are 
+implementing algorithms, generally keeping data in data frames is more convenient for data wrangling.
+
+### Lists 
+
+See R4DS [Chapter 20: Vectors](http://r4ds.had.co.nz/vectors.html),  [Chapter 21: Iteration](http://r4ds.had.co.nz/iteration.html) and the **purrr** package for more powerful methods of computing on lists.
+
+### k-means algorithms
+
+**TODO** A good visualization of the k-means algorithm and a simple, naive implementation in R.
+
+Calculate the clusters by the 80th and 112th congresses,
+```{r}
+k80two.out <- 
+  kmeans(select(filter(congress, congress == 80),
+                     dwnom1, dwnom2),
+              centers = 2, nstart = 5)
+```
+
+Add the cluster ids to datasets
+```{r}
+congress80 <- 
+  congress %>%
+  filter(congress == 80) %>%
+  mutate(cluster2 = factor(k80two.out$cluster))
+```
+
+We will also create a data sets with the cluster centroids.
+These are in the `centers` element of the cluster object.
+```{r}
+k80two.out$centers
+```
+To make it easier to use with ggplot, we need to convert this to a data frame.
+The `tidy` function from the **broom** package:
+```{r}
+k80two.clusters <- tidy(k80two.out)
+k80two.clusters
+```
+
+
+Plot the ideal points and clusters
+```{r}
+ggplot() +
+  geom_point(data = congress80,
+             aes(x = dwnom1, y = dwnom2, colour = cluster2)) +
+  geom_point(data = k80two.clusters, mapping = aes(x = x1, y = x2))
+
+```
+
+We can also plot,
+```{r}
+congress80 %>%
+  group_by(party, cluster2) %>%
+  count()
+```
+
+And now we can repeat these steps for the 112th congress:
+```{r}
+k112two.out <-
+  kmeans(select(filter(congress, congress == 112),
+                dwnom1, dwnom2),
+         centers = 2, nstart = 5)
+
+congress112 <-
+  filter(congress, congress == 112) %>%
+  mutate(cluster2 = factor(k112two.out$cluster))
+
+k112two.clusters <- tidy(k112two.out)
+
+ggplot() +
+  geom_point(data = congress112,
+             mapping = aes(x = dwnom1, y = dwnom2, colour = cluster2)) +
+  geom_point(data = k112two.clusters,
+             mapping = aes(x = x1, y = x2))
+
+```
+
+```{r}
+congress112 %>%
+  group_by(party, cluster2) %>%
+  count()
+```
+
+Now repeat the same with four clusters on the 80th congress:
+```{r}
+k80four.out <-
+  kmeans(select(filter(congress, congress == 80),
+                dwnom1, dwnom2),
+         centers = 4, nstart = 5)
+
+congress80 <-
+  filter(congress, congress == 80) %>%
+  mutate(cluster2 = factor(k80four.out$cluster))
+
+k80four.clusters <- tidy(k80four.out)
+
+ggplot() +
+  geom_point(data = congress80,
+             mapping = aes(x = dwnom1, y = dwnom2, colour = cluster2)) +
+  geom_point(data = k80four.clusters,
+             mapping = aes(x = x1, y = x2), size = 3)
+
+```
+
+and on the 112th congress:
+```{r}
+k112four.out <-
+  kmeans(select(filter(congress, congress == 112),
+                dwnom1, dwnom2),
+         centers = 4, nstart = 5)
+
+congress112 <-
+  filter(congress, congress == 112) %>%
+  mutate(cluster2 = factor(k112four.out$cluster))
+
+k112four.clusters <- tidy(k112four.out)
+
+ggplot() +
+  geom_point(data = congress112,
+             mapping = aes(x = dwnom1, y = dwnom2, colour = cluster2)) +
+  geom_point(data = k112four.clusters,
+             mapping = aes(x = x1, y = x2), size = 3)
+
+```
+
+
+<!--chapter:end:ch3.Rmd-->
+

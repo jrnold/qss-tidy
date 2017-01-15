@@ -15,11 +15,6 @@ The packages [modelr](https://cran.r-project.org/package=modelr) and [broom](htt
 ```r
 library("broom")
 library("modelr")
-#> 
-#> Attaching package: 'modelr'
-#> The following object is masked from 'package:broom':
-#> 
-#>     bootstrap
 ```
 
 

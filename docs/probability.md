@@ -983,3 +983,172 @@ pres08 %>%
 ## Large Sample Theorems
 
 ### Law of Large Numbers
+
+**Original:**
+
+```r
+sims <- 1000
+## 3 separate simulations for each
+x.binom <- rbinom(sims, p = 0.2, size = 10)
+## computing sample mean with varying sample size
+mean.binom <- cumsum(x.binom) / 1:sims
+```
+
+**Tidyverse**: Put the simulation number, `x` and `mean` in a tibble:
+
+```r
+sims <- 1000
+p <- 0.2
+size = 10
+lln_binom <- tibble(
+  n = seq_len(sims),
+  x = rbinom(sims, p = p, size = size),
+  mean = cumsum(x) / n,
+  distrib = str_c("Binomial(", size, ", ", p, ")"))
+```
+
+**Original:**
+
+```r
+## default runif() is uniform(0, 1)
+x.unif <- runif(sims)
+mean.unif <- cumsum(x.unif) / 1:sims
+```
+
+**Tidyverse:**
+
+```r
+lln_unif <-
+ tibble(n = seq_len(sims),
+        x = runif(sims),
+        mean = cumsum(x) / n,
+        distrib = str_c("Uniform(0, 1)"))
+```
+
+**Original:**
+
+```r
+par(cex = 1.5)
+## plot for binomial
+plot(1:sims, mean.binom, type = "l", ylim = c(1, 3),
+     xlab = "Sample size", ylab = "Sample mean", main = "Binomial(10, 0.2)")
+abline(h = 2, lty = "dashed") # expectation
+
+## plot for uniform
+plot(1:sims, mean.unif, type = "l", ylim = c(0, 1),
+     xlab = "Sample size", ylab = "Sample mean", main = "Uniform(0, 1)")
+abline(h = 0.5, lty = "dashed") # expectation
+```
+
+**Tidyverse:** 
+
+```r
+true_means <- 
+  tribble(~distrib, ~mean,
+          "Uniform(0, 1)", 0.5,
+          str_c("Binomial(", size, ", ", p, ")"), size * p)
+
+ggplot() +
+  geom_hline(aes(yintercept = mean), data = true_means, 
+             colour = "white", size = 2) +
+  geom_line(aes(x = n, y = mean), 
+            data = bind_rows(lln_binom, lln_unif)) +
+  facet_grid(distrib ~ ., scales = "free_y") +
+  labs(x = "Sample Size", y = "Sample Mean")
+```
+
+<img src="probability_files/figure-html/unnamed-chunk-70-1.png" width="70%" style="display: block; margin: auto;" />
+
+### Central Limit Theorem
+
+**Original:**
+
+```r
+par(cex = 1.5)
+## sims = number of simulations
+n.samp <- 1000
+z.binom <- z.unif <- rep(NA, sims)
+
+for (i in 1:sims) {
+    x <- rbinom(n.samp, p = 0.2, size = 10)
+    z.binom[i] <- (mean(x) - 2) / sqrt(1.6 / n.samp)
+    x <- runif(n.samp, min = 0, max = 1)
+    z.unif[i] <- (mean(x) - 0.5) / sqrt(1 / (12 * n.samp))
+}
+
+## histograms; nclass specifies the number of bins
+hist(z.binom, freq = FALSE, nclass = 40, xlim = c(-4, 4), ylim = c(0, 0.6),
+     xlab = "z-score", main = "Binomial(0.2, 10)")
+
+x <- seq(from = -3, to = 3, by = 0.01)
+lines(x, dnorm(x)) # overlay the standard Normal PDF
+hist(z.unif, freq = FALSE, nclass = 40, xlim = c(-4, 4), ylim = c(0, 0.6),
+     xlab = "z-score", main = "Uniform(0, 1)")
+lines(x, dnorm(x))
+```
+
+**tidyverse:** Instead of using a for loop, write functions to 
+
+The population mean of the binomial distribution is $\mu = p n$ and the variance is $\mu = p (1 - p) n$.
+
+
+```r
+sims <- 1000
+n_samp <- 1000
+
+# Mean of binomial distribution
+binom_mean <- function(size, p) {
+  size * p
+}
+
+# Variance of binomial distribution
+binom_var <- function(size, p) {
+  size * p * (1 - p) 
+}
+
+sim_binom_clt <- function(n_samp, size, p) {
+  x <- rbinom(n_samp, prob = p, size = size)
+  z <- (mean(x) - binom_mean(size, p)) /
+    sqrt(binom_var(size, p) / n_samp)
+  tibble(distrib = str_c("Binomial(", p, ", ", size, ")"),
+         z = z)
+}
+
+# Mean of uniform distribution
+unif_mean <- function(min, max) {
+  0.5 * (min + max)
+}
+
+# Variance of uniform distribution
+unif_var <- function(min, max) {
+  (1 / 12) * (max - min) ^ 2
+}
+
+sim_unif_clt <- function(n_samp, min = 0, max = 1) {
+  x <- runif(n_samp, min = min, max = max)
+  z <- (mean(x) - unif_mean(min, max)) /
+    sqrt(unif_var(min, max) / n_samp)
+  tibble(distrib = str_c("Uniform(", min, ", ", max, ")"),
+         z = z)
+}
+```
+
+Since we will calculate this for `n_samp = 1000` and `n_samp`, we might as well write a function for it. 
+
+```r
+clt_plot <- function(n_samp) {
+  bind_rows(map_df(seq_len(sims), ~ sim_binom_clt(n_samp, size, p)),
+            map_df(seq_len(sims), ~ sim_unif_clt(n_samp))) %>%
+    ggplot(aes(x = z)) +
+    geom_density() +
+    geom_rug() +
+    stat_function(fun = dnorm, colour = "red") +
+    facet_grid(distrib ~ .) +
+    ggtitle(str_c("Sample size = ", n_samp))
+}
+clt_plot(1000)
+clt_plot(100)
+```
+
+<img src="probability_files/figure-html/unnamed-chunk-73-1.png" width="70%" style="display: block; margin: auto;" /><img src="probability_files/figure-html/unnamed-chunk-73-2.png" width="70%" style="display: block; margin: auto;" />
+

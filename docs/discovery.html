@@ -173,6 +173,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="6" data-path="discovery.html"><a href="discovery.html"><i class="fa fa-check"></i><b>6</b> Discovery</a><ul>
 <li class="chapter" data-level="6.1" data-path="discovery.html"><a href="discovery.html#prerequisites-3"><i class="fa fa-check"></i><b>6.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="6.2" data-path="discovery.html"><a href="discovery.html#textual-data"><i class="fa fa-check"></i><b>6.2</b> Textual data</a></li>
+<li class="chapter" data-level="6.3" data-path="discovery.html"><a href="discovery.html#network-data"><i class="fa fa-check"></i><b>6.3</b> Network Data</a></li>
+<li class="chapter" data-level="6.4" data-path="discovery.html"><a href="discovery.html#spatial-data-in-r"><i class="fa fa-check"></i><b>6.4</b> Spatial Data in R</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="discovery.html"><a href="discovery.html#colors-in-r"><i class="fa fa-check"></i><b>6.4.1</b> Colors in R</a></li>
+<li class="chapter" data-level="6.4.2" data-path="discovery.html"><a href="discovery.html#united-states-presidential-elections"><i class="fa fa-check"></i><b>6.4.2</b> United States Presidential Elections</a></li>
+<li class="chapter" data-level="6.4.3" data-path="discovery.html"><a href="discovery.html#expansion-of-walmart"><i class="fa fa-check"></i><b>6.4.3</b> Expansion of Walmart</a></li>
+<li class="chapter" data-level="6.4.4" data-path="discovery.html"><a href="discovery.html#animation-in-r"><i class="fa fa-check"></i><b>6.4.4</b> Animation in R</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="probability.html"><a href="probability.html"><i class="fa fa-check"></i><b>7</b> Probability</a><ul>
 <li class="chapter" data-level="7.1" data-path="probability.html"><a href="probability.html#prerequisites-4"><i class="fa fa-check"></i><b>7.1</b> Prerequisites</a></li>
@@ -232,19 +240,289 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="discovery" class="section level1">
 <h1><span class="header-section-number">6</span> Discovery</h1>
+<p>The idea of tidy data and the common feature of tidyverse packages is that data should be stored in data frames with certain conventions. This works well with naturally tabular data, the type which has been common in social science applications. But there are other domains in which other data structures are more appropriate because they more naturally model the data or processes, or for computational reasons. The three applications in this chapter: text, networks, and spatial data are examples where the tidy data structure is less of an advantage. I will still rely on <strong>ggplot2</strong> for plotting, and use tidyverse compatible packages where appropriate.</p>
+<ul>
+<li>Textual data: <a href="https://cran.r-project.org/package=tidytext">tidytext</a></li>
+<li>Network data: <a href="https://cran.r-project.org/package=igraph">igraph</a> for network computation, as in the chapter. But several ggplot2 extension packages for plotting the networks.</li>
+<li>Spatial data: <a href="https://cran.r-project.org/package=ggplot2">ggplot2</a> has some built-in support for maps. The <a href="https://cran.r-project.org/package=map">map</a> package provides map data.</li>
+</ul>
+<p>See the <a href="http://r4ds.had.co.nz/">R for Data Science</a> section <a href="http://r4ds.had.co.nz/tidy-data.html#non-tidy-data">12.7 Non-tidy data</a> and this post on <a href="http://simplystatistics.org/2016/02/17/non-tidy-data/">Non-tidy data</a> by Jeff Leek for more on non-tidy data.</p>
 <div id="prerequisites-3" class="section level2">
 <h2><span class="header-section-number">6.1</span> Prerequisites</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)
-<span class="co">#&gt; Loading tidyverse: ggplot2</span>
-<span class="co">#&gt; Loading tidyverse: tibble</span>
-<span class="co">#&gt; Loading tidyverse: tidyr</span>
-<span class="co">#&gt; Loading tidyverse: readr</span>
-<span class="co">#&gt; Loading tidyverse: purrr</span>
-<span class="co">#&gt; Loading tidyverse: dplyr</span>
-<span class="co">#&gt; Conflicts with tidy packages ----------------------------------------------</span>
-<span class="co">#&gt; filter(): dplyr, stats</span>
-<span class="co">#&gt; lag():    dplyr, stats</span></code></pre></div>
+<span class="kw">library</span>(<span class="st">&quot;lubridate&quot;</span>)
+<span class="co">#&gt; Loading required package: methods</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: &#39;lubridate&#39;</span>
+<span class="co">#&gt; The following object is masked from &#39;package:base&#39;:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     date</span>
+<span class="kw">library</span>(<span class="st">&quot;stringr&quot;</span>)</code></pre></div>
+</div>
+<div id="textual-data" class="section level2">
+<h2><span class="header-section-number">6.2</span> Textual data</h2>
+<p>This section will primarily use the <a href="https://cran.r-project.org/package=tidytext">tidytext</a> package. It is a relatively new package. The <a href="https://cran.r-project.org/package=tm">tm</a> and <a href="https://cran.r-project.org/package=quanteda">quanteda</a> (by Ken Benoit) packages are more established and use the document-term matrix format as described in the QSS chapter. The <strong>tidytext</strong> package stores everything in a data frame; this may be less efficient than the other packages, but has the benefit of being able to easily take advantage of the tidyverse ecosystem. If your corpus is not too large, this shouldn’t be an issue.</p>
+<p>See <a href="http://tidytextmining.com/">Tidy Text Mining with R</a> for a full introduction to using <strong>tidytext</strong>.</p>
+<p>In tidy data, each row is an observation and each column is a variable. In the <strong>tidytext</strong> package, documents are stored as data frames with <strong>one-term-per-row</strong>.</p>
+</div>
+<div id="network-data" class="section level2">
+<h2><span class="header-section-number">6.3</span> Network Data</h2>
+</div>
+<div id="spatial-data-in-r" class="section level2">
+<h2><span class="header-section-number">6.4</span> Spatial Data in R</h2>
+<p>Sources:</p>
+<ul>
+<li>ggfortify: <code>fortify</code> and <code>autoplot</code> allows ggplot to handle some popular R packages. <a href="https://journal.r-project.org/archive/accepted/tang-horikoshi-li.pdf" class="uri">https://journal.r-project.org/archive/accepted/tang-horikoshi-li.pdf</a></li>
+<li><a href="https://cran.r-project.org/web/packages/ggfortify/vignettes/plot_map.html" class="uri">https://cran.r-project.org/web/packages/ggfortify/vignettes/plot_map.html</a></li>
+<li><p>ggplot loads map data using the <code>map_data</code> function.</p></li>
+<li><a href="http://docs.ggplot2.org/current/borders.html" class="uri">http://docs.ggplot2.org/current/borders.html</a></li>
+<li><a href="http://docs.ggplot2.org/current/fortify.map.html" class="uri">http://docs.ggplot2.org/current/fortify.map.html</a></li>
+<li><p><a href="http://docs.ggplot2.org/current/map_data.html" class="uri">http://docs.ggplot2.org/current/map_data.html</a></p></li>
+<li><a href="https://cran.r-project.org/doc/contrib/intro-spatial-rl.pdf" class="uri">https://cran.r-project.org/doc/contrib/intro-spatial-rl.pdf</a></li>
+<li><a href="https://cran.r-project.org/web/views/Spatial.html" class="uri">https://cran.r-project.org/web/views/Spatial.html</a></li>
+<li><a href="https://cran.r-project.org/web/packages/sp/index.html" class="uri">https://cran.r-project.org/web/packages/sp/index.html</a></li>
+<li><a href="https://cran.r-project.org/web/packages/maptools/index.html" class="uri">https://cran.r-project.org/web/packages/maptools/index.html</a></li>
+<li><a href="https://cran.r-project.org/web/packages/tmap/index.html" class="uri">https://cran.r-project.org/web/packages/tmap/index.html</a></li>
+<li><a href="https://cran.r-project.org/web/packages/leaflet/index.html" class="uri">https://cran.r-project.org/web/packages/leaflet/index.html</a></li>
+<li><a href="https://www.ggplot2-exts.org" class="uri">https://www.ggplot2-exts.org</a></li>
+<li>David Kahle and Hadley Wickham. 2013. <a href="https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf">ggmap: Spatial Visualization with ggplot2</a>. <em>Journal of Statistical Software</em></li>
+<li>Github <a href="https://github.com/dkahle/ggmap">dkahle/ggmamp</a></li>
+<li><a href="http://eriqande.github.io/rep-res-web/lectures/making-maps-with-R.html" class="uri">http://eriqande.github.io/rep-res-web/lectures/making-maps-with-R.html</a></li>
+<li><a href="https://www.r-bloggers.com/r-beginners-plotting-locations-on-to-a-world-map/" class="uri">https://www.r-bloggers.com/r-beginners-plotting-locations-on-to-a-world-map/</a></li>
+<li><p><a href="https://rpubs.com/m_dev/Intro-to-Spatial-Data-and-ggplot2" class="uri">https://rpubs.com/m_dev/Intro-to-Spatial-Data-and-ggplot2</a></p></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;maps&quot;</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: &#39;maps&#39;</span>
+<span class="co">#&gt; The following object is masked from &#39;package:purrr&#39;:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     map</span>
+<span class="kw">library</span>(<span class="st">&quot;ggrepel&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(us.cities)
+<span class="kw">glimpse</span>(us.cities)
+<span class="co">#&gt; Observations: 1,005</span>
+<span class="co">#&gt; Variables: 6</span>
+<span class="co">#&gt; $ name        &lt;chr&gt; &quot;Abilene TX&quot;, &quot;Akron OH&quot;, &quot;Alameda CA&quot;, &quot;Albany GA...</span>
+<span class="co">#&gt; $ country.etc &lt;chr&gt; &quot;TX&quot;, &quot;OH&quot;, &quot;CA&quot;, &quot;GA&quot;, &quot;NY&quot;, &quot;OR&quot;, &quot;NM&quot;, &quot;LA&quot;, &quot;V...</span>
+<span class="co">#&gt; $ pop         &lt;int&gt; 113888, 206634, 70069, 75510, 93576, 45535, 494962...</span>
+<span class="co">#&gt; $ lat         &lt;dbl&gt; 32.5, 41.1, 37.8, 31.6, 42.7, 44.6, 35.1, 31.3, 38...</span>
+<span class="co">#&gt; $ long        &lt;dbl&gt; -99.7, -81.5, -122.3, -84.2, -73.8, -123.1, -106.6...</span>
+<span class="co">#&gt; $ capital     &lt;int&gt; 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">usa_map &lt;-<span class="st"> </span><span class="kw">map_data</span>(<span class="st">&quot;usa&quot;</span>)
+capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
+                   capital ==<span class="st"> </span><span class="dv">2</span>, 
+                   !country.etc %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;HI&quot;</span>, <span class="st">&quot;AK&quot;</span>))
+<span class="kw">ggplot</span>() +
+<span class="st">  </span><span class="kw">geom_map</span>(<span class="dt">map =</span> usa_map) +
+<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;usa&quot;</span>) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat, <span class="dt">size =</span> pop), 
+             <span class="dt">data =</span> capitals) +
+<span class="st">  </span><span class="co"># scale size area ensures: 0 = no area</span>
+<span class="st">  </span><span class="kw">scale_size_area</span>() +
+<span class="st">  </span><span class="kw">coord_quickmap</span>() +
+<span class="st">  </span><span class="kw">theme_minimal</span>() +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>, <span class="dt">title =</span> <span class="st">&quot;US State Capitals&quot;</span>,
+       <span class="dt">size =</span> <span class="st">&quot;Population&quot;</span>)
 
+  </code></pre></div>
+<p><img src="discovery_files/figure-html/unnamed-chunk-5-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cal_cities &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities, country.etc ==<span class="st"> &quot;CA&quot;</span>) %&gt;%
+<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">7</span>, pop)
+
+<span class="kw">ggplot</span>() +
+<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat), <span class="dt">data =</span> cal_cities) +
+<span class="st">  </span><span class="kw">geom_text_repel</span>(<span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat, <span class="dt">label =</span> name), <span class="dt">data =</span> cal_cities) +
+<span class="st">  </span><span class="kw">coord_quickmap</span>() +
+<span class="st">  </span><span class="kw">theme_minimal</span>() +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
+<p><img src="discovery_files/figure-html/unnamed-chunk-6-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div id="colors-in-r" class="section level3">
+<h3><span class="header-section-number">6.4.1</span> Colors in R</h3>
+<p><strong>TODO</strong> There are many more links for this.</p>
+<p>Use <a href="http://docs.ggplot2.org/current/scale_identity.html">scale_identity</a> for the color and alpha scales since the values of the variables are the values of the scale itself (the color names, and the alpha values).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">rep</span>(<span class="dv">1</span>:<span class="dv">4</span>, <span class="dt">each =</span> <span class="dv">2</span>),
+              <span class="dt">y =</span> x +<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.2</span>), <span class="dt">times =</span> <span class="dv">2</span>),
+              <span class="dt">colour =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="dt">each =</span> <span class="dv">4</span>),
+              <span class="dt">alpha =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>)),
+  <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y, <span class="dt">colour =</span> colour, <span class="dt">alpha =</span> alpha)) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">15</span>) +
+<span class="st">  </span><span class="kw">scale_color_identity</span>() +
+<span class="st">  </span><span class="kw">scale_alpha_identity</span>() +
+<span class="st">  </span><span class="kw">theme_bw</span>() +
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid =</span> <span class="kw">element_blank</span>())</code></pre></div>
+<p><img src="discovery_files/figure-html/unnamed-chunk-7-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="united-states-presidential-elections" class="section level3">
+<h3><span class="header-section-number">6.4.2</span> United States Presidential Elections</h3>
+<p><strong>Original:</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres08 &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;pres08.csv&quot;</span>)
+## two-party vote share
+pres08$Dem &lt;-<span class="st"> </span>pres08$Obama /<span class="st"> </span>(pres08$Obama +<span class="st"> </span>pres08$McCain)
+pres08$Rep &lt;-<span class="st"> </span>pres08$McCain /<span class="st"> </span>(pres08$Obama +<span class="st"> </span>pres08$McCain) ## color for California
+cal.color &lt;-<span class="st"> </span><span class="kw">rgb</span>(<span class="dt">red =</span> pres08$Rep[pres08$state ==<span class="st"> &quot;CA&quot;</span>],
+                 <span class="dt">blue =</span> pres08$Dem[pres08$state ==<span class="st"> &quot;CA&quot;</span>],
+                 <span class="dt">green =</span> <span class="dv">0</span>)</code></pre></div>
+<p><strong>tidyverse:</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres08 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;discovery&quot;</span>, <span class="st">&quot;pres08.csv&quot;</span>)) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Dem =</span> Obama /<span class="st"> </span>(Obama +<span class="st"> </span>McCain),
+         <span class="dt">Rep =</span> McCain /<span class="st"> </span>(Obama +<span class="st"> </span>McCain))
+<span class="co">#&gt; Parsed with column specification:</span>
+<span class="co">#&gt; cols(</span>
+<span class="co">#&gt;   state.name = col_character(),</span>
+<span class="co">#&gt;   state = col_character(),</span>
+<span class="co">#&gt;   Obama = col_integer(),</span>
+<span class="co">#&gt;   McCain = col_integer(),</span>
+<span class="co">#&gt;   EV = col_integer()</span>
+<span class="co">#&gt; )</span></code></pre></div>
+<p><strong>Original:</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## California as a blue state
+<span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>,
+    <span class="dt">fill =</span> <span class="ot">TRUE</span>)
+## California as a purple state
+<span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>, <span class="dt">col =</span> cal.color,
+    <span class="dt">fill =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p><strong>tidyverse:</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>() +
+<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;blue&quot;</span>) +
+<span class="st">  </span><span class="kw">coord_quickmap</span>() +
+<span class="st">  </span><span class="kw">theme_minimal</span>() </code></pre></div>
+<p><img src="discovery_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cal_color &lt;-<span class="st"> </span><span class="kw">filter</span>(pres08, state ==<span class="st"> &quot;CA&quot;</span>) %&gt;%
+<span class="st">  </span>{<span class="kw">rgb</span>(<span class="dt">red =</span> .$Rep, <span class="dt">green =</span> <span class="dv">0</span>, <span class="dt">blue =</span> .$Dem)}
+  
+<span class="kw">ggplot</span>() +
+<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>, <span class="dt">fill =</span> cal_color) +
+<span class="st">  </span><span class="kw">coord_quickmap</span>() +
+<span class="st">  </span><span class="kw">theme_minimal</span>()
+          </code></pre></div>
+<p><img src="discovery_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># America as red and blue states</span>
+<span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) <span class="co"># create a map </span>
+for (i  in <span class="dv">1</span>:<span class="kw">nrow</span>(pres08)) {
+    if ((pres08$state[i] !=<span class="st"> &quot;HI&quot;</span>) &amp;<span class="st"> </span>(pres08$state[i] !=<span class="st"> &quot;AK&quot;</span>) &amp;
+<span class="st">        </span>(pres08$state[i] !=<span class="st"> &quot;DC&quot;</span>)) {
+        <span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> pres08$state.name[i],
+            <span class="dt">col =</span> <span class="kw">ifelse</span>(pres08$Rep[i] &gt;<span class="st"> </span>pres08$Dem[i], <span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>),
+            <span class="dt">fill =</span> <span class="ot">TRUE</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>)
+    }
+}
+
+## America as purple states 
+<span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) <span class="co"># create a map </span>
+for (i in <span class="dv">1</span>:<span class="kw">nrow</span>(pres08)) {
+    if ((pres08$state[i] !=<span class="st"> &quot;HI&quot;</span>) &amp;<span class="st"> </span>(pres08$state[i] !=<span class="st"> &quot;AK&quot;</span>) &amp;
+<span class="st">        </span>(pres08$state[i] !=<span class="st"> &quot;DC&quot;</span>)) {
+        <span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> pres08$state.name[i],
+            <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dt">red =</span> pres08$Rep[i], <span class="dt">blue =</span> pres08$Dem[i],
+               <span class="dt">green =</span> <span class="dv">0</span>), <span class="dt">fill =</span> <span class="ot">TRUE</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>)
+    }
+}                      </code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">states &lt;-<span class="st"> </span><span class="kw">map_data</span>(<span class="st">&quot;state&quot;</span>) %&gt;%
+<span class="st">  </span><span class="kw">left_join</span>(<span class="kw">mutate</span>(pres08, <span class="dt">state.name =</span> <span class="kw">str_to_lower</span>(state.name)),
+            <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;region&quot;</span> =<span class="st"> &quot;state.name&quot;</span>)) %&gt;%
+<span class="st">  </span><span class="co"># drops DC</span>
+<span class="st">  </span><span class="kw">filter</span>(!<span class="kw">is.na</span>(EV)) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">party =</span> <span class="kw">if_else</span>(Dem &gt;<span class="st"> </span>Rep, <span class="st">&quot;Dem&quot;</span>, <span class="st">&quot;Rep&quot;</span>),
+         <span class="dt">color =</span> <span class="kw">map2_chr</span>(Dem, Rep, ~<span class="st"> </span><span class="kw">rgb</span>(<span class="dt">blue =</span> .x, <span class="dt">red =</span> .y, <span class="dt">green =</span> <span class="dv">0</span>)))
+
+<span class="kw">ggplot</span>(states) +
+<span class="st">  </span><span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="dt">group =</span> group, <span class="dt">x =</span> long, <span class="dt">y =</span> lat,
+                   <span class="dt">fill =</span> party)) +
+<span class="st">  </span><span class="kw">coord_quickmap</span>() +
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;Rep&quot;</span> =<span class="st"> &quot;red&quot;</span>, <span class="st">&quot;Dem&quot;</span> =<span class="st"> &quot;blue&quot;</span>)) +
+<span class="st">  </span><span class="kw">theme_minimal</span>() +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
+<p><img src="discovery_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>For plotting the purple states, I use <code>scale_fill_identity</code> since the <code>color</code> column contains the RGB values to use in the plot:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(states) +
+<span class="st">  </span><span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="dt">group =</span> group, <span class="dt">x =</span> long, <span class="dt">y =</span> lat,
+                   <span class="dt">fill =</span> color)) +
+<span class="st">  </span><span class="kw">coord_quickmap</span>() +
+<span class="st">  </span><span class="kw">scale_fill_identity</span>() +
+<span class="st">  </span><span class="kw">theme_minimal</span>() +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
+<p><img src="discovery_files/figure-html/unnamed-chunk-15-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="expansion-of-walmart" class="section level3">
+<h3><span class="header-section-number">6.4.3</span> Expansion of Walmart</h3>
+<p><strong>Original:</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">walmart &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;walmart.csv&quot;</span>)
+## red = WalMartStore, blue = SuperCenter, green = DistributionCenter
+walmart$storecolors &lt;-<span class="st"> </span><span class="ot">NA</span> <span class="co"># create an empty vector</span>
+walmart$storecolors[walmart$type ==<span class="st"> &quot;Wal-MartStore&quot;</span>] &lt;-
+<span class="st">    </span><span class="kw">rgb</span>(<span class="dt">red =</span> <span class="dv">1</span>, <span class="dt">green =</span> <span class="dv">0</span>, <span class="dt">blue =</span> <span class="dv">0</span>, <span class="dt">alpha =</span> <span class="dv">1</span>/<span class="dv">3</span>)
+walmart$storecolors[walmart$type ==<span class="st"> &quot;SuperCenter&quot;</span>] &lt;-
+<span class="st">    </span><span class="kw">rgb</span>(<span class="dt">red =</span> <span class="dv">0</span>, <span class="dt">green =</span> <span class="dv">0</span>, <span class="dt">blue =</span> <span class="dv">1</span>, <span class="dt">alpha =</span> <span class="dv">1</span>/<span class="dv">3</span>)
+walmart$storecolors[walmart$type ==<span class="st"> &quot;DistributionCenter&quot;</span>] &lt;-
+<span class="kw">rgb</span>(<span class="dt">red =</span> <span class="dv">0</span>, <span class="dt">green =</span> <span class="dv">1</span>, <span class="dt">blue =</span> <span class="dv">0</span>, <span class="dt">alpha =</span> <span class="dv">1</span>/<span class="dv">3</span>)
+## larger circles for DistributionCenter
+walmart$storesize &lt;-<span class="st"> </span><span class="kw">ifelse</span>(walmart$type ==<span class="st"> &quot;DistributionCenter&quot;</span>, <span class="dv">1</span>, <span class="fl">0.5</span>)</code></pre></div>
+<p><strong>tidyverse</strong> We don’t need to do the direct mapping since</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">walmart &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;discovery&quot;</span>, <span class="st">&quot;walmart.csv&quot;</span>))
+<span class="co">#&gt; Parsed with column specification:</span>
+<span class="co">#&gt; cols(</span>
+<span class="co">#&gt;   opendate = col_date(format = &quot;&quot;),</span>
+<span class="co">#&gt;   st.address = col_character(),</span>
+<span class="co">#&gt;   city = col_character(),</span>
+<span class="co">#&gt;   state = col_character(),</span>
+<span class="co">#&gt;   long = col_double(),</span>
+<span class="co">#&gt;   lat = col_double(),</span>
+<span class="co">#&gt;   type = col_character()</span>
+<span class="co">#&gt; )</span>
+
+<span class="kw">ggplot</span>() +
+<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat, <span class="dt">colour =</span> type, <span class="dt">size =</span> size),
+             <span class="dt">data =</span> <span class="kw">mutate</span>(walmart, 
+                           <span class="dt">size =</span> <span class="kw">if_else</span>(type ==<span class="st"> &quot;DistributionCenter&quot;</span>, <span class="dv">2</span>, <span class="dv">1</span>)), <span class="dt">alpha =</span> <span class="dv">1</span> /<span class="st"> </span><span class="dv">3</span>) +
+<span class="st">  </span><span class="kw">coord_quickmap</span>() +
+<span class="st">  </span><span class="kw">scale_size_identity</span>() +
+<span class="st">  </span><span class="kw">theme_minimal</span>() </code></pre></div>
+<p><img src="discovery_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" /> We don’t need to worry about colors since <code>ggplot</code> handles that.</p>
+<p>To make a plot showing all Walmart stores opened up through that year, I write a function, that takes the year and dataset as parameters.</p>
+<p>Since I am calling the function for its side effect (printing the plot) rather than the value it returns, I use the <a href="https://www.rdocumentation.org/packages/purrr/topics/walk">walk</a> function rather than <a href="https://www.rdocumentation.org/packages/purrr/topics/map">map</a>. See <a href="http://r4ds.had.co.nz/">R for Data Science</a>, <a href="http://r4ds.had.co.nz/iteration.html#walk">Chapter 21.8: Walk</a> for more information.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">map_walmart &lt;-<span class="st"> </span>function(year, .data) {
+  .data &lt;-<span class="st"> </span><span class="kw">filter</span>(.data, opendate &lt;<span class="st"> </span><span class="kw">make_date</span>(year, <span class="dv">1</span>, <span class="dv">1</span>)) %&gt;%
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">size =</span> <span class="kw">if_else</span>(type ==<span class="st"> &quot;DistributionCenter&quot;</span>, <span class="dv">2</span>, <span class="dv">1</span>))
+  <span class="kw">ggplot</span>() +
+<span class="st">    </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat, <span class="dt">colour =</span> type, <span class="dt">size =</span> size),
+               <span class="dt">data =</span> .data, <span class="dt">alpha =</span> <span class="dv">1</span> /<span class="st"> </span><span class="dv">3</span>) +
+<span class="st">    </span><span class="kw">coord_quickmap</span>() +
+<span class="st">    </span><span class="kw">scale_size_identity</span>() +
+<span class="st">    </span><span class="kw">theme_minimal</span>() +
+<span class="st">    </span><span class="kw">ggtitle</span>(year)
+}
+
+years &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1975</span>, <span class="dv">1985</span>, <span class="dv">1995</span>, <span class="dv">2005</span>)
+<span class="kw">walk</span>(years, ~<span class="st"> </span><span class="kw">print</span>(<span class="kw">map_walmart</span>(.x, walmart)))</code></pre></div>
+<p><img src="discovery_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-18-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-18-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-18-4.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="animation-in-r" class="section level3">
+<h3><span class="header-section-number">6.4.4</span> Animation in R</h3>
+<p>For easy annimation with <a href="https://cran.r-project.org/package=ggplot">ggplot</a>, use the <a href="https://github.com/dgrtwo/gganimate">gganimate</a> package. Note that the <strong>gganimate</strong> package is not on CRAN, so you have to install it with the <a href="https://cran.r-project.org/package=devtools">devtools</a> package:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;cowplot&quot;</span>)
+devtools::<span class="kw">install_github</span>(<span class="st">&quot;dgrtwo/animate&quot;</span>)</code></pre></div>
+<p>The <strong>gganimate</strong> works by simply adding a new <code>frame</code> aesthetic. And then the function <code>gg_animate</code> will animate the plot.</p>
+<p>This creates a <code>gif</code> with store openings by year. I use <code>frame = year(opendate)</code> to have the animation use each year as a frame, and <code>cumulative = TRUE</code> so that the previous years are shown.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;gganimate&quot;</span>)
+walmart_animated &lt;-
+<span class="st">  </span><span class="kw">ggplot</span>() +
+<span class="st">    </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat,
+                   <span class="dt">colour =</span> type,
+                   <span class="dt">fill =</span> type,
+                   <span class="dt">frame =</span> <span class="kw">year</span>(opendate),
+                   <span class="dt">cumulative =</span> <span class="ot">TRUE</span>),
+               <span class="dt">data =</span> walmart) +
+<span class="st">    </span><span class="kw">coord_quickmap</span>() +
+<span class="st">    </span><span class="kw">theme_minimal</span>()
+
+<span class="kw">gganimate</span>(walmart_animated)</code></pre></div>
+<p><img src="discovery_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-4.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-5.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-6.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-7.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-8.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-9.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-10.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-11.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-12.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-13.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-14.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-15.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-16.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-17.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-18.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-19.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-20.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-21.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-22.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-23.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-24.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-25.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-26.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-27.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-28.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-29.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-30.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-31.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-32.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-33.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-34.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-35.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-36.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-37.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-38.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-39.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-40.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-41.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-42.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-20-43.png" width="70%" style="display: block; margin: auto;" /></p>
+
+</div>
 </div>
 </div>
             </section>

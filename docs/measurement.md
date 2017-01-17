@@ -6,15 +6,6 @@
 
 ```r
 library("tidyverse")
-#> Loading tidyverse: ggplot2
-#> Loading tidyverse: tibble
-#> Loading tidyverse: tidyr
-#> Loading tidyverse: readr
-#> Loading tidyverse: purrr
-#> Loading tidyverse: dplyr
-#> Conflicts with tidy packages ----------------------------------------------
-#> filter(): dplyr, stats
-#> lag():    dplyr, stats
 library("forcats")
 library("broom")
 ```
@@ -570,7 +561,7 @@ Calculate the clusters by the 80th and 112th congresses,
 ```r
 k80two.out <- 
   kmeans(select(filter(congress, congress == 80),
-                     dwnom1, dwnom2),
+                       dwnom1, dwnom2),
               centers = 2, nstart = 5)
 ```
 
@@ -589,8 +580,8 @@ These are in the `centers` element of the cluster object.
 ```r
 k80two.out$centers
 #>    dwnom1 dwnom2
-#> 1 -0.0484  0.783
-#> 2  0.1468 -0.339
+#> 1  0.1468 -0.339
+#> 2 -0.0484  0.783
 ```
 To make it easier to use with ggplot, we need to convert this to a data frame.
 The `tidy` function from the **broom** package:
@@ -599,8 +590,8 @@ The `tidy` function from the **broom** package:
 k80two.clusters <- tidy(k80two.out)
 k80two.clusters
 #>        x1     x2 size withinss cluster
-#> 1 -0.0484  0.783  135     10.9       1
-#> 2  0.1468 -0.339  311     54.9       2
+#> 1  0.1468 -0.339  311     54.9       1
+#> 2 -0.0484  0.783  135     10.9       2
 ```
 
 
@@ -626,11 +617,11 @@ congress80 %>%
 #> 
 #>        party cluster2     n
 #>        <chr>   <fctr> <int>
-#> 1   Democrat        1   132
-#> 2   Democrat        2    62
-#> 3      Other        2     2
-#> 4 Republican        1     3
-#> 5 Republican        2   247
+#> 1   Democrat        1    62
+#> 2   Democrat        2   132
+#> 3      Other        1     2
+#> 4 Republican        1   247
+#> 5 Republican        2     3
 ```
 
 And now we can repeat these steps for the 112th congress:
@@ -666,9 +657,9 @@ congress112 %>%
 #> 
 #>        party cluster2     n
 #>        <chr>   <fctr> <int>
-#> 1   Democrat        2   200
-#> 2 Republican        1   242
-#> 3 Republican        2     1
+#> 1   Democrat        1   200
+#> 2 Republican        1     1
+#> 3 Republican        2   242
 ```
 
 Now repeat the same with four clusters on the 80th congress:

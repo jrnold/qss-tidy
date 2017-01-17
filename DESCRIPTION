@@ -1,0 +1,25 @@
+Package: qsstidy
+Version: 0.0.0.9000
+Title: QSS with tidyverse
+Description: tidyverse R code for Kosuke Imai's "A First Course in Quantitative Social Science".
+Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Depends: R (>= 3.3.2)
+Imports:
+  broom,
+  gganimate,
+  ggrepel,
+  haven,
+  maps,
+  tidytext,
+  tidyverse,
+  tm,
+  rio,
+  viridis
+Remotes:
+  dgrtwo/gganimate,
+  slowkow/ggrepel
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+URL: https://github.com/jrnold/qss-tidy
+BugReports: https://github.com/jrnold/qss-tidy/issues

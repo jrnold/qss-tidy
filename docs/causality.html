@@ -8,7 +8,7 @@
   <title>QSS Tidyverse Code</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.3.6 and GitBook 2.6.7">
 
   <meta property="og:title" content="QSS Tidyverse Code" />
   <meta property="og:type" content="book" />
@@ -26,7 +26,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2017-01-16">
+<meta name="date" content="2017-01-17">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -94,13 +94,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <body>
 
 
+
   <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
 
     <div class="book-summary">
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#colonphon"><i class="fa fa-check"></i><b>1.1</b> Colonphon</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
 <li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i><b>2.1</b> Prerequisites</a></li>
 <li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#introduction-to-r"><i class="fa fa-check"></i><b>2.2</b> Introduction to R</a><ul>
@@ -178,7 +181,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.2.3" data-path="discovery.html"><a href="discovery.html#authorship-prediction"><i class="fa fa-check"></i><b>6.2.3</b> Authorship Prediction</a></li>
 <li class="chapter" data-level="6.2.4" data-path="discovery.html"><a href="discovery.html#cross-validation"><i class="fa fa-check"></i><b>6.2.4</b> Cross-Validation</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="discovery.html"><a href="discovery.html#network-data"><i class="fa fa-check"></i><b>6.3</b> Network Data</a></li>
+<li class="chapter" data-level="6.3" data-path="discovery.html"><a href="discovery.html#network-data"><i class="fa fa-check"></i><b>6.3</b> Network Data</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="discovery.html"><a href="discovery.html#twitter-following-network"><i class="fa fa-check"></i><b>6.3.1</b> Twitter Following Network</a></li>
+</ul></li>
 <li class="chapter" data-level="6.4" data-path="discovery.html"><a href="discovery.html#spatial-data-in-r"><i class="fa fa-check"></i><b>6.4</b> Spatial Data in R</a><ul>
 <li class="chapter" data-level="6.4.1" data-path="discovery.html"><a href="discovery.html#colors-in-r"><i class="fa fa-check"></i><b>6.4.1</b> Colors in R</a></li>
 <li class="chapter" data-level="6.4.2" data-path="discovery.html"><a href="discovery.html#united-states-presidential-elections"><i class="fa fa-check"></i><b>6.4.2</b> United States Presidential Elections</a></li>
@@ -396,7 +401,7 @@ resumeW
 <span class="co">#&gt; 1 female     0.0663     0.0989   0.0326</span>
 <span class="co">#&gt; 2   male     0.0583     0.0887   0.0304</span></code></pre></div>
 <p>This seems to be a little more code, but we didn’t duplicate as much as in QSS, and this would easily scale to more than two categories.</p>
-<p>A way to do this using the <code>spread</code> and gather functions from <strong>tidy</strong> are, First, caclulate the</p>
+<p>A way to do this using the <code>spread</code> and gather functions from <strong>tidy</strong> are, First, calculate the</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume_race_sex &lt;-
 <span class="st">  </span>resume %&gt;%
 <span class="st">  </span><span class="kw">group_by</span>(race, sex) %&gt;%
@@ -446,7 +451,7 @@ resume_sex
 </div>
 <div id="simple-conditional-statements" class="section level3">
 <h3><span class="header-section-number">3.3.2</span> Simple conditional statements</h3>
-<p>See the <strong>dlpyr</strong> functions <code>if_else</code>, <code>recode</code> and <code>case_when</code>. The function <code>if_else</code> is like <code>ifelse</code> bue corrects for some weird behavior that <code>ifelse</code> has in certain cases.</p>
+<p>See the <strong>dlpyr</strong> functions <code>if_else</code>, <code>recode</code> and <code>case_when</code>. The function <code>if_else</code> is like <code>ifelse</code> but corrects for some weird behavior that <code>ifelse</code> has in certain cases.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">BlackFemale =</span> <span class="kw">if_else</span>(race ==<span class="st"> &quot;black&quot;</span> &amp;<span class="st"> </span>sex ==<span class="st"> &quot;female&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)) %&gt;%
 <span class="st">  </span><span class="kw">group_by</span>(BlackFemale, race, sex) %&gt;%
@@ -464,7 +469,7 @@ resume_sex
 <div id="factor-variables" class="section level3">
 <h3><span class="header-section-number">3.3.3</span> Factor Variables</h3>
 <p>See R4DS Chapter 15 “Factors” and the package <strong>forcats</strong></p>
-<p>The code in this section works, but can be simplified by using the function <code>case_when</code> which works in exactly thease cases.</p>
+<p>The code in this section works, but can be simplified by using the function <code>case_when</code> which works in exactly these cases.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume %&gt;%
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">type =</span> <span class="kw">as.factor</span>(<span class="kw">case_when</span>(
     .$race ==<span class="st"> &quot;black&quot;</span> &amp;<span class="st"> </span>.$sex ==<span class="st"> &quot;female&quot;</span> ~<span class="st"> &quot;BlackFemale&quot;</span>,
@@ -512,7 +517,7 @@ resume &lt;-
 <span class="co">#&gt; 2 black   male 0.0583</span>
 <span class="co">#&gt; 3 white female 0.0989</span>
 <span class="co">#&gt; 4 white   male 0.0887</span></code></pre></div>
-<p>We can use that same appraoch to calculate the mean of firstnames, and use <code>arrange</code> to sort in ascending order.</p>
+<p>We can use that same approach to calculate the mean of firstnames, and use <code>arrange</code> to sort in ascending order.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume %&gt;%
 <span class="st">  </span><span class="kw">group_by</span>(firstname) %&gt;%
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">call =</span> <span class="kw">mean</span>(call)) %&gt;%
@@ -606,7 +611,7 @@ gotv_by_group
 <span class="co">#&gt; 2    Control   0.297   0.297       0.0000</span>
 <span class="co">#&gt; 3  Hawthorne   0.322   0.297       0.0257</span>
 <span class="co">#&gt; 4  Neighbors   0.378   0.297       0.0813</span></code></pre></div>
-<p><strong>Pro-tip</strong> The <code>summarise_at</code> functions allows you summarize one-or-more columns with one-or-more functions. In addition to <code>age</code>, 2004 turnout, and household size, we’ll also compare propotion female,</p>
+<p><strong>Pro-tip</strong> The <code>summarise_at</code> functions allows you summarize one-or-more columns with one-or-more functions. In addition to <code>age</code>, 2004 turnout, and household size, we’ll also compare proportion female,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">social %&gt;%
 <span class="st">  </span><span class="kw">group_by</span>(messages) %&gt;%
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age =</span> <span class="dv">2006</span> -<span class="st"> </span>yearofbirth,
@@ -663,7 +668,7 @@ minwage &lt;-<span class="st"> </span><span class="kw">read_csv</span>(minwage_u
 <span class="co">#&gt;  Mean   : 8.5   Mean   : 8.4   Mean   :18.8   Mean   :18.7  </span>
 <span class="co">#&gt;  3rd Qu.:12.0   3rd Qu.:12.0   3rd Qu.:25.0   3rd Qu.:25.0  </span>
 <span class="co">#&gt;  Max.   :60.0   Max.   :40.0   Max.   :60.0   Max.   :60.0</span></code></pre></div>
-<p>First, calcualte the proportion of restraunts by state whose hourly wages were less than the minimum wage in NJ, $5.05, for <code>wageBefore</code> and <code>wageAfter</code>:</p>
+<p>First, calculate the proportion of restaurants by state whose hourly wages were less than the minimum wage in NJ, $5.05, for <code>wageBefore</code> and <code>wageAfter</code>:</p>
 <p>Since the NJ minimum wage was $5.05, we’ll define a variable with that value. Even if you use them only once or twice, it is a good idea to put values like this in variables. It makes your code closer to self-documenting.n</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">NJ_MINWAGE &lt;-<span class="st"> </span><span class="fl">5.05</span></code></pre></div>
 <p>Later, it will be easier to understand <code>wageAfter &lt; NJ_MINWAGE</code> without any comments than it would be to understand <code>wageAfter &lt; 5.05</code>. In the latter case you’d have to remember that the new NJ minimum wage was 5.05 and that’s why you were using that value. This is an example of a <a href="https://en.wikipedia.org/wiki/Magic_number_(programming)#Unnamed_numerical_constants">magic number</a>: try to avoid them.</p>
@@ -685,7 +690,7 @@ minwage &lt;-
 <p>Alternatively, since everything is either PA or NJ</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage &lt;-
 <span class="st">  </span><span class="kw">mutate</span>(minwage, <span class="dt">state =</span> <span class="kw">if_else</span>(location ==<span class="st"> &quot;PA&quot;</span>, <span class="st">&quot;PA&quot;</span>, <span class="st">&quot;NJ&quot;</span>))</code></pre></div>
-<p>Let’s confirm that the restraunts followed the law:</p>
+<p>Let’s confirm that the restaurants followed the law:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage %&gt;%
 <span class="st">  </span><span class="kw">group_by</span>(state) %&gt;%
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_after =</span> <span class="kw">mean</span>(wageAfter &lt;<span class="st"> </span>NJ_MINWAGE),
@@ -724,7 +729,7 @@ full_prop_by_state
 <span class="co">#&gt; 1  0.32 0.272 0.0481</span></code></pre></div>
 <div id="confounding-bias" class="section level3">
 <h3><span class="header-section-number">3.5.1</span> Confounding Bias</h3>
-<p>We can calculate the proportion of fast-food restraunts in each chain in each state:</p>
+<p>We can calculate the proportion of fast-food restaurants in each chain in each state:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">chains_by_state &lt;-
 <span class="st">  </span>minwage %&gt;%
 <span class="st">  </span><span class="kw">group_by</span>(state) %&gt;%
@@ -735,7 +740,7 @@ full_prop_by_state
 <span class="st">  </span><span class="kw">geom_point</span>() +<span class="st"> </span>
 <span class="st">  </span><span class="kw">coord_flip</span>()</code></pre></div>
 <p><img src="causality_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p>In the QSS text, only Burger King restraunts are compared. However, dplyr makes this easy. All we have to do is change the <code>group_by</code> statement we used last time, and add chain to it:</p>
+<p>In the QSS text, only Burger King restaurants are compared. However, dplyr makes this easy. All we have to do is change the <code>group_by</code> statement we used last time, and add chain to it:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">full_prop_by_state_chain &lt;-
 <span class="st">  </span>minwage %&gt;%
 <span class="st">  </span><span class="kw">group_by</span>(state, chain) %&gt;%

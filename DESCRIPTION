@@ -2,18 +2,25 @@ Package: qsstidy
 Version: 0.0.0.9000
 Title: QSS with tidyverse
 Description: tidyverse R code for Kosuke Imai's "A First Course in Quantitative Social Science".
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Authors@R: person("Jeffrey", "Arnold", email = "jeffrey.arnold@gmail.com", role = c("aut", "cre"))
 Depends: R (>= 3.3.2)
 Imports:
+  GGally,
+  bookdown,
   broom,
+  devtools,
+  geomnet,
   gganimate,
+  ggnetwork,
   ggrepel,
+  igraph,
   haven,
   maps,
   tidytext,
   tidyverse,
   tm,
   rio,
+  rmarkdown2,
   viridis
 Remotes:
   dgrtwo/gganimate,

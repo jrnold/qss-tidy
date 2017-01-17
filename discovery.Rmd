@@ -104,12 +104,18 @@ corpus_tidy <- mutate(corpus_tidy,
 
 The `r rdoc("tidytext", "unnest_tokens")` tokenizes the document texts.
 ```{r}
-tokens <- unnest_tokens(corpus_tidy, word, text)
+tokens <- corpus_tidy %>%
+  # tokenizes into words and stems them
+  unnest_tokens(word, text, token = "word_stems") %>%
+  # remove any numbers in the strings
+  mutate(word = str_replace_all(word, "\\d+", "")) %>%
+  # drop any empty strings
+  filter(word != "")
 tokens
 ```
-The `unnest_tokens` function uses the `r pkg_link("tokenizers")` package to tokenize the text. In particular, it uses the `r rdoc("tokenizer", "tokenize_word")` function.
-The default tokenization removes punctuation, and lowercases the words.
-This is sufficient for our purposes, but can be customized if need be.
+The `unnest_tokens` function uses the `r pkg_link("tokenizers")` package to tokenize the text.
+By default, it uses the `r RDoc("tokenizer::tokenize_word")` function which removes punctuation, and lowercases the words.
+I set the tokenizer to `r RDoc("tokenizer::tokenize_word_stems")` to stem the word, using the `r pkg("SnowballC")` package.
 
 We can remove stopwords with an `r rdoc("dplyr", "anti_join")` on the dataset `r rdoc("tidytext", "stop_words")`
 ```{r}
@@ -164,8 +170,6 @@ filter(dtm, document == 24) %>%
 ```{r eval=FALSE}
 stemCompletion(c("revenu", "commerc", "peac", "army"), corpus.prep)
 ```
-
-I didn't stem words in the tokenizer, so there's no need to use `stemCompletion` to unstem them.
 
 
 **Original:**
@@ -238,7 +242,7 @@ We could use `spread` to do this, but that would be a large matrix.
 ```{r}
 CLUSTERS <- 4
 km_out <-
-  kmeans(cast_dtm(dtm_hamilton, document, word, tf_idf), centers = CLUSTERS)
+  kmeans(cast_dtm(dtm_hamilton, document, word, tf_idf), centers = CLUSTERS, nstart = 10)
 km_out$iter         
 ```
 
@@ -284,6 +288,15 @@ gather(hamilton_words, cluster, value, -word) %>%
   summarise(top_words = str_c(word, collapse = ", ")) %>%
   knitr::kable()
 ```
+
+Or to print out the documents in each cluster,
+```{r results='asis'}
+enframe(km_out$cluster, "document", "cluster") %>%
+  group_by(cluster) %>%
+  summarise(documents = str_c(document, collapse = ", ")) %>%
+  knitr::kable()
+```
+
 
 
 ### Authorship Prediction
@@ -416,6 +429,8 @@ mean(hm.fitted[author.data$author == 1] > 0)
 mean(hm.fitted[author.data$author == -1] < 0)
 ```
 
+**tidyverse:** For cross-validation, I rely on the `r pkg("modelr")` package function `RDoc("modelr::crossv_kfold")`. See the tutorial [Cross validation of linear regression with modelr](https://rpubs.com/dgrtwo/cv-modelr) for more on using **modelr** for cross validation or [k-fold cross-validation with modelr and broom](https://drsimonj.svbtle.com/k-fold-cross-validation-with-modelr-and-broom).
+
 In sample, this regression perfectly predicts the authorship of the documents with known authors.
 ```{r}
 author_data %>%
@@ -423,6 +438,42 @@ author_data %>%
   group_by(author) %>%
   summarise(`Proportion Correct` = mean(author == pred_author))
 ```
+
+Create the cross-validation data-sets using `r RDoc("modelr::crossv_kfold")`. 
+As in the chapter, I will use a leave-one-out cross-validation, which is a k-fold crossvalidation where k is the number of observations. 
+To simplify this, I define the `crossv_loo` function that runs `crossv_kfold` with `k = nrow(data)`.
+```{r}
+crossv_loo <- function(data, id = ".id") {
+  crossv_kfold(data, k = nrow(data), id = id)
+}
+
+# leave one out cross-validation object
+cv <- author_data %>%
+  filter(!is.na(author)) %>%
+  crossv_loo()
+```
+
+Now estimate the model for each training dataset
+```{r}
+models <- purrr::map(cv$train, ~ lm(author2 ~ upon + there + consequently + whilst,
+                              data = ., model = FALSE))
+```
+Note that I use `purrr::map` to ensure that the correct `map()` function is used since the **maps** package also defines a `map`.
+
+Now calculate the test performance on the held out observation,
+```{r}
+test <- map2_df(models, cv$test, 
+                function(mod, test) {
+                  add_predictions(as.data.frame(test), mod) %>%
+                    mutate(pred_author = 
+                             if_else(pred >= 0, "Hamilton", "Madison"),
+                           correct = (pred_author == author))
+                })
+test %>%
+  group_by(author) %>%
+  summarise(mean(correct))
+```
+
 
 
 **Original:**
@@ -443,7 +494,10 @@ mean(hm.classify[author.data$author == 1] > 0)
 
 ## proportion of correctly classified essays by Madison
 mean(hm.classify[author.data$author == -1] < 0)
+```
 
+**Original:**
+```{r eval=FALSE}
 disputed <- c(49, 50:57, 62, 63) # 11 essays with disputed authorship
 tf.disputed <- as.data.frame(tfm[disputed, ])
 
@@ -452,8 +506,8 @@ pred <- predict(hm.fit, newdata = tf.disputed)
 pred # predicted values
 ```
 
-When adding prediction with `add_predictions` it added predictions for missing 
-values as well.
+**tidyverse:**
+When adding prediction with `add_predictions` it added predictions for missing  values as well.
 
 Table of authorship of disputed papers
 ```{r results='asis'}
@@ -501,47 +555,253 @@ ggplot(mutate(author_data,
 ```
 
 
-
-
-
 ## Network Data
+
+
+Network data is area for which the tidyverse is not well suited.
+The `r pkg_link("igraph")`, `r pkg_link("sna")`, and `r pkg_link("network")` packages are the best in class. 
+See the Social Network Analysis section of the [Social Sciences Task View](https://cran.r-project.org/web/views/SocialSciences.html).
+See this tutorial by Katherin Ognyanova, [Static and dynamic nework visualization with R](https://rpubs.com/kateto/netviz), for a good overview of network visualization with those packages in R.
+
+There are several packages that plot networks in ggplot2.
+
+- `r pkg_link("ggnetwork")`
+- `r pkg_link("ggraph")`
+- `r pkg_link("geomnet")`
+- `r pkg_link("GGally")` functions [ggnet](https://ggobi.github.io/ggally/rd.html#ggnet), `ggnet2`, and `ggnetworkmap`.
+- `r pkg("ggCompNet")` compares the speed of various network plotting packages in R.
+ 
+See this [presentation](http://curleylab.psych.columbia.edu/netviz/netviz1.html#/12) for an overview of some of those packages for data visualization.
+
+Examples: [Network Visualization Examples with the ggplot2 Package](https://cran.r-project.org/web/packages/ggCompNet/vignettes/examples-from-paper.html)
+
+```{r message=FALSE}
+library("igraph")
+```
+
+
+
+### Twitter Following Network
+
+**Original:**
+```{r eval=FALSE}
+twitter <- read.csv("twitter-following.csv")
+senator <- read.csv("twitter-senator.csv")
+```
+
+**tidyverse:**
+```{r}
+twitter <- read_csv(qss_data_url("discovery", "twitter-following.csv"))
+senator <- read_csv(qss_data_url("discovery", "twitter-senator.csv"))
+```
+
+**Original:**
+```{r eval=FALSE}
+n <- nrow(senator) # number of senators
+
+## initialize adjacency matrix
+twitter.adj <- matrix(0, nrow = n, ncol = n)
+
+## assign screen names to rows and columns
+colnames(twitter.adj) <- rownames(twitter.adj) <- senator$screen_name
+
+## change `0' to `1' when edge goes from node `i' to node `j'
+for (i in 1:nrow(twitter)) {
+    twitter.adj[twitter$following[i], twitter$followed[i]] <- 1
+}
+
+twitter.adj <- graph.adjacency(twitter.adj, mode = "directed", diag = FALSE)
+
+```
+
+**tidyverse:**
+Simply use the `r RDoc("igraph::graph_from_edgelist")` function since `twitter` consists of edges (a link from a senator to another).
+SInce `graph_from_edgelist` expects a matrix, convert the data frame to a matrix using `r RDoc("base::as.matrix")`.
+```{r}
+twitter_adj <- graph_from_edgelist(as.matrix(twitter))
+```
+
+
+**original:**
+```{r eval=FALSE}
+senator$indegree <- degree(twitter.adj, mode = "in")
+senator$outdegree <- degree(twitter.adj, mode = "out") 
+
+in.order <- order(senator$indegree, decreasing = TRUE)
+out.order <- order(senator$outdegree, decreasing = TRUE)
+
+## 3 greatest indegree
+senator[in.order[1:3], ]
+
+## 3 greatest outdegree
+senator[out.order[1:3], ]
+```
+
+**tidyverse:** Add in- and out-degree varibles to the `senator` data frame:
+```{r}
+senator <-
+  mutate(senator,
+         indegree = degree(twitter_adj, mode = "in"),
+         outdegree = degree(twitter_adj, mode = "out"))
+```
+
+Now find the senators with the 3 greatest in-degrees
+```{r}
+arrange(senator, desc(indegree)) %>%
+  slice(1:3) %>%
+  select(name, party, state, indegree, outdegree)
+```
+or using the `r RDoc("dplyr::top_n")` function:
+```{r}
+top_n(senator, 3, indegree) %>%
+  arrange(desc(indegree)) %>%
+  select(name, party, state, indegree, outdegree)
+```
+The `top_n` function catches that three senators are tied for 3rd highest outdegree, whereas the simply sorting and slicing cannot.
+
+And we can find the senators with the three highest out-degrees similarly,
+```{r}
+top_n(senator, 3, outdegree) %>%
+  arrange(desc(outdegree)) %>%
+  select(name, party, state, indegree, outdegree)
+```
+
+
+
+**original:**
+```{r eval=FALSE}
+n <- nrow(senator)
+## color: Democrats = `blue', Republicans = `red', Independent = `black'
+col <- rep("red", n)
+col[senator$party == "D"] <- "blue"
+col[senator$party == "I"] <- "black"
+
+## pch: Democrats = circle, Republicans = diamond, Independent = cross
+pch <- rep(16, n)
+pch[senator$party == "D"] <- 17
+pch[senator$party == "I"] <- 4
+
+par(cex = 1.25)
+## plot for comparing two closeness measures (incoming vs. outgoing)
+plot(closeness(twitter.adj, mode = "in"), 
+     closeness(twitter.adj, mode = "out"), pch = pch, col = col, 
+     main = "Closeness", xlab = "Incoming path", ylab = "Outgoing path")
+
+## plot for comparing directed and undirected betweenness
+plot(betweenness(twitter.adj, directed = TRUE), 
+     betweenness(twitter.adj, directed = FALSE), pch = pch, col = col,
+     main = "Betweenness", xlab = "Directed", ylab = "Undirected")
+
+```
+
+
+**tidyverse**
+```{r}
+# Define scales to reuse for the plots
+scale_colour_parties <- scale_colour_manual("Party", values = c(R = "red",
+                                                       D = "blue",
+                                                       I = "green"))
+scale_shape_parties <- scale_shape_manual("Party", values = c(R = 16, 
+                                                              D = 17, 
+                                                              I = 4))
+
+
+senator %>%
+  mutate(closeness_in = closeness(twitter_adj, mode = "in"),
+         closeness_out = closeness(twitter_adj, mode = "out")) %>%
+  ggplot(aes(x = closeness_in, y = closeness_out,
+             colour = party, shape = party)) +
+  geom_abline(intercept = 0, slope = 1, colour = "white", size = 2) +
+  geom_point() +
+  scale_colour_parties +
+  scale_shape_parties +
+  labs(main = "Closeness", x = "Incoming path", y = "Outgoing path")
+```
+
+What does the reference line indicate? What does that say about senators twitter
+networks?
+
+
+```{r}
+senator %>%
+  mutate(betweenness_dir = betweenness(twitter_adj, directed = TRUE),
+         betweenness_undir = betweenness(twitter_adj, directed = FALSE)) %>%
+  ggplot(aes(x = betweenness_dir, y = betweenness_undir, colour = party,
+             shape = party)) +
+  geom_abline(intercept = 0, slope = 1, colour = "white", size = 2) +
+  geom_point() +
+  scale_colour_parties +
+  scale_shape_parties +
+  coord_fixed() +
+  labs(main = "Betweenness", x = "Directed", y = "Undirected")
+```
+
+
+We've covered three different methods of calculating the importance of a node in a network: degree, closeness, and centrality. 
+But what do they mean? What's the "best" measure of importance?
+The answer to the the former is "it depends on the question".
+There are probably other papers out there on this, but Borgatti (2005) is a good
+discussion:
+
+> Borgatti, Stephen. 2005. "Centrality and Network Flow". *Social Networks*.
+  [DOI](https://dx.doi.org/doi:10.1016/j.socnet.2004.11.008)
+
+**Original:**
+```{r eval=FALSE}
+senator$pagerank <- page.rank(twitter.adj)$vector
+
+par(cex = 1.25)
+## `col' parameter is defined earlier
+plot(twitter.adj, vertex.size = senator$pagerank * 1000, 
+     vertex.color = col, vertex.label = NA, 
+     edge.arrow.size = 0.1, edge.width = 0.5)
+```
+
+
+Add and plot page-rank:
+```{r}
+senator <- mutate(senator, page_rank = page_rank(twitter_adj)[["vector"]])
+
+library("GGally")
+library("intergraph")
+ggnet(twitter_adj, mode = "target")
+```
+
 
 
 ## Spatial Data in R
 
 Sources:
 
-- ggfortify: `fortify` and `autoplot` allows ggplot to handle some popular R packages. https://journal.r-project.org/archive/accepted/tang-horikoshi-li.pdf
-- https://cran.r-project.org/web/packages/ggfortify/vignettes/plot_map.html
-- ggplot loads map data using the `map_data` function.
+- `r pkg("ggplot2")` has several map-related functions
 
-  - http://docs.ggplot2.org/current/borders.html
-  - http://docs.ggplot2.org/current/fortify.map.html
-  - http://docs.ggplot2.org/current/map_data.html
+  - `r ggdoc("borders")`
+  - `r ggdoc("fortify.map")`
+  - `r ggdoc("map_data")`
 
-- https://cran.r-project.org/doc/contrib/intro-spatial-rl.pdf
-- https://cran.r-project.org/web/views/Spatial.html
-- https://cran.r-project.org/web/packages/sp/index.html
-- https://cran.r-project.org/web/packages/maptools/index.html
-- https://cran.r-project.org/web/packages/tmap/index.html
-- https://cran.r-project.org/web/packages/leaflet/index.html
-- https://www.ggplot2-exts.org
-- David Kahle and Hadley Wickham. 2013. [ggmap: Spatial Visualization with ggplot2](https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf). *Journal of Statistical Software*
-- Github [dkahle/ggmamp](https://github.com/dkahle/ggmap)
+- `r pkg("ggmap")` allows ggplot to us a map from Google Maps, OpenStreet Maps or similar as a background for the plot.
+
+  - David Kahle and Hadley Wickham. 2013. [ggmap: Spatial Visualization with ggplot2](https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf). *Journal of Statistical Software*
+  - Github [dkahle/ggmamp](https://github.com/dkahle/ggmap)
+
+- `r pkg_link("tmap")` is not built on ggplot2 but uses a ggplot2-like API for network data.
+- `r pkg_link("leaflet")` is an R interface to a popular javascript mapping library.
+
+Here are few tutorials on plotting spatial data in ggplot2:
+
 - http://eriqande.github.io/rep-res-web/lectures/making-maps-with-R.html
 - https://www.r-bloggers.com/r-beginners-plotting-locations-on-to-a-world-map/
 - https://rpubs.com/m_dev/Intro-to-Spatial-Data-and-ggplot2
 
+
 ```{r}
-library("maps")
 library("ggrepel")
 ```
 
 ```{r}
-data(us.cities)
+data("us.cities", package = "maps")
 glimpse(us.cities)
 ```
-
 
 ```{r}
 usa_map <- map_data("usa")
@@ -578,7 +838,22 @@ ggplot() +
 
 ### Colors in R
 
-**TODO** There are many more links for this.
+For more resources on using colors in R
+
+- `R4DS` chapter [Graphics for Communication](http://r4ds.had.co.nz/graphics-for-communication.html#replacing-a-scale)
+- ggplot2 book Chapter "Scales"
+- Jenny Bryan [Using colors in R](https://www.stat.ubc.ca/~jenny/STAT545A/block14_colors.html)
+- Achim Zeileis, Kurt Hornik, Paul Murrell (2009). Escaping RGBland: Selecting Colors for Statistical Graphics. Computational Statistics & Data Analysis [DOI](http://dx.doi.org/10.1016/j.csda.2008.11.033)
+- [colorspace vignette](https://cran.r-project.org/web/packages/colorspace/vignettes/hcl-colors.pdf)
+- Maureen Stone [Choosing Colors for Data Visualization](https://www.perceptualedge.com/articles/b-eye/choosing_colors.pdf)
+- [ColorBrewer](http://colorbrewer2.org) A website with a variety of palettes, primarily designed for maps, but also useful in data viz.
+- Stephen Few [Practical Rules for Using Color in Charts](http://www.perceptualedge.com/articles/visual_business_intelligence/rules_for_using_color.pdf)
+- [Why Should Engineers and Scientists by Worried About Color?](http://www.research.ibm.com/people/l/lloydt/color/color.HTM)
+- [A Better Default Colormap for Matplotlib](https://www.youtube.com/watch?v=xAoljeRJ3lU) A SciPy 2015 talk that describes how the `r pkg("viridis")` was created.
+- [Evaluation of Artery Visualizations for Heart Disease Diagnosis](http://www.eecs.harvard.edu/~kgajos/papers/2011/borkin11-infoviz.pdf) Using the wrong color scale can be deadly ... literally.
+- The python package matplotlib has a good discussion of [colormaps](http://matplotlib.org/users/colormaps.html).
+- Peter Kovesi "Good Color Maps: How to Design Them" https://arxiv.org/pdf/1509.03700v1.pdf
+- See the `r pkg("viridis")`, `r pkg("ggthemes")`, and `r pkg("pals")` packages for color palettes.
 
 Use `r ggdoc("scale_identity")` for the color and alpha scales since the values
 of the variables are the values of the scale itself (the color names, and the 

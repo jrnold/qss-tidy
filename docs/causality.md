@@ -210,7 +210,7 @@ inner_join(resumeB, resumeW, by = "sex") %>%
 This seems to be a little more code, but we didn't duplicate as much as in QSS, and this would easily scale to more than two categories.
 
 A way to do this using the `spread` and gather functions from **tidy** are,
-First, caclulate the 
+First, calculate the 
 
 ```r
 resume_race_sex <-
@@ -276,7 +276,7 @@ resume %>%
 ### Simple conditional statements
 
 See the **dlpyr** functions `if_else`, `recode` and `case_when`.
-The function `if_else` is like `ifelse` bue corrects for some weird behavior that `ifelse` has in certain cases.
+The function `if_else` is like `ifelse` but corrects for some weird behavior that `ifelse` has in certain cases.
 
 
 ```r
@@ -301,7 +301,7 @@ resume %>%
 See R4DS Chapter 15 "Factors" and the package **forcats**
 
 The code in this section works, but can be simplified by using the function
-`case_when` which works in exactly thease cases.
+`case_when` which works in exactly these cases.
 
 ```r
 resume %>%
@@ -368,7 +368,7 @@ resume %>%
 ```
 
 
-We can use that same appraoch to calculate the mean of firstnames, and use
+We can use that same approach to calculate the mean of firstnames, and use
 `arrange` to sort in ascending order.
 
 ```r
@@ -492,7 +492,7 @@ gotv_by_group %>%
 
 
 **Pro-tip** The `summarise_at` functions allows you summarize one-or-more columns with one-or-more functions.
-In addition to `age`, 2004 turnout, and household size, we'll also compare propotion female,
+In addition to `age`, 2004 turnout, and household size, we'll also compare proportion female,
 
 ```r
 social %>%
@@ -556,7 +556,7 @@ summary(minwage)
 #>  Max.   :60.0   Max.   :40.0   Max.   :60.0   Max.   :60.0
 ```
 
-First, calcualte the proportion of restraunts by state whose hourly wages were less than the minimum wage in NJ, \$5.05, for `wageBefore` and `wageAfter`:
+First, calculate the proportion of restaurants by state whose hourly wages were less than the minimum wage in NJ, \$5.05, for `wageBefore` and `wageAfter`:
 
 Since the NJ minimum wage was \$5.05, we'll define a variable with that value.
 Even if you use them only once or twice, it is a good idea to put values like this in variables. 
@@ -599,7 +599,7 @@ minwage <-
   mutate(minwage, state = if_else(location == "PA", "PA", "NJ"))
 ```
 
-Let's confirm that the restraunts followed the law:
+Let's confirm that the restaurants followed the law:
 
 ```r
 minwage %>%
@@ -659,7 +659,7 @@ spread(full_prop_by_state, state, fullPropAfter) %>%
 
 ### Confounding Bias
 
-We can calculate the proportion of fast-food restraunts in each chain in each state:
+We can calculate the proportion of fast-food restaurants in each chain in each state:
 
 ```r
 chains_by_state <-
@@ -679,7 +679,7 @@ ggplot(chains_by_state, aes(x = chain, y = prop, colour = state)) +
 
 <img src="causality_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" />
 
-In the QSS text, only Burger King restraunts are compared. 
+In the QSS text, only Burger King restaurants are compared. 
 However, dplyr makes this easy.
 All we have to do is change the `group_by` statement we used last time,
 and add chain to it:

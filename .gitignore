@@ -11,3 +11,4 @@ tmp-pdfcrop-*
 *.knit.md
 _book
 /bookdown*
+.Rapp.history

@@ -372,7 +372,7 @@ Calculate the clusters by the 80th and 112th congresses,
 ```{r}
 k80two.out <- 
   kmeans(select(filter(congress, congress == 80),
-                     dwnom1, dwnom2),
+                       dwnom1, dwnom2),
               centers = 2, nstart = 5)
 ```
 

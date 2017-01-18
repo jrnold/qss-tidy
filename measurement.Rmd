@@ -99,21 +99,40 @@ ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
 ```
 
 
-**TODO** This plot could improved by plotting the two values simultaneously to be able to better compare them.
-
-- dodged bar plot
-- dot-plot
+This plot could improved by plotting the two values simultaneously to be able to better compare them.
 
 This will require creating a data frame that has the following columns: perpetrator (`ISAF`, `Taliban`), response (`No Harm`, `Harm`, `No response`). 
-See the section on Tidy Data and spread gather.
 
-**TODO** Compare them by region, ? 
+
+```{r}
+library("tidyr")
+violent_exp <-
+  afghan %>%
+  select(violent.exp.ISAF, violent.exp.taliban) %>%
+  gather(perpetrator, response) %>%
+  mutate(perpetrator = str_replace(perpetrator, "violent\\.exp\\.", ""),
+         perpetrator = str_replace(perpetrator, "taliban", "Taliban"),
+         response = fct_recode(factor(response), c("Harm" = "1", "No Harm" = "0")),
+         response = fct_explicit_na(response, "No response"),
+         response = fct_relevel(response, c("No response", "No Harm"))) %>%
+  count(perpetrator, response) %>%
+  mutate(prop = n / sum(n))
+         
+ggplot(violent_exp, aes(x = prop, y = response, color = perpetrator)) +
+  geom_point() +
+  scale_color_manual(values = c(ISAF = "green", Taliban = "black"))
+
+```
+
+Black was chosen for the Taliban, and Green for ISAF because it is the color of their respective [flags](https://en.wikipedia.org/wiki/International_Security_Assistance_Force).
+
 
 ### Boxplot
 
 ```{r}
 ggplot(afghan, aes(x = 1, y = age)) +
   geom_boxplot() +
+  coord_flip() +
   labs(y = "Age", x = "") +
   ggtitle("Distribution of Age")
 ```
@@ -122,8 +141,9 @@ ggplot(afghan, aes(x = 1, y = age)) +
 ```{r}
 ggplot(afghan, aes(y = educ.years, x = province)) +
   geom_boxplot() +
+  coord_flip() +
   labs(x = "Province", y = "Years of education") +
-  ggtitle("Education by Provice")
+  ggtitle("Education by Province")
 
 ```
 
@@ -164,7 +184,8 @@ ggplot(afghan.village, aes(x = factor(village.surveyed,
                                       labels = c("sampled", "non-sampled")),
                            y = altitude)) +
   geom_boxplot() +
-  labs(y = "Altitude (meter)", x = "")
+  labs(y = "Altitude (meter)", x = "") +
+  coord_flip()
 
 ```
 
@@ -174,7 +195,8 @@ ggplot(afghan.village, aes(x = factor(village.surveyed,
                                       labels = c("sampled", "non-sampled")),
                            y = log(population))) +
   geom_boxplot() +
-  labs(y = "log(population)", x = "")
+  labs(y = "log(population)", x = "") +
+  coord_flip()
 ```
 
 You can also compare these distributions by plotting their densities:
@@ -186,6 +208,8 @@ ggplot(afghan.village, aes(colour = factor(village.surveyed,
   geom_rug() +
   labs(x = "log(population)", colour = "")
 ```
+The function `r ggdoc("geom_rug")`, creates a rug plot, which puts small lines on the axis to represent the value of each observation.
+It can be combined with a scatter or density plot to add extra detail.
 
 ### Non-response and other sources of bias
 
@@ -255,7 +279,7 @@ q + scale_colour_parties
 ```
 
 
-```{r}
+```{r fig.width = 7, fig.height = 7}
 congress %>%
   ggplot(aes(x = dwnom1, y = dwnom2, colour = party)) +
   geom_point() +

@@ -20,7 +20,9 @@ sims <- 1000 # number of simulations event <- 0 # counter
 for (i in 1:sims) {
 days <- sample(1:365, k, replace = TRUE)
 days.unique <- unique(days) # unique birthdays
-## if there are duplicates, the number of unique birthdays ## will be less than the number of birthdays, which is `k' if (length(days.unique) < k) {
+## if there are duplicates, the number of unique birthdays 
+## will be less than the number of birthdays, which is `k' 
+if (length(days.unique) < k) {
         event <- event + 1
     }
 }
@@ -43,6 +45,7 @@ bday <- tibble(k = 1:50,
                pr = birthday(k))
 ggplot(bday, aes(x = k , y = pr)) +
   geom_hline(yintercept = 0.5, colour = "white", size = 2) +
+  geom_line() +
   geom_point() +
   scale_y_continuous("Probability that at least two\n people have the same birthday", limits = c(0, 1)) +
   labs(x = "Number of people")
@@ -66,7 +69,9 @@ sims <- 1000 # number of simulations event <- 0 # counter
 for (i in 1:sims) {
 days <- sample(1:365, k, replace = TRUE)
 days.unique <- unique(days) # unique birthdays
-## if there are duplicates, the number of unique birthdays ## will be less than the number of birthdays, which is `k' if (length(days.unique) < k) {
+## if there are duplicates, the number of unique birthdays 
+## will be less than the number of birthdays, which is `k' 
+if (length(days.unique) < k) {
         event <- event + 1
     }
 }
@@ -99,6 +104,7 @@ map_lgl(seq_len(sims), ~ sim_bdays(k)) %>%
 #> [1] 0.486
 ```
 
+
 ### Combinations
 
 **Original code**
@@ -126,15 +132,6 @@ dim(FLVoters) # after removal
 
 ```r
 FLVoters <- read_csv(qss_data_url("probability", "FLVoters.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   surname = col_character(),
-#>   county = col_integer(),
-#>   VTD = col_integer(),
-#>   age = col_integer(),
-#>   gender = col_character(),
-#>   race = col_character()
-#> )
 dim(FLVoters)
 #> [1] 10000     6
 FLVoters <- FLVoters %>%
@@ -674,16 +671,6 @@ Start with the Census names files:
 
 ```r
 cnames <- read_csv(qss_data_url("probability", "names.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   surname = col_character(),
-#>   count = col_integer(),
-#>   pctwhite = col_double(),
-#>   pctblack = col_double(),
-#>   pctapi = col_double(),
-#>   pcthispanic = col_double(),
-#>   pctothers = col_double()
-#> )
 glimpse(cnames)
 #> Observations: 151,671
 #> Variables: 7
@@ -811,17 +798,6 @@ Now add get residence data
 
 ```r
 FLCensus <- read_csv(qss_data_url("probability", "FLCensusVTD.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   county = col_integer(),
-#>   VTD = col_integer(),
-#>   total.pop = col_integer(),
-#>   white = col_double(),
-#>   black = col_double(),
-#>   hispanic = col_double(),
-#>   api = col_double(),
-#>   others = col_double()
-#> )
 ```
 
 $P(race)$ in Florida:
@@ -860,14 +836,6 @@ pres08$p <- pres08$Obama / (pres08$Obama + pres08$McCain)
 ```r
 pres08 <- read_csv(qss_data_url("probability", "pres08.csv")) %>%
   mutate(p = Obama / (Obama + McCain))
-#> Parsed with column specification:
-#> cols(
-#>   state.name = col_character(),
-#>   state = col_character(),
-#>   Obama = col_integer(),
-#>   McCain = col_integer(),
-#>   EV = col_integer()
-#> )
 ```
 
 **Original code**
@@ -918,9 +886,10 @@ ELECTION_EV <- 364
 And plot them,
 
 ```r
-ggplot(sim_results, aes(x = EV)) +
-  geom_histogram(binwidth = 10) +
-  geom_vline(xintercept = ELECTION_EV, colour = "red", size = 2)
+ggplot(sim_results, aes(x = EV, y = ..density..)) +
+  geom_histogram(binwidth = 10, fill = "gray30") +
+  geom_vline(xintercept = ELECTION_EV, colour = "black", size = 2) +
+  labs(x = "Electoral Votes", y = "density")
 ```
 
 <img src="probability_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" />

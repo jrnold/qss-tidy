@@ -16,15 +16,7 @@ However, this can be done easily with `dplyr` using grouping and summarizing.
 
 
 ```r
-resume_url <- "https://raw.githubusercontent.com/jrnold/qss/master/CAUSALITY/resume.csv"
-resume <- read_csv(resume_url)
-#> Parsed with column specification:
-#> cols(
-#>   firstname = col_character(),
-#>   sex = col_character(),
-#>   race = col_character(),
-#>   call = col_integer()
-#> )
+resume <- read_csv(qss_data_url("causality", "resume.csv"))
 ```
 
 In addition to the functions shown in the text,
@@ -390,20 +382,10 @@ resume %>%
 
 ## Causal Affects and the Counterfactual
  
-Load the data using the **readr** function `read_csv`
+Load the data using the **readr** function 
 
 ```r
-social_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/CAUSALITY/social.csv"
-social <- read_csv(social_url)
-#> Parsed with column specification:
-#> cols(
-#>   sex = col_character(),
-#>   yearofbirth = col_integer(),
-#>   primary2004 = col_integer(),
-#>   messages = col_character(),
-#>   primary2006 = col_integer(),
-#>   hhsize = col_integer()
-#> )
+social <- read_csv(qss_data_url("causality", "social.csv"))
 summary(social)
 #>      sex             yearofbirth    primary2004      messages        
 #>  Length:305866      Min.   :1900   Min.   :0.000   Length:305866     
@@ -517,17 +499,6 @@ Load the `minwage` dataset from its URL using `readr::read_csv`:
 ```r
 minwage_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/CAUSALITY/minwage.csv"
 minwage <- read_csv(minwage_url)
-#> Parsed with column specification:
-#> cols(
-#>   chain = col_character(),
-#>   location = col_character(),
-#>   wageBefore = col_double(),
-#>   wageAfter = col_double(),
-#>   fullBefore = col_double(),
-#>   fullAfter = col_double(),
-#>   partBefore = col_double(),
-#>   partAfter = col_double()
-#> )
 glimpse(minwage)
 #> Observations: 358
 #> Variables: 8

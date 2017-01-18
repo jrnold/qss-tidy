@@ -21,7 +21,7 @@ afghan %>%
   summary()
 ```
 
-With `income`, `read_csv` never converts strings to factors by default.
+With `income`, `r RDoc("readr::read_csv")` never converts strings to factors by default.
 To get a summary of the different levels, either convert it to a factor (R4DS Ch 15), or use `count()`
 ```{r}
 afghan %>%
@@ -174,7 +174,7 @@ created by code-chunks.
 
 ## load village data
 
-```{r}
+```{r message=FALSE}
 afghan.village <- read_csv(qss_data_url("measurement", "afghan-village.csv"))
 ```
 
@@ -244,7 +244,7 @@ afghan %>%
 
 ## Measuring Political Polarization
 
-```{r}
+```{r message=FALSE}
 congress <- read_csv(qss_data_url("measurement", "congress.csv"))
 ```
 
@@ -310,7 +310,7 @@ congress %>%
 ### Correlation
 
 Let's plot the Gini coefficient
-```{r}
+```{r message=FALSE}
 USGini <- read_csv(qss_data_url("measurement", "USGini.csv"))
 ```
 

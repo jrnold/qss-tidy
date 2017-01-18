@@ -343,7 +343,7 @@ poll.pred[, 3] <- poll.pred[, 1] + qnorm(1 - alpha/2) * s.e.
 ```
 
 **tidyverse:** `r rdoc("readr", "read_csv")` already recognizes the date columns, so we don't need to convert them.
-```{r}
+```{r message=FALSE}
 ELECTION_DATE <- ymd(20081104)
 pres08 <- read_csv(qss_data_url("uncertainty", "pres08.csv"))
 
@@ -478,7 +478,7 @@ abline(v = mean(STAR$g4reading[STAR$classtype == 2], na.rm = TRUE),
 ```
 
 **tidyverse:**
-```{r}
+```{r message=FALSE}
 STAR <- read_csv(qss_data_url("uncertainty", "STAR.csv")) %>%
   mutate(classtype = factor(classtype,
                             labels = c("small class", "regular class",
@@ -870,7 +870,7 @@ prop.test(x, alternative = "greater")
 ```
 
 **tidyverse:**
-```{r}
+```{r message=FALSE}
 resume <- read_csv(qss_data_url("uncertainty", "resume.csv"))
 
 x <- resume %>%
@@ -1010,7 +1010,7 @@ minwage$NJ <- ifelse(minwage$location == "PA", 0, 1)
 ```
 
 **tidyverse:**
-```{r}
+```{r message=FALSE}
 minwage <- read_csv(qss_data_url("uncertainty", "minwage.csv")) %>%
   mutate(fullPropBefore = fullBefore / (fullBefore + partBefore),
          fullPropAfter = fullAfter / (fullAfter + partAfter),
@@ -1059,7 +1059,7 @@ confint(fit.women) # 95% confidence intervals
 ```
 
 **tidyverse:** Use the `r rdoc("broom", "tidy")` function to return the coefficients, including confidence intervals, as a data frame:
-```{r}
+```{r message=FALSE}
 women <- read_csv(qss_data_url("uncertainty", "women.csv"))
 fit_women <- lm(water ~ reserved, data = women)
 summary(fit_women)
@@ -1100,7 +1100,7 @@ tory.fit2 <- lm(ln.net ~ margin, data = MPs.tory[MPs.tory$margin > 0, ])
 ```
 
 **tidyverse:**
-```{r}
+```{r message=FALSE}
 MPs <- read_csv(qss_data_url("uncertainty", "MPs.csv"))
 MPs_labour <- filter(MPs, party == "labour")
 MPs_tory <- filter(MPs, party == "tory")

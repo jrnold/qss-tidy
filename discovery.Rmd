@@ -15,7 +15,7 @@ See the `r R4DS` section [12.7 Non-tidy data](http://r4ds.had.co.nz/tidy-data.ht
 
 ## Prerequisites
 
-```{r}
+```{r message=FALSE}
 library("tidyverse")
 library("lubridate")
 library("stringr")
@@ -25,7 +25,7 @@ library("modelr")
 
 ## Textual data
 
-```{r}
+```{r message=FALSE}
 library("tm")
 library("SnowballC")
 library("tidytext")
@@ -159,7 +159,7 @@ wordcloud(colnames(dtm.mat), dtm.mat[24, ], max.words = 20)  # essay No. 24
 ```
 
 Plot the word-clouds for essays 12 and 24:
-```{r, warning=FALSE}
+```{r, warning=FALSE,message=FALSE}
 library("wordcloud")
 filter(dtm, document == 12) %>%
   {wordcloud(.$word, .$n, max.words = 20)}
@@ -396,7 +396,6 @@ sd(hm.fitted)
 
 **tidyverse:**
 ```{r}
-library("modelr")
 author_data <- 
   hm_tfm %>%
   ungroup() %>%
@@ -551,7 +550,7 @@ ggplot(mutate(author_data,
   scale_shape_manual(values = c("Madison" = 16, "Hamilton" = 15, 
                                  "Disputed" = 17)) +
   labs(colour = "Author", shape = "Author", 
-       x = "Federalist Papers", y = "Predicted values")
+       y = "Federalist Papers", x = "Predicted values")
 
 ```
 
@@ -577,6 +576,8 @@ Examples: [Network Visualization Examples with the ggplot2 Package](https://cran
 
 ```{r message=FALSE}
 library("igraph")
+library("intergraph")
+library("GGally")
 ```
 
 
@@ -590,7 +591,7 @@ senator <- read.csv("twitter-senator.csv")
 ```
 
 **tidyverse:**
-```{r}
+```{r message=FALSE}
 twitter <- read_csv(qss_data_url("discovery", "twitter-following.csv"))
 senator <- read_csv(qss_data_url("discovery", "twitter-senator.csv"))
 ```
@@ -707,8 +708,8 @@ scale_shape_parties <- scale_shape_manual("Party", values = c(R = 16,
 
 
 senator %>%
-  mutate(closeness_in = closeness(twitter_adj, mode = "in"),
-         closeness_out = closeness(twitter_adj, mode = "out")) %>%
+  mutate(closeness_in = igraph::closeness(twitter_adj, mode = "in"),
+         closeness_out = igraph::closeness(twitter_adj, mode = "out")) %>%
   ggplot(aes(x = closeness_in, y = closeness_out,
              colour = party, shape = party)) +
   geom_abline(intercept = 0, slope = 1, colour = "white", size = 2) +
@@ -724,15 +725,14 @@ networks?
 
 ```{r}
 senator %>%
-  mutate(betweenness_dir = betweenness(twitter_adj, directed = TRUE),
-         betweenness_undir = betweenness(twitter_adj, directed = FALSE)) %>%
+  mutate(betweenness_dir = igraph::betweenness(twitter_adj, directed = TRUE),
+         betweenness_undir = igraph::betweenness(twitter_adj, directed = FALSE)) %>%
   ggplot(aes(x = betweenness_dir, y = betweenness_undir, colour = party,
              shape = party)) +
   geom_abline(intercept = 0, slope = 1, colour = "white", size = 2) +
   geom_point() +
   scale_colour_parties +
   scale_shape_parties +
-  coord_fixed() +
   labs(main = "Betweenness", x = "Directed", y = "Undirected")
 ```
 
@@ -759,11 +759,9 @@ plot(twitter.adj, vertex.size = senator$pagerank * 1000,
 
 
 Add and plot page-rank:
-```{r}
+```{r message=FALSE}
 senator <- mutate(senator, page_rank = page_rank(twitter_adj)[["vector"]])
 
-library("GGally")
-library("intergraph")
 ggnet(twitter_adj, mode = "target")
 ```
 
@@ -793,7 +791,6 @@ Here are few tutorials on plotting spatial data in ggplot2:
 - [Making Maps with R](http://eriqande.github.io/rep-res-web/lectures/making-maps-with-R.html)
 - [Plotting Data on a World Map](https://www.r-bloggers.com/r-beginners-plotting-locations-on-to-a-world-map/)
 - [Introduciton to Spatial Data and ggplot2](https://rpubs.com/m_dev/Intro-to-Spatial-Data-and-ggplot2)
-
 
 ```{r}
 library("ggrepel")
@@ -888,7 +885,7 @@ cal.color <- rgb(red = pres08$Rep[pres08$state == "CA"],
 ```
 
 **tidyverse:**
-```{r}
+```{r message=FALSE}
 pres08 <- read_csv(qss_data_url("discovery", "pres08.csv")) %>%
   mutate(Dem = Obama / (Obama + McCain),
          Rep = McCain / (Obama + McCain))
@@ -1012,7 +1009,7 @@ walmart$storesize <- ifelse(walmart$type == "DistributionCenter", 1, 0.5)
 ```
 
 **tidyverse:** We don't need to do the direct mapping since 
-```{r}
+```{r message=FALSE}
 walmart <- read_csv(qss_data_url("discovery", "walmart.csv"))
 
 ggplot() +
@@ -1022,9 +1019,13 @@ ggplot() +
                            size = if_else(type == "DistributionCenter", 2, 1)), alpha = 1 / 3) +
   coord_quickmap() +
   scale_size_identity() +
-  theme_void() 
+  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+  theme_void()
 ```
 We don't need to worry about colors since `ggplot` handles that.
+I use `r ggdoc("guides")` to so that the colors or not transparent
+in the legend (see `r r4ds_ch("Graphics for communication", "graphics-for-communication")`).
+
 
 To make a plot showing all Walmart stores opened up through that year, I write a function, that takes the year and dataset as parameters.
 
@@ -1039,6 +1040,7 @@ map_walmart <- function(year, .data) {
                data = .data, alpha = 1 / 3) +
     coord_quickmap() +
     scale_size_identity() +
+    guides(color = guide_legend(override.aes = list(alpha = 1))) +
     theme_void() +
     ggtitle(year)
 }
@@ -1057,13 +1059,15 @@ Note that the **gganimate** package is not on CRAN, so you have to install it wi
 install.packages("cowplot")
 devtools::install_github("dgrtwo/animate")
 ```
+```{r message=FALSE}
+library("gganimate")
+```
 
 An animation is a series of frames. 
 The `r pkg("gganimate")` package works by adding a `frame` aesthetic to ggplots, and function `r RDoc("gganimate::gg_animate")` will animate the plot.
 
 I use `frame = year(opendate)` to have the animation use each year as a frame, and `cumulative = TRUE` so that the previous years are shown.
-```{r warning = FALSE, message = FALSE}
-library("gganimate")
+```{r warning = FALSE, message = FALSE, fig.show = "animate",fig.cap="The Expansion of Walmart"}
 walmart_animated <-
   ggplot() +
     borders(database = "state") +

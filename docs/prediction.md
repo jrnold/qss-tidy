@@ -27,10 +27,11 @@ for loops and function: see  [this](https://support.rstudio.com/hc/en-us/article
 
 ## General Conditional Statements in R
 
-**TODO** Is this in R4DS, find good cites.
+See the *R for Data Science* section [Conditional Execution](http://r4ds.had.co.nz/functions.html#conditional-execution) for a more complete discussion of conditional execution.
 
 If you are using conditional statements to assign values for data frame, 
 see the **dplyr** functions [if_else](https://www.rdocumentation.org/packages/dplyr/topics/if_else), [recode](https://www.rdocumentation.org/packages/dplyr/topics/recode), and [case_when](https://www.rdocumentation.org/packages/dplyr/topics/case_when)
+
 
 ## Poll Predictions
 
@@ -392,6 +393,7 @@ Plot facial competence vs. vote share:
 
 ```r
 ggplot(face, aes(x = d.comp, y = diff.share, colour = w.party)) +
+  geom_ref_line(h = 0) +
   geom_point() +
   scale_colour_manual("Winning\nParty",
                       values = c(D = "blue", R = "red")) +
@@ -410,25 +412,14 @@ Run the linear regression
 
 ```r
 fit <- lm(diff.share ~ d.comp, data = face)
-summary(fit)
+fit
 #> 
 #> Call:
 #> lm(formula = diff.share ~ d.comp, data = face)
 #> 
-#> Residuals:
-#>    Min     1Q Median     3Q    Max 
-#> -0.675 -0.166  0.014  0.177  0.743 
-#> 
 #> Coefficients:
-#>             Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept)   -0.312      0.066   -4.73  6.2e-06 ***
-#> d.comp         0.660      0.127    5.19  8.9e-07 ***
-#> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#> 
-#> Residual standard error: 0.266 on 117 degrees of freedom
-#> Multiple R-squared:  0.187,	Adjusted R-squared:  0.18 
-#> F-statistic:   27 on 1 and 117 DF,  p-value: 8.85e-07
+#> (Intercept)       d.comp  
+#>      -0.312        0.660
 ```
 
 There are many functions to get data out of the `lm` model.
@@ -479,7 +470,8 @@ We can plot the results of the bivariate linear regression as follows:
 ggplot() +
   geom_point(data = face, mapping = aes(x = d.comp, y = diff.share)) +
   geom_abline(slope = coef(fit)["d.comp"],
-              intercept = coef(fit)["(Intercept)"])
+              intercept = coef(fit)["(Intercept)"],
+              colour = "red")
 ```
 
 <img src="prediction_files/figure-html/unnamed-chunk-30-1.png" width="70%" style="display: block; margin: auto;" />
@@ -509,7 +501,8 @@ Now we can plot the regression line and the original data just like any other pl
 ```r
 ggplot() +
   geom_point(data = face, mapping = aes(x = d.comp, y = diff.share)) +
-  geom_line(data = grid, mapping = aes(x = d.comp, y = pred))
+  geom_line(data = grid, mapping = aes(x = d.comp, y = pred),
+            colour = "red")
 ```
 
 <img src="prediction_files/figure-html/unnamed-chunk-32-1.png" width="70%" style="display: block; margin: auto;" />
@@ -588,8 +581,8 @@ Scatter plot of states with vote shares in 2008 and 2012
 
 ```r
 ggplot(pres, aes(x = Obama2008.z, y = Obama2012.z, label = state)) +
+  geom_abline(colour = "white", size = 2) +
   geom_text() +
-  geom_abline() +
   coord_fixed() +
   scale_x_continuous("Obama's standardized vote share in 2008",
                      limits = c(-4, 4)) +  
@@ -627,45 +620,24 @@ pres %>%
 
 ```r
 florida <- read_csv(qss_data_url("prediction", "florida.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   county = col_character(),
-#>   Clinton96 = col_integer(),
-#>   Dole96 = col_integer(),
-#>   Perot96 = col_integer(),
-#>   Bush00 = col_integer(),
-#>   Gore00 = col_integer(),
-#>   Buchanan00 = col_integer()
-#> )
 fit2 <- lm(Buchanan00 ~ Perot96, data = florida)
-summary(fit2)
+fit2
 #> 
 #> Call:
 #> lm(formula = Buchanan00 ~ Perot96, data = florida)
 #> 
-#> Residuals:
-#>    Min     1Q Median     3Q    Max 
-#> -612.7  -66.0    1.9   32.9 2301.7 
-#> 
 #> Coefficients:
-#>             Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept)  1.34575   49.75931    0.03     0.98    
-#> Perot96      0.03592    0.00434    8.28  9.5e-12 ***
-#> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#> 
-#> Residual standard error: 316 on 65 degrees of freedom
-#> Multiple R-squared:  0.513,	Adjusted R-squared:  0.506 
-#> F-statistic: 68.5 on 1 and 65 DF,  p-value: 9.47e-12
+#> (Intercept)      Perot96  
+#>      1.3458       0.0359
 ```
 
-In addition to,
+In addition to
 
 ```r
 summary(fit2)$r.squared
 #> [1] 0.513
 ```
-we can get the R2 squared value from the data frame [glance](https://www.rdocumentation.org/packages/broom/topics/glance.lm) returns:
+we can get the R squared value from the data frame [glance](https://www.rdocumentation.org/packages/broom/topics/glance.lm) returns:
 
 ```r
 glance(fit2)
@@ -675,7 +647,7 @@ glance(fit2)
 #> 1  6506118          65
 ```
 
-We can get predictions and residuals on the original data frame using the [modelr](https://cran.r-project.org/package=modelr) functions [add_residuals](https://www.rdocumentation.org/packages/modelr/topics/add_residuals) and [add_predictions](https://www.rdocumentation.org/packages/modelr/topics/add_predictions)
+We can add predictions and residuals to the original data frame using the [modelr](https://cran.r-project.org/package=modelr) functions [add_residuals](https://www.rdocumentation.org/packages/modelr/topics/add_residuals) and [add_predictions](https://www.rdocumentation.org/packages/modelr/topics/add_predictions)
 
 ```r
 florida <-
@@ -745,25 +717,14 @@ Data without Palm Beach
 ```r
 florida_pb <- filter(florida, county != "PalmBeach")
 fit3 <- lm(Buchanan00 ~ Perot96, data = florida_pb)
-summary(fit3)
+fit3
 #> 
 #> Call:
 #> lm(formula = Buchanan00 ~ Perot96, data = florida_pb)
 #> 
-#> Residuals:
-#>    Min     1Q Median     3Q    Max 
-#> -206.7  -43.5  -16.0   26.9  269.0 
-#> 
 #> Coefficients:
-#>             Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept) 45.84193   13.89275     3.3   0.0016 ** 
-#> Perot96      0.02435    0.00127    19.1   <2e-16 ***
-#> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#> 
-#> Residual standard error: 87.7 on 64 degrees of freedom
-#> Multiple R-squared:  0.851,	Adjusted R-squared:  0.849 
-#> F-statistic:  366 on 1 and 64 DF,  p-value: <2e-16
+#> (Intercept)      Perot96  
+#>     45.8419       0.0244
 ```
 
 $R^2$ or coefficient of determination
@@ -834,15 +795,6 @@ Load data
 
 ```r
 women <- read_csv(qss_data_url("prediction", "women.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   GP = col_integer(),
-#>   village = col_integer(),
-#>   reserved = col_integer(),
-#>   female = col_integer(),
-#>   irrigation = col_integer(),
-#>   water = col_integer()
-#> )
 ```
 
 proportion of female politicians in reserved GP vs. unreserved GP
@@ -919,44 +871,25 @@ Now each row is an outcome variable of interest, and there are columns for the t
 
 
 ```r
-lm(water ~ reserved, data = women) %>% summary()
+lm(water ~ reserved, data = women)
 #> 
 #> Call:
 #> lm(formula = water ~ reserved, data = women)
 #> 
-#> Residuals:
-#>    Min     1Q Median     3Q    Max 
-#> -23.99 -14.74  -7.86   2.26 316.01 
-#> 
 #> Coefficients:
-#>             Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept)    14.74       2.29    6.45  4.2e-10 ***
-#> reserved        9.25       3.95    2.34     0.02 *  
-#> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#> 
-#> Residual standard error: 33.4 on 320 degrees of freedom
-#> Multiple R-squared:  0.0169,	Adjusted R-squared:  0.0138 
-#> F-statistic: 5.49 on 1 and 320 DF,  p-value: 0.0197
-lm(irrigation ~ reserved, data = women) %>% summary()
+#> (Intercept)     reserved  
+#>       14.74         9.25
+```
+
+```r
+lm(irrigation ~ reserved, data = women)
 #> 
 #> Call:
 #> lm(formula = irrigation ~ reserved, data = women)
 #> 
-#> Residuals:
-#>    Min     1Q Median     3Q    Max 
-#>  -3.39  -3.39  -3.02  -1.02  86.61 
-#> 
 #> Coefficients:
-#>             Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept)    3.388      0.650    5.21  3.3e-07 ***
-#> reserved      -0.369      1.122   -0.33     0.74    
-#> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#> 
-#> Residual standard error: 9.51 on 320 degrees of freedom
-#> Multiple R-squared:  0.000338,	Adjusted R-squared:  -0.00279 
-#> F-statistic: 0.108 on 1 and 320 DF,  p-value: 0.742
+#> (Intercept)     reserved  
+#>       3.388       -0.369
 ```
 
 ### Regression with multiple predictors
@@ -964,15 +897,6 @@ lm(irrigation ~ reserved, data = women) %>% summary()
 
 ```r
 social <- read_csv(qss_data_url("prediction", "social.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   sex = col_character(),
-#>   yearofbirth = col_integer(),
-#>   primary2004 = col_integer(),
-#>   messages = col_character(),
-#>   primary2008 = col_integer(),
-#>   hhsize = col_integer()
-#> )
 glimpse(social)
 #> Observations: 305,866
 #> Variables: 6
@@ -1266,7 +1190,7 @@ ggplot(y.hat, aes(x = age, y = pred,
   theme(legend.position = "bottom")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-76-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="prediction_files/figure-html/unnamed-chunk-77-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -1280,7 +1204,7 @@ y.hat %>%
   ylim(0, 0.1)
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-77-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="prediction_files/figure-html/unnamed-chunk-78-1.png" width="70%" style="display: block; margin: auto;" />
 
 ## Regression Discontinuity Design
 
@@ -1303,19 +1227,6 @@ tory.fit2 <- lm(ln.net ~ margin, data = MPs.tory[MPs.tory$margin > 0, ])
 
 ```r
 MPs <- read_csv(qss_data_url("prediction", "MPs.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   surname = col_character(),
-#>   firstname = col_character(),
-#>   party = col_character(),
-#>   ln.gross = col_double(),
-#>   ln.net = col_double(),
-#>   yob = col_integer(),
-#>   yod = col_integer(),
-#>   margin.pre = col_double(),
-#>   region = col_character(),
-#>   margin = col_double()
-#> )
 
 MPs_labour <- filter(MPs, party == "labour")
 MPs_tory <- filter(MPs, party == "tory")
@@ -1408,7 +1319,7 @@ ggplot() +
        title = "Labour")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-83-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="prediction_files/figure-html/unnamed-chunk-84-1.png" width="70%" style="display: block; margin: auto;" />
 
 Tory politicians
 
@@ -1425,7 +1336,7 @@ ggplot() +
        title = "labour")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-84-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="prediction_files/figure-html/unnamed-chunk-85-1.png" width="70%" style="display: block; margin: auto;" />
 
 We can actually produce this plot easily without running the regressions, by using `geom_smooth`:
 
@@ -1440,7 +1351,7 @@ ggplot(mutate(MPs, winner = (margin > 0)),
   labs(x = "margin of victory", y = "log net wealth at death")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-85-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="prediction_files/figure-html/unnamed-chunk-86-1.png" width="70%" style="display: block; margin: auto;" />
 
 **Original code**
 

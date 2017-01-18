@@ -388,25 +388,9 @@ poll.pred[, 3] <- poll.pred[, 1] + qnorm(1 - alpha/2) * s.e.
 ```r
 ELECTION_DATE <- ymd(20081104)
 pres08 <- read_csv(qss_data_url("uncertainty", "pres08.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   state.name = col_character(),
-#>   state = col_character(),
-#>   Obama = col_integer(),
-#>   McCain = col_integer(),
-#>   EV = col_integer()
-#> )
 
 polls08 <- read_csv(qss_data_url("uncertainty", "polls08.csv")) %>%
   mutate(DaysToElection = as.integer(ELECTION_DATE - middate))
-#> Parsed with column specification:
-#> cols(
-#>   state = col_character(),
-#>   Pollster = col_character(),
-#>   Obama = col_integer(),
-#>   McCain = col_integer(),
-#>   middate = col_date(format = "")
-#> )
 ```
 For each state calculate the mean of the latest polls,
 
@@ -568,15 +552,6 @@ STAR <- read_csv(qss_data_url("uncertainty", "STAR.csv")) %>%
   mutate(classtype = factor(classtype,
                             labels = c("small class", "regular class",
                                        "regular class with aid")))
-#> Parsed with column specification:
-#> cols(
-#>   race = col_integer(),
-#>   classtype = col_integer(),
-#>   yearssmall = col_integer(),
-#>   hsgrad = col_integer(),
-#>   g4math = col_integer(),
-#>   g4reading = col_integer()
-#> )
 
 classtype_means <- 
   STAR %>%
@@ -1162,13 +1137,6 @@ prop.test(x, alternative = "greater")
 
 ```r
 resume <- read_csv(qss_data_url("uncertainty", "resume.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   firstname = col_character(),
-#>   sex = col_character(),
-#>   race = col_character(),
-#>   call = col_integer()
-#> )
 
 x <- resume %>%
   count(race, call) %>%
@@ -1338,17 +1306,6 @@ minwage <- read_csv(qss_data_url("uncertainty", "minwage.csv")) %>%
   mutate(fullPropBefore = fullBefore / (fullBefore + partBefore),
          fullPropAfter = fullAfter / (fullAfter + partAfter),
          NJ = as.integer(location == "PA"))
-#> Parsed with column specification:
-#> cols(
-#>   chain = col_character(),
-#>   location = col_character(),
-#>   wageBefore = col_double(),
-#>   wageAfter = col_double(),
-#>   fullBefore = col_double(),
-#>   fullAfter = col_double(),
-#>   partBefore = col_double(),
-#>   partAfter = col_double()
-#> )
 ```
 
 
@@ -1424,15 +1381,6 @@ confint(fit.women) # 95% confidence intervals
 
 ```r
 women <- read_csv(qss_data_url("uncertainty", "women.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   GP = col_integer(),
-#>   village = col_integer(),
-#>   reserved = col_integer(),
-#>   female = col_integer(),
-#>   irrigation = col_integer(),
-#>   water = col_integer()
-#> )
 fit_women <- lm(water ~ reserved, data = women)
 summary(fit_women)
 #> 
@@ -1531,19 +1479,6 @@ tory.fit2 <- lm(ln.net ~ margin, data = MPs.tory[MPs.tory$margin > 0, ])
 
 ```r
 MPs <- read_csv(qss_data_url("uncertainty", "MPs.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   surname = col_character(),
-#>   firstname = col_character(),
-#>   party = col_character(),
-#>   ln.gross = col_double(),
-#>   ln.net = col_double(),
-#>   yob = col_integer(),
-#>   yod = col_integer(),
-#>   margin.pre = col_double(),
-#>   region = col_character(),
-#>   margin = col_double()
-#> )
 MPs_labour <- filter(MPs, party == "labour")
 MPs_tory <- filter(MPs, party == "tory")
 labour_fit1 <- lm(ln.net ~ margin, data = filter(MPs_labour, margin < 0))

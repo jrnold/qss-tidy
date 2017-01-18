@@ -24,10 +24,11 @@ for loops and function: see  [this](https://support.rstudio.com/hc/en-us/article
 
 ## General Conditional Statements in R
 
-**TODO** Is this in R4DS, find good cites.
+See the *R for Data Science* section [Conditional Execution](http://r4ds.had.co.nz/functions.html#conditional-execution) for a more complete discussion of conditional execution.
 
 If you are using conditional statements to assign values for data frame, 
 see the **dplyr** functions `r rdoc("dplyr", "if_else")`, `r rdoc("dplyr", "recode")`, and `r rdoc("dplyr", "case_when")`
+
 
 ## Poll Predictions
 
@@ -284,6 +285,7 @@ face <- mutate(face,
 Plot facial competence vs. vote share:
 ```{r}
 ggplot(face, aes(x = d.comp, y = diff.share, colour = w.party)) +
+  geom_ref_line(h = 0) +
   geom_point() +
   scale_colour_manual("Winning\nParty",
                       values = c(D = "blue", R = "red")) +
@@ -299,7 +301,7 @@ ggplot(face, aes(x = d.comp, y = diff.share, colour = w.party)) +
 Run the linear regression
 ```{r}
 fit <- lm(diff.share ~ d.comp, data = face)
-summary(fit)
+fit
 ```
 
 There are many functions to get data out of the `lm` model.
@@ -325,7 +327,8 @@ We can plot the results of the bivariate linear regression as follows:
 ggplot() +
   geom_point(data = face, mapping = aes(x = d.comp, y = diff.share)) +
   geom_abline(slope = coef(fit)["d.comp"],
-              intercept = coef(fit)["(Intercept)"])
+              intercept = coef(fit)["(Intercept)"],
+              colour = "red")
 ```
 
 A more general way to plot the predictions of the model against the data 
@@ -342,7 +345,8 @@ Now we can plot the regression line and the original data just like any other pl
 ```{r}
 ggplot() +
   geom_point(data = face, mapping = aes(x = d.comp, y = diff.share)) +
-  geom_line(data = grid, mapping = aes(x = d.comp, y = pred))
+  geom_line(data = grid, mapping = aes(x = d.comp, y = pred),
+            colour = "red")
 ```
 This method is more complicated than the `geom_abline` method for a bivariate regression, but will work for more complicated models, while the `geom_abline` method won't.
 
@@ -391,8 +395,8 @@ pres <- pres %>%
 Scatter plot of states with vote shares in 2008 and 2012
 ```{r}
 ggplot(pres, aes(x = Obama2008.z, y = Obama2012.z, label = state)) +
+  geom_abline(colour = "white", size = 2) +
   geom_text() +
-  geom_abline() +
   coord_fixed() +
   scale_x_continuous("Obama's standardized vote share in 2008",
                      limits = c(-4, 4)) +  
@@ -416,22 +420,22 @@ pres %>%
 
 ### Model Fit
 
-```{r}
+```{r message=FALSE}
 florida <- read_csv(qss_data_url("prediction", "florida.csv"))
 fit2 <- lm(Buchanan00 ~ Perot96, data = florida)
-summary(fit2)
+fit2
 ```
 
-In addition to,
+In addition to
 ```{r}
 summary(fit2)$r.squared
 ```
-we can get the R2 squared value from the data frame `r rdoc("broom", "glance.lm", "glance")` returns:
+we can get the R squared value from the data frame `r rdoc("broom", "glance.lm", "glance")` returns:
 ```{r}
 glance(fit2)
 ```
 
-We can get predictions and residuals on the original data frame using the `r pkg_link("modelr")` functions `r rdoc("modelr", "add_residuals")` and `r rdoc("modelr", "add_predictions")`
+We can add predictions and residuals to the original data frame using the `r pkg_link("modelr")` functions `r rdoc("modelr", "add_residuals")` and `r rdoc("modelr", "add_predictions")`
 ```{r}
 florida <-
   florida %>%
@@ -472,7 +476,7 @@ Data without Palm Beach
 ```{r}
 florida_pb <- filter(florida, county != "PalmBeach")
 fit3 <- lm(Buchanan00 ~ Perot96, data = florida_pb)
-summary(fit3)
+fit3
 ```
 
 $R^2$ or coefficient of determination
@@ -528,7 +532,7 @@ See [Graphics for communication](http://r4ds.had.co.nz/graphics-for-communicatio
 ## Regression and Causation
 
 Load data
-```{r}
+```{r message=FALSE}
 women <- read_csv(qss_data_url("prediction", "women.csv"))
 ```
 
@@ -580,13 +584,15 @@ women %>%
 Now each row is an outcome variable of interest, and there are columns for the treatment (`1`) and control (`0`) groups, and the difference (`diff`).
 
 ```{r}
-lm(water ~ reserved, data = women) %>% summary()
-lm(irrigation ~ reserved, data = women) %>% summary()
+lm(water ~ reserved, data = women)
+```
+```{r}
+lm(irrigation ~ reserved, data = women)
 ```
 
 ### Regression with multiple predictors
 
-```{r}
+```{r message=FALSE}
 social <- read_csv(qss_data_url("prediction", "social.csv"))
 glimpse(social)
 levels(social$messages)
@@ -766,7 +772,7 @@ tory.fit2 <- lm(ln.net ~ margin, data = MPs.tory[MPs.tory$margin > 0, ])
 ```
 
 **Tidyverse**
-```{r}
+```{r message=FALSE}
 MPs <- read_csv(qss_data_url("prediction", "MPs.csv"))
 
 MPs_labour <- filter(MPs, party == "labour")

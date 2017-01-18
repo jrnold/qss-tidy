@@ -32,7 +32,7 @@ afghan %>%
 #>  Max.   :80.0   Max.   :18   Max.   :1.000
 ```
 
-With `income`, `read_csv` never converts strings to factors by default.
+With `income`,  never converts strings to factors by default.
 To get a summary of the different levels, either convert it to a factor (R4DS Ch 15), or use `count()`
 
 ```r
@@ -251,12 +251,6 @@ created by code-chunks.
 
 ```r
 afghan.village <- read_csv(qss_data_url("measurement", "afghan-village.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   altitude = col_double(),
-#>   population = col_integer(),
-#>   village.surveyed = col_integer()
-#> )
 ```
 
 Box-plots of altitude
@@ -363,16 +357,6 @@ afghan %>%
 
 ```r
 congress <- read_csv(qss_data_url("measurement", "congress.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   congress = col_integer(),
-#>   district = col_integer(),
-#>   state = col_character(),
-#>   party = col_character(),
-#>   name = col_character(),
-#>   dwnom1 = col_double(),
-#>   dwnom2 = col_double()
-#> )
 ```
 
 
@@ -464,12 +448,6 @@ Let's plot the Gini coefficient
 ```r
 USGini <- read_csv(qss_data_url("measurement", "USGini.csv"))
 #> Warning: Missing column names filled in: 'X1' [1]
-#> Parsed with column specification:
-#> cols(
-#>   X1 = col_integer(),
-#>   year = col_integer(),
-#>   gini = col_double()
-#> )
 ```
 
 

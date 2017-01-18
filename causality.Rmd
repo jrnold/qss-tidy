@@ -12,9 +12,8 @@ library("tidyverse")
 The code in the book uses `table` and `addmargins` to construct the table.
 However, this can be done easily with `dplyr` using grouping and summarizing.
 
-```{r}
-resume_url <- "https://raw.githubusercontent.com/jrnold/qss/master/CAUSALITY/resume.csv"
-resume <- read_csv(resume_url)
+```{r message=FALSE}
+resume <- read_csv(qss_data_url("causality", "resume.csv"))
 ```
 
 In addition to the functions shown in the text,
@@ -215,10 +214,9 @@ resume %>%
 
 ## Causal Affects and the Counterfactual
  
-Load the data using the **readr** function `read_csv`
-```{r}
-social_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/CAUSALITY/social.csv"
-social <- read_csv(social_url)
+Load the data using the **readr** function `r RDoc("readr::read_csv")`
+```{r message=FALSE}
+social <- read_csv(qss_data_url("causality", "social.csv"))
 summary(social)
 ```
 
@@ -273,7 +271,7 @@ social %>%
 ## Observational Studies
 
 Load the `minwage` dataset from its URL using `readr::read_csv`:
-```{r}
+```{r message=FALSE}
 minwage_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/CAUSALITY/minwage.csv"
 minwage <- read_csv(minwage_url)
 glimpse(minwage)

@@ -30,12 +30,6 @@ library("modelr")
 
 ```r
 library("tm")
-#> Loading required package: NLP
-#> 
-#> Attaching package: 'NLP'
-#> The following object is masked from 'package:ggplot2':
-#> 
-#>     annotate
 library("SnowballC")
 library("tidytext")
 ```
@@ -215,7 +209,6 @@ Plot the word-clouds for essays 12 and 24:
 
 ```r
 library("wordcloud")
-#> Loading required package: RColorBrewer
 filter(dtm, document == 12) %>%
   {wordcloud(.$word, .$n, max.words = 20)}
 ```
@@ -565,7 +558,6 @@ sd(hm.fitted)
 **tidyverse:**
 
 ```r
-library("modelr")
 author_data <- 
   hm_tfm %>%
   ungroup() %>%
@@ -768,7 +760,7 @@ ggplot(mutate(author_data,
   scale_shape_manual(values = c("Madison" = 16, "Hamilton" = 15, 
                                  "Disputed" = 17)) +
   labs(colour = "Author", shape = "Author", 
-       x = "Federalist Papers", y = "Predicted values")
+       y = "Federalist Papers", x = "Predicted values")
 ```
 
 <img src="discovery_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" />
@@ -796,6 +788,8 @@ Examples: [Network Visualization Examples with the ggplot2 Package](https://cran
 
 ```r
 library("igraph")
+library("intergraph")
+library("GGally")
 ```
 
 
@@ -813,19 +807,7 @@ senator <- read.csv("twitter-senator.csv")
 
 ```r
 twitter <- read_csv(qss_data_url("discovery", "twitter-following.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   following = col_character(),
-#>   followed = col_character()
-#> )
 senator <- read_csv(qss_data_url("discovery", "twitter-senator.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   screen_name = col_character(),
-#>   name = col_character(),
-#>   party = col_character(),
-#>   state = col_character()
-#> )
 ```
 
 **Original:**
@@ -970,8 +952,8 @@ scale_shape_parties <- scale_shape_manual("Party", values = c(R = 16,
 
 
 senator %>%
-  mutate(closeness_in = closeness(twitter_adj, mode = "in"),
-         closeness_out = closeness(twitter_adj, mode = "out")) %>%
+  mutate(closeness_in = igraph::closeness(twitter_adj, mode = "in"),
+         closeness_out = igraph::closeness(twitter_adj, mode = "out")) %>%
   ggplot(aes(x = closeness_in, y = closeness_out,
              colour = party, shape = party)) +
   geom_abline(intercept = 0, slope = 1, colour = "white", size = 2) +
@@ -990,15 +972,14 @@ networks?
 
 ```r
 senator %>%
-  mutate(betweenness_dir = betweenness(twitter_adj, directed = TRUE),
-         betweenness_undir = betweenness(twitter_adj, directed = FALSE)) %>%
+  mutate(betweenness_dir = igraph::betweenness(twitter_adj, directed = TRUE),
+         betweenness_undir = igraph::betweenness(twitter_adj, directed = FALSE)) %>%
   ggplot(aes(x = betweenness_dir, y = betweenness_undir, colour = party,
              shape = party)) +
   geom_abline(intercept = 0, slope = 1, colour = "white", size = 2) +
   geom_point() +
   scale_colour_parties +
   scale_shape_parties +
-  coord_fixed() +
   labs(main = "Betweenness", x = "Directed", y = "Undirected")
 ```
 
@@ -1032,56 +1013,7 @@ Add and plot page-rank:
 ```r
 senator <- mutate(senator, page_rank = page_rank(twitter_adj)[["vector"]])
 
-library("GGally")
-#> 
-#> Attaching package: 'GGally'
-#> The following object is masked from 'package:dplyr':
-#> 
-#>     nasa
-library("intergraph")
 ggnet(twitter_adj, mode = "target")
-#> Loading required package: network
-#> network: Classes for Relational Data
-#> Version 1.13.0 created on 2015-08-31.
-#> copyright (c) 2005, Carter T. Butts, University of California-Irvine
-#>                     Mark S. Handcock, University of California -- Los Angeles
-#>                     David R. Hunter, Penn State University
-#>                     Martina Morris, University of Washington
-#>                     Skye Bender-deMoll, University of Washington
-#>  For citation information, type citation("network").
-#>  Type help("network-package") to get started.
-#> 
-#> Attaching package: 'network'
-#> The following objects are masked from 'package:igraph':
-#> 
-#>     %c%, %s%, add.edges, add.vertices, delete.edges,
-#>     delete.vertices, get.edge.attribute, get.edges,
-#>     get.vertex.attribute, is.bipartite, is.directed,
-#>     list.edge.attributes, list.vertex.attributes,
-#>     set.edge.attribute, set.vertex.attribute
-#> Loading required package: sna
-#> Loading required package: statnet.common
-#> sna: Tools for Social Network Analysis
-#> Version 2.4 created on 2016-07-23.
-#> copyright (c) 2005, Carter T. Butts, University of California-Irvine
-#>  For citation information, type citation("sna").
-#>  Type help(package="sna") to get started.
-#> 
-#> Attaching package: 'sna'
-#> The following objects are masked from 'package:igraph':
-#> 
-#>     betweenness, bonpow, closeness, components, degree,
-#>     dyad.census, evcent, hierarchy, is.connected, neighborhood,
-#>     triad.census
-#> Loading required package: scales
-#> 
-#> Attaching package: 'scales'
-#> The following object is masked from 'package:purrr':
-#> 
-#>     discard
-#> The following objects are masked from 'package:readr':
-#> 
-#>     col_factor, col_numeric
 ```
 
 <img src="discovery_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" />
@@ -1112,7 +1044,6 @@ Here are few tutorials on plotting spatial data in ggplot2:
 - [Making Maps with R](http://eriqande.github.io/rep-res-web/lectures/making-maps-with-R.html)
 - [Plotting Data on a World Map](https://www.r-bloggers.com/r-beginners-plotting-locations-on-to-a-world-map/)
 - [Introduciton to Spatial Data and ggplot2](https://rpubs.com/m_dev/Intro-to-Spatial-Data-and-ggplot2)
-
 
 
 ```r
@@ -1232,14 +1163,6 @@ cal.color <- rgb(red = pres08$Rep[pres08$state == "CA"],
 pres08 <- read_csv(qss_data_url("discovery", "pres08.csv")) %>%
   mutate(Dem = Obama / (Obama + McCain),
          Rep = McCain / (Obama + McCain))
-#> Parsed with column specification:
-#> cols(
-#>   state.name = col_character(),
-#>   state = col_character(),
-#>   Obama = col_integer(),
-#>   McCain = col_integer(),
-#>   EV = col_integer()
-#> )
 ```
 
 **Original:**
@@ -1380,16 +1303,6 @@ walmart$storesize <- ifelse(walmart$type == "DistributionCenter", 1, 0.5)
 
 ```r
 walmart <- read_csv(qss_data_url("discovery", "walmart.csv"))
-#> Parsed with column specification:
-#> cols(
-#>   opendate = col_date(format = ""),
-#>   st.address = col_character(),
-#>   city = col_character(),
-#>   state = col_character(),
-#>   long = col_double(),
-#>   lat = col_double(),
-#>   type = col_character()
-#> )
 
 ggplot() +
   borders(database = "state") +
@@ -1398,11 +1311,15 @@ ggplot() +
                            size = if_else(type == "DistributionCenter", 2, 1)), alpha = 1 / 3) +
   coord_quickmap() +
   scale_size_identity() +
-  theme_void() 
+  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+  theme_void()
 ```
 
 <img src="discovery_files/figure-html/unnamed-chunk-77-1.png" width="70%" style="display: block; margin: auto;" />
 We don't need to worry about colors since `ggplot` handles that.
+I use [guides](http://docs.ggplot2.org/current/guides.html) to so that the colors or not transparent
+in the legend (see *R for Data Science* chapter[Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html)).
+
 
 To make a plot showing all Walmart stores opened up through that year, I write a function, that takes the year and dataset as parameters.
 
@@ -1418,6 +1335,7 @@ map_walmart <- function(year, .data) {
                data = .data, alpha = 1 / 3) +
     coord_quickmap() +
     scale_size_identity() +
+    guides(color = guide_legend(override.aes = list(alpha = 1))) +
     theme_void() +
     ggtitle(year)
 }
@@ -1439,13 +1357,16 @@ install.packages("cowplot")
 devtools::install_github("dgrtwo/animate")
 ```
 
+```r
+library("gganimate")
+```
+
 An animation is a series of frames. 
 The [gganimate](https://cran.r-project.org/package=gganimate) package works by adding a `frame` aesthetic to ggplots, and function  will animate the plot.
 
 I use `frame = year(opendate)` to have the animation use each year as a frame, and `cumulative = TRUE` so that the previous years are shown.
 
 ```r
-library("gganimate")
 walmart_animated <-
   ggplot() +
     borders(database = "state") +
@@ -1460,4 +1381,4 @@ walmart_animated <-
 gganimate(walmart_animated)
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-80-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-4.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-5.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-6.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-7.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-8.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-9.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-10.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-11.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-12.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-13.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-14.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-15.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-16.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-17.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-18.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-19.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-20.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-21.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-22.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-23.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-24.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-25.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-26.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-27.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-28.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-29.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-30.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-31.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-32.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-33.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-34.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-35.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-36.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-37.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-38.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-39.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-40.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-41.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-42.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-43.png" width="70%" style="display: block; margin: auto;" />
+![unnamed-chunk-81](discovery_files/figure-html/unnamed-chunk-81-.gif)

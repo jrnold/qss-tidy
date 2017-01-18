@@ -45,14 +45,13 @@ library("rio")
 Don't use `setwd()` within scripts.
 It is much better to organize your code in projects.
 
-When reading from csv files use `readr::read_csv` instead of the base R function `read.csv`. 
+When reading from csv files use `r RDoc("read::read_csv")` instead of the base R function `r RDoc("base::read.csv")`. 
 It is slightly faster, and returns a `tibble` instead of a data frame.
-See r4ds [Ch 11: Data Import](http://r4ds.had.co.nz/tibbles.html#introduction-4)
-for more dicussion.
+See  `r r4ds_ch("Data Import", "data-import")` for more dicussion.
 
 We also can load it directly from a URL.
-```{r}
-UNpop <- read_csv("https://raw.githubusercontent.com/jrnold/qss/master/INTRO/UNpop.csv")
+```{r message=FALSE}
+UNpop <- read_csv(qss_data_url("intro", "UNpop.csv"))
 class(UNpop)
 UNpop
 ```
@@ -171,9 +170,8 @@ library("tidyverse")
 The code in the book uses `table` and `addmargins` to construct the table.
 However, this can be done easily with `dplyr` using grouping and summarizing.
 
-```{r}
-resume_url <- "https://raw.githubusercontent.com/jrnold/qss/master/CAUSALITY/resume.csv"
-resume <- read_csv(resume_url)
+```{r message=FALSE}
+resume <- read_csv(qss_data_url("causality", "resume.csv"))"
 ```
 
 In addition to the functions shown in the text,
@@ -374,10 +372,9 @@ resume %>%
 
 ## Causal Affects and the Counterfactual
  
-Load the data using the **readr** function `read_csv`
-```{r}
-social_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/CAUSALITY/social.csv"
-social <- read_csv(social_url)
+Load the data using the `r pkg("readr")` function `r RDoc("readr::read_csv")`
+```{r message=FALSE}
+social <- read_csv(qss_data_url("causality", "social.csv"))
 summary(social)
 ```
 
@@ -431,10 +428,9 @@ social %>%
 
 ## Observational Studies
 
-Load the `minwage` dataset from its URL using `readr::read_csv`:
+Load the `minwage` dataset from its URL using `r RDoc("readr::read_csv")`:
 ```{r}
-minwage_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/CAUSALITY/minwage.csv"
-minwage <- read_csv(minwage_url)
+minwage <- read_csv(qss_data_url("causality", "minwage.csv"))
 glimpse(minwage)
 summary(minwage)
 ```
@@ -685,8 +681,7 @@ library("forcats")
 ```
 
 ```{r message=FALSE}
-afghan_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/MEASUREMENT/afghan.csv"
-afghan <- read_csv(afghan_url)
+afghan <- read_csv(qss_data_url("measurement", "afghan.csv"))"
 ```
 
 Summarize the variables of interest

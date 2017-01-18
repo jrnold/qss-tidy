@@ -17,7 +17,9 @@ sims <- 1000 # number of simulations event <- 0 # counter
 for (i in 1:sims) {
 days <- sample(1:365, k, replace = TRUE)
 days.unique <- unique(days) # unique birthdays
-## if there are duplicates, the number of unique birthdays ## will be less than the number of birthdays, which is `k' if (length(days.unique) < k) {
+## if there are duplicates, the number of unique birthdays 
+## will be less than the number of birthdays, which is `k' 
+if (length(days.unique) < k) {
         event <- event + 1
     }
 }
@@ -39,6 +41,7 @@ bday <- tibble(k = 1:50,
                pr = birthday(k))
 ggplot(bday, aes(x = k , y = pr)) +
   geom_hline(yintercept = 0.5, colour = "white", size = 2) +
+  geom_line() +
   geom_point() +
   scale_y_continuous("Probability that at least two\n people have the same birthday", limits = c(0, 1)) +
   labs(x = "Number of people")
@@ -59,7 +62,9 @@ sims <- 1000 # number of simulations event <- 0 # counter
 for (i in 1:sims) {
 days <- sample(1:365, k, replace = TRUE)
 days.unique <- unique(days) # unique birthdays
-## if there are duplicates, the number of unique birthdays ## will be less than the number of birthdays, which is `k' if (length(days.unique) < k) {
+## if there are duplicates, the number of unique birthdays 
+## will be less than the number of birthdays, which is `k' 
+if (length(days.unique) < k) {
         event <- event + 1
     }
 }
@@ -89,6 +94,7 @@ map_lgl(seq_len(sims), ~ sim_bdays(k)) %>%
   mean()
 ```
 
+
 ### Combinations
 
 **Original code**
@@ -110,7 +116,7 @@ dim(FLVoters) # after removal
 ```
 
 **tidyverse**
-```{r}
+```{r message=FALSE}
 FLVoters <- read_csv(qss_data_url("probability", "FLVoters.csv"))
 dim(FLVoters)
 FLVoters <- FLVoters %>%
@@ -372,7 +378,7 @@ While the original code only calculates joint-independence value for values of
 age > 60, and female, this calculates the joint probabilities for all combinations
 of the three variables, and facets by age and gender.
 
-```{r}
+```{r fig.height = 10, fig.width = 7, fig.asp = NA}
 joint_indep <-
   # all combinations of race, age, gender
   crossing(select(margin_race, race, prob_race = prop),
@@ -397,7 +403,7 @@ ggplot(joint_indep, aes(x = prob, y = indep_prob, colour = race)) +
 
 The original code only calculates the conditional independence given female;
 this calculates conditional independence for all values of `gender`:
-```{r}
+```{r fig.height = 10, fig.width = 7, fig.asp = NA}
 cond_gender <- 
   left_join(select(joint3, race, age_group, gender, joint_prob = prop),
             select(margin_gender, gender, prob_gender = prop),
@@ -492,7 +498,7 @@ Can we make this even more general? What about a function that takes a data fram
 ### Predicting Race Using Surname and Residence Location
 
 Start with the Census names files:
-```{r}
+```{r message=FALSE}
 cnames <- read_csv(qss_data_url("probability", "names.csv"))
 glimpse(cnames)
 ```
@@ -569,7 +575,7 @@ FLVoters %>%
 ```
 
 Now add get residence data
-```{r}
+```{r message=FALSE}
 FLCensus <- read_csv(qss_data_url("probability", "FLCensusVTD.csv"))
 ```
 
@@ -595,7 +601,7 @@ pres08$p <- pres08$Obama / (pres08$Obama + pres08$McCain)
 ```
 
 **Tidyverse code**
-```{r}
+```{r message=FALSE}
 pres08 <- read_csv(qss_data_url("probability", "pres08.csv")) %>%
   mutate(p = Obama / (Obama + McCain))
 ```
@@ -643,9 +649,10 @@ ELECTION_EV <- 364
 ```
 And plot them,
 ```{r}
-ggplot(sim_results, aes(x = EV)) +
-  geom_histogram(binwidth = 10) +
-  geom_vline(xintercept = ELECTION_EV, colour = "red", size = 2)
+ggplot(sim_results, aes(x = EV, y = ..density..)) +
+  geom_histogram(binwidth = 10, fill = "gray30") +
+  geom_vline(xintercept = ELECTION_EV, colour = "black", size = 2) +
+  labs(x = "Electoral Votes", y = "density")
 ```
 
 **Original code**

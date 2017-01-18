@@ -9,7 +9,7 @@ library("stringr")
 library("forcats")
 ```
 The packages `r pkg_link("modelr")` and `r pkg_link("broom")` are used to wrangle the results of linear regressions,
-```{r}
+```{r message=FALSE}
 library("broom")
 library("modelr")
 ```
@@ -91,7 +91,7 @@ glimpse(polls_w_results)
 ```
 
 
-To get the last poll in each state, arrange and filter on middate
+To get the last poll in each state, arrange and filter on `middate`
 ```{r}
 last_polls <- 
   polls_w_results %>%
@@ -128,13 +128,13 @@ mean(last_polls$error)
 
 This is slightly different than what is in the book due to the difference in the poll used as the final poll; many states have many polls on the last day.
 
-I'll choose binwidths of 1%, since that is fairly interpretable:
+I'll choose bin widths of 1%, since that is fairly interpretable:
 ```{r}
 ggplot(last_polls, aes(x = error)) +
   geom_histogram(binwidth = 1, boundary = 0)
 ```
 
-The text uses bindwidths of 5%:
+The text uses bin widths of 5%:
 ```{r}
 ggplot(last_polls, aes(x = error)) +
   geom_histogram(binwidth = 5, boundary = 0)
@@ -146,23 +146,22 @@ ggplot(last_polls, aes(x = error)) +
 Consider averaging back over time? 
 What happens if you take the averages of the state poll average and average of **all** polls - does that improve prediction? 
 
-To create a scatterplot using the state abbreviations instead of points use
+To create a scatter plots using the state abbreviations instead of points use
 `r ggdoc("geom_text")` instead of `r ggdoc("geom_point")`.
 ```{r}
 ggplot(last_polls, aes(x = margin, y = elec_margin, label = state)) +
+  geom_abline(color = "white", size = 2) +  
+  geom_hline(yintercept = 0, color = "gray", size = 2) +
+  geom_vline(xintercept = 0, color = "gray", size = 2) +
   geom_text() +
-  geom_abline(col = "red") +
-  geom_hline(yintercept = 0) +
-  geom_vline(xintercept = 0) +
   coord_fixed() +
   labs(x = "Poll Results", y = "Actual Election Results")
 ```
 
-We can create a confusion matrix as follow.
-
-Create a new columns `classification` which shows whether how the poll's classification was related to the actual election outcome ("true positive", "false positive", "false negative", "false positive").
-This can be accomplished easily with the `r pkg_link("dplyr")` funtion `r rdoc("dplyr", "case_when")`.
-*Note:* You need to use `.` to refer to the data frame when using `case_when` with a `mutate` function.
+We can create a confusion matrix as follows.
+Create a new column `classification` which shows whether how the poll's classification was related to the actual election outcome ("true positive", "false positive", "false negative", "false positive").
+If there were two outcomes, then we would use the `r RDoc("dplyr::if_then")` function. 
+But with more than two outcomes, it is easier to use the `r pkg("dplyr")` function `r RDoc("dplyr::case_when")`.
 ```{r}
 last_polls <-
   last_polls %>%
@@ -175,14 +174,17 @@ last_polls <-
              (.$margin < 0 & .$elec_margin > 0) ~ "false negative"
            ))
 ```
-No simply count the 
+You need to use `.` to refer to the data frame when using `case_when` within `mutate()`.
+Also, we needed to first use `r RDoc("ungroup")` in order to remove the grouping variable so `mutate` will work.
+
+Now simply count the number of polls in each category of `classification`:
 ```{r}
 last_polls %>%
   group_by(classification) %>%
   count()
 ```
 
-Which states were incorrectly predicted?
+Which states were incorrectly predicted by the polls?
 ```{r}
 last_polls %>%
   filter(classification %in% c("false positive", "false negative")) %>%
@@ -244,10 +246,11 @@ pop_vote_avg_tidy
 
 ```{r}
 ggplot(pop_vote_avg_tidy, aes(x = date, y = share,
-                              colour = forcats::fct_reorder2(candidate,
-                                                             date, share))) +
+                              colour = forcats::fct_reorder2(candidate, date, share))) +
   geom_point() +
-  geom_line()
+  geom_line() +
+  scale_colour_manual("Candidate", 
+                      values = c(Obama = "blue", McCain = "red"))
 ```
 
 
@@ -255,7 +258,7 @@ ggplot(pop_vote_avg_tidy, aes(x = date, y = share,
 
 The 7-day average is similar to the simple method used by [Real Clear Politics](http://www.realclearpolitics.com/epolls/2016/president/us/general_election_trump_vs_clinton-5491.html). 
 The RCP average is simply the average of all polls in their data for the last seven days.
-Sites like 538 and the Huffington Post on the other hand, also use what amounts to averaging polls, but using more sophisticated statistical methods to assign different weights to different polls.
+Sites like [538](https://fivethirtyeight.com) and the [Huffpost Pollster](http://elections.huffingtonpost.com/pollster), on the other hand, also use what amounts to averaging polls, but using more sophisticated statistical methods to assign different weights to different polls.
 
 **Challenge** Why do we need to use different polls for the popular vote data? Why not simply average all the state polls?
 What would you have to do? 
@@ -272,20 +275,22 @@ face <- read_csv(qss_data_url("prediction", "face.csv"))
 ```
 Add Democrat and Republican vote shares, and the difference in shares:
 ```{r face_shares}
-face <-
-  face %>%
-  mutate(d.share = d.votes / (d.votes + r.votes),
-         r.share = r.votes / (d.votes + r.votes),
-         diff.share = d.share - r.share)
+face <- mutate(face, 
+                d.share = d.votes / (d.votes + r.votes),
+                r.share = r.votes / (d.votes + r.votes),
+                diff.share = d.share - r.share)
 ```
 
 Plot facial competence vs. vote share:
 ```{r}
 ggplot(face, aes(x = d.comp, y = diff.share, colour = w.party)) +
   geom_point() +
+  scale_colour_manual("Winning\nParty",
+                      values = c(D = "blue", R = "red")) +
   labs(x = "Competence scores for Democrats",
        y = "Democratic margin in vote share")
 ```
+
 
 ### Correlation
 
@@ -339,7 +344,7 @@ ggplot() +
   geom_point(data = face, mapping = aes(x = d.comp, y = diff.share)) +
   geom_line(data = grid, mapping = aes(x = d.comp, y = pred))
 ```
-This method is more complicated than the `geom_abline` method for a bivariate regerssion, but will work for more complicated models, while the `geom_abline` method won't.
+This method is more complicated than the `geom_abline` method for a bivariate regression, but will work for more complicated models, while the `geom_abline` method won't.
 
 
 Note that `r ggdoc("geom_smooth")` can be used to add a regression line to a data-set.
@@ -350,7 +355,7 @@ ggplot(data = face, mapping = aes(x = d.comp, y = diff.share)) +
 ```
 The argument `method = "lm"` specifies that the function `lm` is to be used to generate fitted values. 
 It is equivalent to running the regression `lm(y ~ x)` and plotting the regression line, where `y` and `x` are the aesthetics specified by the mappings.
-The argument `se = FALSE` tells the function not to plot the confidence interval of the regresion (discussed later).
+The argument `se = FALSE` tells the function not to plot the confidence interval of the regression (discussed later).
 
 ### Regresion towards the mean
 
@@ -358,7 +363,6 @@ The argument `se = FALSE` tells the function not to plot the confidence interval
 
 See the `r R4DS` chapter [Relational data](http://r4ds.had.co.nz/relational-data.html).
 
-Merge - or intter join the data frames by state:
 ```{r pres12,message=FALSE}
 pres12 <- read_csv(qss_data_url("prediction", "pres12.csv"))
 ```
@@ -384,7 +388,7 @@ pres <- pres %>%
          Obama2012.z = scale(Obama_12))
 ```
 
-Scatterplot of states with vote shares in 2008 and 2012
+Scatter plot of states with vote shares in 2008 and 2012
 ```{r}
 ggplot(pres, aes(x = Obama2008.z, y = Obama2012.z, label = state)) +
   geom_text() +
@@ -396,7 +400,7 @@ ggplot(pres, aes(x = Obama2008.z, y = Obama2012.z, label = state)) +
                      limits = c(-4, 4))
 ```
 
-To calcualte the bottom and top quartiles
+To calculate the bottom and top quartiles
 
 ```{r}
 pres %>%
@@ -563,7 +567,7 @@ women %>%
             diff_water = diff(water))
 ```
 
-The other way uses tidyr `r rdoc("tidyr", "spread.lm", "spread")` and `r rdoc("tidyr", "gather.lm", "gather")`,
+The other way uses **tidyr** `r rdoc("tidyr", "spread.lm", "spread")` and `r rdoc("tidyr", "gather.lm", "gather")`,
 ```{r}
 women %>%
   group_by(reserved) %>%
@@ -710,9 +714,9 @@ ate.age <-
 ate.age
 ```
 
-You can use `r rdoc("base", "poly")` for polynomials instead of `age + I(age ^ 2)`.
+You can use `r rdoc("base", "poly")` function to calculate polynomials instead of adding each term, `age + I(age ^ 2)`.
 Though note that the coefficients will be be different since by default `poly` calculates orthogonal polynomials instead of the natural (raw) polynomials.
-However, you really shouldn't interpet the coefficients directly anyways, so this should matter.
+However, you really shouldn't interpret the coefficients directly anyways, so this should matter.
 ```{r}
 fit.age2 <- lm(primary2008 ~ poly(age, 2) * messages,
                data = social.neighbor)
@@ -794,7 +798,7 @@ y2.tory <- predict(tory.fit2, newdata = data.frame(margin = y2t.range))
 
 **Tidyverse code**
 
-Use `r rdoc("modelr", "data_grid")` to generate a grid for predictions.
+Use `r RDoc("modelr::data_grid")` to generate a grid for predictions.
 ```{r}
 y1_labour <-
   filter(MPs_labour, margin < 0) %>%
@@ -844,9 +848,10 @@ ggplot() +
   geom_point(data = MPs_labour,
             mapping = aes(x = margin, y = ln.net)) +
   geom_line(data = y1_labour,
-            mapping = aes(x = margin, y = pred), colour = "red") +
+            mapping = aes(x = margin, y = pred), colour = "red",
+            size = 1.5) +
   geom_line(data = y2_labour,
-            mapping = aes(x = margin, y = pred), colour = "red") +
+            mapping = aes(x = margin, y = pred), colour = "red", size = 1.5) +
   labs(x = "margin of victory", y = "log net wealth at death",
        title = "Labour")
 ```
@@ -858,9 +863,9 @@ ggplot() +
   geom_point(data = MPs_tory,
              mapping = aes(x = margin, y = ln.net)) +
   geom_line(data = y1_tory,
-            mapping = aes(x = margin, y = pred), colour = "red") +
+            mapping = aes(x = margin, y = pred), colour = "red", size = 1.5) +
   geom_line(data = y2_tory,
-            mapping = aes(x = margin, y = pred), colour = "red") +
+            mapping = aes(x = margin, y = pred), colour = "red", size = 1.5) +
   labs(x = "margin of victory", y = "log net wealth at death",
        title = "labour")
 ```
@@ -895,8 +900,7 @@ tory.MP - tory.nonMP
 ## 255050.9
 ```
 
-**Tidyverse code**
-
+**Tidyverse:**
 In the previous code, I didn't directly compute the the average net wealth at 0, so I'll need to do that here.
 I'll use `r rdoc("modelr", "gather_predictions")` to add predictions for multiple models:
 ```{r}
@@ -906,7 +910,7 @@ spread_predictions(data_frame(margin = 0),
 ```
 
 
-**Original code**
+**Original:**
 ```{r eval = FALSE}
 ## two regressions for Tory: negative and positive margin
 tory.fit3 <- lm(margin.pre ~ margin, data = MPs.tory[MPs.tory$margin < 0, ])
@@ -916,7 +920,7 @@ coef(tory.fit4)[1] - coef(tory.fit3)[1]
 ## -0.01725578
 ```
 
-**Tidyverse code**
+**Tidyverse:**
 ```{r}
 tory_fit3 <- lm(margin.pre ~ margin, data = filter(MPs_tory, margin < 0))
 tory_fit4 <- lm(margin.pre ~ margin, data = filter(MPs_tory, margin > 0))
@@ -924,4 +928,3 @@ tory_fit4 <- lm(margin.pre ~ margin, data = filter(MPs_tory, margin > 0))
 (filter(tidy(tory_fit3), term == "(Intercept)")[["estimate"]] -
  filter(tidy(tory_fit4), term == "(Intercept)")[["estimate"]])
 ```
-

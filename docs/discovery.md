@@ -5,10 +5,10 @@ The idea of tidy data and the common feature of tidyverse packages is that data 
 This works well with naturally tabular data, the type which has been common in social science applications.
 But there are other domains in which other data structures are more appropriate because they more naturally model the data or processes, or for computational reasons.
 The three applications in this chapter: text, networks, and spatial data are examples where the tidy data structure is less of an advantage.
-I will still rely on **ggplot2** for plotting, and use tidyverse compatible packages where appropriate.
+I will still rely on **ggplot2** for plotting, and use tidy verse compatible packages where appropriate.
 
 - Textual data: [tidytext](https://cran.r-project.org/package=tidytext) 
-- Network data: [igraph](https://cran.r-project.org/package=igraph) for network computation, as in the chapter. But several ggplot2 extension packages for plotting the networks.
+- Network data: [igraph](https://cran.r-project.org/package=igraph) for network computation, as in the chapter. But several **ggplot2**2 extension packages for plotting the networks.
 - Spatial data: [ggplot2](https://cran.r-project.org/package=ggplot2) has some built-in support for maps. The [map](https://cran.r-project.org/package=map) package provides map data.
 
 See the [R for Data Science](http://r4ds.had.co.nz/) section [12.7 Non-tidy data](http://r4ds.had.co.nz/tidy-data.html#non-tidy-data) and this post on [Non-tidy data](http://simplystatistics.org/2016/02/17/non-tidy-data/) by Jeff Leek for more on non-tidy data.
@@ -113,13 +113,13 @@ corpus_tidy
 #> # ... with 79 more rows, and 1 more variables: text <chr>
 ```
 The `text` column contains the text of the documents themselves.
-Since most of the metadat is irrelevant, we'll delete those columns, 
-keepin only the document (`id`) and `text` columns.
+Since most of the metadata is irrelevant, we'll delete those columns, 
+keeping only the document (`id`) and `text` columns.
 
 ```r
 corpus_tidy <- select(corpus_tidy, id, text)
 ```
-Also, we want to extract the essay number and use that as the document id rather than its filename.
+Also, we want to extract the essay number and use that as the document id rather than its file name.
 
 ```r
 corpus_tidy <- mutate(corpus_tidy, 
@@ -129,35 +129,44 @@ corpus_tidy <- mutate(corpus_tidy,
 
 
 
-The [unnest_tokens](https://www.rdocumentation.org/packages/tidytext/topics/unnest_tokens) tokenizes the document texts.
+The  tokenizes the document texts.
 
 ```r
-tokens <- unnest_tokens(corpus_tidy, word, text)
+tokens <- corpus_tidy %>%
+  # tokenizes into words and stems them
+  unnest_tokens(word, text, token = "word_stems") %>%
+  # remove any numbers in the strings
+  mutate(word = str_replace_all(word, "\\d+", "")) %>%
+  # drop any empty strings
+  filter(word != "")
 tokens
-#> # A tibble: 187,537 × 2
-#>   document        word
-#>      <int>       <chr>
-#> 1        1       after
-#> 2        1          an
-#> 3        1 unequivocal
-#> 4        1  experience
-#> 5        1          of
-#> 6        1         the
-#> # ... with 1.875e+05 more rows
+#> # A tibble: 187,412 × 2
+#>   document      word
+#>      <int>     <chr>
+#> 1        1     after
+#> 2        1        an
+#> 3        1 unequivoc
+#> 4        1    experi
+#> 5        1        of
+#> 6        1       the
+#> # ... with 1.874e+05 more rows
 ```
-The `unnest_tokens` function uses the [tokenizers](https://cran.r-project.org/package=tokenizers) package to tokenize the text. In particular, it uses the [tokenize_word](https://www.rdocumentation.org/packages/tokenizer/topics/tokenize_word) function.
-The default tokenization removes punctuation, and lowercases the words.
-This is sufficient for our purposes, but can be customized if need be.
 
-We can remove stopwords with an [anti_join](https://www.rdocumentation.org/packages/dplyr/topics/anti_join) on the dataset [stop_words](https://www.rdocumentation.org/packages/tidytext/topics/stop_words)
+
+The `unnest_tokens` function uses the [tokenizers](https://cran.r-project.org/package=tokenizers) package to tokenize the text.
+By default, it uses the  function which removes punctuation, and lowercases the words.
+I set the tokenizer to  to stem the word, using the [SnowballC](https://cran.r-project.org/package=SnowballC) package.
+
+We can remove stop-words with an [anti_join](https://www.rdocumentation.org/packages/dplyr/topics/anti_join) on the dataset [stop_words](https://www.rdocumentation.org/packages/tidytext/topics/stop_words)
 
 ```r
 data("stop_words", package = "tidytext")
 tokens <- anti_join(tokens, stop_words, by = "word")
 ```
 
-### Document-Term Matrix
 
+
+### Document-Term Matrix
 
 **Original:**
 
@@ -202,7 +211,7 @@ wordcloud(colnames(dtm.mat), dtm.mat[12, ], max.words = 20)  # essay No. 12
 wordcloud(colnames(dtm.mat), dtm.mat[24, ], max.words = 20)  # essay No. 24
 ```
 
-Plot the wordclouds for essays 12 and 24:
+Plot the word-clouds for essays 12 and 24:
 
 ```r
 library("wordcloud")
@@ -225,8 +234,6 @@ filter(dtm, document == 24) %>%
 ```r
 stemCompletion(c("revenu", "commerc", "peac", "army"), corpus.prep)
 ```
-
-I didn't stem words in the tokenizer, so there's no need to use `stemCompletion` to unstem them.
 
 
 **Original:**
@@ -342,13 +349,13 @@ We could use `spread` to do this, but that would be a large matrix.
 ```r
 CLUSTERS <- 4
 km_out <-
-  kmeans(cast_dtm(dtm_hamilton, document, word, tf_idf), centers = CLUSTERS)
+  kmeans(cast_dtm(dtm_hamilton, document, word, tf_idf), centers = CLUSTERS, nstart = 10)
 km_out$iter         
 #> [1] 3
 ```
 
-Dataframe with the unique terms used by Hamilton. I extract these from the 
-colnames of the DTM after `cast_dtm` to ensure that the order is the same as the 
+Data frame with the unique terms used by Hamilton. I extract these from the 
+column names of the DTM after `cast_dtm` to ensure that the order is the same as the 
 k-means results.
 
 ```r
@@ -423,6 +430,25 @@ cluster   top_words
 3         judges, compensation, inability, office, diminished, salaries, bench, faculties, insanity, subsistence        
 4         court, executive, appointment, senate, appointments, president, impeachments, nomination, governor, vacancies 
 
+Or to print out the documents in each cluster,
+
+```r
+enframe(km_out$cluster, "document", "cluster") %>%
+  group_by(cluster) %>%
+  summarise(documents = str_c(document, collapse = ", ")) %>%
+  knitr::kable()
+```
+
+
+
+ cluster  documents                                                                                                                                                             
+--------  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+       1  74                                                                                                                                                                    
+       2  67                                                                                                                                                                    
+       3  1, 6, 7, 8, 9, 11, 12, 13, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 34, 35, 36, 59, 60, 61, 65, 66, 68, 69, 70, 71, 72, 73, 75, 76, 77, 78, 79, 84, 85 
+       4  32, 33, 80, 81, 82, 83                                                                                                                                                
+
+
 
 ### Authorship Prediction
 
@@ -450,9 +476,7 @@ tfm.ave
 ```
 
 
-**tidyverse:**
-
-We'll create a data-frame with the known 
+**tidyverse:** We'll create a data-frame with the known 
 
 ```r
 MADISON_ESSAYS <- c(10, 14, 37:48, 58)
@@ -585,6 +609,8 @@ mean(hm.fitted[author.data$author == 1] > 0)
 mean(hm.fitted[author.data$author == -1] < 0)
 ```
 
+**tidyverse:** For cross-validation, I rely on the [modelr](https://cran.r-project.org/package=modelr) package function `RDoc("modelr::crossv_kfold")`. See the tutorial [Cross validation of linear regression with modelr](https://rpubs.com/dgrtwo/cv-modelr) for more on using **modelr** for cross validation or [k-fold cross-validation with modelr and broom](https://drsimonj.svbtle.com/k-fold-cross-validation-with-modelr-and-broom).
+
 In sample, this regression perfectly predicts the authorship of the documents with known authors.
 
 ```r
@@ -598,6 +624,50 @@ author_data %>%
 #> 1 Hamilton                    1
 #> 2  Madison                    1
 ```
+
+Create the cross-validation data-sets using . 
+As in the chapter, I will use a leave-one-out cross-validation, which is a k-fold crossvalidation where k is the number of observations. 
+To simplify this, I define the `crossv_loo` function that runs `crossv_kfold` with `k = nrow(data)`.
+
+```r
+crossv_loo <- function(data, id = ".id") {
+  crossv_kfold(data, k = nrow(data), id = id)
+}
+
+# leave one out cross-validation object
+cv <- author_data %>%
+  filter(!is.na(author)) %>%
+  crossv_loo()
+```
+
+Now estimate the model for each training dataset
+
+```r
+models <- purrr::map(cv$train, ~ lm(author2 ~ upon + there + consequently + whilst,
+                              data = ., model = FALSE))
+```
+Note that I use `purrr::map` to ensure that the correct `map()` function is used since the **maps** package also defines a `map`.
+
+Now calculate the test performance on the held out observation,
+
+```r
+test <- map2_df(models, cv$test, 
+                function(mod, test) {
+                  add_predictions(as.data.frame(test), mod) %>%
+                    mutate(pred_author = 
+                             if_else(pred >= 0, "Hamilton", "Madison"),
+                           correct = (pred_author == author))
+                })
+test %>%
+  group_by(author) %>%
+  summarise(mean(correct))
+#> # A tibble: 2 × 2
+#>     author `mean(correct)`
+#>      <chr>           <dbl>
+#> 1 Hamilton           1.000
+#> 2  Madison           0.786
+```
+
 
 
 **Original:**
@@ -619,7 +689,11 @@ mean(hm.classify[author.data$author == 1] > 0)
 
 ## proportion of correctly classified essays by Madison
 mean(hm.classify[author.data$author == -1] < 0)
+```
 
+**Original:**
+
+```r
 disputed <- c(49, 50:57, 62, 63) # 11 essays with disputed authorship
 tf.disputed <- as.data.frame(tfm[disputed, ])
 
@@ -628,8 +702,8 @@ pred <- predict(hm.fit, newdata = tf.disputed)
 pred # predicted values
 ```
 
-When adding prediction with `add_predictions` it added predictions for missing 
-values as well.
+**tidyverse:**
+When adding prediction with `add_predictions` it added predictions for missing  values as well.
 
 Table of authorship of disputed papers
 
@@ -697,54 +771,357 @@ ggplot(mutate(author_data,
        x = "Federalist Papers", y = "Predicted values")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" />
-
-
-
+<img src="discovery_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ## Network Data
 
+Network data is area for which the tidyverse is not well suited.
+The [igraph](https://cran.r-project.org/package=igraph), [sna](https://cran.r-project.org/package=sna), and [network](https://cran.r-project.org/package=network) packages are the best in class. 
+See the Social Network Analysis section of the [Social Sciences Task View](https://cran.r-project.org/web/views/SocialSciences.html).
+See this tutorial by Katherin Ognyanova, [Static and dynamic nework visualization with R](https://rpubs.com/kateto/netviz), for a good overview of network visualization with those packages in R.
 
-## Spatial Data in R
+There are several packages that plot networks in ggplot2.
 
-Sources:
+- [ggnetwork](https://cran.r-project.org/package=ggnetwork)
+- [ggraph](https://cran.r-project.org/package=ggraph)
+- [geomnet](https://cran.r-project.org/package=geomnet)
+- [GGally](https://cran.r-project.org/package=GGally) functions [ggnet](https://ggobi.github.io/ggally/rd.html#ggnet), `ggnet2`, and `ggnetworkmap`.
+- [ggCompNet](https://cran.r-project.org/package=ggCompNet) compares the speed of various network plotting packages in R.
+ 
+See this [presentation](http://curleylab.psych.columbia.edu/netviz/netviz1.html#/12) for an overview of some of those packages for data visualization.
 
-- ggfortify: `fortify` and `autoplot` allows ggplot to handle some popular R packages. https://journal.r-project.org/archive/accepted/tang-horikoshi-li.pdf
-- https://cran.r-project.org/web/packages/ggfortify/vignettes/plot_map.html
-- ggplot loads map data using the `map_data` function.
-
-  - http://docs.ggplot2.org/current/borders.html
-  - http://docs.ggplot2.org/current/fortify.map.html
-  - http://docs.ggplot2.org/current/map_data.html
-
-- https://cran.r-project.org/doc/contrib/intro-spatial-rl.pdf
-- https://cran.r-project.org/web/views/Spatial.html
-- https://cran.r-project.org/web/packages/sp/index.html
-- https://cran.r-project.org/web/packages/maptools/index.html
-- https://cran.r-project.org/web/packages/tmap/index.html
-- https://cran.r-project.org/web/packages/leaflet/index.html
-- https://www.ggplot2-exts.org
-- David Kahle and Hadley Wickham. 2013. [ggmap: Spatial Visualization with ggplot2](https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf). *Journal of Statistical Software*
-- Github [dkahle/ggmamp](https://github.com/dkahle/ggmap)
-- http://eriqande.github.io/rep-res-web/lectures/making-maps-with-R.html
-- https://www.r-bloggers.com/r-beginners-plotting-locations-on-to-a-world-map/
-- https://rpubs.com/m_dev/Intro-to-Spatial-Data-and-ggplot2
+Examples: [Network Visualization Examples with the ggplot2 Package](https://cran.r-project.org/web/packages/ggCompNet/vignettes/examples-from-paper.html)
 
 
 ```r
-library("maps")
+library("igraph")
+```
+
+
+
+### Twitter Following Network
+
+**Original:**
+
+```r
+twitter <- read.csv("twitter-following.csv")
+senator <- read.csv("twitter-senator.csv")
+```
+
+**tidyverse:**
+
+```r
+twitter <- read_csv(qss_data_url("discovery", "twitter-following.csv"))
+#> Parsed with column specification:
+#> cols(
+#>   following = col_character(),
+#>   followed = col_character()
+#> )
+senator <- read_csv(qss_data_url("discovery", "twitter-senator.csv"))
+#> Parsed with column specification:
+#> cols(
+#>   screen_name = col_character(),
+#>   name = col_character(),
+#>   party = col_character(),
+#>   state = col_character()
+#> )
+```
+
+**Original:**
+
+```r
+n <- nrow(senator) # number of senators
+
+## initialize adjacency matrix
+twitter.adj <- matrix(0, nrow = n, ncol = n)
+
+## assign screen names to rows and columns
+colnames(twitter.adj) <- rownames(twitter.adj) <- senator$screen_name
+
+## change `0' to `1' when edge goes from node `i' to node `j'
+for (i in 1:nrow(twitter)) {
+    twitter.adj[twitter$following[i], twitter$followed[i]] <- 1
+}
+
+twitter.adj <- graph.adjacency(twitter.adj, mode = "directed", diag = FALSE)
+
+```
+
+**tidyverse:**
+Simply use the  function since `twitter` consists of edges (a link from a senator to another).
+SInce `graph_from_edgelist` expects a matrix, convert the data frame to a matrix using .
+
+```r
+twitter_adj <- graph_from_edgelist(as.matrix(twitter))
+```
+
+
+**original:**
+
+```r
+senator$indegree <- degree(twitter.adj, mode = "in")
+senator$outdegree <- degree(twitter.adj, mode = "out") 
+
+in.order <- order(senator$indegree, decreasing = TRUE)
+out.order <- order(senator$outdegree, decreasing = TRUE)
+
+## 3 greatest indegree
+senator[in.order[1:3], ]
+
+## 3 greatest outdegree
+senator[out.order[1:3], ]
+```
+
+**tidyverse:** Add in- and out-degree varibles to the `senator` data frame:
+
+```r
+senator <-
+  mutate(senator,
+         indegree = degree(twitter_adj, mode = "in"),
+         outdegree = degree(twitter_adj, mode = "out"))
+```
+
+Now find the senators with the 3 greatest in-degrees
+
+```r
+arrange(senator, desc(indegree)) %>%
+  slice(1:3) %>%
+  select(name, party, state, indegree, outdegree)
+#> # A tibble: 3 × 5
+#>                name party state indegree outdegree
+#>               <chr> <chr> <chr>    <dbl>     <dbl>
+#> 1        Tom Cotton     R    AR       64        15
+#> 2 Richard J. Durbin     D    IL       60        87
+#> 3     John Barrasso     R    WY       58        79
+```
+or using the  function:
+
+```r
+top_n(senator, 3, indegree) %>%
+  arrange(desc(indegree)) %>%
+  select(name, party, state, indegree, outdegree)
+#> # A tibble: 5 × 5
+#>                name party state indegree outdegree
+#>               <chr> <chr> <chr>    <dbl>     <dbl>
+#> 1        Tom Cotton     R    AR       64        15
+#> 2 Richard J. Durbin     D    IL       60        87
+#> 3     John Barrasso     R    WY       58        79
+#> 4      Joe Donnelly     D    IN       58         9
+#> 5    Orrin G. Hatch     R    UT       58        50
+```
+The `top_n` function catches that three senators are tied for 3rd highest outdegree, whereas the simply sorting and slicing cannot.
+
+And we can find the senators with the three highest out-degrees similarly,
+
+```r
+top_n(senator, 3, outdegree) %>%
+  arrange(desc(outdegree)) %>%
+  select(name, party, state, indegree, outdegree)
+#> # A tibble: 4 × 5
+#>               name party state indegree outdegree
+#>              <chr> <chr> <chr>    <dbl>     <dbl>
+#> 1     Thad Cochran     R    MS       55        89
+#> 2     Steve Daines     R    MT       30        88
+#> 3      John McCain     R    AZ       41        88
+#> 4 Joe Manchin, III     D    WV       43        88
+```
+
+
+
+**original:**
+
+```r
+n <- nrow(senator)
+## color: Democrats = `blue', Republicans = `red', Independent = `black'
+col <- rep("red", n)
+col[senator$party == "D"] <- "blue"
+col[senator$party == "I"] <- "black"
+
+## pch: Democrats = circle, Republicans = diamond, Independent = cross
+pch <- rep(16, n)
+pch[senator$party == "D"] <- 17
+pch[senator$party == "I"] <- 4
+
+par(cex = 1.25)
+## plot for comparing two closeness measures (incoming vs. outgoing)
+plot(closeness(twitter.adj, mode = "in"), 
+     closeness(twitter.adj, mode = "out"), pch = pch, col = col, 
+     main = "Closeness", xlab = "Incoming path", ylab = "Outgoing path")
+
+## plot for comparing directed and undirected betweenness
+plot(betweenness(twitter.adj, directed = TRUE), 
+     betweenness(twitter.adj, directed = FALSE), pch = pch, col = col,
+     main = "Betweenness", xlab = "Directed", ylab = "Undirected")
+
+```
+
+
+**tidyverse**
+
+```r
+# Define scales to reuse for the plots
+scale_colour_parties <- scale_colour_manual("Party", values = c(R = "red",
+                                                       D = "blue",
+                                                       I = "green"))
+scale_shape_parties <- scale_shape_manual("Party", values = c(R = 16, 
+                                                              D = 17, 
+                                                              I = 4))
+
+
+senator %>%
+  mutate(closeness_in = closeness(twitter_adj, mode = "in"),
+         closeness_out = closeness(twitter_adj, mode = "out")) %>%
+  ggplot(aes(x = closeness_in, y = closeness_out,
+             colour = party, shape = party)) +
+  geom_abline(intercept = 0, slope = 1, colour = "white", size = 2) +
+  geom_point() +
+  scale_colour_parties +
+  scale_shape_parties +
+  labs(main = "Closeness", x = "Incoming path", y = "Outgoing path")
+```
+
+<img src="discovery_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" />
+
+What does the reference line indicate? What does that say about senators twitter
+networks?
+
+
+
+```r
+senator %>%
+  mutate(betweenness_dir = betweenness(twitter_adj, directed = TRUE),
+         betweenness_undir = betweenness(twitter_adj, directed = FALSE)) %>%
+  ggplot(aes(x = betweenness_dir, y = betweenness_undir, colour = party,
+             shape = party)) +
+  geom_abline(intercept = 0, slope = 1, colour = "white", size = 2) +
+  geom_point() +
+  scale_colour_parties +
+  scale_shape_parties +
+  coord_fixed() +
+  labs(main = "Betweenness", x = "Directed", y = "Undirected")
+```
+
+<img src="discovery_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+We've covered three different methods of calculating the importance of a node in a network: degree, closeness, and centrality. 
+But what do they mean? What's the "best" measure of importance?
+The answer to the the former is "it depends on the question".
+There are probably other papers out there on this, but Borgatti (2005) is a good
+discussion:
+
+> Borgatti, Stephen. 2005. "Centrality and Network Flow". *Social Networks*.
+  [DOI](https://dx.doi.org/doi:10.1016/j.socnet.2004.11.008)
+
+**Original:**
+
+```r
+senator$pagerank <- page.rank(twitter.adj)$vector
+
+par(cex = 1.25)
+## `col' parameter is defined earlier
+plot(twitter.adj, vertex.size = senator$pagerank * 1000, 
+     vertex.color = col, vertex.label = NA, 
+     edge.arrow.size = 0.1, edge.width = 0.5)
+```
+
+
+Add and plot page-rank:
+
+```r
+senator <- mutate(senator, page_rank = page_rank(twitter_adj)[["vector"]])
+
+library("GGally")
 #> 
-#> Attaching package: 'maps'
+#> Attaching package: 'GGally'
+#> The following object is masked from 'package:dplyr':
+#> 
+#>     nasa
+library("intergraph")
+ggnet(twitter_adj, mode = "target")
+#> Loading required package: network
+#> network: Classes for Relational Data
+#> Version 1.13.0 created on 2015-08-31.
+#> copyright (c) 2005, Carter T. Butts, University of California-Irvine
+#>                     Mark S. Handcock, University of California -- Los Angeles
+#>                     David R. Hunter, Penn State University
+#>                     Martina Morris, University of Washington
+#>                     Skye Bender-deMoll, University of Washington
+#>  For citation information, type citation("network").
+#>  Type help("network-package") to get started.
+#> 
+#> Attaching package: 'network'
+#> The following objects are masked from 'package:igraph':
+#> 
+#>     %c%, %s%, add.edges, add.vertices, delete.edges,
+#>     delete.vertices, get.edge.attribute, get.edges,
+#>     get.vertex.attribute, is.bipartite, is.directed,
+#>     list.edge.attributes, list.vertex.attributes,
+#>     set.edge.attribute, set.vertex.attribute
+#> Loading required package: sna
+#> Loading required package: statnet.common
+#> sna: Tools for Social Network Analysis
+#> Version 2.4 created on 2016-07-23.
+#> copyright (c) 2005, Carter T. Butts, University of California-Irvine
+#>  For citation information, type citation("sna").
+#>  Type help(package="sna") to get started.
+#> 
+#> Attaching package: 'sna'
+#> The following objects are masked from 'package:igraph':
+#> 
+#>     betweenness, bonpow, closeness, components, degree,
+#>     dyad.census, evcent, hierarchy, is.connected, neighborhood,
+#>     triad.census
+#> Loading required package: scales
+#> 
+#> Attaching package: 'scales'
 #> The following object is masked from 'package:purrr':
 #> 
-#>     map
+#>     discard
+#> The following objects are masked from 'package:readr':
+#> 
+#>     col_factor, col_numeric
+```
+
+<img src="discovery_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+
+## Spatial Data in R
+
+
+Some resources on plotting spatial data in R:
+
+- [ggplot2](https://cran.r-project.org/package=ggplot2) has several map-related functions
+
+  - [borders](http://docs.ggplot2.org/current/borders.html)
+  - [fortify.map](http://docs.ggplot2.org/current/fortify.map.html)
+  - [map_data](http://docs.ggplot2.org/current/map_data.html)
+
+- [ggmap](https://cran.r-project.org/package=ggmap) allows ggplot to us a map from Google Maps, OpenStreet Maps or similar as a background for the plot.
+
+  - David Kahle and Hadley Wickham. 2013. [ggmap: Spatial Visualization with ggplot2](https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf). *Journal of Statistical Software*
+  - Github [dkahle/ggmamp](https://github.com/dkahle/ggmap)
+
+- [tmap](https://cran.r-project.org/package=tmap) is not built on ggplot2 but uses a ggplot2-like API for network data.
+- [leaflet](https://cran.r-project.org/package=leaflet) is an R interface to a popular javascript mapping library.
+
+Here are few tutorials on plotting spatial data in ggplot2:
+
+- [Making Maps with R](http://eriqande.github.io/rep-res-web/lectures/making-maps-with-R.html)
+- [Plotting Data on a World Map](https://www.r-bloggers.com/r-beginners-plotting-locations-on-to-a-world-map/)
+- [Introduciton to Spatial Data and ggplot2](https://rpubs.com/m_dev/Intro-to-Spatial-Data-and-ggplot2)
+
+
+
+```r
 library("ggrepel")
 ```
 
 
 ```r
-data(us.cities)
+data("us.cities", package = "maps")
 glimpse(us.cities)
 #> Observations: 1,005
 #> Variables: 6
@@ -755,7 +1132,6 @@ glimpse(us.cities)
 #> $ long        <dbl> -99.7, -81.5, -122.3, -84.2, -73.8, -123.1, -106.6...
 #> $ capital     <int> 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...
 ```
-
 
 
 ```r
@@ -771,14 +1147,12 @@ ggplot() +
   # scale size area ensures: 0 = no area
   scale_size_area() +
   coord_quickmap() +
-  theme_minimal() +
+  theme_void() +
   labs(x = "", y = "", title = "US State Capitals",
        size = "Population")
-
-  
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-64-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -794,11 +1168,29 @@ ggplot() +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-65-1.png" width="70%" style="display: block; margin: auto;" />
+
+
 
 ### Colors in R
 
-**TODO** There are many more links for this.
+For more resources on using colors in R
+
+- `R4DS` chapter [Graphics for Communication](http://r4ds.had.co.nz/graphics-for-communication.html#replacing-a-scale)
+- ggplot2 book Chapter "Scales"
+- Jenny Bryan [Using colors in R](https://www.stat.ubc.ca/~jenny/STAT545A/block14_colors.html)
+- Achim Zeileis, Kurt Hornik, Paul Murrell (2009). Escaping RGBland: Selecting Colors for Statistical Graphics. Computational Statistics & Data Analysis [DOI](http://dx.doi.org/10.1016/j.csda.2008.11.033)
+- [colorspace vignette](https://cran.r-project.org/web/packages/colorspace/vignettes/hcl-colors.pdf)
+- Maureen Stone [Choosing Colors for Data Visualization](https://www.perceptualedge.com/articles/b-eye/choosing_colors.pdf)
+- [ColorBrewer](http://colorbrewer2.org) A website with a variety of palettes, primarily designed for maps, but also useful in data viz.
+- Stephen Few [Practical Rules for Using Color in Charts](http://www.perceptualedge.com/articles/visual_business_intelligence/rules_for_using_color.pdf)
+- [Why Should Engineers and Scientists by Worried About Color?](http://www.research.ibm.com/people/l/lloydt/color/color.HTM)
+- [A Better Default Colormap for Matplotlib](https://www.youtube.com/watch?v=xAoljeRJ3lU) A SciPy 2015 talk that describes how the [viridis](https://cran.r-project.org/package=viridis) was created.
+- [Evaluation of Artery Visualizations for Heart Disease Diagnosis](http://www.eecs.harvard.edu/~kgajos/papers/2011/borkin11-infoviz.pdf) Using the wrong color scale can be deadly ... literally.
+- The python package matplotlib has a good discussion of [colormaps](http://matplotlib.org/users/colormaps.html).
+- Peter Kovesi [Good Color Maps: How to Design Them](https://arxiv.org/pdf/1509.03700v1.pdf).
+- See the [viridis](https://cran.r-project.org/package=viridis), [ggthemes](https://cran.r-project.org/package=ggthemes), [dichromat](https://cran.r-project.org/package=dichromat), and [pals](https://cran.r-project.org/package=pals) packages for color palettes.
+
 
 Use [scale_identity](http://docs.ggplot2.org/current/scale_identity.html) for the color and alpha scales since the values
 of the variables are the values of the scale itself (the color names, and the 
@@ -817,7 +1209,8 @@ ggplot(tibble(x = rep(1:4, each = 2),
   theme(panel.grid = element_blank())
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-66-1.png" width="70%" style="display: block; margin: auto;" />
+
 
 ### United States Presidential Elections
 
@@ -866,10 +1259,10 @@ map(database = "state", regions = "California", col = cal.color,
 ggplot() +
   borders(database = "state", regions = "California", fill = "blue") +
   coord_quickmap() +
-  theme_minimal() 
+  theme_void() 
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-70-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -879,11 +1272,10 @@ cal_color <- filter(pres08, state == "CA") %>%
 ggplot() +
   borders(database = "state", regions = "California", fill = cal_color) +
   coord_quickmap() +
-  theme_minimal()
-          
+  theme_void()
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-71-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -925,13 +1317,13 @@ ggplot(states) +
                    fill = party)) +
   coord_quickmap() +
   scale_fill_manual(values = c("Rep" = "red", "Dem" = "blue")) +
-  theme_minimal() +
+  theme_void() +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-53-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-73-1.png" width="70%" style="display: block; margin: auto;" />
 
-For plotting the purple states, I use `scale_fill_identity` since the `color` column contains the RGB values to use in the plot:
+For plotting the purple states, I use  since the `color` column contains the RGB values to use in the plot:
 
 ```r
 ggplot(states) +
@@ -939,11 +1331,32 @@ ggplot(states) +
                    fill = color)) +
   coord_quickmap() +
   scale_fill_identity() +
-  theme_minimal() +
+  theme_void() +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-54-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-74-1.png" width="70%" style="display: block; margin: auto;" />
+
+However, plotting purple states is not a good data visualization.
+Even though the colors are a proportional mixture of red and blue, human visual perception doesn't work that way.
+
+The proportion of the democratic vote is best thought of a diverging scale with 0.5 is midpoint.
+And since the Democratic Party is associated with the color blue and the Republican Party is associated with the color red.
+The Color Brewer palette [RdBu](http://colorbrewer2.org/#type=diverging&scheme=RdBu&n=11) is an example:
+
+```r
+ggplot(states) +
+  geom_polygon(aes(group = group, x = long, y = lat, fill = Dem)) +
+  scale_fill_distiller("% Obama", direction = 1, limits = c(0, 1), type = "div", palette = "RdBu") +
+  coord_quickmap() +
+  theme_void() +
+  labs(x = "", y = "")
+```
+
+<img src="discovery_files/figure-html/unnamed-chunk-75-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+
 
 ### Expansion of Walmart
 
@@ -963,7 +1376,7 @@ rgb(red = 0, green = 1, blue = 0, alpha = 1/3)
 walmart$storesize <- ifelse(walmart$type == "DistributionCenter", 1, 0.5)
 ```
 
-**tidyverse** We don't need to do the direct mapping since 
+**tidyverse:** We don't need to do the direct mapping since 
 
 ```r
 walmart <- read_csv(qss_data_url("discovery", "walmart.csv"))
@@ -985,10 +1398,10 @@ ggplot() +
                            size = if_else(type == "DistributionCenter", 2, 1)), alpha = 1 / 3) +
   coord_quickmap() +
   scale_size_identity() +
-  theme_minimal() 
+  theme_void() 
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-77-1.png" width="70%" style="display: block; margin: auto;" />
 We don't need to worry about colors since `ggplot` handles that.
 
 To make a plot showing all Walmart stores opened up through that year, I write a function, that takes the year and dataset as parameters.
@@ -1005,7 +1418,7 @@ map_walmart <- function(year, .data) {
                data = .data, alpha = 1 / 3) +
     coord_quickmap() +
     scale_size_identity() +
-    theme_minimal() +
+    theme_void() +
     ggtitle(year)
 }
 
@@ -1013,11 +1426,12 @@ years <- c(1975, 1985, 1995, 2005)
 walk(years, ~ print(map_walmart(.x, walmart)))
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-57-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-57-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-57-4.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-78-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-78-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-78-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-78-4.png" width="70%" style="display: block; margin: auto;" />
+
 
 ### Animation in R
 
-For easy annimation with [ggplot](https://cran.r-project.org/package=ggplot), use the [gganimate](https://github.com/dgrtwo/gganimate) package.
+For easy animation with [ggplot2](https://cran.r-project.org/package=ggplot2), use the [gganimate](https://github.com/dgrtwo/gganimate) package.
 Note that the **gganimate** package is not on CRAN, so you have to install it with the [devtools](https://cran.r-project.org/package=devtools) package:
 
 ```r
@@ -1025,10 +1439,9 @@ install.packages("cowplot")
 devtools::install_github("dgrtwo/animate")
 ```
 
-The **gganimate** works by simply adding a new `frame` aesthetic.
-And then the function `gg_animate` will animate the plot.
+An animation is a series of frames. 
+The [gganimate](https://cran.r-project.org/package=gganimate) package works by adding a `frame` aesthetic to ggplots, and function  will animate the plot.
 
-This creates a `gif` with store openings by year.
 I use `frame = year(opendate)` to have the animation use each year as a frame, and `cumulative = TRUE` so that the previous years are shown.
 
 ```r
@@ -1043,10 +1456,8 @@ walmart_animated <-
                    cumulative = TRUE),
                data = walmart) +
     coord_quickmap() +
-    theme_minimal()
-
+    theme_void()
 gganimate(walmart_animated)
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-4.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-5.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-6.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-7.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-8.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-9.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-10.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-11.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-12.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-13.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-14.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-15.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-16.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-17.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-18.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-19.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-20.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-21.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-22.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-23.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-24.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-25.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-26.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-27.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-28.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-29.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-30.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-31.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-32.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-33.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-34.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-35.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-36.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-37.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-38.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-39.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-40.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-41.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-42.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-43.png" width="70%" style="display: block; margin: auto;" />
-
+<img src="discovery_files/figure-html/unnamed-chunk-80-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-4.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-5.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-6.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-7.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-8.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-9.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-10.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-11.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-12.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-13.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-14.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-15.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-16.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-17.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-18.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-19.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-20.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-21.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-22.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-23.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-24.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-25.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-26.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-27.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-28.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-29.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-30.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-31.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-32.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-33.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-34.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-35.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-36.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-37.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-38.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-39.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-40.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-41.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-42.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-80-43.png" width="70%" style="display: block; margin: auto;" />

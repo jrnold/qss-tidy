@@ -26,7 +26,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2017-01-16">
+<meta name="date" content="2017-01-17">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -100,7 +100,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#colonphon"><i class="fa fa-check"></i><b>1.1</b> Colonphon</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
 <li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i><b>2.1</b> Prerequisites</a></li>
 <li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#introduction-to-r"><i class="fa fa-check"></i><b>2.2</b> Introduction to R</a><ul>
@@ -178,7 +180,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.2.3" data-path="discovery.html"><a href="discovery.html#authorship-prediction"><i class="fa fa-check"></i><b>6.2.3</b> Authorship Prediction</a></li>
 <li class="chapter" data-level="6.2.4" data-path="discovery.html"><a href="discovery.html#cross-validation"><i class="fa fa-check"></i><b>6.2.4</b> Cross-Validation</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="discovery.html"><a href="discovery.html#network-data"><i class="fa fa-check"></i><b>6.3</b> Network Data</a></li>
+<li class="chapter" data-level="6.3" data-path="discovery.html"><a href="discovery.html#network-data"><i class="fa fa-check"></i><b>6.3</b> Network Data</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="discovery.html"><a href="discovery.html#twitter-following-network"><i class="fa fa-check"></i><b>6.3.1</b> Twitter Following Network</a></li>
+</ul></li>
 <li class="chapter" data-level="6.4" data-path="discovery.html"><a href="discovery.html#spatial-data-in-r"><i class="fa fa-check"></i><b>6.4</b> Spatial Data in R</a><ul>
 <li class="chapter" data-level="6.4.1" data-path="discovery.html"><a href="discovery.html#colors-in-r"><i class="fa fa-check"></i><b>6.4.1</b> Colors in R</a></li>
 <li class="chapter" data-level="6.4.2" data-path="discovery.html"><a href="discovery.html#united-states-presidential-elections"><i class="fa fa-check"></i><b>6.4.2</b> United States Presidential Elections</a></li>
@@ -245,14 +249,65 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="header">
 <h1 class="title">QSS Tidyverse Code</h1>
 <h4 class="author"><em>Jeffrey B. Arnold</em></h4>
-<h4 class="date"><em>2017-01-16</em></h4>
+<h4 class="date"><em>2017-01-17</em></h4>
 </div>
 <div id="preface" class="section level1">
 <h1><span class="header-section-number">1</span> Preface</h1>
 <p>This is tidyverse R code to supplement the book, <a href="http://press.princeton.edu/titles/11025.html">Quantitative Social Science: An Introduction</a>, by Kosuke Imai, to be published by Princeton University Press in March 2017.</p>
 <p>The R code included with the text of QSS and the supplementary materials relies mostly on base R functions. This translates the code examples provided with QSS to tidyverse R code. <a href="https://github.com/tidyverse/tidyverse">Tidyverse</a> refers to a set of packages (<strong>ggplot2</strong>, <strong>dplyr</strong>, <strong>tidyr</strong>, <strong>readr</strong>, <strong>purrr</strong>, <strong>tibble</strong>, and a few others) that share common data representations, especially the use of data frames for return values. The book <a href="http://r4ds.had.co.nz/">R for Data Science</a> by Hadley Wickham and Garrett Grolemond is an introduction.</p>
+<p>To install the R packages used in this work run the following code:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages(&quot;devtools&quot;)</span>
+<span class="kw">install_github</span>(<span class="st">&quot;jrnold/qss-tidy&quot;</span>)</code></pre></div>
+<p>It install’s the <strong>qsstidy</strong> package which contains no code or data, but will install the needed dependencies.</p>
 <p>I wrote this code while teaching course that employed both texts in order to make the excellent examples and statistical material in QSS more compatible with the modern data science R approach in R4DS.</p>
+<div id="colonphon" class="section level2">
+<h2><span class="header-section-number">1.1</span> Colonphon</h2>
+<p>The source of the book is available <a href="https://github.com/jrnold/qsstidy">here</a> and was built with versions of packages below:</p>
+<pre><code>#&gt; Session info --------------------------------------------------------------
+#&gt;  setting  value                       
+#&gt;  version  R version 3.3.2 (2016-10-31)
+#&gt;  system   x86_64, darwin13.4.0        
+#&gt;  ui       X11                         
+#&gt;  language (EN)                        
+#&gt;  collate  en_US.UTF-8                 
+#&gt;  tz       America/Los_Angeles         
+#&gt;  date     2017-01-17
+#&gt; Packages ------------------------------------------------------------------
+#&gt;  package    * version    date       source                         
+#&gt;  assertthat   0.1        2013-12-06 CRAN (R 3.3.0)                 
+#&gt;  backports    1.0.4      2016-10-24 CRAN (R 3.3.0)                 
+#&gt;  bookdown     0.3        2016-11-28 CRAN (R 3.3.2)                 
+#&gt;  colorspace   1.3-2      2016-12-14 CRAN (R 3.3.2)                 
+#&gt;  DBI          0.5-1      2016-09-10 CRAN (R 3.3.0)                 
+#&gt;  devtools     1.12.0     2016-06-24 CRAN (R 3.3.0)                 
+#&gt;  digest       0.6.11     2017-01-03 cran (@0.6.11)                 
+#&gt;  dplyr      * 0.5.0      2016-06-24 CRAN (R 3.3.0)                 
+#&gt;  evaluate     0.10       2016-10-11 CRAN (R 3.3.0)                 
+#&gt;  ggplot2    * 2.2.1.9000 2017-01-09 Github (hadley/ggplot2@464e0f3)
+#&gt;  gtable       0.2.0      2016-02-26 CRAN (R 3.3.0)                 
+#&gt;  htmltools    0.3.5      2016-03-21 CRAN (R 3.3.0)                 
+#&gt;  knitr        1.15.1     2016-11-22 CRAN (R 3.3.2)                 
+#&gt;  lazyeval     0.2.0      2016-06-12 CRAN (R 3.3.0)                 
+#&gt;  magrittr     1.5        2014-11-22 CRAN (R 3.3.0)                 
+#&gt;  memoise      1.0.0      2016-01-29 CRAN (R 3.3.0)                 
+#&gt;  munsell      0.4.3      2016-02-13 CRAN (R 3.3.0)                 
+#&gt;  plyr         1.8.4      2016-06-08 CRAN (R 3.3.0)                 
+#&gt;  purrr      * 0.2.2      2016-06-18 CRAN (R 3.3.0)                 
+#&gt;  R6           2.2.0      2016-10-05 CRAN (R 3.3.0)                 
+#&gt;  Rcpp         0.12.8     2016-11-17 CRAN (R 3.3.2)                 
+#&gt;  readr      * 1.0.0      2016-08-03 CRAN (R 3.3.0)                 
+#&gt;  rmarkdown    1.3        2016-12-21 CRAN (R 3.3.2)                 
+#&gt;  rprojroot    1.1        2016-10-29 CRAN (R 3.3.0)                 
+#&gt;  scales       0.4.1      2016-11-09 CRAN (R 3.3.2)                 
+#&gt;  stringi      1.1.2      2016-10-01 CRAN (R 3.3.0)                 
+#&gt;  stringr    * 1.1.0      2016-08-19 CRAN (R 3.3.1)                 
+#&gt;  tibble     * 1.2        2016-08-26 CRAN (R 3.3.0)                 
+#&gt;  tidyr      * 0.6.0      2016-08-12 CRAN (R 3.3.0)                 
+#&gt;  tidyverse  * 1.0.0      2016-09-09 CRAN (R 3.3.0)                 
+#&gt;  withr        1.0.2      2016-06-20 CRAN (R 3.3.0)                 
+#&gt;  yaml         2.1.14     2016-11-12 CRAN (R 3.3.2)</code></pre>
 
+</div>
 </div>
             </section>
 

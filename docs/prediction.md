@@ -15,11 +15,6 @@ The packages [modelr](https://cran.r-project.org/package=modelr) and [broom](htt
 ```r
 library("broom")
 library("modelr")
-#> 
-#> Attaching package: 'modelr'
-#> The following object is masked from 'package:broom':
-#> 
-#>     bootstrap
 ```
 
 
@@ -134,7 +129,7 @@ glimpse(polls_w_results)
 ```
 
 
-To get the last poll in each state, arrange and filter on middate
+To get the last poll in each state, arrange and filter on `middate`
 
 ```r
 last_polls <- 
@@ -192,7 +187,7 @@ mean(last_polls$error)
 
 This is slightly different than what is in the book due to the difference in the poll used as the final poll; many states have many polls on the last day.
 
-I'll choose binwidths of 1%, since that is fairly interpretable:
+I'll choose bin widths of 1%, since that is fairly interpretable:
 
 ```r
 ggplot(last_polls, aes(x = error)) +
@@ -201,7 +196,7 @@ ggplot(last_polls, aes(x = error)) +
 
 <img src="prediction_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" />
 
-The text uses bindwidths of 5%:
+The text uses bin widths of 5%:
 
 ```r
 ggplot(last_polls, aes(x = error)) +
@@ -216,26 +211,25 @@ ggplot(last_polls, aes(x = error)) +
 Consider averaging back over time? 
 What happens if you take the averages of the state poll average and average of **all** polls - does that improve prediction? 
 
-To create a scatterplot using the state abbreviations instead of points use
+To create a scatter plots using the state abbreviations instead of points use
 [geom_text](http://docs.ggplot2.org/current/geom_text.html) instead of [geom_point](http://docs.ggplot2.org/current/geom_point.html).
 
 ```r
 ggplot(last_polls, aes(x = margin, y = elec_margin, label = state)) +
+  geom_abline(color = "white", size = 2) +  
+  geom_hline(yintercept = 0, color = "gray", size = 2) +
+  geom_vline(xintercept = 0, color = "gray", size = 2) +
   geom_text() +
-  geom_abline(col = "red") +
-  geom_hline(yintercept = 0) +
-  geom_vline(xintercept = 0) +
   coord_fixed() +
   labs(x = "Poll Results", y = "Actual Election Results")
 ```
 
 <img src="prediction_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;" />
 
-We can create a confusion matrix as follow.
-
-Create a new columns `classification` which shows whether how the poll's classification was related to the actual election outcome ("true positive", "false positive", "false negative", "false positive").
-This can be accomplished easily with the [dplyr](https://cran.r-project.org/package=dplyr) funtion [case_when](https://www.rdocumentation.org/packages/dplyr/topics/case_when).
-*Note:* You need to use `.` to refer to the data frame when using `case_when` with a `mutate` function.
+We can create a confusion matrix as follows.
+Create a new column `classification` which shows whether how the poll's classification was related to the actual election outcome ("true positive", "false positive", "false negative", "false positive").
+If there were two outcomes, then we would use the  function. 
+But with more than two outcomes, it is easier to use the [dplyr](https://cran.r-project.org/package=dplyr) function .
 
 ```r
 last_polls <-
@@ -249,7 +243,10 @@ last_polls <-
              (.$margin < 0 & .$elec_margin > 0) ~ "false negative"
            ))
 ```
-No simply count the 
+You need to use `.` to refer to the data frame when using `case_when` within `mutate()`.
+Also, we needed to first use  in order to remove the grouping variable so `mutate` will work.
+
+Now simply count the number of polls in each category of `classification`:
 
 ```r
 last_polls %>%
@@ -264,7 +261,7 @@ last_polls %>%
 #> 4  true positive    27
 ```
 
-Which states were incorrectly predicted?
+Which states were incorrectly predicted by the polls?
 
 ```r
 last_polls %>%
@@ -352,10 +349,11 @@ pop_vote_avg_tidy
 
 ```r
 ggplot(pop_vote_avg_tidy, aes(x = date, y = share,
-                              colour = forcats::fct_reorder2(candidate,
-                                                             date, share))) +
+                              colour = forcats::fct_reorder2(candidate, date, share))) +
   geom_point() +
-  geom_line()
+  geom_line() +
+  scale_colour_manual("Candidate", 
+                      values = c(Obama = "blue", McCain = "red"))
 ```
 
 <img src="prediction_files/figure-html/unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" />
@@ -365,7 +363,7 @@ ggplot(pop_vote_avg_tidy, aes(x = date, y = share,
 
 The 7-day average is similar to the simple method used by [Real Clear Politics](http://www.realclearpolitics.com/epolls/2016/president/us/general_election_trump_vs_clinton-5491.html). 
 The RCP average is simply the average of all polls in their data for the last seven days.
-Sites like 538 and the Huffington Post on the other hand, also use what amounts to averaging polls, but using more sophisticated statistical methods to assign different weights to different polls.
+Sites like [538](https://fivethirtyeight.com) and the [Huffpost Pollster](http://elections.huffingtonpost.com/pollster), on the other hand, also use what amounts to averaging polls, but using more sophisticated statistical methods to assign different weights to different polls.
 
 **Challenge** Why do we need to use different polls for the popular vote data? Why not simply average all the state polls?
 What would you have to do? 
@@ -384,11 +382,10 @@ face <- read_csv(qss_data_url("prediction", "face.csv"))
 Add Democrat and Republican vote shares, and the difference in shares:
 
 ```r
-face <-
-  face %>%
-  mutate(d.share = d.votes / (d.votes + r.votes),
-         r.share = r.votes / (d.votes + r.votes),
-         diff.share = d.share - r.share)
+face <- mutate(face, 
+                d.share = d.votes / (d.votes + r.votes),
+                r.share = r.votes / (d.votes + r.votes),
+                diff.share = d.share - r.share)
 ```
 
 Plot facial competence vs. vote share:
@@ -396,11 +393,14 @@ Plot facial competence vs. vote share:
 ```r
 ggplot(face, aes(x = d.comp, y = diff.share, colour = w.party)) +
   geom_point() +
+  scale_colour_manual("Winning\nParty",
+                      values = c(D = "blue", R = "red")) +
   labs(x = "Competence scores for Democrats",
        y = "Democratic margin in vote share")
 ```
 
 <img src="prediction_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" />
+
 
 ### Correlation
 
@@ -513,7 +513,7 @@ ggplot() +
 ```
 
 <img src="prediction_files/figure-html/unnamed-chunk-32-1.png" width="70%" style="display: block; margin: auto;" />
-This method is more complicated than the `geom_abline` method for a bivariate regerssion, but will work for more complicated models, while the `geom_abline` method won't.
+This method is more complicated than the `geom_abline` method for a bivariate regression, but will work for more complicated models, while the `geom_abline` method won't.
 
 
 Note that [geom_smooth](http://docs.ggplot2.org/current/geom_smooth.html) can be used to add a regression line to a data-set.
@@ -527,7 +527,7 @@ ggplot(data = face, mapping = aes(x = d.comp, y = diff.share)) +
 <img src="prediction_files/figure-html/unnamed-chunk-33-1.png" width="70%" style="display: block; margin: auto;" />
 The argument `method = "lm"` specifies that the function `lm` is to be used to generate fitted values. 
 It is equivalent to running the regression `lm(y ~ x)` and plotting the regression line, where `y` and `x` are the aesthetics specified by the mappings.
-The argument `se = FALSE` tells the function not to plot the confidence interval of the regresion (discussed later).
+The argument `se = FALSE` tells the function not to plot the confidence interval of the regression (discussed later).
 
 ### Regresion towards the mean
 
@@ -535,7 +535,6 @@ The argument `se = FALSE` tells the function not to plot the confidence interval
 
 See the [R for Data Science](http://r4ds.had.co.nz/) chapter [Relational data](http://r4ds.had.co.nz/relational-data.html).
 
-Merge - or intter join the data frames by state:
 
 ```r
 pres12 <- read_csv(qss_data_url("prediction", "pres12.csv"))
@@ -585,7 +584,7 @@ pres <- pres %>%
          Obama2012.z = scale(Obama_12))
 ```
 
-Scatterplot of states with vote shares in 2008 and 2012
+Scatter plot of states with vote shares in 2008 and 2012
 
 ```r
 ggplot(pres, aes(x = Obama2008.z, y = Obama2012.z, label = state)) +
@@ -600,7 +599,7 @@ ggplot(pres, aes(x = Obama2008.z, y = Obama2012.z, label = state)) +
 
 <img src="prediction_files/figure-html/unnamed-chunk-37-1.png" width="70%" style="display: block; margin: auto;" />
 
-To calcualte the bottom and top quartiles
+To calculate the bottom and top quartiles
 
 
 ```r
@@ -900,7 +899,7 @@ women %>%
 #> 1          -0.369       9.25
 ```
 
-The other way uses tidyr [spread](https://www.rdocumentation.org/packages/tidyr/topics/spread.lm) and [gather](https://www.rdocumentation.org/packages/tidyr/topics/gather.lm),
+The other way uses **tidyr** [spread](https://www.rdocumentation.org/packages/tidyr/topics/spread.lm) and [gather](https://www.rdocumentation.org/packages/tidyr/topics/gather.lm),
 
 ```r
 women %>%
@@ -1229,9 +1228,9 @@ ate.age
 #> 4    85   0.429     0.531 0.1020
 ```
 
-You can use [poly](https://www.rdocumentation.org/packages/base/topics/poly) for polynomials instead of `age + I(age ^ 2)`.
+You can use [poly](https://www.rdocumentation.org/packages/base/topics/poly) function to calculate polynomials instead of adding each term, `age + I(age ^ 2)`.
 Though note that the coefficients will be be different since by default `poly` calculates orthogonal polynomials instead of the natural (raw) polynomials.
-However, you really shouldn't interpet the coefficients directly anyways, so this should matter.
+However, you really shouldn't interpret the coefficients directly anyways, so this should matter.
 
 ```r
 fit.age2 <- lm(primary2008 ~ poly(age, 2) * messages,
@@ -1348,7 +1347,7 @@ y2.tory <- predict(tory.fit2, newdata = data.frame(margin = y2t.range))
 
 **Tidyverse code**
 
-Use [data_grid](https://www.rdocumentation.org/packages/modelr/topics/data_grid) to generate a grid for predictions.
+Use  to generate a grid for predictions.
 
 ```r
 y1_labour <-
@@ -1401,9 +1400,10 @@ ggplot() +
   geom_point(data = MPs_labour,
             mapping = aes(x = margin, y = ln.net)) +
   geom_line(data = y1_labour,
-            mapping = aes(x = margin, y = pred), colour = "red") +
+            mapping = aes(x = margin, y = pred), colour = "red",
+            size = 1.5) +
   geom_line(data = y2_labour,
-            mapping = aes(x = margin, y = pred), colour = "red") +
+            mapping = aes(x = margin, y = pred), colour = "red", size = 1.5) +
   labs(x = "margin of victory", y = "log net wealth at death",
        title = "Labour")
 ```
@@ -1418,9 +1418,9 @@ ggplot() +
   geom_point(data = MPs_tory,
              mapping = aes(x = margin, y = ln.net)) +
   geom_line(data = y1_tory,
-            mapping = aes(x = margin, y = pred), colour = "red") +
+            mapping = aes(x = margin, y = pred), colour = "red", size = 1.5) +
   geom_line(data = y2_tory,
-            mapping = aes(x = margin, y = pred), colour = "red") +
+            mapping = aes(x = margin, y = pred), colour = "red", size = 1.5) +
   labs(x = "margin of victory", y = "log net wealth at death",
        title = "labour")
 ```
@@ -1461,8 +1461,7 @@ tory.MP - tory.nonMP
 ## 255050.9
 ```
 
-**Tidyverse code**
-
+**Tidyverse:**
 In the previous code, I didn't directly compute the the average net wealth at 0, so I'll need to do that here.
 I'll use [gather_predictions](https://www.rdocumentation.org/packages/modelr/topics/gather_predictions) to add predictions for multiple models:
 
@@ -1477,7 +1476,7 @@ spread_predictions(data_frame(margin = 0),
 ```
 
 
-**Original code**
+**Original:**
 
 ```r
 ## two regressions for Tory: negative and positive margin
@@ -1488,7 +1487,7 @@ coef(tory.fit4)[1] - coef(tory.fit3)[1]
 ## -0.01725578
 ```
 
-**Tidyverse code**
+**Tidyverse:**
 
 ```r
 tory_fit3 <- lm(margin.pre ~ margin, data = filter(MPs_tory, margin < 0))
@@ -1498,4 +1497,3 @@ tory_fit4 <- lm(margin.pre ~ margin, data = filter(MPs_tory, margin > 0))
  filter(tidy(tory_fit4), term == "(Intercept)")[["estimate"]])
 #> [1] 0.0173
 ```
-

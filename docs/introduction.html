@@ -26,7 +26,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2017-01-16">
+<meta name="date" content="2017-01-17">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -100,7 +100,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#colonphon"><i class="fa fa-check"></i><b>1.1</b> Colonphon</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
 <li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i><b>2.1</b> Prerequisites</a></li>
 <li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#introduction-to-r"><i class="fa fa-check"></i><b>2.2</b> Introduction to R</a><ul>
@@ -178,7 +180,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.2.3" data-path="discovery.html"><a href="discovery.html#authorship-prediction"><i class="fa fa-check"></i><b>6.2.3</b> Authorship Prediction</a></li>
 <li class="chapter" data-level="6.2.4" data-path="discovery.html"><a href="discovery.html#cross-validation"><i class="fa fa-check"></i><b>6.2.4</b> Cross-Validation</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="discovery.html"><a href="discovery.html#network-data"><i class="fa fa-check"></i><b>6.3</b> Network Data</a></li>
+<li class="chapter" data-level="6.3" data-path="discovery.html"><a href="discovery.html#network-data"><i class="fa fa-check"></i><b>6.3</b> Network Data</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="discovery.html"><a href="discovery.html#twitter-following-network"><i class="fa fa-check"></i><b>6.3.1</b> Twitter Following Network</a></li>
+</ul></li>
 <li class="chapter" data-level="6.4" data-path="discovery.html"><a href="discovery.html#spatial-data-in-r"><i class="fa fa-check"></i><b>6.4</b> Spatial Data in R</a><ul>
 <li class="chapter" data-level="6.4.1" data-path="discovery.html"><a href="discovery.html#colors-in-r"><i class="fa fa-check"></i><b>6.4.1</b> Colors in R</a></li>
 <li class="chapter" data-level="6.4.2" data-path="discovery.html"><a href="discovery.html#united-states-presidential-elections"><i class="fa fa-check"></i><b>6.4.2</b> United States Presidential Elections</a></li>
@@ -257,9 +261,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="data-files" class="section level3">
 <h3><span class="header-section-number">2.2.1</span> Data Files</h3>
 <p>Don’t use <code>setwd()</code> within scripts. It is much better to organize your code in projects.</p>
-<p>When reading from csv files use <code>readr::read_csv</code> instead of the base R function <code>read.csv</code>. It is slightly faster, and returns a <code>tibble</code> instead of a data frame. See r4ds <a href="http://r4ds.had.co.nz/tibbles.html#introduction-4">Ch 11: Data Import</a> for more dicussion.</p>
+<p>When reading from csv files use <code>readr::read_csv</code> instead of the base R function <code>read.csv</code>. It is slightly faster, and returns a <code>tibble</code> instead of a data frame. See <a href="http://r4ds.had.co.nz/">R for Data Science</a> <a href="http://r4ds.had.co.nz/tibbles.html#introduction-4">Ch 11: Data Import</a> for more dicussion.</p>
 <p>We also can load it directly from a URL.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/jrnold/qss/master/INTRO/UNpop.csv&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;INTRO&quot;</span>, <span class="st">&quot;UNpop.csv&quot;</span>))
 <span class="co">#&gt; Parsed with column specification:</span>
 <span class="co">#&gt; cols(</span>
 <span class="co">#&gt;   year = col_integer(),</span>
@@ -335,7 +339,7 @@ UNpop
 <span class="co">#&gt; 1  1950</span>
 <span class="co">#&gt; 2  1960</span>
 <span class="co">#&gt; 3  1970</span></code></pre></div>
-<p>For this example using these functions and <code>%&gt;%</code> to chain them together may seem a little excessive, but later we will see how chaining simple functions togther like that becomes a very powerful way to build up complicated logic.</p>
+<p>For this example using these functions and <code>%&gt;%</code> to chain them together may seem a little excessive, but later we will see how chaining simple functions together like that becomes a very powerful way to build up complicated logic.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop$world.pop[<span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">1</span>, <span class="dt">to =</span> <span class="kw">nrow</span>(UNpop), <span class="dt">by =</span> <span class="dv">2</span>)]
 <span class="co">#&gt; [1] 2525779 3691173 5320817 6916183</span></code></pre></div>
 <p>can be rewritten as</p>
@@ -349,19 +353,19 @@ UNpop
 <span class="co">#&gt; 2   3691173</span>
 <span class="co">#&gt; 3   5320817</span>
 <span class="co">#&gt; 4   6916183</span></code></pre></div>
-<p>The function <code>n()</code> when used in a dplyr functions returns the number of rows in the data frame (or the number of rows in the group if used with <code>group_by</code>).</p>
+<p>The function <code>n()</code> when used in a <strong>dplyr</strong> function returns the number of rows in the data frame (or the number of rows in the group if used with <code>group_by</code>).</p>
 </div>
 <div id="saving-objects" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Saving Objects</h3>
-<p><strong>Do not save</strong> the workspace using <code>save.image</code>. This is an extremely bad idea for reproducibility. See r4ds <a href="http://r4ds.had.co.nz/workflow-projects.html">Ch 8</a>. You should uncheck the options in RStudio to avoid saving and rstoring from <code>.RData</code> files. This will help ensure that your R code runs the way you think it does, instead of depending on some long forgotten code that is only saved in the workspace image.</p>
+<p><strong>Do not save</strong> the work space using <code>save.image</code>. This is an extremely bad idea for reproducibility. See <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/workflow-projects.html">Workflow Projects</a>. You should uncheck the options in RStudio to avoid saving and restoring from <code>.RData</code> files. This will help ensure that your R code runs the way you think it does, instead of depending on some long forgotten code that is only saved in the workspace image.</p>
 <p>Everything important should be in a script. Anything saved or loaded from file should be done explicitly.</p>
-<p>As with reading CSVs, use the <strong>readr</strong> package functions. In this case, <code>write_csv</code> writes a csv file</p>
+<p>As with reading CSV files, use the <strong>readr</strong> package functions. In this case, <code>write_csv</code> writes a csv file</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write_csv</span>(UNpop, <span class="st">&quot;UNpop.csv&quot;</span>)</code></pre></div>
 </div>
 <div id="packages" class="section level3">
 <h3><span class="header-section-number">2.2.3</span> Packages</h3>
 <p>Instead of <strong>foreign</strong> for reading and writing Stata and SPSS files, use <strong>haven</strong>. One reason to do so is that it is better maintained. The R function <code>read.dta</code> does not read files created by the most recent versions of Stata (13+).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">read_dta</span>(<span class="st">&quot;https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.dta&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">read_dta</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;INTRO&quot;</span>, <span class="st">&quot;UNpop.dta&quot;</span>))
 <span class="co">#&gt; # A tibble: 7 × 2</span>
 <span class="co">#&gt;    year world_pop</span>
 <span class="co">#&gt;   &lt;dbl&gt;     &lt;dbl&gt;</span>
@@ -376,7 +380,7 @@ UNpop
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write_dta</span>(UNpop, <span class="st">&quot;UNpop.dta&quot;</span>)</code></pre></div>
 <p>Also see the <a href="https://cran.r-project.org/package=rio">rio</a> package which makes loading data even easier with smart defaults.</p>
 <p>You can use the <code>import</code> function to load many types of files:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">import</span>(<span class="st">&quot;https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.csv&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">import</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;INTRO&quot;</span>, <span class="st">&quot;UNpop.csv&quot;</span>))
 <span class="co">#&gt;   year world.pop</span>
 <span class="co">#&gt; 1 1950   2525779</span>
 <span class="co">#&gt; 2 1960   3026003</span>
@@ -385,7 +389,7 @@ UNpop
 <span class="co">#&gt; 5 1990   5320817</span>
 <span class="co">#&gt; 6 2000   6127700</span>
 <span class="co">#&gt; 7 2010   6916183</span>
-<span class="kw">import</span>(<span class="st">&quot;https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.RData&quot;</span>)
+<span class="kw">import</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;INTRO&quot;</span>, <span class="st">&quot;UNpop.RData&quot;</span>))
 <span class="co">#&gt;   year world.pop</span>
 <span class="co">#&gt; 1 1950   2525779</span>
 <span class="co">#&gt; 2 1960   3026003</span>
@@ -394,7 +398,7 @@ UNpop
 <span class="co">#&gt; 5 1990   5320817</span>
 <span class="co">#&gt; 6 2000   6127700</span>
 <span class="co">#&gt; 7 2010   6916183</span>
-<span class="kw">import</span>(<span class="st">&quot;https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.dta&quot;</span>)
+<span class="kw">import</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;INTRO&quot;</span>, <span class="st">&quot;UNpop.dta&quot;</span>))
 <span class="co">#&gt;   year world_pop</span>
 <span class="co">#&gt; 1 1950      2526</span>
 <span class="co">#&gt; 2 1960      3026</span>
@@ -407,7 +411,7 @@ UNpop
 <div id="style-guide" class="section level3">
 <h3><span class="header-section-number">2.2.4</span> Style Guide</h3>
 <p>Follow <a href="http://adv-r.had.co.nz/Style.html">Hadley Wickham’s Style Guide</a> not the Google R style guide.</p>
-<p>In addition to <strong>lintr</strong>, the R package <a href="https://cran.r-project.org/package=formatR">formatR</a> has methods to clean up your code.</p>
+<p>In addition to <a href="https://cran.r-project.org/package=lintr">lintr</a> the R package <a href="https://cran.r-project.org/package=formatR">formatR</a> has methods to clean up your code.</p>
 
 </div>
 </div>

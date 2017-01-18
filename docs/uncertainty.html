@@ -26,7 +26,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2017-01-16">
+<meta name="date" content="2017-01-17">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -100,7 +100,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#colonphon"><i class="fa fa-check"></i><b>1.1</b> Colonphon</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
 <li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i><b>2.1</b> Prerequisites</a></li>
 <li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#introduction-to-r"><i class="fa fa-check"></i><b>2.2</b> Introduction to R</a><ul>
@@ -178,7 +180,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.2.3" data-path="discovery.html"><a href="discovery.html#authorship-prediction"><i class="fa fa-check"></i><b>6.2.3</b> Authorship Prediction</a></li>
 <li class="chapter" data-level="6.2.4" data-path="discovery.html"><a href="discovery.html#cross-validation"><i class="fa fa-check"></i><b>6.2.4</b> Cross-Validation</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="discovery.html"><a href="discovery.html#network-data"><i class="fa fa-check"></i><b>6.3</b> Network Data</a></li>
+<li class="chapter" data-level="6.3" data-path="discovery.html"><a href="discovery.html#network-data"><i class="fa fa-check"></i><b>6.3</b> Network Data</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="discovery.html"><a href="discovery.html#twitter-following-network"><i class="fa fa-check"></i><b>6.3.1</b> Twitter Following Network</a></li>
+</ul></li>
 <li class="chapter" data-level="6.4" data-path="discovery.html"><a href="discovery.html#spatial-data-in-r"><i class="fa fa-check"></i><b>6.4</b> Spatial Data in R</a><ul>
 <li class="chapter" data-level="6.4.1" data-path="discovery.html"><a href="discovery.html#colors-in-r"><i class="fa fa-check"></i><b>6.4.1</b> Colors in R</a></li>
 <li class="chapter" data-level="6.4.2" data-path="discovery.html"><a href="discovery.html#united-states-presidential-elections"><i class="fa fa-check"></i><b>6.4.2</b> United States Presidential Elections</a></li>
@@ -620,7 +624,7 @@ for (i in <span class="dv">1</span>:<span class="dv">51</span>) {
 ## proportion of confidence intervals that contain the election day outcome
 <span class="kw">mean</span>((poll.pred[, <span class="dv">2</span>] &lt;=<span class="st"> </span>pres08$Obama /<span class="st"> </span><span class="dv">100</span>) &amp;<span class="st"> </span>
 <span class="st">         </span>(poll.pred[, <span class="dv">3</span>] &gt;=<span class="st"> </span>pres08$Obama /<span class="st"> </span><span class="dv">100</span>))</code></pre></div>
-<p><strong>tidyverse:</strong> In the plot, color the pointranges by whether they include the election day outcome.</p>
+<p><strong>tidyverse:</strong> In the plot, color the point ranges by whether they include the election day outcome.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(poll_pred, <span class="kw">aes</span>(<span class="dt">x =</span> actual, <span class="dt">y =</span> Obama,
                       <span class="dt">ymin =</span> ci_lwr, <span class="dt">ymax =</span> ci_upr,
                       <span class="dt">colour =</span> covers)) +
@@ -631,7 +635,7 @@ for (i in <span class="dv">1</span>:<span class="dv">51</span>) {
 <span class="st">  </span><span class="kw">scale_colour_discrete</span>(<span class="st">&quot;CI includes result?&quot;</span>) +
 <span class="st">  </span><span class="kw">coord_fixed</span>() +
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" /> Proportion of polls with CIs that include the election outcome?</p>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" /> Proportion of polls with confidence intervals that include the election outcome?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">poll_pred %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="kw">mean</span>(covers))
 <span class="co">#&gt; # A tibble: 1 × 1</span>
@@ -888,7 +892,7 @@ true &lt;-<span class="st"> </span>true /<span class="st"> </span><span class="k
 ## number of correctly classified cups as labels
 <span class="kw">names</span>(true) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>)
 true</code></pre></div>
-<p><strong>tidyverse:</strong> Generate the combinations more programmatically, and save the true distribution in a data frame rather than a vector.</p>
+<p><strong>tidyverse:</strong> Generate the combinations more pro grammatically, and save the true distribution in a data frame rather than a vector.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Number of cups of tea</span>
 cups &lt;-<span class="st"> </span><span class="dv">4</span>
 <span class="co"># Number guessed correctly</span>
@@ -1113,7 +1117,7 @@ z.score
 <span class="co">#&gt; sample estimates:</span>
 <span class="co">#&gt;    p </span>
 <span class="co">#&gt; 0.54</span></code></pre></div>
-<p>None of that is driectly working with data frames or plotting, so nothing to change.</p>
+<p>None of that is directly working with data frames or plotting, so nothing to change.</p>
 <p><strong>Original:</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## two-sided one-sample t-test
 <span class="kw">t.test</span>(STAR$g4reading, <span class="dt">mu =</span> <span class="dv">710</span>)

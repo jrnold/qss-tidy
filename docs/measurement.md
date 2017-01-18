@@ -14,8 +14,7 @@ library("broom")
 
 
 ```r
-afghan_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/MEASUREMENT/afghan.csv"
-afghan <- read_csv(afghan_url)
+afghan <- read_csv(qss_data_url("measurement", "afghan.csv"))
 ```
 
 Summarize the variables of interest
@@ -101,7 +100,7 @@ answering the "experienced violence" questions.
 You can filter rows with specific variables having missing values using `filter`
 as shown above.
 
-Howeer, `na.omit` works with tibbles just like any other data frame.
+However, `na.omit` works with tibbles just like any other data frame.
 
 ```r
 na.omit(afghan)
@@ -192,7 +191,7 @@ ggplot(afghan, aes(y = educ.years, x = province)) +
 <img src="measurement_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" />
 
 Helmand and Uruzgan have much lower levels of education than the other
-provicnces, and also report higher levels of violence.
+provinces, and also report higher levels of violence.
 
 ```r
 afghan %>%
@@ -215,9 +214,9 @@ afghan %>%
 
 ### Printing and saving graphics
 
-Use the function `ggsave()` to save ggplot graphics. 
+Use the function `ggsave()` to save **ggplot2** graphics. 
 
-Also, RMarkdown files have their own means of creating and saving plots
+Also, R Markdown files have their own means of creating and saving plots
 created by code-chunks.
 
 
@@ -229,8 +228,7 @@ created by code-chunks.
 
 
 ```r
-afghan_village_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/MEASUREMENT/afghan-village.csv"
-afghan.village <- read_csv(afghan_village_url)
+afghan.village <- read_csv(qss_data_url("measurement", "afghan-village.csv"))
 #> Parsed with column specification:
 #> cols(
 #>   altitude = col_double(),
@@ -251,7 +249,7 @@ ggplot(afghan.village, aes(x = factor(village.surveyed,
 
 <img src="measurement_files/figure-html/unnamed-chunk-15-1.png" width="70%" style="display: block; margin: auto;" />
 
-Boxplots log-population values of sampled and non-sampled
+Box plots log-population values of sampled and non-sampled
 
 ```r
 ggplot(afghan.village, aes(x = factor(village.surveyed,
@@ -298,7 +296,7 @@ afghan %>%
 ```
 
 
-Calculat the proportion who support the ISAF using the difference in means
+Calculate the proportion who support the ISAF using the difference in means
 between the ISAF and control groups:
 
 ```r
@@ -308,8 +306,8 @@ between the ISAF and control groups:
 ```
 
 
-To calculate the table responses to the list expriment in the control, ISAF,
-and taliban groups>
+To calculate the table responses to the list experiment in the control, ISAF,
+and Taliban groups>
 
 ```r
 afghan %>%
@@ -338,8 +336,7 @@ afghan %>%
 
 
 ```r
-congress_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/MEASUREMENT/congress.csv"
-congress <- read_csv(congress_url)
+congress <- read_csv(qss_data_url("measurement", "congress.csv"))
 #> Parsed with column specification:
 #> cols(
 #>   congress = col_integer(),
@@ -366,11 +363,10 @@ glimpse(congress)
 #> $ dwnom2   <dbl> 0.016, 0.796, 0.999, 1.005, 1.066, 0.870, 0.990, 0.89...
 ```
 
-To create the scatterplot in 3.6, we can 
-
 
 ```r
-congress %>%
+q <- 
+  congress %>%
   filter(congress %in% c(80, 112), 
          party %in% c("Democrat", "Republican")) %>%
   ggplot(aes(x = dwnom1, y = dwnom2, colour = party)) +
@@ -381,9 +377,24 @@ congress %>%
                      limits = c(-1.5, 1.5)) +
   scale_x_continuous("economic liberalism/conservatism",
                      limits = c(-1.5, 1.5))
+q
 ```
 
 <img src="measurement_files/figure-html/unnamed-chunk-23-1.png" width="70%" style="display: block; margin: auto;" />
+
+However, since there are colors associated with Democrats and Republicans, we should use them rather than the defaults.
+Since I'll resuse the scale several times, I'll save it in a variable.
+
+```r
+scale_colour_parties <-
+  scale_colour_manual(values = c(Democrat = "blue",
+                                 Republican = "red",
+                                 Other = "green"))
+q + scale_colour_parties
+```
+
+<img src="measurement_files/figure-html/unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" />
+
 
 
 ```r
@@ -395,14 +406,12 @@ congress %>%
   scale_y_continuous("racial liberalism/conservatism",
                      limits = c(-1.5, 1.5)) +
   scale_x_continuous("economic liberalism/conservatism",
-                     limits = c(-1.5, 1.5))
+                     limits = c(-1.5, 1.5)) +
+  scale_colour_parties
 #> Warning: Removed 2 rows containing missing values (geom_point).
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" />
-
-
-
+<img src="measurement_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -413,6 +422,7 @@ congress %>%
   ggplot(aes(x = congress, y = dwnom1, 
              colour = fct_reorder2(party, congress, dwnom1))) +
   geom_line() +
+  scale_colour_parties +
   labs(y = "DW-NOMINATE score (1st Dimension)", x = "Congress",
        colour = "Party")
 ```
@@ -420,13 +430,13 @@ congress %>%
 <img src="measurement_files/figure-html/unnamed-chunk-26-1.png" width="70%" style="display: block; margin: auto;" />
 
 
+
 ### Correlation
 
 Let's plot the Gini coefficient
 
 ```r
-usgini_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/MEASUREMENT/USGini.csv"
-USGini <- read_csv(usgini_url)
+USGini <- read_csv(qss_data_url("measurement", "USGini.csv"))
 #> Warning: Missing column names filled in: 'X1' [1]
 #> Parsed with column specification:
 #> cols(
@@ -440,6 +450,7 @@ USGini <- read_csv(usgini_url)
 ```r
 ggplot(USGini, aes(x = year, y = gini)) +
   geom_point() +
+  geom_line() +
   labs(x = "Year", y = "Gini coefficient") +
   ggtitle("Income Inequality")
 ```
@@ -475,6 +486,7 @@ party_polarization
 ```r
 ggplot(party_polarization, aes(x = congress, y = polarization)) +
   geom_point() +
+  geom_line() +
   ggtitle("Political Polarization") +
   labs(x = "Year", y = "Republican median − Democratic median")
 ```
@@ -483,11 +495,7 @@ ggplot(party_polarization, aes(x = congress, y = polarization)) +
 
 
 
-
-
 ### Quantile-Quantile Plot
-
-To create histogram plots similar 
 
 
 ```r
@@ -495,16 +503,15 @@ congress %>%
   filter(congress == 112, party %in% c("Republican", "Democrat")) %>%
   ggplot(aes(x = dwnom2, y = ..density..)) +
   geom_histogram() +
-  facet_grid(. ~ party) + 
+  facet_grid(party ~ .) + 
   labs(x = "racial liberalism/conservatism dimension")
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
 <img src="measurement_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" />
 
-*ggplot2* includes a `stat_qq` which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distibution, usually the normal one.
+*ggplot2* includes a `stat_qq` which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distribution, usually the normal one.
 However, we can calculate one by hand, which may give more insight into exactly what the qq-plot is doing.
-
 
 
 ```r
@@ -565,7 +572,7 @@ k80two.out <-
               centers = 2, nstart = 5)
 ```
 
-Add the cluster ids to datasets
+Add the cluster ids to data sets
 
 ```r
 congress80 <- 
@@ -583,7 +590,7 @@ k80two.out$centers
 #> 1  0.1468 -0.339
 #> 2 -0.0484  0.783
 ```
-To make it easier to use with ggplot, we need to convert this to a data frame.
+To make it easier to use with **ggplot2**, we need to convert this to a data frame.
 The `tidy` function from the **broom** package:
 
 ```r
@@ -707,4 +714,3 @@ ggplot() +
 ```
 
 <img src="measurement_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" />
-

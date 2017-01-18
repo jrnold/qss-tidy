@@ -469,7 +469,7 @@ mean((poll.pred[, 2] <= pres08$Obama / 100) &
          (poll.pred[, 3] >= pres08$Obama / 100))
 ```
 
-**tidyverse:** In the plot, color the pointranges by whether they include the election day outcome.
+**tidyverse:** In the plot, color the point ranges by whether they include the election day outcome.
 
 ```r
 ggplot(poll_pred, aes(x = actual, y = Obama,
@@ -485,7 +485,7 @@ ggplot(poll_pred, aes(x = actual, y = Obama,
 ```
 
 <img src="uncertainty_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" />
-Proportion of polls with CIs that include the election outcome?
+Proportion of polls with confidence intervals that include the election outcome?
 
 ```r
 poll_pred %>% 
@@ -804,7 +804,7 @@ names(true) <- c(0, 2, 4, 6, 8)
 true
 ```
 
-**tidyverse:** Generate the combinations more programmatically,
+**tidyverse:** Generate the combinations more pro grammatically,
 and save the true distribution in a data frame rather than a vector.
 
 ```r
@@ -1055,7 +1055,7 @@ prop.test(550, n = n, p = 0.5, conf.level = 0.99)
 #> 0.54
 ```
 
-None of that is driectly working with data frames or plotting, so nothing to change.
+None of that is directly working with data frames or plotting, so nothing to change.
 
 **Original:**
 

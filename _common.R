@@ -5,6 +5,7 @@ options(digits = 3)
 
 suppressPackageStartupMessages({
   library("tidyverse")
+  library("stringr")
 })
 
 
@@ -31,7 +32,26 @@ options(dplyr.print_min = 6, dplyr.print_max = 6)
 #' @return character string
 rdoc <- function(package, name, text = NULL) {
   text <- text %||% name
-  rprintf::rprintv("[$text](https://www.rdocumentation.org/packages/$package/topics/$name)", text = text, name = name, package = package)
+  stringr::str_c("[", text, "](https://www.rdocumentation.org/packages/",
+                 package, "/topics/", name, ")")
+}
+
+RDoc <- function(name, package = NULL, text = NULL, full = FALSE) {
+  if (is.null(package)) {
+    pkg_name <- str_split(name, "::", n = 2)[[1]]
+    name = pkg_name[1]
+    package = pkg_name[2]
+  }
+  if (is.null(text)) {
+    if (full) {
+      text <- str_c(package, name, sep = "::")
+    } else {
+      text <- name
+    }
+  }
+  url <- str_c("https://www.rdocumentation.org/packages/",
+               package, "/topics/", name)
+  str_c()
 }
 
 #' Get link to a QSS Data File
@@ -53,6 +73,7 @@ cran_pkg_url <- function(pkgname) {
 pkg_link <- function(pkgname) {
   stringr::str_c("[", pkgname, "](", cran_pkg_url(pkgname), ")")
 }
+pkg <- pkg_link
 
 #' Constant to insert title and link to R for data science
 R4DS <- "[R for Data Science](http://r4ds.had.co.nz/)"

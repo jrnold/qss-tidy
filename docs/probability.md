@@ -440,7 +440,7 @@ filter(joint2, age_group == "> 60", gender == "f")
 #> 1      > 60      f  1761           0.193
 ```
 
-The onditional probablities $P(race | gender, age)$,
+The conditional probabilities $P(race | gender, age)$,
 
 ```r
 condprob_race <-
@@ -476,7 +476,7 @@ abline(0, 1) # 45 degree line
 
 Create a table with the products of margins of race and age.
 Using the function [crossing](https://www.rdocumentation.org/packages/tidyr/topics/crossing) to create a tibble with
-all combinations of race and gender and the indep prob
+all combinations of race and gender and the independent prob
 
 ```r
 race_gender_indep <-
@@ -698,7 +698,7 @@ glimpse(cnames)
 
 For each surname, contains variables with the probability that it belongs to an individual of a given race (`pctwhite`, `pctblack`, ...).
 We want to find the most-likely race for a given surname, by finding the race with the maximum proportion.
-Instead of dealing with multiple variables, it is easier to use `max` on a single variable, so we will rearrange the data to in order to use a grouped summarise, and then merge the new variable back to the original datasets.
+Instead of dealing with multiple variables, it is easier to use `max` on a single variable, so we will rearrange the data to in order to use a grouped summarize, and then merge the new variable back to the original data sets.
 
 <!-- This needs to be sped up. Possibly a  -->
 
@@ -724,14 +724,14 @@ most_likely <-
                                 "asian" = "api", "other" = "others"))
 ```
 
-Now merge that back to the original cnames
+Now merge that back to the original `cnames` data frame.
 
 ```r
 cnames <- left_join(cnames, most_likely, by = "surname")
 ```
 
 
-Intead of using `match`, use `inner_join` to merge the surnames to FLVoters
+Instead of using `match`, use `inner_join` to merge the surnames to `FLVoters`:
 
 ```r
 FLVoters <- inner_join(FLVoters, cnames, by = "surname")

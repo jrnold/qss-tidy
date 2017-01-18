@@ -19,6 +19,7 @@ library("rio")
 ```
 
 
+
 ## Introduction to R
 
 ### Data Files
@@ -28,13 +29,13 @@ It is much better to organize your code in projects.
 
 When reading from csv files use `readr::read_csv` instead of the base R function `read.csv`. 
 It is slightly faster, and returns a `tibble` instead of a data frame.
-See r4ds [Ch 11: Data Import](http://r4ds.had.co.nz/tibbles.html#introduction-4)
+See [R for Data Science](http://r4ds.had.co.nz/) [Ch 11: Data Import](http://r4ds.had.co.nz/tibbles.html#introduction-4)
 for more dicussion.
 
 We also can load it directly from a URL.
 
 ```r
-UNpop <- read_csv("https://raw.githubusercontent.com/jrnold/qss/master/INTRO/UNpop.csv")
+UNpop <- read_csv(qss_data_url("INTRO", "UNpop.csv"))
 #> Parsed with column specification:
 #> cols(
 #>   year = col_integer(),
@@ -139,7 +140,7 @@ UNpop %>%
 ```
 For this example using these functions and `%>%` to chain them together may 
 seem a little excessive, but later we will see how chaining simple functions 
-togther like that becomes a very powerful way to build up complicated logic.
+together like that becomes a very powerful way to build up complicated logic.
 
 
 
@@ -162,21 +163,21 @@ UNpop %>%
 #> 4   6916183
 ```
 
-The function `n()` when used in a dplyr functions returns the number of rows
+The function `n()` when used in a **dplyr** function returns the number of rows
 in the data frame (or the number of rows in the group if used with `group_by`).
 
 ### Saving Objects
 
-**Do not save** the workspace using `save.image`.
+**Do not save** the work space using `save.image`.
 This is an extremely bad idea for reproducibility.
-See r4ds [Ch 8](http://r4ds.had.co.nz/workflow-projects.html). 
-You should uncheck the options in RStudio to avoid saving and rstoring from `.RData` files. 
+See [R for Data Science](http://r4ds.had.co.nz/) chapter [Workflow Projects](http://r4ds.had.co.nz/workflow-projects.html). 
+You should uncheck the options in RStudio to avoid saving and restoring from `.RData` files. 
 This will help ensure that your R code runs the way you think it does, instead of depending on some long forgotten code that is only saved in the workspace image. 
 
 Everything important should be in a script. Anything saved or loaded from file
 should be done explicitly.
 
-As with reading CSVs, use the **readr** package functions. 
+As with reading CSV files, use the **readr** package functions. 
 In this case, `write_csv` writes a csv file
 
 
@@ -192,7 +193,7 @@ The R function `read.dta` does not read files created by the most recent version
 
 
 ```r
-read_dta("https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.dta")
+read_dta(qss_data_url("INTRO", "UNpop.dta"))
 #> # A tibble: 7 × 2
 #>    year world_pop
 #>   <dbl>     <dbl>
@@ -216,7 +217,7 @@ Also see the [rio](https://cran.r-project.org/package=rio) package which makes l
 You can use the `import` function to load many types of files:
 
 ```r
-import("https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.csv")
+import(qss_data_url("INTRO", "UNpop.csv"))
 #>   year world.pop
 #> 1 1950   2525779
 #> 2 1960   3026003
@@ -225,7 +226,7 @@ import("https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.csv"
 #> 5 1990   5320817
 #> 6 2000   6127700
 #> 7 2010   6916183
-import("https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.RData")
+import(qss_data_url("INTRO", "UNpop.RData"))
 #>   year world.pop
 #> 1 1950   2525779
 #> 2 1960   3026003
@@ -234,7 +235,7 @@ import("https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.RDat
 #> 5 1990   5320817
 #> 6 2000   6127700
 #> 7 2010   6916183
-import("https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.dta")
+import(qss_data_url("INTRO", "UNpop.dta"))
 #>   year world_pop
 #> 1 1950      2526
 #> 2 1960      3026
@@ -249,4 +250,4 @@ import("https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.dta"
 
 Follow [Hadley Wickham's Style Guide](http://adv-r.had.co.nz/Style.html) not the Google R style guide.
 
-In addition to **lintr**, the R package [formatR](https://cran.r-project.org/package=formatR) has methods to clean up your code.
+In addition to [lintr](https://cran.r-project.org/package=lintr) the R package [formatR](https://cran.r-project.org/package=formatR) has methods to clean up your code.

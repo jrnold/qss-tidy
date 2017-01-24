@@ -245,7 +245,7 @@ q
 ```
 
 However, since there are colors associated with Democrats and Republicans, we should use them rather than the defaults.
-Since I'll resuse the scale several times, I'll save it in a variable.
+Since I'll reuse the scale several times, I'll save it in a variable.
 ```{r}
 scale_colour_parties <-
   scale_colour_manual(values = c(Democrat = "blue",

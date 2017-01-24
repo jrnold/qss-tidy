@@ -9,6 +9,11 @@ library("lubridate")
 library("stringr")
 library("modelr")
 library("broom")
+qss_data_url <- function(chapter, file) {
+  chapter_name <- stringr::str_to_upper(chapter)
+  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
+                 chapter_name, "/", file)
+}
 ```
 
 ## Estimation

@@ -4,8 +4,13 @@
 
 ```{r message=FALSE}
 library("tidyverse")
-```
 
+qss_data_url <- function(chapter, file) {
+  chapter_name <- stringr::str_to_upper(chapter)
+  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
+                 chapter_name, "/", file)
+}
+```
 
 ## Racial Discrimination in the Labor Market
 

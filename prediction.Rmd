@@ -7,6 +7,11 @@ library("tidyverse")
 library("lubridate")
 library("stringr")
 library("forcats")
+qss_data_url <- function(chapter, file) {
+  chapter_name <- stringr::str_to_upper(chapter)
+  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
+                 chapter_name, "/", file)
+}
 ```
 The packages `r pkg_link("modelr")` and `r pkg_link("broom")` are used to wrangle the results of linear regressions,
 ```{r message=FALSE}

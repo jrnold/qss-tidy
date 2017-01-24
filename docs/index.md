@@ -2,7 +2,7 @@
 ---
 title: "QSS Tidyverse Code"
 author: "Jeffrey B. Arnold"
-date: "2017-01-17"
+date: "2017-01-23"
 github-repo: jrnold/qss-tidy
 site: "bookdown::bookdown_site"
 documentclass: book

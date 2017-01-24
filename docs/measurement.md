@@ -392,8 +392,10 @@ q
 
 <img src="measurement_files/figure-html/unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" />
 
-However, since there are colors associated with Democrats and Republicans, we should use them rather than the defaults.
-Since I'll resuse the scale several times, I'll save it in a variable.
+However, since there are colors associated with Democrats (blue) and Republicans (blue), we should use them rather than the defaults.
+There's some evidence that using semantically-resonant colors can help decoding data visualizations ([Lin, et al. 2013](http://vis.stanford.edu/files/2013-SemanticColor-EuroVis.pdf)).
+
+Since I'll reuse the scale several times, I'll save it in a variable.
 
 ```r
 scale_colour_parties <-

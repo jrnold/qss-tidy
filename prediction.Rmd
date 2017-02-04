@@ -7,11 +7,6 @@ library("tidyverse")
 library("lubridate")
 library("stringr")
 library("forcats")
-qss_data_url <- function(chapter, file) {
-  chapter_name <- stringr::str_to_upper(chapter)
-  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
-                 chapter_name, "/", file)
-}
 ```
 The packages `r pkg_link("modelr")` and `r pkg_link("broom")` are used to wrangle the results of linear regressions,
 ```{r message=FALSE}
@@ -19,6 +14,12 @@ library("broom")
 library("modelr")
 ```
 
+We also use the R function
+```{r echo=FALSE}
+insert_fun("qss_data_url")
+```
+```{r qss_data_url-source,eval=FALSE}
+```
 
 ## Loops in R
 
@@ -475,8 +476,6 @@ arrange(florida) %>%
   head()
 ```
 
-![Ted Mosby dressed as a Hanging Chad in "How I Met Your Mother"](./images/hanging-chad.png)
-
 Data without Palm Beach
 ```{r}
 florida_pb <- filter(florida, county != "PalmBeach")
@@ -844,7 +843,8 @@ lines(y2l.range, y2.labour, col = "red")
 ## scatterplot with regression lines for tory
 plot(MPs.tory$margin, MPs.tory$ln.net, main = "Tory", xlim = c(-0.5, 0.5),
      ylim = c(6, 18), xlab = "margin of victory",
-ylab = "log net wealth at death") abline(v = 0, lty = "dashed")
+ylab = "log net wealth at death")
+abline(v = 0, lty = "dashed")
 ## add regression lines
 lines(y1t.range, y1.tory, col = "red")
 lines(y2t.range, y2.tory, col = "red")

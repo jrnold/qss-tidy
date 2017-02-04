@@ -2,6 +2,7 @@
 
 ## Prerequisites
 
+We will use these package in this chapter:
 ```{r message=FALSE}
 library("tidyverse")
 library("forcats")
@@ -9,12 +10,15 @@ library("lubridate")
 library("stringr")
 library("modelr")
 library("broom")
-qss_data_url <- function(chapter, file) {
-  chapter_name <- stringr::str_to_upper(chapter)
-  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
-                 chapter_name, "/", file)
-}
 ```
+We will also, use the function `qss_data_url`:
+```{r echo=FALSE}
+insert_fun("qss_data_url")
+```
+```{r qss_data_url-source,eval=FALSE}
+```
+
+
 
 ## Estimation
 

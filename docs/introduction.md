@@ -12,10 +12,43 @@ We also load the **haven** package to load Stata `dta` files,
 ```r
 library("haven")
 ```
-and the **rio** package to load multiple types of files,
+and the **rio** package to load multiple types of files.
 
 ```r
 library("rio")
+```
+We also create a helper function for loading in the data.
+We will also, use the function `qss_data_url`:
+
+
+```r
+qss_data_url <-
+function(chapter, file) {
+  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
+        stringr::str_to_upper(chapter), "/", file)
+}
+```
+
+This function returns the URL to a data set.
+
+```r
+qss_data_url("intro", "Kenya.csv")
+#> [1] "https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/Kenya.csv"
+```
+Since URLs can be used for paths to files, this can be used to easily load data directly from the site:
+
+```r
+read_csv(qss_data_url("intro", "Kenya.csv"))
+#> # A tibble: 30 × 8
+#>   country    period   age births deaths py.men py.women    l_x
+#>     <chr>     <chr> <chr>  <dbl>  <dbl>  <dbl>    <dbl>  <dbl>
+#> 1     KEN 1950-1955   0-4      0  398.3   2983     2978 100000
+#> 2     KEN 1950-1955   5-9      0   36.8   1978     1970  75157
+#> 3     KEN 1950-1955 10-14      0   19.5   1635     1634  71365
+#> 4     KEN 1950-1955 15-19    264   18.5   1589     1565  69469
+#> 5     KEN 1950-1955 20-24    486   21.4   1428     1364  67421
+#> 6     KEN 1950-1955 25-29    383   20.4   1205     1106  64855
+#> # ... with 24 more rows
 ```
 
 
@@ -251,3 +284,4 @@ import(qss_data_url("INTRO", "UNpop.dta"))
 Follow [Hadley Wickham's Style Guide](http://adv-r.had.co.nz/Style.html) not the Google R style guide.
 
 In addition to [lintr](https://cran.r-project.org/package=lintr) the R package [formatR](https://cran.r-project.org/package=formatR) has methods to clean up your code.
+

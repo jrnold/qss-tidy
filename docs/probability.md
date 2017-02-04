@@ -9,6 +9,17 @@ library("tidyverse")
 library("forcats")
 library("stringr")
 ```
+We will also, use the function `qss_data_url`:
+
+
+```r
+qss_data_url <-
+function(chapter, file) {
+  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
+        stringr::str_to_upper(chapter), "/", file)
+}
+```
+
 
 ## Probability
 
@@ -51,7 +62,7 @@ ggplot(bday, aes(x = k , y = pr)) +
   labs(x = "Number of people")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-5-1.png" width="70%" style="display: block; margin: auto;" />
 
 **Note:** The logarithm is used for numerical stability. Basically,  "floating-point" numbers are approximations of numbers. If you perform arithmetic with numbers that are very large, very small, or vary differently in magnitudes, you could have problems. Logarithms help with some of those issues.
 See "Falling Into the Floating Point Trap" in [The R Inforno](http://www.burns-stat.com/pages/Tutor/R_inferno.pdf) for a summary of floating point numbers.
@@ -101,7 +112,7 @@ sims <- 1000
 k <- 23
 map_lgl(seq_len(sims), ~ sim_bdays(k)) %>%
   mean()
-#> [1] 0.486
+#> [1] 0.478
 ```
 
 
@@ -122,10 +133,10 @@ choose(84, 6)
 **Original:**
 
 ```r
-FLVoters <- read.csv("FLVoters.csv") dim(FLVoters) # before removal of missing data
-## [1] 10000     6
+FLVoters <- read.csv("FLVoters.csv")
+dim(FLVoters)
 FLVoters <- na.omit(FLVoters)
-dim(FLVoters) # after removal
+dim(FLVoters)
 ```
 
 **tidyverse**
@@ -310,7 +321,9 @@ joint_p %>%
 ```r
 FLVoters$age.group <- NA # initialize a variable
 FLVoters$age.group[FLVoters$age <= 20] <- 1
-FLVoters$age.group[FLVoters$age > 20 & FLVoters$age <= 40] <- 2 FLVoters$age.group[FLVoters$age > 40 & FLVoters$age <= 60] <- 3 FLVoters$age.group[FLVoters$age > 60] <- 4
+FLVoters$age.group[FLVoters$age > 20 & FLVoters$age <= 40] <- 2
+FLVoters$age.group[FLVoters$age > 40 & FLVoters$age <= 60] <- 3
+FLVoters$age.group[FLVoters$age > 60] <- 4
 ```
 
 **tidyverse:** Use the [cut](https://www.rdocumentation.org/packages/base/topics/cut)
@@ -509,7 +522,7 @@ ggplot(race_gender_indep,
        y = expression(P("race and gender")))
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-37-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-38-1.png" width="70%" style="display: block; margin: auto;" />
 
 **Original code**
 
@@ -558,7 +571,7 @@ ggplot(joint_indep, aes(x = prob, y = indep_prob, colour = race)) +
     
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-39-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-40-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 The original code only calculates the conditional independence given female;
@@ -604,7 +617,7 @@ inner_join(select(indep_cond_gender, race, age_group, gender, indep_prob),
        title = "Marginal independence")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-40-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -657,8 +670,8 @@ results %>%
 #> # A tibble: 2 × 2
 #>    strategy pct_win
 #>       <chr>   <dbl>
-#> 1 no switch    0.35
-#> 2    switch    0.65
+#> 1 no switch   0.338
+#> 2    switch   0.662
 ```
 
 Can we make this even more general? What about a function that takes a data frame as its input with the choices? ...
@@ -853,7 +866,8 @@ for (i in 1:sims) {
   Obama.ev[i] <- sum(pres08$EV[draws > n/2])
 }
 hist(Obama.ev, freq = FALSE, main = "Prediction of Election Outcome",
-xlab = "Obama's Electoral College Votes") abline(v = 364, col = "red") # actual result
+xlab = "Obama's Electoral College Votes")
+abline(v = 364, col = "red") # actual result
 ```
 
 **Tidyverse code**
@@ -892,7 +906,7 @@ ggplot(sim_results, aes(x = EV, y = ..density..)) +
   labs(x = "Electoral Votes", y = "density")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-62-1.png" width="70%" style="display: block; margin: auto;" />
 
 **Original code**
 
@@ -929,7 +943,7 @@ sim_results %>%
 #> # A tibble: 1 × 3
 #>    mean   var    sd
 #>   <dbl> <dbl> <dbl>
-#> 1   352   270  16.4
+#> 1   352   269  16.4
 ```
 
 Theoretical probabilities
@@ -1026,7 +1040,7 @@ ggplot() +
   labs(x = "Sample Size", y = "Sample Mean")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-70-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-71-1.png" width="70%" style="display: block; margin: auto;" />
 
 ### Central Limit Theorem
 
@@ -1119,5 +1133,5 @@ clt_plot(1000)
 clt_plot(100)
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-73-1.png" width="70%" style="display: block; margin: auto;" /><img src="probability_files/figure-html/unnamed-chunk-73-2.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-74-1.png" width="70%" style="display: block; margin: auto;" /><img src="probability_files/figure-html/unnamed-chunk-74-2.png" width="70%" style="display: block; margin: auto;" />
 

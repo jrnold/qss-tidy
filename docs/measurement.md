@@ -8,7 +8,19 @@
 library("tidyverse")
 library("forcats")
 library("broom")
+library("tidyr")
 ```
+
+
+```r
+qss_data_url <-
+function(chapter, file) {
+  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
+        stringr::str_to_upper(chapter), "/", file)
+}
+```
+
+
 
 ## Measuring Civilian Victimization during Wartime
 
@@ -123,7 +135,6 @@ na.omit(afghan)
 
 
 ```r
-library(forcats)
 afghan <-
   afghan %>%
   mutate(violent.exp.ISAF.fct = 
@@ -137,7 +148,7 @@ ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
   ggtitle("Civilian Victimization by the ISAF")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-9-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-10-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -154,7 +165,7 @@ ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
   ggtitle("Civilian Victimization by the Taliban")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-10-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 This plot could improved by plotting the two values simultaneously to be able to better compare them.
@@ -164,16 +175,16 @@ This will require creating a data frame that has the following columns: perpetra
 
 
 ```r
-library("tidyr")
 violent_exp <-
   afghan %>%
   select(violent.exp.ISAF, violent.exp.taliban) %>%
   gather(perpetrator, response) %>%
   mutate(perpetrator = str_replace(perpetrator, "violent\\.exp\\.", ""),
          perpetrator = str_replace(perpetrator, "taliban", "Taliban"),
-         response = fct_recode(factor(response), c("Harm" = "1", "No Harm" = "0")),
+         response = fct_recode(factor(response), "Harm" = "1", "No Harm" = "0"),
          response = fct_explicit_na(response, "No response"),
-         response = fct_relevel(response, c("No response", "No Harm"))) %>%
+         response = fct_relevel(response, c("No response", "No Harm"))
+         ) %>%
   count(perpetrator, response) %>%
   mutate(prop = n / sum(n))
          
@@ -182,7 +193,7 @@ ggplot(violent_exp, aes(x = prop, y = response, color = perpetrator)) +
   scale_color_manual(values = c(ISAF = "green", Taliban = "black"))
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" />
 
 Black was chosen for the Taliban, and Green for ISAF because it is the color of their respective [flags](https://en.wikipedia.org/wiki/International_Security_Assistance_Force).
 
@@ -198,7 +209,7 @@ ggplot(afghan, aes(x = 1, y = age)) +
   ggtitle("Distribution of Age")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -210,7 +221,7 @@ ggplot(afghan, aes(y = educ.years, x = province)) +
   ggtitle("Education by Province")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" />
 
 Helmand and Uruzgan have much lower levels of education than the other
 provinces, and also report higher levels of violence.
@@ -264,7 +275,7 @@ ggplot(afghan.village, aes(x = factor(village.surveyed,
   coord_flip()
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
 
 Box plots log-population values of sampled and non-sampled
 
@@ -277,7 +288,7 @@ ggplot(afghan.village, aes(x = factor(village.surveyed,
   coord_flip()
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" />
 
 You can also compare these distributions by plotting their densities:
 
@@ -290,7 +301,7 @@ ggplot(afghan.village, aes(colour = factor(village.surveyed,
   labs(x = "log(population)", colour = "")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" />
 The function [geom_rug](http://docs.ggplot2.org/current/geom_rug.html), creates a rug plot, which puts small lines on the axis to represent the value of each observation.
 It can be combined with a scatter or density plot to add extra detail.
 
@@ -390,7 +401,7 @@ q <-
 q
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" />
 
 However, since there are colors associated with Democrats (blue) and Republicans (blue), we should use them rather than the defaults.
 There's some evidence that using semantically-resonant colors can help decoding data visualizations ([Lin, et al. 2013](http://vis.stanford.edu/files/2013-SemanticColor-EuroVis.pdf)).
@@ -405,7 +416,7 @@ scale_colour_parties <-
 q + scale_colour_parties
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-26-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -423,7 +434,7 @@ congress %>%
 #> Warning: Removed 2 rows containing missing values (geom_point).
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-26-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-27-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -439,7 +450,7 @@ congress %>%
        colour = "Party")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-27-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-28-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -461,7 +472,7 @@ ggplot(USGini, aes(x = year, y = gini)) +
   ggtitle("Income Inequality")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-29-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-30-1.png" width="70%" style="display: block; margin: auto;" />
 
 To calculate a measure of party polarization take the code used in the plot of Republican and Democratic party median ideal points and adapt it to calculate the difference in the party medians:
 
@@ -497,7 +508,7 @@ ggplot(party_polarization, aes(x = congress, y = polarization)) +
   labs(x = "Year", y = "Republican median − Democratic median")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-32-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -514,7 +525,7 @@ congress %>%
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-32-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-33-1.png" width="70%" style="display: block; margin: auto;" />
 
 *ggplot2* includes a `stat_qq` which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distribution, usually the normal one.
 However, we can calculate one by hand, which may give more insight into exactly what the qq-plot is doing.
@@ -551,7 +562,7 @@ party_qtiles %>%
   coord_fixed()
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-34-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-35-1.png" width="70%" style="display: block; margin: auto;" />
 
 ## Clustering
 
@@ -593,8 +604,8 @@ These are in the `centers` element of the cluster object.
 ```r
 k80two.out$centers
 #>    dwnom1 dwnom2
-#> 1 -0.0484  0.783
-#> 2  0.1468 -0.339
+#> 1  0.1468 -0.339
+#> 2 -0.0484  0.783
 ```
 To make it easier to use with **ggplot2**, we need to convert this to a data frame.
 The `tidy` function from the **broom** package:
@@ -603,8 +614,8 @@ The `tidy` function from the **broom** package:
 k80two.clusters <- tidy(k80two.out)
 k80two.clusters
 #>        x1     x2 size withinss cluster
-#> 1 -0.0484  0.783  135     10.9       1
-#> 2  0.1468 -0.339  311     54.9       2
+#> 1  0.1468 -0.339  311     54.9       1
+#> 2 -0.0484  0.783  135     10.9       2
 ```
 
 
@@ -617,7 +628,7 @@ ggplot() +
   geom_point(data = k80two.clusters, mapping = aes(x = x1, y = x2))
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-39-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-40-1.png" width="70%" style="display: block; margin: auto;" />
 
 We can also plot,
 
@@ -630,11 +641,11 @@ congress80 %>%
 #> 
 #>        party cluster2     n
 #>        <chr>   <fctr> <int>
-#> 1   Democrat        1   132
-#> 2   Democrat        2    62
-#> 3      Other        2     2
-#> 4 Republican        1     3
-#> 5 Republican        2   247
+#> 1   Democrat        1    62
+#> 2   Democrat        2   132
+#> 3      Other        1     2
+#> 4 Republican        1   247
+#> 5 Republican        2     3
 ```
 
 And now we can repeat these steps for the 112th congress:
@@ -658,7 +669,7 @@ ggplot() +
              mapping = aes(x = x1, y = x2))
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -696,7 +707,7 @@ ggplot() +
              mapping = aes(x = x1, y = x2), size = 3)
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
 
 and on the 112th congress:
 
@@ -719,4 +730,4 @@ ggplot() +
              mapping = aes(x = x1, y = x2), size = 3)
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" />

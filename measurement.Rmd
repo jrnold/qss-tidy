@@ -6,12 +6,15 @@
 library("tidyverse")
 library("forcats")
 library("broom")
-qss_data_url <- function(chapter, file) {
-  chapter_name <- stringr::str_to_upper(chapter)
-  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
-                 chapter_name, "/", file)
-}
+library("tidyr")
 ```
+```{r echo=FALSE}
+insert_fun("qss_data_url")
+```
+```{r qss_data_url-source,eval=FALSE}
+```
+
+
 
 ## Measuring Civilian Victimization during Wartime
 
@@ -75,7 +78,6 @@ na.omit(afghan)
 ### Barplot
 
 ```{r}
-library(forcats)
 afghan <-
   afghan %>%
   mutate(violent.exp.ISAF.fct = 
@@ -110,16 +112,16 @@ This will require creating a data frame that has the following columns: perpetra
 
 
 ```{r}
-library("tidyr")
 violent_exp <-
   afghan %>%
   select(violent.exp.ISAF, violent.exp.taliban) %>%
   gather(perpetrator, response) %>%
   mutate(perpetrator = str_replace(perpetrator, "violent\\.exp\\.", ""),
          perpetrator = str_replace(perpetrator, "taliban", "Taliban"),
-         response = fct_recode(factor(response), c("Harm" = "1", "No Harm" = "0")),
+         response = fct_recode(factor(response), "Harm" = "1", "No Harm" = "0"),
          response = fct_explicit_na(response, "No response"),
-         response = fct_relevel(response, c("No response", "No Harm"))) %>%
+         response = fct_relevel(response, c("No response", "No Harm"))
+         ) %>%
   count(perpetrator, response) %>%
   mutate(prop = n / sum(n))
          

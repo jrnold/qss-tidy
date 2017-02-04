@@ -13,6 +13,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   collapse = TRUE,
   cache = TRUE,
+  autodep = TRUE,
   out.width = "70%",
   fig.align = 'center',
   fig.width = 6,
@@ -20,11 +21,16 @@ knitr::opts_chunk$set(
   fig.show = "hold"
 )
 
+# set ref.chunk pattern to be proceeded by a comment and thus valid code
+.md_pat <- knitr::all_patterns$md
+.md_pat$ref.chunk <- "^\\s*#\\+ (.+)\\s*$"
+knitr::knit_patterns$set(.md_pat)
+
 # I want the README to have visible GIFs on GitHub, as
 # GitHub cannot show .mp4s or other animation formats.
 # I therefore hacked together a GIF animation hook for knitr.
 
-library(animation)
+library("animation")
 ani.options(autobrowse = FALSE, interval = 1)
 
 knitr::opts_knit$set(animation.fun = function(x, options, format = "gif") {
@@ -113,4 +119,14 @@ ggdoc <- function(name) {
 r4ds_ch <- function(name, path, book = TRUE) {
   stringr::str_c(if (book) "*R for Data Science* chapter" else "",
                  "[", name, "](http://r4ds.had.co.nz/", path, ".html)")
+}
+
+
+#' Insert code of function
+#'
+#' @param name Function name
+#' @source https://yihui.name/knitr/demo/pretty/
+insert_fun <- function(name) {
+  knitr::read_chunk(lines = capture.output(dump(name, "")),
+                    labels = paste(name, "source", sep = "-"))
 }

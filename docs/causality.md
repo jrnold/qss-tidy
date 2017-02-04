@@ -3,11 +3,21 @@
 
 ## Prerequistes
 
+This chapter only uses the tidyverse package
 
 ```r
 library("tidyverse")
 ```
+and the `qss_data_url` helper function to download data from the QSS site,
 
+
+```r
+qss_data_url <-
+function(chapter, file) {
+  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
+        stringr::str_to_upper(chapter), "/", file)
+}
+```
 
 ## Racial Discrimination in the Labor Market
 
@@ -648,7 +658,7 @@ ggplot(chains_by_state, aes(x = chain, y = prop, colour = state)) +
   coord_flip()
 ```
 
-<img src="causality_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="causality_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
 
 In the QSS text, only Burger King restaurants are compared. 
 However, **dplyr** makes this easy.
@@ -689,7 +699,7 @@ ggplot(full_prop_by_state_chain,
   labs(x = "chains")
 ```
 
-<img src="causality_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="causality_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" />
 
 To calculate the differences, we need to get the data frame 
 
@@ -805,7 +815,7 @@ ggplot(full_prop_by_state, aes(x = period, y = fullProp, colour = state)) +
   scale_x_continuous(breaks = c(0, 1), labels = c("Before", "After"))
 ```
 
-<img src="causality_files/figure-html/unnamed-chunk-52-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="causality_files/figure-html/unnamed-chunk-53-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 

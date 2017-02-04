@@ -25,6 +25,10 @@ library("forcats")
 library("modelr")
 ```
 
+
+
+
+
 ## Textual data
 
 
@@ -98,12 +102,12 @@ corpus_tidy
 #> # A tibble: 85 × 8
 #>   author       datetimestamp description heading       id language origin
 #>    <lgl>              <dttm>       <lgl>   <lgl>    <chr>    <chr>  <lgl>
-#> 1     NA 2017-01-16 18:48:05          NA      NA fp01.txt       en     NA
-#> 2     NA 2017-01-16 18:48:05          NA      NA fp02.txt       en     NA
-#> 3     NA 2017-01-16 18:48:05          NA      NA fp03.txt       en     NA
-#> 4     NA 2017-01-16 18:48:05          NA      NA fp04.txt       en     NA
-#> 5     NA 2017-01-16 18:48:05          NA      NA fp05.txt       en     NA
-#> 6     NA 2017-01-16 18:48:05          NA      NA fp06.txt       en     NA
+#> 1     NA 2017-02-03 17:57:31          NA      NA fp01.txt       en     NA
+#> 2     NA 2017-02-03 17:57:31          NA      NA fp02.txt       en     NA
+#> 3     NA 2017-02-03 17:57:31          NA      NA fp03.txt       en     NA
+#> 4     NA 2017-02-03 17:57:31          NA      NA fp04.txt       en     NA
+#> 5     NA 2017-02-03 17:57:31          NA      NA fp05.txt       en     NA
+#> 6     NA 2017-02-03 17:57:31          NA      NA fp06.txt       en     NA
 #> # ... with 79 more rows, and 1 more variables: text <chr>
 ```
 The `text` column contains the text of the documents themselves.
@@ -183,14 +187,14 @@ head(dtm)
 #> Source: local data frame [6 x 3]
 #> Groups: document [1]
 #> 
-#>   document        word     n
-#>      <int>       <chr> <int>
-#> 1        1           1     1
-#> 2        1      absurd     1
-#> 3        1    accident     1
-#> 4        1 acknowledge     1
-#> 5        1         act     1
-#> 6        1    actuated     1
+#>   document       word     n
+#>      <int>      <chr> <int>
+#> 1        1        abl     1
+#> 2        1     absurd     1
+#> 3        1      accid     1
+#> 4        1     accord     1
+#> 5        1 acknowledg     1
+#> 6        1        act     1
 ```
 
 
@@ -213,14 +217,14 @@ filter(dtm, document == 12) %>%
   {wordcloud(.$word, .$n, max.words = 20)}
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;" />
 
 ```r
 filter(dtm, document == 24) %>%
   {wordcloud(.$word, .$n, max.words = 20)}
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-15-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
 
 **Original:**
 
@@ -248,18 +252,18 @@ head(sort(dtm.tfidf.mat[24, ], decreasing = TRUE), n = 10)
 ```r
 dtm <- bind_tf_idf(dtm, word, document, n)
 dtm
-#> Source: local data frame [42,978 x 6]
-#> Groups: document [?]
+#> Source: local data frame [38,764 x 6]
+#> Groups: document [85]
 #> 
-#>   document        word     n      tf   idf  tf_idf
-#>      <int>       <chr> <int>   <dbl> <dbl>   <dbl>
-#> 1        1           1     1 0.00186 0.832 0.00155
-#> 2        1      absurd     1 0.00186 2.245 0.00417
-#> 3        1    accident     1 0.00186 3.750 0.00697
-#> 4        1 acknowledge     1 0.00186 2.497 0.00464
-#> 5        1         act     1 0.00186 0.705 0.00131
-#> 6        1    actuated     1 0.00186 2.651 0.00493
-#> # ... with 4.297e+04 more rows
+#>   document       word     n      tf   idf   tf_idf
+#>      <int>      <chr> <int>   <dbl> <dbl>    <dbl>
+#> 1        1        abl     1 0.00176 0.705 0.001241
+#> 2        1     absurd     1 0.00176 1.735 0.003054
+#> 3        1      accid     1 0.00176 3.750 0.006601
+#> 4        1     accord     1 0.00176 0.754 0.001327
+#> 5        1 acknowledg     1 0.00176 1.552 0.002733
+#> 6        1        act     1 0.00176 0.400 0.000704
+#> # ... with 3.876e+04 more rows
 ```
 
 The 10 most important words for Paper No. 12 are
@@ -271,14 +275,14 @@ dtm %>%
 #> Source: local data frame [10 x 6]
 #> Groups: document [1]
 #> 
-#>   document        word     n      tf   idf tf_idf
-#>      <int>       <chr> <int>   <dbl> <dbl>  <dbl>
-#> 1       12        cent     2 0.00250  4.44 0.0111
-#> 2       12  contraband     3 0.00375  4.44 0.0167
-#> 3       12      duties     8 0.01001  1.26 0.0127
-#> 4       12      excise     2 0.00250  4.44 0.0111
-#> 5       12 importation     3 0.00375  3.06 0.0115
-#> 6       12     patrols     3 0.00375  4.44 0.0167
+#>   document       word     n      tf   idf tf_idf
+#>      <int>      <chr> <int>   <dbl> <dbl>  <dbl>
+#> 1       12       cent     2 0.00240  4.44 0.0107
+#> 2       12      coast     3 0.00360  3.75 0.0135
+#> 3       12    commerc     8 0.00959  1.11 0.0107
+#> 4       12 contraband     3 0.00360  4.44 0.0160
+#> 5       12      excis     5 0.00600  2.65 0.0159
+#> 6       12     gallon     2 0.00240  4.44 0.0107
 #> # ... with 4 more rows
 ```
 and for Paper No. 24,
@@ -290,14 +294,14 @@ dtm %>%
 #> Source: local data frame [10 x 6]
 #> Groups: document [1]
 #> 
-#>   document           word     n      tf   idf tf_idf
-#>      <int>          <chr> <int>   <dbl> <dbl>  <dbl>
-#> 1       24         armies     5 0.00770  1.73 0.0134
-#> 2       24           dock     3 0.00462  4.44 0.0205
-#> 3       24 establishments     7 0.01079  1.55 0.0167
-#> 4       24       frontier     3 0.00462  2.83 0.0131
-#> 5       24      garrisons     6 0.00924  2.83 0.0262
-#> 6       24          posts     3 0.00462  3.06 0.0141
+#>   document     word     n      tf   idf  tf_idf
+#>      <int>    <chr> <int>   <dbl> <dbl>   <dbl>
+#> 1       24     armi     7 0.01034  1.26 0.01308
+#> 2       24  arsenal     2 0.00295  3.75 0.01108
+#> 3       24     dock     3 0.00443  4.44 0.01969
+#> 4       24 frontier     3 0.00443  2.83 0.01255
+#> 5       24 garrison     6 0.00886  2.83 0.02511
+#> 6       24   nearer     2 0.00295  3.34 0.00988
 #> # ... with 4 more rows
 ```
 
@@ -361,22 +365,22 @@ and then append columns to `hamilton_words` so the location of each word in the 
 
 ```r
 dim(km_out$centers)
-#> [1]    4 6457
+#> [1]    4 3850
 ```
 
 ```r
 hamilton_words <- bind_cols(hamilton_words, as_tibble(t(km_out$centers)))
 hamilton_words
-#> # A tibble: 6,457 × 5
-#>          word      `1`      `2`     `3`      `4`
-#>         <chr>    <dbl>    <dbl>   <dbl>    <dbl>
-#> 1           1 0.000897 0.000627 0.00251 0.000569
-#> 2      absurd 0.000797 0.000633 0.00000 0.000000
-#> 3    accident 0.000000 0.000307 0.00000 0.000000
-#> 4 acknowledge 0.000886 0.000724 0.00000 0.000000
-#> 5         act 0.000438 0.000757 0.00000 0.001071
-#> 6    actuated 0.000000 0.000380 0.00000 0.000000
-#> # ... with 6,451 more rows
+#> # A tibble: 3,850 × 5
+#>         word      `1`      `2`      `3`     `4`
+#>        <chr>    <dbl>    <dbl>    <dbl>   <dbl>
+#> 1        abl 0.000262 0.000000 0.001004 0.00113
+#> 2     absurd 0.000272 0.001430 0.000678 0.00000
+#> 3      accid 0.000000 0.000000 0.000292 0.00000
+#> 4     accord 0.000319 0.001381 0.000499 0.00000
+#> 5 acknowledg 0.000000 0.000767 0.000556 0.00000
+#> 6        act 0.000927 0.000838 0.000657 0.00000
+#> # ... with 3,844 more rows
 ```
 To find the top 10 words in each centroid, we use `top_n` with `group_by`:
 
@@ -395,13 +399,13 @@ for (i in 1:CLUSTERS) {
       str_c(filter(top_words_cluster, cluster == i)$word, collapse = ", "),
       "\n\n")
 }
-#> CLUSTER  1 :  court, jurisdiction, courts, supreme, inferior, trial, tribunals, cognizance, jury, appellate 
+#> CLUSTER  1 :  offic, accus, presid, treati, appoint, senat, nomin, governor, impeach, pardon 
 #> 
-#> CLUSTER  2 :  national, taxes, duties, revenue, army, military, militia, taxation, clause, elections 
+#> CLUSTER  2 :  court, appeal, jurisdict, inferior, suprem, trial, tribun, cogniz, juri, appel 
 #> 
-#> CLUSTER  3 :  judges, compensation, inability, office, diminished, salaries, bench, faculties, insanity, subsistence 
+#> CLUSTER  3 :  confederaci, tax, war, land, revenu, armi, militari, militia, taxat, claus 
 #> 
-#> CLUSTER  4 :  court, executive, appointment, senate, appointments, president, impeachments, nomination, governor, vacancies
+#> CLUSTER  4 :  presid, appoint, senat, claus, expir, fill, recess, session, unfound, vacanc
 ```
 
 This is alternative code that prints out a table:
@@ -416,12 +420,12 @@ gather(hamilton_words, cluster, value, -word) %>%
 
 
 
-cluster   top_words                                                                                                     
---------  --------------------------------------------------------------------------------------------------------------
-1         court, jurisdiction, courts, supreme, inferior, trial, tribunals, cognizance, jury, appellate                 
-2         national, taxes, duties, revenue, army, military, militia, taxation, clause, elections                        
-3         judges, compensation, inability, office, diminished, salaries, bench, faculties, insanity, subsistence        
-4         court, executive, appointment, senate, appointments, president, impeachments, nomination, governor, vacancies 
+cluster   top_words                                                                      
+--------  -------------------------------------------------------------------------------
+1         offic, accus, presid, treati, appoint, senat, nomin, governor, impeach, pardon 
+2         court, appeal, jurisdict, inferior, suprem, trial, tribun, cogniz, juri, appel 
+3         confederaci, tax, war, land, revenu, armi, militari, militia, taxat, claus     
+4         presid, appoint, senat, claus, expir, fill, recess, session, unfound, vacanc   
 
 Or to print out the documents in each cluster,
 
@@ -434,12 +438,12 @@ enframe(km_out$cluster, "document", "cluster") %>%
 
 
 
- cluster  documents                                                                                                                                                             
---------  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-       1  74                                                                                                                                                                    
-       2  67                                                                                                                                                                    
-       3  1, 6, 7, 8, 9, 11, 12, 13, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 34, 35, 36, 59, 60, 61, 65, 66, 68, 69, 70, 71, 72, 73, 75, 76, 77, 78, 79, 84, 85 
-       4  32, 33, 80, 81, 82, 83                                                                                                                                                
+ cluster  documents                                                                                                                                         
+--------  --------------------------------------------------------------------------------------------------------------------------------------------------
+       1  65, 66, 68, 69, 74, 75, 76, 77, 79                                                                                                                
+       2  81, 82, 83                                                                                                                                        
+       3  1, 6, 7, 8, 9, 11, 12, 13, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 59, 60, 61, 70, 71, 72, 73, 78, 80, 84, 85 
+       4  67                                                                                                                                                
 
 
 
@@ -763,7 +767,7 @@ ggplot(mutate(author_data,
        y = "Federalist Papers", x = "Predicted values")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ## Network Data
@@ -855,13 +859,19 @@ senator[in.order[1:3], ]
 senator[out.order[1:3], ]
 ```
 
+
+```r
+environment(degree)
+#> <environment: namespace:sna>
+```
+
 **tidyverse:** Add in- and out-degree varibles to the `senator` data frame:
 
 ```r
 senator <-
   mutate(senator,
-         indegree = degree(twitter_adj, mode = "in"),
-         outdegree = degree(twitter_adj, mode = "out"))
+         indegree = igraph::degree(twitter_adj, mode = "in"),
+         outdegree = igraph::degree(twitter_adj, mode = "out"))
 ```
 
 Now find the senators with the 3 greatest in-degrees
@@ -963,7 +973,7 @@ senator %>%
   labs(main = "Closeness", x = "Incoming path", y = "Outgoing path")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" />
 
 What does the reference line indicate? What does that say about senators twitter
 networks?
@@ -983,7 +993,7 @@ senator %>%
   labs(main = "Betweenness", x = "Directed", y = "Undirected")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-62-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 We've covered three different methods of calculating the importance of a node in a network: degree, closeness, and centrality. 
@@ -1012,11 +1022,10 @@ Add and plot page-rank:
 
 ```r
 senator <- mutate(senator, page_rank = page_rank(twitter_adj)[["vector"]])
-
 ggnet(twitter_adj, mode = "target")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-64-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -1083,7 +1092,7 @@ ggplot() +
        size = "Population")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-64-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-67-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -1099,7 +1108,7 @@ ggplot() +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-65-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-68-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -1140,7 +1149,7 @@ ggplot(tibble(x = rep(1:4, each = 2),
   theme(panel.grid = element_blank())
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-66-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-69-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ### United States Presidential Elections
@@ -1185,7 +1194,7 @@ ggplot() +
   theme_void() 
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-70-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-73-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -1198,7 +1207,7 @@ ggplot() +
   theme_void()
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-71-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-74-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -1244,7 +1253,7 @@ ggplot(states) +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-73-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-76-1.png" width="70%" style="display: block; margin: auto;" />
 
 For plotting the purple states, I use  since the `color` column contains the RGB values to use in the plot:
 
@@ -1258,7 +1267,7 @@ ggplot(states) +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-74-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-77-1.png" width="70%" style="display: block; margin: auto;" />
 
 However, plotting purple states is not a good data visualization.
 Even though the colors are a proportional mixture of red and blue, human visual perception doesn't work that way.
@@ -1276,7 +1285,7 @@ ggplot(states) +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-75-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-78-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -1315,7 +1324,7 @@ ggplot() +
   theme_void()
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-77-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-80-1.png" width="70%" style="display: block; margin: auto;" />
 We don't need to worry about colors since `ggplot` handles that.
 I use [guides](http://docs.ggplot2.org/current/guides.html) to so that the colors or not transparent
 in the legend (see *R for Data Science* chapter[Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html)).
@@ -1344,7 +1353,7 @@ years <- c(1975, 1985, 1995, 2005)
 walk(years, ~ print(map_walmart(.x, walmart)))
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-78-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-78-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-78-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-78-4.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-81-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-81-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-81-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-81-4.png" width="70%" style="display: block; margin: auto;" />
 
 
 ### Animation in R
@@ -1381,4 +1390,4 @@ walmart_animated <-
 gganimate(walmart_animated)
 ```
 
-![unnamed-chunk-81](discovery_files/figure-html/unnamed-chunk-81-.gif)
+![unnamed-chunk-84](discovery_files/figure-html/unnamed-chunk-84-.gif)

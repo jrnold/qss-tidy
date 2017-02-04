@@ -3,6 +3,7 @@
 
 ## Prerequisites
 
+We will use these package in this chapter:
 
 ```r
 library("tidyverse")
@@ -12,6 +13,11 @@ library("stringr")
 library("modelr")
 library("broom")
 ```
+We will also, use the function `qss_data_url`:
+
+
+
+
 
 ## Estimation
 
@@ -167,7 +173,7 @@ ggplot(diff_means, aes(x = diff)) +
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-9-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-10-1.png" width="70%" style="display: block; margin: auto;" />
 
 **Original:**
 
@@ -341,7 +347,7 @@ ggplot(props, aes(x = p, y = n, colour = factor(MoE))) +
   theme(legend.position = "bottom")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-21-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -468,7 +474,7 @@ ggplot(poll_pred, aes(x = actual, y = Obama,
   theme(legend.position = "bottom")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-26-1.png" width="70%" style="display: block; margin: auto;" />
 Proportion of polls with confidence intervals that include the election outcome?
 
 ```r
@@ -572,7 +578,7 @@ ggplot(filter(STAR,
   labs(x = "Fourth grade reading score", y = "Density")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-30-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 **Original:**
@@ -1609,7 +1615,7 @@ ggplot() +
   labs(x = "Margin of vitory", y = "log net wealth")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-74-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-75-1.png" width="70%" style="display: block; margin: auto;" />
 
 **Original:**
 

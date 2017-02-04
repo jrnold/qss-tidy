@@ -21,7 +21,6 @@ I wrote this code while teaching course that employed both texts in order to mak
 
 ## Colonphon
 
-
 To install the R packages used in this work run the following code:
 ```{r eval=FALSE}
 # install.packages("devtools")

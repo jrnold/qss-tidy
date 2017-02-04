@@ -6,12 +6,14 @@
 library("tidyverse")
 library("forcats")
 library("stringr")
-qss_data_url <- function(chapter, file) {
-  chapter_name <- stringr::str_to_upper(chapter)
-  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
-                 chapter_name, "/", file)
-}
 ```
+We will also, use the function `qss_data_url`:
+```{r echo=FALSE}
+insert_fun("qss_data_url")
+```
+```{r qss_data_url-source,eval=FALSE}
+```
+
 
 ## Probability
 
@@ -114,10 +116,10 @@ choose(84, 6)
 
 **Original:**
 ```{r, eval = FALSE}
-FLVoters <- read.csv("FLVoters.csv") dim(FLVoters) # before removal of missing data
-## [1] 10000     6
+FLVoters <- read.csv("FLVoters.csv")
+dim(FLVoters)
 FLVoters <- na.omit(FLVoters)
-dim(FLVoters) # after removal
+dim(FLVoters)
 ```
 
 **tidyverse**
@@ -223,7 +225,9 @@ joint_p %>%
 ```{r eval=FALSE}
 FLVoters$age.group <- NA # initialize a variable
 FLVoters$age.group[FLVoters$age <= 20] <- 1
-FLVoters$age.group[FLVoters$age > 20 & FLVoters$age <= 40] <- 2 FLVoters$age.group[FLVoters$age > 40 & FLVoters$age <= 60] <- 3 FLVoters$age.group[FLVoters$age > 60] <- 4
+FLVoters$age.group[FLVoters$age > 20 & FLVoters$age <= 40] <- 2
+FLVoters$age.group[FLVoters$age > 40 & FLVoters$age <= 60] <- 3
+FLVoters$age.group[FLVoters$age > 60] <- 4
 ```
 
 **tidyverse:** Use the `r rdoc("base", "cut")`
@@ -625,7 +629,8 @@ for (i in 1:sims) {
   Obama.ev[i] <- sum(pres08$EV[draws > n/2])
 }
 hist(Obama.ev, freq = FALSE, main = "Prediction of Election Outcome",
-xlab = "Obama's Electoral College Votes") abline(v = 364, col = "red") # actual result
+xlab = "Obama's Electoral College Votes")
+abline(v = 364, col = "red") # actual result
 ```
 
 **Tidyverse code**

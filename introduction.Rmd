@@ -14,18 +14,22 @@ and the **rio** package to load multiple types of files.
 library("rio")
 ```
 We also create a helper function for loading in the data.
-```{r}
-qss_data_url <- function(chapter, file) {
-  # ensure chapter name is uppercase regardless of user-input
-  chapter_name <- stringr::str_to_upper(chapter)
-  # add chapter and file names to the base URL to get the full URL to the file
-  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
-                 chapter_name, "/", file)
-}
-# e.g. see what this returns
-# qss_data_url("intro", "Kenya.csv")
-# > "https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/Kenya.csv"
+We will also, use the function `qss_data_url`:
+```{r echo=FALSE}
+insert_fun("qss_data_url")
 ```
+```{r qss_data_url-source,eval=FALSE}
+```
+
+This function returns the URL to a data set.
+```{r}
+qss_data_url("intro", "Kenya.csv")
+```
+Since URLs can be used for paths to files, this can be used to easily load data directly from the site:
+```{r message=FALSE}
+read_csv(qss_data_url("intro", "Kenya.csv"))
+```
+
 
 
 ## Introduction to R
@@ -144,3 +148,4 @@ import(qss_data_url("INTRO", "UNpop.dta"))
 Follow [Hadley Wickham's Style Guide](http://adv-r.had.co.nz/Style.html) not the Google R style guide.
 
 In addition to `r pkg("lintr")` the R package `r pkg("formatR")` has methods to clean up your code.
+

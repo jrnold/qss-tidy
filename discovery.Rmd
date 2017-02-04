@@ -21,12 +21,16 @@ library("lubridate")
 library("stringr")
 library("forcats")
 library("modelr")
-qss_data_url <- function(chapter, file) {
-  chapter_name <- stringr::str_to_upper(chapter)
-  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
-                 chapter_name, "/", file)
-}
 ```
+```{r echo=FALSE}
+insert_fun("qss_data_url")
+```
+```{r qss_data_url-source,eval=FALSE}
+```
+```{r include=FALSE}
+knitr::opts_chunk$set(cache = FALSE)
+```
+
 
 ## Textual data
 
@@ -164,12 +168,12 @@ wordcloud(colnames(dtm.mat), dtm.mat[24, ], max.words = 20)  # essay No. 24
 ```
 
 Plot the word-clouds for essays 12 and 24:
-```{r, warning=FALSE,message=FALSE}
+```{r, warning=FALSE,message=FALSE, fig.aspect = 1}
 library("wordcloud")
 filter(dtm, document == 12) %>%
   {wordcloud(.$word, .$n, max.words = 20)}
 ```
-```{r warning=FALSE}
+```{r warning=FALSE, fig.aspect = 1}
 filter(dtm, document == 24) %>%
   {wordcloud(.$word, .$n, max.words = 20)}
 ```
@@ -643,12 +647,16 @@ senator[in.order[1:3], ]
 senator[out.order[1:3], ]
 ```
 
+```{r}
+environment(degree)
+```
+
 **tidyverse:** Add in- and out-degree varibles to the `senator` data frame:
 ```{r}
 senator <-
   mutate(senator,
-         indegree = degree(twitter_adj, mode = "in"),
-         outdegree = degree(twitter_adj, mode = "out"))
+         indegree = igraph::degree(twitter_adj, mode = "in"),
+         outdegree = igraph::degree(twitter_adj, mode = "out"))
 ```
 
 Now find the senators with the 3 greatest in-degrees
@@ -766,7 +774,6 @@ plot(twitter.adj, vertex.size = senator$pagerank * 1000,
 Add and plot page-rank:
 ```{r message=FALSE}
 senator <- mutate(senator, page_rank = page_rank(twitter_adj)[["vector"]])
-
 ggnet(twitter_adj, mode = "target")
 ```
 

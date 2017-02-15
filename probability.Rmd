@@ -65,7 +65,8 @@ Also see: http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/.
 **Original code:**
 ```{r eval=FALSE}
 k <- 23 # number of people
-sims <- 1000 # number of simulations event <- 0 # counter
+sims <- 1000 # number of simulations 
+event <- 0 # counter
 for (i in 1:sims) {
 days <- sample(1:365, k, replace = TRUE)
 days.unique <- unique(days) # unique birthdays
@@ -339,7 +340,7 @@ abline(0, 1) # 45 degree line
 
 Create a table with the products of margins of race and age.
 Using the function `r rdoc("tidyr", "crossing")` to create a tibble with
-all combinations of race and gender and the independent prob
+all combinations of race and gender and the independent prob.
 ```{r}
 race_gender_indep <-
   crossing(select(margin_race, race, prob_race = prop),
@@ -583,7 +584,7 @@ FLVoters %>%
   arrange(desc(fp))
 ```
 
-Now add get residence data
+Now add residence data
 ```{r message=FALSE}
 FLCensus <- read_csv(qss_data_url("probability", "FLCensusVTD.csv"))
 ```
@@ -807,7 +808,7 @@ hist(z.unif, freq = FALSE, nclass = 40, xlim = c(-4, 4), ylim = c(0, 0.6),
 lines(x, dnorm(x))
 ```
 
-**tidyverse:** Instead of using a for loop, write functions to 
+**tidyverse:** Instead of using a for loop, write functions.
 
 The population mean of the binomial distribution is $\mu = p n$ and the variance is $\mu = p (1 - p) n$.
 

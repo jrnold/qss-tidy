@@ -149,11 +149,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">library</span>(<span class="st">&quot;forcats&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;stringr&quot;</span>)</code></pre></div>
 <p>We will also, use the function <code>qss_data_url</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qss_data_url &lt;-
-function(chapter, file) {
-  stringr::<span class="kw">str_c</span>(<span class="st">&quot;https://raw.githubusercontent.com/kosukeimai/qss/master/&quot;</span>,
-        stringr::<span class="kw">str_to_upper</span>(chapter), <span class="st">&quot;/&quot;</span>, file)
-}</code></pre></div>
 </div>
 <div id="probability-1" class="section level2">
 <h2><span class="header-section-number">7.2</span> Probability</h2>
@@ -194,7 +189,8 @@ bday &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="d
 <h3><span class="header-section-number">7.2.1</span> Sampling without replacement</h3>
 <p><strong>Original code:</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">k &lt;-<span class="st"> </span><span class="dv">23</span> <span class="co"># number of people</span>
-sims &lt;-<span class="st"> </span><span class="dv">1000</span> <span class="co"># number of simulations event &lt;- 0 # counter</span>
+sims &lt;-<span class="st"> </span><span class="dv">1000</span> <span class="co"># number of simulations </span>
+event &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># counter</span>
 for (i in <span class="dv">1</span>:sims) {
 days &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span>:<span class="dv">365</span>, k, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
 days.unique &lt;-<span class="st"> </span><span class="kw">unique</span>(days) <span class="co"># unique birthdays</span>
@@ -217,7 +213,7 @@ answer</code></pre></div>
 k &lt;-<span class="st"> </span><span class="dv">23</span>
 <span class="kw">map_lgl</span>(<span class="kw">seq_len</span>(sims), ~<span class="st"> </span><span class="kw">sim_bdays</span>(k)) %&gt;%
 <span class="st">  </span><span class="kw">mean</span>()
-<span class="co">#&gt; [1] 0.478</span></code></pre></div>
+<span class="co">#&gt; [1] 0.486</span></code></pre></div>
 </div>
 <div id="combinations" class="section level3">
 <h3><span class="header-section-number">7.2.2</span> Combinations</h3>
@@ -467,7 +463,7 @@ joint2
 <span class="dt">xlab =</span> <span class="st">&quot;P(race) * P(female)&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;P(race and female)&quot;</span>)
 <span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>) <span class="co"># 45 degree line</span></code></pre></div>
 <p><strong>Tidyverse</strong></p>
-<p>Create a table with the products of margins of race and age. Using the function <a href="https://www.rdocumentation.org/packages/tidyr/topics/crossing">crossing</a> to create a tibble with all combinations of race and gender and the independent prob</p>
+<p>Create a table with the products of margins of race and age. Using the function <a href="https://www.rdocumentation.org/packages/tidyr/topics/crossing">crossing</a> to create a tibble with all combinations of race and gender and the independent prob.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">race_gender_indep &lt;-
 <span class="st">  </span><span class="kw">crossing</span>(<span class="kw">select</span>(margin_race, race, <span class="dt">prob_race =</span> prop),
            <span class="kw">select</span>(margin_gender, gender, <span class="dt">prob_gender =</span> prop)) %&gt;%
@@ -609,8 +605,8 @@ results %&gt;%
 <span class="co">#&gt; # A tibble: 2 × 2</span>
 <span class="co">#&gt;    strategy pct_win</span>
 <span class="co">#&gt;       &lt;chr&gt;   &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 no switch   0.338</span>
-<span class="co">#&gt; 2    switch   0.662</span></code></pre></div>
+<span class="co">#&gt; 1 no switch    0.35</span>
+<span class="co">#&gt; 2    switch    0.65</span></code></pre></div>
 <p>Can we make this even more general? What about a function that takes a data frame as its input with the choices? …</p>
 </div>
 <div id="predicting-race-using-surname-and-residence-location" class="section level3">
@@ -703,7 +699,7 @@ results %&gt;%
 <span class="co">#&gt; 3     black 0.329</span>
 <span class="co">#&gt; 4  hispanic 0.227</span>
 <span class="co">#&gt; 5     white 0.197</span></code></pre></div>
-<p>Now add get residence data</p>
+<p>Now add residence data</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLCensus &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;probability&quot;</span>, <span class="st">&quot;FLCensusVTD.csv&quot;</span>))</code></pre></div>
 <p><span class="math inline">\(P(race)\)</span> in Florida:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">race.prop &lt;-
@@ -796,7 +792,7 @@ V
 <span class="co">#&gt; # A tibble: 1 × 3</span>
 <span class="co">#&gt;    mean   var    sd</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1   352   269  16.4</span></code></pre></div>
+<span class="co">#&gt; 1   352   270  16.4</span></code></pre></div>
 <p>Theoretical probabilities</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># we cannot use n, because mutate will look for n() first.</span>
 n_draws &lt;-<span class="st"> </span><span class="dv">1000</span>
@@ -891,7 +887,7 @@ x &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dt">fro
 <span class="kw">hist</span>(z.unif, <span class="dt">freq =</span> <span class="ot">FALSE</span>, <span class="dt">nclass =</span> <span class="dv">40</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">4</span>, <span class="dv">4</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.6</span>),
      <span class="dt">xlab =</span> <span class="st">&quot;z-score&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;Uniform(0, 1)&quot;</span>)
 <span class="kw">lines</span>(x, <span class="kw">dnorm</span>(x))</code></pre></div>
-<p><strong>tidyverse:</strong> Instead of using a for loop, write functions to</p>
+<p><strong>tidyverse:</strong> Instead of using a for loop, write functions.</p>
 <p>The population mean of the binomial distribution is <span class="math inline">\(\mu = p n\)</span> and the variance is <span class="math inline">\(\mu = p (1 - p) n\)</span>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sims &lt;-<span class="st"> </span><span class="dv">1000</span>
 n_samp &lt;-<span class="st"> </span><span class="dv">1000</span>

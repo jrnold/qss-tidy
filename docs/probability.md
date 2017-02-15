@@ -12,13 +12,6 @@ library("stringr")
 We will also, use the function `qss_data_url`:
 
 
-```r
-qss_data_url <-
-function(chapter, file) {
-  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
-        stringr::str_to_upper(chapter), "/", file)
-}
-```
 
 
 ## Probability
@@ -76,7 +69,8 @@ Also see: http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/.
 
 ```r
 k <- 23 # number of people
-sims <- 1000 # number of simulations event <- 0 # counter
+sims <- 1000 # number of simulations 
+event <- 0 # counter
 for (i in 1:sims) {
 days <- sample(1:365, k, replace = TRUE)
 days.unique <- unique(days) # unique birthdays
@@ -112,7 +106,7 @@ sims <- 1000
 k <- 23
 map_lgl(seq_len(sims), ~ sim_bdays(k)) %>%
   mean()
-#> [1] 0.478
+#> [1] 0.486
 ```
 
 
@@ -486,7 +480,7 @@ abline(0, 1) # 45 degree line
 
 Create a table with the products of margins of race and age.
 Using the function [crossing](https://www.rdocumentation.org/packages/tidyr/topics/crossing) to create a tibble with
-all combinations of race and gender and the independent prob
+all combinations of race and gender and the independent prob.
 
 ```r
 race_gender_indep <-
@@ -670,8 +664,8 @@ results %>%
 #> # A tibble: 2 × 2
 #>    strategy pct_win
 #>       <chr>   <dbl>
-#> 1 no switch   0.338
-#> 2    switch   0.662
+#> 1 no switch    0.35
+#> 2    switch    0.65
 ```
 
 Can we make this even more general? What about a function that takes a data frame as its input with the choices? ...
@@ -807,7 +801,7 @@ FLVoters %>%
 #> 5     white 0.197
 ```
 
-Now add get residence data
+Now add residence data
 
 ```r
 FLCensus <- read_csv(qss_data_url("probability", "FLCensusVTD.csv"))
@@ -943,7 +937,7 @@ sim_results %>%
 #> # A tibble: 1 × 3
 #>    mean   var    sd
 #>   <dbl> <dbl> <dbl>
-#> 1   352   269  16.4
+#> 1   352   270  16.4
 ```
 
 Theoretical probabilities
@@ -1070,7 +1064,7 @@ hist(z.unif, freq = FALSE, nclass = 40, xlim = c(-4, 4), ylim = c(0, 0.6),
 lines(x, dnorm(x))
 ```
 
-**tidyverse:** Instead of using a for loop, write functions to 
+**tidyverse:** Instead of using a for loop, write functions.
 
 The population mean of the binomial distribution is $\mu = p n$ and the variance is $\mu = p (1 - p) n$.
 

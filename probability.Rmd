@@ -62,37 +62,40 @@ Also see: http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/.
 
 ### Sampling without replacement
 
-**Original code:**
-```{r eval=FALSE}
-k <- 23 # number of people
-sims <- 1000 # number of simulations 
-event <- 0 # counter
-for (i in 1:sims) {
-days <- sample(1:365, k, replace = TRUE)
-days.unique <- unique(days) # unique birthdays
-## if there are duplicates, the number of unique birthdays 
-## will be less than the number of birthdays, which is `k' 
-if (length(days.unique) < k) {
-        event <- event + 1
-    }
-}
-## fraction of trials where at least two bdays are the same
-answer <- event / sims
-answer
-```
 
-
-**tidyverse code:**
 Instead of using a for loop, we could do the simulations using a functional
 as described in `r R4DS`.
-Define the function `sim_bdays` to randomly sample `k` birthdays, and returns
-`TRUE` if there are any duplicates.
+
+Define the function `sim_bdays` which randomly samples `k` birthdays, and returns
+`TRUE` if there are any duplicate birthdays, and `FALSE` if there are none.
 ```{r}
 sim_bdays <- function(k) {
   days <- sample(1:365, k, replace = TRUE)
   length(unique(days)) < k
 }
 ```
+
+We can test the code for `k = 10` birthdays.
+```{r}
+sim_bday(10)
+```
+Since the function is randomly sampling birthdays 
+
+One helpful feature of a functional style of writing code vs. a `for` loop is that
+the function encapsulates the code and allows you to test that it works for different
+inputs before repeating it for many inputs.
+It is more difficult to debug functions that produce random outputs, but some sanity checks
+are
+
+- function always returns a logical vector of length one (`TRUE` or `FALSE`)
+- it is always `FALSE` when `k = 1` since there can never be a duplicates with one person
+- it is always `TRUE` when `k >= 365` by the [pidgeonhole principle](https://en.wikipedia.org/wiki/Pigeonhole_principle).
+
+```{r}
+sim_bday(1)
+sim_bday(365)
+```
+
 Set the parameters for 1,000 simulations, and 23 individuals.
 We use `map_lgl` since `sim_bdays` returns a logical value (`TRUE`, `FALSE`):
 ```{r}
@@ -115,15 +118,6 @@ choose(84, 6)
 ### Conditional, Marginal, and Joint Probabilities
 
 
-**Original:**
-```{r, eval = FALSE}
-FLVoters <- read.csv("FLVoters.csv")
-dim(FLVoters)
-FLVoters <- na.omit(FLVoters)
-dim(FLVoters)
-```
-
-**tidyverse**
 ```{r message=FALSE}
 FLVoters <- read_csv(qss_data_url("probability", "FLVoters.csv"))
 dim(FLVoters)
@@ -131,15 +125,6 @@ FLVoters <- FLVoters %>%
   na.omit()
 ```
 
-**original:** 
-```{r eval=FALSE}
-margin.race <- prop.table(table(FLVoters$race))
-margin.race
-margin.gender <- prop.table(table(FLVoters$gender))
-margin.gender
-```
-
-**tidyverse:** 
 Instead of using `r rdoc("base", "prop.base")`, we calculate the probabilities
 with a data frame.
 Marginal probabilities of race,
@@ -159,12 +144,6 @@ margin_gender <- FLVoters %>%
 margin_gender
 ```
 
-**Original:**
-```{r eval=FALSE}
-prop.table(table(FLVoters$race[FLVoters$gender == "f"]))
-```
-
-**tidyverse:**
 ```{r}
 FLVoters %>%
   filter(gender == "f") %>%
@@ -172,14 +151,6 @@ FLVoters %>%
   mutate(prop = n / sum(n))
 ```
 
-
-**Original:**
-```{r}
-joint.p <- prop.table(table(race = FLVoters$race, gender = FLVoters$gender))
-joint.p
-```
-
-**tidyverse:**
 ```{r}
 joint_p <-
   FLVoters %>%
@@ -198,40 +169,20 @@ joint_p %>%
   spread(gender, prop)
 ```
 
-**Original:**
-```{r eval=FALSE}
-rowSums(joint.p)
-```
 
-**tidyverse:** Sum over race:
 ```{r}
 joint_p %>%
   group_by(race) %>%
   summarise(prop = sum(prop))
 ```
 
-**Original:**
-```{r eval=FALSE}
-colSums(joint.p)
-```
-
-**tidyverse:** Sum over gender
+Sum over gender:
 ```{r}
 joint_p %>%
   group_by(gender) %>%
   summarise(prop = sum(prop))
 ```
 
-**Original:**
-```{r eval=FALSE}
-FLVoters$age.group <- NA # initialize a variable
-FLVoters$age.group[FLVoters$age <= 20] <- 1
-FLVoters$age.group[FLVoters$age > 20 & FLVoters$age <= 40] <- 2
-FLVoters$age.group[FLVoters$age > 40 & FLVoters$age <= 60] <- 3
-FLVoters$age.group[FLVoters$age > 60] <- 4
-```
-
-**tidyverse:** Use the `r rdoc("base", "cut")`
 ```{r}
 FLVoters <-
   FLVoters %>%
@@ -239,15 +190,6 @@ FLVoters <-
                          labels = c("<= 20", "20-40", "40-60", "> 60")))
 ```
 
-**Original:** 
-```{r eval=FALSE}
-joint3 <-
-    prop.table(table(race = FLVoters$race, age.group = FLVoters$age.group,
-                     gender = FLVoters$gender))
-joint3
-```
-
-**tidyverse:**
 ```{r}
 joint3 <-
   FLVoters %>%
@@ -257,15 +199,6 @@ joint3 <-
 joint3
 ```
 
-**original:** 
-```{r eval=FALSE}
-margin.age <- prop.table(table(FLVoters$age.group))
-margin.age
-joint3["black", 4, "f"] / margin.age[4]
-```
-
-
-**tidyverse:**
 Marginal probabilities by age groups
 ```{r}
 margin_age <-
@@ -287,16 +220,6 @@ left_join(joint3,
   select(race, age_group, gender, prob_age_group)
 ```
 
-**Original:**
-```{r eval=FALSE}
-joint2 <- prop.table(table(age.group = FLVoters$age.group,
-                           gender = FLVoters$gender))
-joint2
-joint2[4, "f"]
-joint3["black", 4, "f"] / joint2[4, "f"]
-```
-
-**tidyverse:**
 Two-way joint probability table for age group and gender
 ```{r}
 joint2 <- FLVoters %>%
@@ -327,17 +250,6 @@ filter(condprob_race, gender == "f", age_group == "> 60", race == "black")
 
 ### Independence
 
-**Original code**
-```{r eval=FALSE}
-plot(c(margin.race * margin.gender["f"]), # product of marginal probs.
-     c(joint.p[, "f"]), # joint probabilities
-xlim = c(0, 0.4), ylim = c(0, 0.4),
-xlab = "P(race) * P(female)", ylab = "P(race and female)")
-abline(0, 1) # 45 degree line
-```
-
-**Tidyverse**
-
 Create a table with the products of margins of race and age.
 Using the function `r rdoc("tidyr", "crossing")` to create a tibble with
 all combinations of race and gender and the independent prob.
@@ -365,24 +277,6 @@ ggplot(race_gender_indep,
 
 ```
 
-**Original code**
-```{r eval=FALSE}
-## joint independence
-plot(c(joint3[, 4, "f"]), # joint probability
-margin.race * margin.age[4] * margin.gender["f"], # product of marginals xlim = c(0, 0.3), ylim = c(0, 0.3), main = "joint independence",
-xlab = "P(race and above 60 and female)",
-ylab = "P(race) * P(above 60) * P(female)")
-abline(0, 1)
-## conditional independence given female
-plot(c(joint3[, 4, "f"]) / margin.gender["f"], # joint prob. given female
-     ## product of marginals
-     (joint.p[, "f"] / margin.gender["f"]) *
-         (joint2[4, "f"] / margin.gender["f"]),
-     xlim = c(0, 0.3), ylim = c(0, 0.3), main = "marginal independence",
-     xlab = "P(race and above 60 | female)",
-     ylab = "P(race | female) * P(above 60 | female)")
-abline(0, 1)
-```
 
 While the original code only calculates joint-independence value for values of
 age > 60, and female, this calculates the joint probabilities for all combinations
@@ -411,21 +305,27 @@ ggplot(joint_indep, aes(x = prob, y = indep_prob, colour = race)) +
 ```
 
 
-The original code only calculates the conditional independence given female;
-this calculates conditional independence for all values of `gender`:
+While code in *QSS* only calculates the conditional independence given female,
+the following code calculates conditional independence for all values of `gender`:
 ```{r fig.height = 10, fig.width = 7, fig.asp = NA}
 cond_gender <- 
   left_join(select(joint3, race, age_group, gender, joint_prob = prop),
             select(margin_gender, gender, prob_gender = prop),
             by = c("gender")) %>%
   mutate(cond_prob = joint_prob / prob_gender)
+```
 
-# P(race | gender)
+Calculate the conditional distribution $\Pr(\mathtt{race} | \mathtt{gender})$:
+```
 prob_race_gender <- 
   left_join(select(joint_p, race, gender, prob_race_gender = prop),
             select(margin_gender, gender, prob_gender = prop),
             by = "gender") %>%
   mutate(prob_race = prob_race_gender / prob_gender)
+```
+
+Calculate the conditional distribution $\Pr(\mathtt{age} | \mathtt{gender})$:
+```
 # P(age | gender)
 prob_age_gender <- 
   left_join(select(joint2, age_group, gender, prob_age_gender),
@@ -455,23 +355,12 @@ inner_join(select(indep_cond_gender, race, age_group, gender, indep_prob),
 ```
 
 
+**Monty-hall problem**
 
-**Orginal code** for the Monty-Hall problem
-```{r eval=FALSE}
-sims <- 1000
-doors <- c("goat", "goat", "car")
-result.switch <- result.noswitch <- rep(NA, sims)
-for (i in 1:sims) {
-  ## randomly choose the initial door
-  first <- sample(1:3, size = 1)
-  result.noswitch[i] <- doors[first]
-  remain <- doors[-first] # remaining two doors
-  ## Monty chooses one door with a goat
-  monty <- sample((1:2)[remain == "goat"], size = 1)
-  result.switch[i] <- remain[-monty]
-}
-mean(result.noswitch == "car")
-```
+The `for` loop approach in *QSS * is prefectly valid code, but here we provide a more
+functional approach to solving the problem. 
+We will define a function to choose a door, repeat the function multiple times while storing
+the results in a data frame, and then summarize that data frame.
 
 This code doesn't rely on any non-tidyverse code, but the following is another way to write it.
 
@@ -479,14 +368,20 @@ First, create a function for a single iteration.
 This will save the results as data frame.
 ```{r}
 choose_door <- function(.id) {
-  # put doors inside the function to ensure it doesn't get changed
+  # what's behind each door door:
+  # Why is it okay that this is fixed?
   doors <- c("goat", "goat", "car")
+  
+  # User randomly samples a door
   first <- sample(1:3, 1)
+  
+  # randomly choose the door that Monty Hall reveals
   remain <- doors[-first]
   monty <- sample((1:2)[remain == "goat"], size = 1)
+  # 
   ret <- tribble(~strategy, ~result,
-          "no switch", doors[first],
-          "switch", remain[-monty])
+                 "no switch", doors[first],
+                  "switch", remain[-monty])
   ret[[".id"]] <- .id
   ret
 }
@@ -603,38 +498,10 @@ race.prop
 
 ### Predicting Election Outcomes with Uncertainty
 
-**Original code**
-```{r eval = FALSE}
-pres08 <- read.csv("pres08.csv")
-## two-party vote share
-pres08$p <- pres08$Obama / (pres08$Obama + pres08$McCain)
-```
-
-**Tidyverse code**
 ```{r message=FALSE}
 pres08 <- read_csv(qss_data_url("probability", "pres08.csv")) %>%
   mutate(p = Obama / (Obama + McCain))
 ```
-
-**Original code**
-```{r eval = FALSE}
-n.states <- nrow(pres08) # number of states
-n <- 1000 # number of respondents
-sims <- 10000 # number of simulations
-## Obama's electoral votes
-Obama.ev <- rep(NA, sims)
-for (i in 1:sims) {
-  ## samples number of votes for Obama in each state
-  draws <- rbinom(n.states, size = n, prob = pres08$p)
-  ## sums state's electoral college votes if Obama wins the majority
-  Obama.ev[i] <- sum(pres08$EV[draws > n/2])
-}
-hist(Obama.ev, freq = FALSE, main = "Prediction of Election Outcome",
-xlab = "Obama's Electoral College Votes")
-abline(v = 364, col = "red") # actual result
-```
-
-**Tidyverse code**
 
 Write a function to simulate the elections. `df` is the data frame (`pres08`)
 with the state, EV, and `p` columns. `n_draws` is the size of the binomial distribution to draw from. `.id` is the simulation number.
@@ -665,32 +532,6 @@ ggplot(sim_results, aes(x = EV, y = ..density..)) +
   geom_vline(xintercept = ELECTION_EV, colour = "black", size = 2) +
   labs(x = "Electoral Votes", y = "density")
 ```
-
-**Original code**
-```{r eval=FALSE}
-mean(Obama.ev)
-## [1] 352.1646
-## probability of binomial random variable taking greater than n/2 votes
-sum(pres08$EV * pbinom(n/2, size = n, prob = pres08$p, lower.tail = FALSE))
-## [1] 352.1388
-## approximate variance using Monte Carlo draws
-var(Obama.ev)
-## [1] 268.7592
-## theoretical variance
-pres08$pb <- pbinom(n/2, size = n, prob = pres08$p, lower.tail = FALSE)
-V <- sum(pres08$pb*(1-pres08$pb)*pres08$EV^2)
-V
-## [1] 268.8008
-## approximate standard deviation using Monte Carlo draws
-sd(Obama.ev)
-## [1] 16.39388
-## theoretical standard deviation
-sqrt(V)
-## [1] 16.39515
-```
-
-**tidyverse code**
-
 Simulation mean, variance, and standard deviations:
 ```{r}
 sim_results %>%
@@ -714,16 +555,7 @@ pres08 %>%
 
 ### Law of Large Numbers
 
-**Original:**
-```{r eval=FALSE}
-sims <- 1000
-## 3 separate simulations for each
-x.binom <- rbinom(sims, p = 0.2, size = 10)
-## computing sample mean with varying sample size
-mean.binom <- cumsum(x.binom) / 1:sims
-```
-
-**Tidyverse**: Put the simulation number, `x` and `mean` in a tibble:
+Put the simulation number, `x` and `mean` in a tibble:
 ```{r}
 sims <- 1000
 p <- 0.2
@@ -735,14 +567,6 @@ lln_binom <- tibble(
   distrib = str_c("Binomial(", size, ", ", p, ")"))
 ```
 
-**Original:**
-```{r eval=FALSE}
-## default runif() is uniform(0, 1)
-x.unif <- runif(sims)
-mean.unif <- cumsum(x.unif) / 1:sims
-```
-
-**Tidyverse:**
 ```{r}
 lln_unif <-
  tibble(n = seq_len(sims),
@@ -751,21 +575,6 @@ lln_unif <-
         distrib = str_c("Uniform(0, 1)"))
 ```
 
-**Original:**
-```{r eval=FALSE}
-par(cex = 1.5)
-## plot for binomial
-plot(1:sims, mean.binom, type = "l", ylim = c(1, 3),
-     xlab = "Sample size", ylab = "Sample mean", main = "Binomial(10, 0.2)")
-abline(h = 2, lty = "dashed") # expectation
-
-## plot for uniform
-plot(1:sims, mean.unif, type = "l", ylim = c(0, 1),
-     xlab = "Sample size", ylab = "Sample mean", main = "Uniform(0, 1)")
-abline(h = 0.5, lty = "dashed") # expectation
-```
-
-**Tidyverse:** 
 ```{r}
 true_means <- 
   tribble(~distrib, ~mean,
@@ -783,35 +592,8 @@ ggplot() +
 
 ### Central Limit Theorem
 
-**Original:**
-```{r eval=FALSE}
-par(cex = 1.5)
-## sims = number of simulations
-n.samp <- 1000
-z.binom <- z.unif <- rep(NA, sims)
-
-for (i in 1:sims) {
-    x <- rbinom(n.samp, p = 0.2, size = 10)
-    z.binom[i] <- (mean(x) - 2) / sqrt(1.6 / n.samp)
-    x <- runif(n.samp, min = 0, max = 1)
-    z.unif[i] <- (mean(x) - 0.5) / sqrt(1 / (12 * n.samp))
-}
-
-## histograms; nclass specifies the number of bins
-hist(z.binom, freq = FALSE, nclass = 40, xlim = c(-4, 4), ylim = c(0, 0.6),
-     xlab = "z-score", main = "Binomial(0.2, 10)")
-
-x <- seq(from = -3, to = 3, by = 0.01)
-lines(x, dnorm(x)) # overlay the standard Normal PDF
-hist(z.unif, freq = FALSE, nclass = 40, xlim = c(-4, 4), ylim = c(0, 0.6),
-     xlab = "z-score", main = "Uniform(0, 1)")
-lines(x, dnorm(x))
-```
-
-**tidyverse:** Instead of using a for loop, write functions.
 
 The population mean of the binomial distribution is $\mu = p n$ and the variance is $\mu = p (1 - p) n$.
-
 ```{r}
 sims <- 1000
 n_samp <- 1000

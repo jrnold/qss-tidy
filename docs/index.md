@@ -27,7 +27,7 @@ I wrote this code while teaching course that employed both texts in order to mak
 To install the R packages used in this work run the following code, installs the **qsstidy** package which contains no code or data, but will install the needed dependencies.
 
 ```r
-# install.packages("devtools")
+install.packages("devtools")
 install_github("jrnold/qss-tidy")
 ```
 

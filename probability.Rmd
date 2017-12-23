@@ -1,6 +1,6 @@
 ---
 output: html_document
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -27,11 +27,13 @@ birthday <- function(k) {
 
 bday <- tibble(k = 1:50,
                pr = birthday(k))
-ggplot(bday, aes(x = k , y = pr)) +
+ggplot(bday, aes(x = k, y = pr)) +
   geom_hline(yintercept = 0.5, colour = "white", size = 2) +
   geom_line() +
   geom_point() +
-  scale_y_continuous("Probability that at least two\n people have the same birthday", limits = c(0, 1)) +
+  scale_y_continuous(str_c("Probability that at least two",
+                           "people have the same birthday", sep = "\n"),
+                     limits = c(0, 1)) +
   labs(x = "Number of people")
 ```
 
@@ -60,7 +62,7 @@ We can test the code for `k = 10` birthdays.
 ```{r}
 sim_bdays(10)
 ```
-Since the function is randomly sampling birthdays 
+Since the function is randomly sampling birthdays
 
 One helpful feature of a functional style of writing code vs. a `for` loop is that
 the function encapsulates the code and allows you to test that it works for different
@@ -272,7 +274,7 @@ joint_indep <-
   left_join(select(joint3, race, age_group, gender, prob = prop),
             by = c("gender", "age_group", "race")) %>%
   replace_na(list(prob = 0))
-  
+
 ggplot(joint_indep, aes(x = prob, y = indep_prob, colour = race)) +
   geom_abline(intercept = 0, slope = 1, colour = "white", size = 2) +
   geom_point() +
@@ -281,14 +283,14 @@ ggplot(joint_indep, aes(x = prob, y = indep_prob, colour = race)) +
   labs(x = "P(race and age and gender)",
        y = "P(race) * P(age) * P(gender)",
        title = "Joint Independence")
-    
+
 ```
 
 
 While code in *QSS* only calculates the conditional independence given female,
 the following code calculates conditional independence for all values of `gender`:
 ```{r fig.height = 10, fig.width = 7, fig.asp = NA}
-cond_gender <- 
+cond_gender <-
   left_join(select(joint3, race, age_group, gender, joint_prob = prop),
             select(margin_gender, gender, prob_gender = prop),
             by = c("gender")) %>%
@@ -297,7 +299,7 @@ cond_gender <-
 
 Calculate the conditional distribution $\Pr(\mathtt{race} | \mathtt{gender})$:
 ```{r}
-prob_race_gender <- 
+prob_race_gender <-
   left_join(select(joint_p, race, gender, prob_race_gender = prop),
             select(margin_gender, gender, prob_gender = prop),
             by = "gender") %>%
@@ -306,13 +308,13 @@ prob_race_gender <-
 
 Calculate the conditional distribution $\Pr(\mathtt{age} | \mathtt{gender})$:
 ```{r}
-prob_age_gender <- 
+prob_age_gender <-
   left_join(select(joint2, age_group, gender, prob_age_gender),
             select(margin_gender, gender, prob_gender = prop),
             by = "gender") %>%
   mutate(prob_age = prob_age_gender / prob_gender)
 
-# indep prob of race and age    
+# indep prob of race and age
 indep_cond_gender <-
   full_join(select(prob_race_gender, race, gender, prob_race),
             select(prob_age_gender, age_group, gender, prob_age),
@@ -337,7 +339,7 @@ inner_join(select(indep_cond_gender, race, age_group, gender, indep_prob),
 **Monty-hall problem**
 
 The `for` loop approach in *QSS * is valid code, but here we provide a more
-functional approach to solving the problem. 
+functional approach to solving the problem.
 We will define a function to choose a door, repeat the function multiple times while storing
 the results in a data frame, and then summarize that data frame.
 
@@ -350,14 +352,14 @@ choose_door <- function(.id) {
   # what's behind each door door:
   # Why is it okay that this is fixed?
   doors <- c("goat", "goat", "car")
-  
+
   # User randomly samples a door
   first <- sample(1:3, 1)
-  
+
   # randomly choose the door that Monty Hall reveals
   remain <- doors[-first]
-  monty <- sample((1:2)[remain == "goat"], size = 1)
-  # 
+  monty <- sample( (1:2)[remain == "goat"], size = 1)
+  #
   ret <- tribble(~strategy, ~result,
                  "no switch", doors[first],
                   "switch", remain[-monty])
@@ -409,7 +411,7 @@ most_likely_race <-
   select(-pct) %>%
   mutate(race_pred = recode(race_pred, asian = "api", other = "others"))
   #        # need to convert to factor first, else errors
-  #        race_pred = fct_recode(race_pred, 
+  #        race_pred = fct_recode(race_pred,
   #                               "asian" = "api", "other" = "others"))
 
 ```
@@ -458,7 +460,7 @@ FLVoters %>%
   arrange(desc(fp))
 ```
 
-Now add residence data using the `FLCensus` data included in the 
+Now add residence data using the `FLCensus` data included in the
 ```{r message=FALSE}
 data("FLCensus", package = "qss")
 ```
@@ -543,7 +545,7 @@ Put the simulation number, `x` and `mean` in a tibble:
 ```{r lln_binom}
 sims <- 1000
 p <- 0.2
-size = 10
+size <- 10
 lln_binom <- tibble(
   n = seq_len(sims),
   x = rbinom(sims, prob = p, size = size),
@@ -560,15 +562,15 @@ lln_unif <-
 ```
 
 ```{r plot_lln_sim_unif}
-true_means <- 
+true_means <-
   tribble(~distrib, ~mean,
           "Uniform(0, 1)", 0.5,
           str_c("Binomial(", size, ", ", p, ")"), size * p)
 
 ggplot() +
-  geom_hline(aes(yintercept = mean), data = true_means, 
+  geom_hline(aes(yintercept = mean), data = true_means,
              colour = "white", size = 2) +
-  geom_line(aes(x = n, y = mean), 
+  geom_line(aes(x = n, y = mean),
             data = bind_rows(lln_binom, lln_unif)) +
   facet_grid(distrib ~ ., scales = "free_y") +
   labs(x = "Sample Size", y = "Sample Mean")
@@ -592,12 +594,12 @@ binom_mean <- function(size, p) {
 variance of a binomial distribution,
 ```{r binom_var}
 binom_var <- function(size, p) {
-  size * p * (1 - p) 
+  size * p * (1 - p)
 }
 ```
 
-Write a function that takes `n_samp` samples from a binomial distribution with 
-size, `size`, and probability of success, `p`, and returns a data frame with the 
+Write a function that takes `n_samp` samples from a binomial distribution with
+size, `size`, and probability of success, `p`, and returns a data frame with the
 z-score of the sample distribution:
 ```{r sim_binom_clt}
 sim_binom_clt <- function(n_samp, size, p) {
@@ -631,7 +633,7 @@ sim_unif_clt <- function(n_samp, min = 0, max = 1) {
 }
 ```
 
-Since we will calculate this for `n_samp = 1000` and `n_samp`, we might as well write a function for it. 
+Since we will calculate this for `n_samp = 1000` and `n_samp`, we might as well write a function for it.
 ```{r clt_plot}
 clt_plot <- function(n_samp) {
   bind_rows(map_df(seq_len(sims), ~ sim_binom_clt(n_samp, size, p)),

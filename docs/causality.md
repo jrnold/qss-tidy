@@ -3,10 +3,10 @@
 
 ## Prerequisites
 
-This chapter only uses the tidyverse package
 
 ```r
 library("tidyverse")
+library("stringr")
 ```
 
 ## Racial Discrimination in the Labor Market
@@ -56,8 +56,7 @@ glimpse(resume)
 For each combination of `race` and `call` let's count the observations:
 
 ```r
-race_call_tab <-
-  resume %>%
+race_call_tab <- resume %>%
   group_by(race, call) %>%
   count()
 race_call_tab
@@ -74,8 +73,7 @@ race_call_tab
 If we want to calculate callback rates by race:
 
 ```r
-race_call_rate <-
-  race_call_tab %>%
+race_call_rate <- race_call_tab %>%
   group_by(race) %>%
   mutate(call_rate =  n / sum(n)) %>%
   filter(call == 1) %>%
@@ -89,7 +87,7 @@ race_call_rate
 #> 2 white    0.0965
 ```
 
-If we want the overall callback rate, we can calculate it from the original 
+If we want the overall callback rate, we can calculate it from the original
 data,
 
 ```r
@@ -150,9 +148,9 @@ head(resumeBf)
 #> 6    0     Aisha
 ```
 
-Now we can calculate the gender gap by group. 
+Now we can calculate the gender gap by group.
 
-One way to do this is to calculate the call back rates for both sexes of 
+One way to do this is to calculate the call back rates for both sexes of
 black sounding names,
 
 ```r
@@ -190,7 +188,7 @@ inner_join(resumeB, resumeW, by = "sex") %>%
 This seems to be a little more code, but we didn't duplicate as much as in QSS, and this would easily scale to more than two categories.
 
 A way to do this using the `spread` and gather functions from **tidy** are,
-First, calculate the 
+First, calculate the
 
 ```r
 resume_race_sex <-
@@ -259,7 +257,7 @@ The function `if_else` is like `ifelse` but corrects for some weird behavior tha
 
 
 ```r
-resume %>% 
+resume %>%
   mutate(BlackFemale = if_else(race == "black" & sex == "female", 1, 0)) %>%
   group_by(BlackFemale, race, sex) %>%
   count()
@@ -5163,7 +5161,7 @@ resume %>%
 #> 4870    Laurie female white    0 WhiteFemale
 ```
 
-Since the logic of this is so simple, we can create this variable by 
+Since the logic of this is so simple, we can create this variable by
 using `str_c` to combine the vectors of `sex` and `race`, after using `str_to_title` to capitalize them first.
 
 ```r
@@ -5227,7 +5225,7 @@ resume %>%
 ```
 
 ## Causal Affects and the Counterfactual
- 
+
 Load the data using the **readr** function 
 
 ```r
@@ -5340,11 +5338,9 @@ social %>%
 
 ## Observational Studies
 
-Load the `minwage` dataset from its URL using `readr::read_csv`:
 
 ```r
-minwage_url <- "https://raw.githubusercontent.com/kosukeimai/qss/master/CAUSALITY/minwage.csv"
-minwage <- read_csv(minwage_url)
+data("minwage", package = "qss")
 glimpse(minwage)
 #> Observations: 358
 #> Variables: 8
@@ -5376,13 +5372,13 @@ summary(minwage)
 First, calculate the proportion of restaurants by state whose hourly wages were less than the minimum wage in NJ, \$5.05, for `wageBefore` and `wageAfter`:
 
 Since the NJ minimum wage was \$5.05, we'll define a variable with that value.
-Even if you use them only once or twice, it is a good idea to put values like this in variables. 
+Even if you use them only once or twice, it is a good idea to put values like this in variables.
 It makes your code closer to self-documenting.n
 
 ```r
 NJ_MINWAGE <- 5.05
 ```
-Later, it will be easier to understand `wageAfter < NJ_MINWAGE` without any comments than it would be to understand `wageAfter < 5.05`. 
+Later, it will be easier to understand `wageAfter < NJ_MINWAGE` without any comments than it would be to understand `wageAfter < 5.05`.
 In the latter case you'd have to remember that the new NJ minimum wage was 5.05 and that's why you were using that value.
 This is an example of a [magic number](https://en.wikipedia.org/wiki/Magic_number_(programming)#Unnamed_numerical_constants): try to avoid them.
 
@@ -5405,7 +5401,6 @@ minwage %>%
 We can extract the state from the final two characters of the location variable using the **stringr** function `str_sub` (R4DS Ch 14: Strings):
 
 ```r
-library(stringr)
 minwage <-
   mutate(minwage, state = str_sub(location, -2L))
 ```
@@ -5430,11 +5425,10 @@ minwage %>%
 #> 2    PA    0.95522       0.940
 ```
 
-Create a variable for the proportion of full-time employees in NJ and PA 
+Create a variable for the proportion of full-time employees in NJ and PA
 
 ```r
-minwage <-
-  minwage %>%
+minwage <- minwage %>%
   mutate(totalAfter = fullAfter + partAfter,
         fullPropAfter = fullAfter / totalAfter)
 ```
@@ -5442,8 +5436,7 @@ minwage <-
 Now calculate the average for each state:
 
 ```r
-full_prop_by_state <-
-  minwage %>%
+full_prop_by_state <- minwage %>%
   group_by(state) %>%
   summarise(fullPropAfter = mean(fullPropAfter))
 full_prop_by_state
@@ -5454,10 +5447,10 @@ full_prop_by_state
 #> 2    PA         0.272
 ```
 
-We could compute the difference by  
+We could compute the difference by
 
 ```r
-(filter(full_prop_by_state, state == "NJ")[["fullPropAfter"]] - 
+(filter(full_prop_by_state, state == "NJ")[["fullPropAfter"]] -
   filter(full_prop_by_state, state == "PA")[["fullPropAfter"]])
 #> [1] 0.0481
 ```
@@ -5483,20 +5476,20 @@ chains_by_state <-
   minwage %>%
   group_by(state) %>%
   count(chain) %>%
-  mutate(prop = n / sum(n)) 
+  mutate(prop = n / sum(n))
 ```
 
 We can easily compare these using a simple dot-plot:
 
 ```r
 ggplot(chains_by_state, aes(x = chain, y = prop, colour = state)) +
-  geom_point() + 
+  geom_point() +
   coord_flip()
 ```
 
-<img src="causality_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="causality_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" />
 
-In the QSS text, only Burger King restaurants are compared. 
+In the QSS text, only Burger King restaurants are compared.
 However, **dplyr** makes this easy.
 All we have to do is change the `group_by` statement we used last time,
 and add chain to it:
@@ -5527,22 +5520,22 @@ In general, ordering categorical variables alphabetically is useless, so we'll o
 ```r
 ggplot(full_prop_by_state_chain,
        aes(x = forcats::fct_reorder(chain, fullPropAfter),
-           y = fullPropAfter, 
+           y = fullPropAfter,
            colour = state)) +
   geom_point() +
   coord_flip() +
   labs(x = "chains")
 ```
 
-<img src="causality_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="causality_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
 
-To calculate the differences, we need to get the data frame 
+To calculate the differences, we need to get the data frame
 
 1. The join method.
 
    1. Create New Jersey and Pennsylvania data sets with `chain` and prop full employed columns.
    2. Merge the two data sets on `chain`.
-   
+
 
 ```r
 chains_nj <- full_prop_by_state_chain %>%
@@ -5556,7 +5549,7 @@ chains_pa <- full_prop_by_state_chain %>%
   select(-state) %>%
   rename(PA = fullPropAfter)
 
-full_prop_state_chain_diff <- 
+full_prop_state_chain_diff <-
   full_join(chains_nj, chains_pa, by = "chain") %>%
   mutate(diff = NJ - PA)
 full_prop_state_chain_diff
@@ -5593,7 +5586,7 @@ full_prop_by_state_chain %>%
 To compute the estimates in the before and after design first create a variable for the difference before and after the law passed.
 
 ```r
-minwage <- 
+minwage <-
   minwage %>%
   mutate(totalBefore = fullBefore + partBefore,
          fullPropBefore = fullBefore / totalBefore)
@@ -5604,9 +5597,7 @@ The before-and-after analysis is the difference between the full-time employment
 ```r
 filter(minwage, state == "NJ") %>%
   summarise(diff = mean(fullPropAfter) - mean(fullPropBefore))
-#> # A tibble: 1 x 1
 #>     diff
-#>    <dbl>
 #> 1 0.0239
 ```
 
@@ -5650,7 +5641,7 @@ ggplot(full_prop_by_state, aes(x = period, y = fullProp, colour = state)) +
   scale_x_continuous(breaks = c(0, 1), labels = c("Before", "After"))
 ```
 
-<img src="causality_files/figure-html/unnamed-chunk-52-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="causality_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 

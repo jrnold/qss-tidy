@@ -1,5 +1,6 @@
 # Uncertainty
 
+
 ## Prerequisites
 
 We will use these package in this chapter:
@@ -11,7 +12,6 @@ library("stringr")
 library("modelr")
 library("broom")
 ```
-
 
 ## Estimation
 
@@ -29,11 +29,10 @@ SATE <- mean(smpl[["tau"]])
 SATE
 ```
 
-
 ```{r}
 sims <- 5000
-
 sim_treat <- function(smpl) {
+  n <- nrow(smpl)
   SATE <- mean(smpl[["tau"]])
   # indexes of obs receiving treatment
   idx <- sample(seq_len(n), floor(nrow(smpl) / 2), replace = FALSE)
@@ -47,15 +46,13 @@ sim_treat <- function(smpl) {
     mutate(diff = `1` - `0`,
            est_error = diff - SATE)
 }
-
 diff_means <- map_df(seq_len(sims), ~ sim_treat(smpl))
 summary(diff_means[["est_error"]])
 ```
 
 ```{r}
 PATE <- mu1 - mu0
-
-sim_pate <- function(mu0, mu1, sd0, sd1) {
+sim_pate <- function(n, mu0, mu1, sd0, sd1) {
   PATE <- mu1 - mu0
   smpl <- tibble(Y0 = rnorm(n, mean = mu0, sd = sd0),
                  Y1 = rnorm(n, mean = mu1, sd = sd1),
@@ -72,13 +69,11 @@ sim_pate <- function(mu0, mu1, sd0, sd1) {
     mutate(diff = `1` - `0`,
            est_error = diff - PATE)
 }
-
 diff_means <-
-  map_df(seq_len(sims), ~ sim_pate(mu0, mu1, sd0, sd1)) 
-
+  map_df(seq_len(sims), ~ sim_pate(n, mu0, mu1, sd0, sd1))
 summary(diff_means[["est_error"]])
-
 ```
+
 
 ### Standard Errors
 
@@ -88,10 +83,8 @@ ggplot(diff_means, aes(x = diff)) +
   geom_vline(xintercept = PATE, colour = "white", size = 2) +
   ggtitle("sampling distribution")
 ```
-
-
 ```{r}
-sim_pate_se <- function(mu0, mu1, sd0, sd1) {
+sim_pate_se <- function(n, mu0, mu1, sd0, sd1) {
   PATE <- mu1 - mu0
   smpl <- tibble(Y0 = rnorm(n, mean = mu0, sd = sd0),
                  Y1 = rnorm(n, mean = mu1, sd = sd1),
@@ -105,39 +98,29 @@ sim_pate_se <- function(mu0, mu1, sd0, sd1) {
     group_by(treat) %>%
     summarise(mean = mean(Y_obs), var = var(Y_obs),
               nobs = n()) %>%
-    summarise(diff_mean = diff(mean), 
+    summarise(diff_mean = diff(mean),
               se = sqrt(sum(var / nobs)),
               est_error = diff_mean - PATE)
 }
 diff_means <-
-  map_df(seq_len(sims), ~ sim_pate_se(mu0, mu1, sd0, sd1)) 
+  map_df(seq_len(sims), ~ sim_pate_se(n, mu0, mu1, sd0, sd1))
 ```
 ```{r}
 summary(diff_means[["se"]])
 ```
 
+
 ### Confidence Intervals
 
-**tidyverse:**
 ```{r}
-
-```
-
-
-
-**tidyverse:**
-```{r}
-
 sim_binom_ci <- function(size, prob =  p) {
-  
 }
-
 ```
 
 
 ### Margin of Error and Sample Size Calculation in Polls
 
-**tidyverse** Write a function to calculate the sample size needed for a given proportion.
+Write a function to calculate the sample size needed for a given proportion.
 ```{r}
 moe_pop_prop <- function(MoE) {
   tibble(p = seq(from = 0.01, to = 0.99, by = 0.01),
@@ -160,8 +143,6 @@ ggplot(props, aes(x = p, y = n, colour = factor(MoE))) +
        y = "sample size") +
   theme(legend.position = "bottom")
 ```
-
-
 `r rdoc("readr", "read_csv")` already recognizes the date columns, so we don't need to convert them.
 The 2008 election was on Nov 11, 2008, so we'll store that in a variable.
 ```{r message=FALSE}
@@ -190,30 +171,27 @@ poll_pred <-
   filter(DaysToElection == min(DaysToElection)) %>%
   # take mean of latest polls and convert from 0-100 to 0-1
   summarise(Obama = mean(Obama) / 100)
-
 # Add confidence itervals
 # sample size
 sample_size <- 1000
 # confidence level
 alpha <- 0.05
-poll_pred <- 
+poll_pred <-
   poll_pred %>%
   mutate(se = sqrt(Obama * (1 - Obama) / sample_size),
          ci_lwr = Obama + qnorm(alpha / 2) * se,
          ci_upr = Obama + qnorm(1 - alpha / 2) * se)
-
 # Add actual outcome
 poll_pred <-
-  left_join(poll_pred, 
-            select(pres08, state, actual = Obama), 
+  left_join(poll_pred,
+            select(pres08, state, actual = Obama),
             by = "state") %>%
   mutate(actual = actual / 100,
          covers = (ci_lwr <= actual) & (actual <= ci_upr))
 poll_pred
 ```
 
-
-**tidyverse:** In the plot, color the point ranges by whether they include the election day outcome.
+In the plot, color the point ranges by whether they include the election day outcome.
 ```{r}
 ggplot(poll_pred, aes(x = actual, y = Obama,
                       ymin = ci_lwr, ymax = ci_upr,
@@ -226,14 +204,13 @@ ggplot(poll_pred, aes(x = actual, y = Obama,
   coord_fixed() +
   theme(legend.position = "bottom")
 ```
+
 Proportion of polls with confidence intervals that include the election outcome?
 ```{r}
-poll_pred %>% 
+poll_pred %>%
   summarise(mean(covers))
 ```
 
-
-**tidyverse:**
 ```{r}
 poll_pred <-
   poll_pred %>%
@@ -245,12 +222,9 @@ poll_pred <-
          ci_lwr_bc = Obama_bc + qnorm(alpha / 2) * se_bc,
          ci_upr_bc = Obama_bc + qnorm(1 - alpha / 2) * se_bc,
          covers_bc = (ci_lwr_bc <= actual) & (actual <= ci_upr_bc))
-
 poll_pred %>%
   summarise(mean(covers_bc))
-  
 ```
-
 
 
 ### Analysis of Randomized Controlled Trials
@@ -259,7 +233,6 @@ Load the `STAR` data from the **qss** package,
 ```{r message=FALSE}
 data("STAR", package = "qss")
 ```
-
 Add meaningful labels to the `classtype` variable:
 ```{r}
 STAR <- STAR %>%
@@ -267,15 +240,13 @@ STAR <- STAR %>%
                             labels = c("small class", "regular class",
                                        "regular class with aid")))
 ```
-
 Summarize scores by classroom type:
 ```{r}
-classtype_means <- 
+classtype_means <-
   STAR %>%
   group_by(classtype) %>%
   summarise(g4reading = mean(g4reading, na.rm = TRUE))
 ```
-
 Plot the distribution of scores by classroom type:
 ```{r}
 classtypes_used <- c("small class", "regular class")
@@ -285,16 +256,14 @@ ggplot(filter(STAR,
        aes(x = g4reading, y = ..density..)) +
   geom_histogram(binwidth = 20) +
   geom_vline(data = filter(classtype_means, classtype %in% classtypes_used),
-             mapping = aes(xintercept = g4reading), 
+             mapping = aes(xintercept = g4reading),
              colour = "white", size = 2) +
-  facet_grid(classtype ~ .) + 
+  facet_grid(classtype ~ .) +
   labs(x = "Fourth grade reading score", y = "Density")
 ```
-
-
 ```{r}
 alpha <- 0.05
-star_estimates <- 
+star_estimates <-
   STAR %>%
   filter(!is.na(g4reading)) %>%
   group_by(classtype) %>%
@@ -303,10 +272,8 @@ star_estimates <-
             se = sd(g4reading) / sqrt(n)) %>%
   mutate(lwr = est + qnorm(alpha / 2) * se,
          upr = est + qnorm(1 - alpha / 2) * se)
-
 star_estimates
 ```
-
 ```{r}
 star_estimates %>%
   filter(classtype %in% c("small class", "regular class")) %>%
@@ -319,13 +286,12 @@ star_estimates %>%
   mutate(ci_lwr = est + qnorm(alpha / 2) * se,
          ci_up = est + qnorm(1 - alpha / 2) * se)
 ```
-
 Use we could use `r rdoc("tidyr", "spread")` and `r rdoc("tidyr", "gather")`:
 ```{r}
 star_ate <-
   star_estimates %>%
   filter(classtype %in% c("small class", "regular class")) %>%
-  mutate(classtype = fct_recode(factor(classtype), 
+  mutate(classtype = fct_recode(factor(classtype),
                                 "small" = "small class",
                                 "regular" = "regular class")) %>%
   select(classtype, est, se) %>%
@@ -335,13 +301,12 @@ star_ate <-
   mutate(ate_est = est_small - est_regular,
          ate_se = sqrt(se_small ^ 2 + se_regular ^ 2),
          ci_lwr = ate_est + qnorm(alpha / 2) * ate_se,
-         ci_upr = ate_est + qnorm(1 - alpha / 2) * ate_se) 
-star_ate 
+         ci_upr = ate_est + qnorm(1 - alpha / 2) * ate_se)
+star_ate
 ```
 
 
 ### Analysis Based on Student's t-Distribution
-
 
 Use `r rdoc("dplyr", "filter")` to subset.
 ```{r}
@@ -357,8 +322,8 @@ t.test(g4reading ~ classtype,
 
 ## Hypothesis Testing
 
-### Tea-Testing Experiment
 
+### Tea-Testing Experiment
 
 ```{r}
 # Number of cups of tea
@@ -370,13 +335,9 @@ true <-  tibble(correct = k * 2,
   mutate(prob = n / sum(n))
 true
 ```
-
-
 ```{r}
 sims <- 1000
-
 guess <- tibble(guess = c("M", "T", "T", "M", "M", "T", "T", "M"))
-
 randomize_tea <- function(df) {
   # randomize the order of teas
   assignment <- sample_frac(df, 1) %>%
@@ -384,12 +345,10 @@ randomize_tea <- function(df) {
   bind_cols(df, assignment) %>%
     summarise(correct = sum(guess == actual))
 }
-
 approx <-
   map_df(seq_len(sims), ~ randomize_tea(guess)) %>%
   count(correct) %>%
   mutate(prob = n / sum(n))
-
 left_join(select(approx, correct, prob_sim = prob),
           select(true, correct, prob_exact = prob),
           by = "correct") %>%
@@ -400,7 +359,6 @@ left_join(select(approx, correct, prob_sim = prob),
 ### The General Framework
 
 The test functions like `r rdoc("stat", "fisher.test")` do not work particularly well with data frames, and expect vectors or matrices as input, so tidyverse functions are less directly applicable
-
 ```{r}
 # all guesses correct
 x <- tribble(~Guess, ~Truth, ~Number,
@@ -409,20 +367,18 @@ x <- tribble(~Guess, ~Truth, ~Number,
              "Tea", "Milk", 0L,
              "Tea", "Tea", 4L)
 x
-
 # 6 correct guesses
 y <- x %>%
   mutate(Number = c(3L, 1L, 1L, 3L))
 y
-
 # Turn into a 2x2 table for fisher.test
 select(spread(x, Truth, Number), -Guess)
-
 # Use spread to make it a 2 x 2 table
 fisher.test(select(spread(x, Truth, Number), -Guess),
             alternative = "greater")
 fisher.test(select(spread(y, Truth, Number), -Guess))
 ```
+
 
 ### One-Sample Tests
 
@@ -430,45 +386,35 @@ fisher.test(select(spread(y, Truth, Number), -Guess))
 n <- 1018
 x.bar <- 550 / n
 se <- sqrt(0.5 * 0.5 / n) # standard deviation of sampling distribution
-
-## upper red area in the figure
-upper <- pnorm(x.bar, mean = 0.5, sd = se, lower.tail = FALSE)  
-
-## lower red area in the figure; identical to the upper area
-lower <- pnorm(0.5 - (x.bar - 0.5), mean = 0.5, sd = se)  
-
-## two-side p-value
+# upper red area in the figure
+upper <- pnorm(x.bar, mean = 0.5, sd = se, lower.tail = FALSE)
+# lower red area in the figure; identical to the upper area
+lower <- pnorm(0.5 - (x.bar - 0.5), mean = 0.5, sd = se)
+# two side p value
 upper + lower
-
 2 * upper
-
-## one-sided p-value
+# one sided p value
 upper
-
 z.score <- (x.bar - 0.5) / se
 z.score
-
 pnorm(z.score, lower.tail = FALSE) # one-sided p-value
 2 * pnorm(z.score, lower.tail = FALSE) # two-sided p-value
-
-## 99% confidence interval contains 0.5
+# 99% confidence interval contains 0.5
 c(x.bar - qnorm(0.995) * se, x.bar + qnorm(0.995) * se)
-
-## 95% confidence interval does not contain 0.5
+# 95% confidence interval does not contain 0.5
 c(x.bar - qnorm(0.975) * se, x.bar + qnorm(0.975) * se)
-
-## no continuity correction to get the same p-value as above
+# no continuity correction to get the same p-value as above
 prop.test(550, n = n, p = 0.5, correct = FALSE)
-
-## with continuity correction
+# with continuity correction
 prop.test(550, n = n, p = 0.5)
 prop.test(550, n = n, p = 0.5, conf.level = 0.99)
 ```
 
 ```{r}
-## two-sided one-sample t-test
+# two-sided one-sample t-test
 t.test(STAR$g4reading, mu = 710)
 ```
+
 
 ### Two-sample tests
 
@@ -477,16 +423,15 @@ The ATE estimates are stored in a data frame, `star_ate`. Note that the `r pkg_l
 star_ate %>%
   transmute(p_value_1sided = pnorm(-abs(ate_est),
                                    mean = 0, sd = ate_se),
-            p_value_2sided = 2 * pnorm(-abs(ate_est), mean = 0, 
+            p_value_2sided = 2 * pnorm(-abs(ate_est), mean = 0,
                                    sd = ate_se))
-
 ```
 
 ```{r}
 t.test(g4reading ~ classtype,
   data = filter(STAR, classtype %in% c("small class", "regular class")))
 ```
-or 
+or
 ```{r}
 t.test(filter(STAR, classtype == "small class")$g4reading,
        filter(STAR, classtype == "regular class")$g4reading)
@@ -494,93 +439,79 @@ t.test(filter(STAR, classtype == "small class")$g4reading,
 
 ```{r message=FALSE}
 data("resume", package = "qss")
-
 x <- resume %>%
   count(race, call) %>%
   spread(call, n) %>%
   ungroup()
 x
-
 prop.test(as.matrix(select(x, -race)), alternative = "greater")
 ```
 
-**tidyverse:** 
 ```{r}
-## sample size
+# sample size
 n0 <- sum(resume$race == "black")
 n1 <- sum(resume$race == "white")
-
-## sample proportions
+# sample proportions
 p <- mean(resume$call) # overall
 p0 <- mean(filter(resume, race == "black")$call)
 p1 <- mean(filter(resume, race == "white")$call)
-
-## point estimate
+# point estimate
 est <- p1 - p0
 est
-
-## standard error
+# standard error
 se <- sqrt(p * (1 - p) * (1 / n0 + 1 / n1))
 se
-
-## z-statistic
+# z statistic
 zstat <- est / se
 zstat
-
-## one-sided p-value
+# one sided p value
 pnorm(-abs(zstat))
 ```
 The only thing that changed is using `r rdoc("dplyr", "filter")` for selecting the groups.
 
+
 ### Power Analysis
 
 ```{r eval=FALSE}
-## set the parameters
+# set the parameters
 n <- 250
 p.star <- 0.48 # data generating process
 p <- 0.5 # null value
 alpha <- 0.05
-
-## critical value
-cr.value <- qnorm(1 - alpha / 2) 
-
-## standard errors under the hypothetical data generating process
+# critical value
+cr.value <- qnorm(1 - alpha / 2)
+# standard errors under the hypothetical data generating process
 se.star <- sqrt(p.star * (1 - p.star) / n)
-
-## standard error under the null
-se <- sqrt(p * (1 - p) / n)  
-
-## power
-pnorm(p - cr.value * se, mean = p.star, sd = se.star) + 
+# standard error under the null
+se <- sqrt(p * (1 - p) / n)
+# power
+pnorm(p - cr.value * se, mean = p.star, sd = se.star) +
     pnorm(p + cr.value * se, mean = p.star, sd = se.star, lower.tail = FALSE)
-
-## parameters
+# parameters
 n1 <- 500
 n0 <- 500
 p1.star <- 0.05
 p0.star <- 0.1
-
-## overall call back rate as a weighted average
-p <- (n1 * p1.star + n0 * p0.star) / (n1 + n0) 
-## standard error under the null
-se <- sqrt(p * (1 - p) * (1 / n1 + 1 / n0)) 
-## standard error under the hypothetical data generating process
+# overall call back rate as a weighted average
+p <- (n1 * p1.star + n0 * p0.star) / (n1 + n0)
+# standard error under the null
+se <- sqrt(p * (1 - p) * (1 / n1 + 1 / n0))
+# standard error under the hypothetical data generating process
 se.star <- sqrt(p1.star * (1 - p1.star) / n1 + p0.star * (1 - p0.star) / n0)
-
-pnorm(-cr.value * se, mean = p1.star - p0.star, sd = se.star) + 
-    pnorm(cr.value * se, mean = p1.star - p0.star, sd = se.star, 
+pnorm(-cr.value * se, mean = p1.star - p0.star, sd = se.star) +
+    pnorm(cr.value * se, mean = p1.star - p0.star, sd = se.star,
           lower.tail = FALSE)
-
 power.prop.test(n = 500, p1 = 0.05, p2 = 0.1, sig.level = 0.05)
 power.prop.test(p1 = 0.05, p2 = 0.1, sig.level = 0.05, power = 0.9)
 power.t.test(n = 100, delta = 0.25, sd = 1, type = "one.sample")
 power.t.test(power = 0.9, delta = 0.25, sd = 1, type = "one.sample")
-power.t.test(delta = 0.25, sd = 1, type = "two.sample", 
+power.t.test(delta = 0.25, sd = 1, type = "two.sample",
              alternative = "one.sided", power = 0.9)
 ```
 
 
 ## Linear Regression Model with Uncertainty
+
 
 ### Linear Regression as a Generative Model
 
@@ -588,15 +519,12 @@ Load the minimum wage date included with the **qss** package:
 ```{r message=FALSE}
 data("minwage", package = "qss")
 ```
-  
 ```{r}
 minwage <- mutate(minwage,
                   fullPropBefore = fullBefore / (fullBefore + partBefore),
                   fullPropAfter = fullAfter / (fullAfter + partAfter),
                   NJ = as.integer(location == "PA"))
 ```
-
-
 ```{r}
 fit_minwage <- lm(fullPropAfter ~ -1 + NJ + fullPropBefore +
                     wageBefore + chain, data = minwage)
@@ -604,7 +532,6 @@ fit_minwage
 fit_minwage1 <- lm(fullPropAfter ~ NJ + fullPropBefore +
                      wageBefore + chain, data = minwage)
 fit_minwage1
-
 gather_predictions(slice(minwage, 1), fit_minwage, fit_minwage1) %>%
   select(model, pred)
 ```
@@ -626,6 +553,7 @@ summary(fit_minwage)
 tidy(fit_minwage, conf.int = TRUE)
 ```
 
+
 ### Inference about predictions
 
 ```{r message=FALSE}
@@ -637,19 +565,16 @@ labour_fit2 <- lm(ln.net ~ margin, data = filter(MPs_labour, margin > 0))
 tory_fit1 <- lm(ln.net ~ margin, data = filter(MPs_tory, margin < 0))
 tory_fit2 <- lm(ln.net ~ margin, data = filter(MPs_tory, margin > 0))
 ```
-
-
-Predictions at the threshold. 
+Predictions at the threshold.
 The `r pkg_link("broom")` function `r rdoc("broom", "augment")` will return prediction fitted values and standard errors for each value, but not the confidence intervals themselves (we'd have to multiply the correct t-distribution with degrees of freedom.)
 So instead, we'll directly use the `r rdoc("stats", "predict.lm", "predict")` function:
 ```{r}
 tory_y0 <-
-  predict(tory_fit1, interval = "confidence", 
+  predict(tory_fit1, interval = "confidence",
           newdata = tibble(margin = 0)) %>% as_tibble()
 tory_y0
-
 tory_y1 <-
-  predict(tory_fit2, interval = "confidence", 
+  predict(tory_fit2, interval = "confidence",
           newdata = tibble(margin = 0)) %>% as_tibble()
 tory_y1
 ```
@@ -660,7 +585,6 @@ tory_y0 <-
   mutate(lwr = .fitted + qnorm(0.025) * .se.fit,
          upr = .fitted + qnorm(0.975) * .se.fit)
 tory_y0
-
 tory_y1 <-
   augment(tory_fit2, newdata = tibble(margin = 0)) %>%
   mutate(lwr = .fitted + qnorm(0.025) * .se.fit,
@@ -671,11 +595,8 @@ tory_y1
 ```{r}
 y1_range <- data_grid(filter(MPs_tory, margin <= 0), margin)
 tory_y0 <- augment(tory_fit1, newdata = y1_range)
-
-
 y2_range <- data_grid(filter(MPs_tory, margin >= 0), margin)
 tory_y1 <- augment(tory_fit2, newdata = y2_range)
-
 ```
 
 ```{r}
@@ -686,17 +607,16 @@ ggplot() +
   geom_ribbon(aes(x = margin,
                   ymin = .fitted + qnorm(0.025) * .se.fit,
                   ymax = .fitted + qnorm(0.975) * .se.fit),
-              data = tory_y0, alpha = 0.3) +  
+              data = tory_y0, alpha = 0.3) +
   geom_line(aes(x = margin, y = .fitted), data = tory_y0) +
   # plot winners
   geom_ribbon(aes(x = margin,
                   ymin = .fitted + qnorm(0.025) * .se.fit,
                   ymax = .fitted + qnorm(0.975) * .se.fit),
-              data = tory_y1, alpha = 0.3) +  
+              data = tory_y1, alpha = 0.3) +
   geom_line(aes(x = margin, y = .fitted), data = tory_y1) +
   labs(x = "Margin of vitory", y = "log net wealth")
 ```
-
 ```{r}
 tory_y1 <- augment(tory_fit1, newdata = tibble(margin = 0))
 tory_y1
@@ -705,26 +625,22 @@ tory_y0
 summary(tory_fit1)
 summary(tory_fit2)
 ```
-
 Since we aren't doing anything more with these values, there isn't much benefit in keeping them in data frames.
 I just adjust the names to be consistent with earlier code.
 ```{r}
 # standard error
 se_diff <- sqrt(tory_y0$.se.fit ^ 2 + tory_y1$.se.fit ^ 2)
 se_diff
-
-## point estimate
+# point estimate
 diff_est <- tory_y1$.fitted - tory_y0$.fitted
 diff_est
-
-## confidence interval
+# confidence interval
 CI <- c(diff_est - se_diff * qnorm(0.975),
         diff_est + se_diff * qnorm(0.975))
 CI
-
-## hypothesis test
+# hypothesis test
 z.score <- diff_est / se_diff
-p.value <- 2 * pnorm(abs(z.score), lower.tail = FALSE) # two-sided p-value
+# two sided p value
+p.value <- 2 * pnorm(abs(z.score), lower.tail = FALSE)
 p.value
 ```
-

@@ -53,7 +53,7 @@ read_csv(qss_data_url("intro", "Kenya.csv"))
 Don't use `setwd()` within scripts.
 It is much better to organize your code in projects.
 
-When reading from csv files use `readr::read_csv` instead of the base R function `read.csv`. 
+When reading from csv files use `readr::read_csv` instead of the base R function `read.csv`.
 It is slightly faster, and returns a `tibble` instead of a data frame.
 See [R for Data Science](http://r4ds.had.co.nz/) [Ch 11: Data Import](http://r4ds.had.co.nz/tibbles.html#introduction-4)
 for more discussion.
@@ -83,7 +83,7 @@ UNpop
 ```
 
 
-Datasets can also be distributed with R packages. 
+Datasets can also be distributed with R packages.
 These are often smaller datasets used in examples and package tutorials.
 
 The function `data` with called without any arguments will list all the datasets distributed with installed packages.
@@ -108,7 +108,7 @@ UNpop[c(1, 2, 3), ]
 #> 2 1960   3026003
 #> 3 1970   3691173
 ```
-is equivalent to 
+is equivalent to
 
 ```r
 UNpop %>% slice(1:3)
@@ -125,7 +125,7 @@ UNpop %>% slice(1:3)
 UNpop[, "world.pop"]
 #> [1] 2525779 3026003 3691173 4449049 5320817 6127700 6916183
 ```
-is almost equivalent to 
+is almost equivalent to
 
 ```r
 select(UNpop, world.pop)
@@ -138,9 +138,9 @@ select(UNpop, world.pop)
 #> 6   6127700
 #> 7   6916183
 ```
-However, note that `select()` **always** returns a tibble, and never a vector, 
+However, note that `select()` **always** returns a tibble, and never a vector,
 even if only one column is selected.
-Also, note that since `world.pop` is a tibble, using `[` also returns tibbles 
+Also, note that since `world.pop` is a tibble, using `[` also returns tibbles
 rather than a vector if it is only one column.
 
 
@@ -148,7 +148,7 @@ rather than a vector if it is only one column.
 UNpop[1:3, "year"]
 #> [1] 1950 1960 1970
 ```
-is equivalent to 
+is equivalent to
 
 ```r
 UNpop %>%
@@ -173,7 +173,7 @@ can be rewritten as
 ```r
 UNpop %>%
   slice(seq(1, n(), by = 2)) %>%
-  select(world.pop) 
+  select(world.pop)
 #> # A tibble: 4 x 1
 #>   world.pop
 #>       <int>
@@ -193,14 +193,14 @@ in the data frame (or the number of rows in the group if used with `group_by`).
 **Do not save** the work space using `save.image`.
 This is an extremely bad idea for reproducibility.
 
-See the [R for Data Science](http://r4ds.had.co.nz/) chapter [Workflow Projects](http://r4ds.had.co.nz/workflow-projects.html). 
-You should uncheck the options in RStudio to avoid saving and restoring from `.RData` files. 
-This will help ensure that your R code runs the way you think it does, instead of depending on some long forgotten code that is only saved in the workspace image. 
+See the [R for Data Science](http://r4ds.had.co.nz/) chapter [Workflow Projects](http://r4ds.had.co.nz/workflow-projects.html).
+You should uncheck the options in RStudio to avoid saving and restoring from `.RData` files.
+This will help ensure that your R code runs the way you think it does, instead of depending on some long forgotten code that is only saved in the workspace image.
 
 Everything important should be in a script. Anything saved or loaded from file
 should be done explicitly.
 
-As with reading CSV files, use the **readr** package functions. 
+As with reading CSV files, use the **readr** package functions.
 In this case, `write_csv` writes a csv file
 
 ```r
@@ -210,7 +210,7 @@ write_csv(UNpop, "UNpop.csv")
 
 ### Packages
 
-To read and write Stata and SPSS 
+To read and write Stata and SPSS
 
 
 ```r
@@ -267,13 +267,22 @@ import(qss_data_url("INTRO", "UNpop.dta"))
 #> 7 2010      6916
 ```
 
-R also includes the **foreign** package, which contains functions for reading and writing  **haven**. 
-One reason to do so is that it is better maintained. 
+R also includes the **foreign** package, which contains functions for reading and writing  **haven**.
+One reason to do so is that it is better maintained.
 For  R function `read.dta` does not read files created by the most recent versions of Stata (13+).
 
 
 ### Style Guide
 
+Following a consistent coding style is important for your code to be readable by yourself and other.
+The preferred style is the [tidyverse style guide](http://style.tidyverse.org/), which
+differs slightly from [Google's R style guide](http://style.tidyverse.org/).
 
-In addition to [lintr](https://cran.r-project.org/package=lintr) the R package [formatR](https://cran.r-project.org/package=formatR) has methods to clean up your code.
+- The [lintr](https://cran.r-project.org/package=lintr) package will check files for style errors
+- The [styler](https://cran.r-project.org/package=styler) package provides functions for automatically formatting
+    R code according to style guides.
+- In RStudio, go to the `Tools > Global Options > Code > Diagnostics` pane and check the
+    box to activate style warnings. On this pane, there are other options that can be 
+    set in order to provide more or less warnings while writing R code in Rstudio.
+
 

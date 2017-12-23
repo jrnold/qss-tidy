@@ -1,7 +1,7 @@
 
 ---
 output: html_document
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 # Prediction
@@ -33,7 +33,7 @@ for loops and function: see  [this](https://support.rstudio.com/hc/en-us/article
 
 See the *R for Data Science* section [Conditional Execution](http://r4ds.had.co.nz/functions.html#conditional-execution) for a more complete discussion of conditional execution.
 
-If you are using conditional statements to assign values for data frame, 
+If you are using conditional statements to assign values for data frame,
 see the **dplyr** functions [if_else](https://www.rdocumentation.org/packages/dplyr/topics/if_else), [recode](https://www.rdocumentation.org/packages/dplyr/topics/recode), and [case_when](https://www.rdocumentation.org/packages/dplyr/topics/case_when)
 
 
@@ -70,7 +70,7 @@ Compute Obama's margin in polls and final election
 ```r
 polls08 <-
   polls08 %>% mutate(margin = Obama - McCain)
-pres08 <- 
+pres08 <-
   pres08 %>% mutate(margin = Obama - McCain)
 ```
 
@@ -114,7 +114,7 @@ We can accomplish the same task by merging the election results data to the poll
 
 
 ```r
-polls_w_results <- 
+polls_w_results <-
   left_join(polls08,
             select(pres08, state, elec_margin = margin),
             by = "state") %>%
@@ -137,7 +137,7 @@ glimpse(polls_w_results)
 To get the last poll in each state, arrange and filter on `middate`
 
 ```r
-last_polls <- 
+last_polls <-
   polls_w_results %>%
   arrange(state, desc(middate)) %>%
   group_by(state) %>%
@@ -166,7 +166,7 @@ See the [R for Data Science](http://r4ds.had.co.nz/) chapter [Functions](http://
 
 ```r
 rmse <- function(actual, pred) {
-  sqrt(mean((actual - pred) ^ 2))
+  sqrt(mean( (actual - pred) ^ 2))
 }
 ```
 Now we can use `rmse()` to calculate the RMSE for all the final polls:
@@ -212,15 +212,15 @@ ggplot(last_polls, aes(x = error)) +
 **Challenge:** What other ways could you visualize the results? How would you show all states? What about plotting the absolute or squared errors instead of the errors?
 
 **Challenge:** What happens to prediction error if you average polls?
-Consider averaging back over time? 
-What happens if you take the averages of the state poll average and average of **all** polls - does that improve prediction? 
+Consider averaging back over time?
+What happens if you take the averages of the state poll average and average of **all** polls - does that improve prediction?
 
 To create a scatter plots using the state abbreviations instead of points use
 [geom_text](http://docs.ggplot2.org/current/geom_text.html) instead of [geom_point](http://docs.ggplot2.org/current/geom_point.html).
 
 ```r
 ggplot(last_polls, aes(x = margin, y = elec_margin, label = state)) +
-  geom_abline(color = "white", size = 2) +  
+  geom_abline(color = "white", size = 2) +
   geom_hline(yintercept = 0, color = "gray", size = 2) +
   geom_vline(xintercept = 0, color = "gray", size = 2) +
   geom_text() +
@@ -232,14 +232,14 @@ ggplot(last_polls, aes(x = margin, y = elec_margin, label = state)) +
 
 We can create a confusion matrix as follows.
 Create a new column `classification` which shows whether how the poll's classification was related to the actual election outcome ("true positive", "false positive", "false negative", "false positive").
-If there were two outcomes, then we would use the  function. 
+If there were two outcomes, then we would use the  function.
 But with more than two outcomes, it is easier to use the [dplyr](https://cran.r-project.org/package=dplyr) function .
 
 ```r
 last_polls <-
   last_polls %>%
   ungroup() %>%
-  mutate(classification = 
+  mutate(classification =
            case_when(
              (.$margin > 0 & .$elec_margin > 0) ~ "true positive",
              (.$margin > 0 & .$elec_margin < 0) ~ "false positive",
@@ -281,14 +281,14 @@ last_polls %>%
 #> 3    MO      1          -1 false positive
 ```
 
-What was the difference in the poll prediction of electoral votes and actual electoral votes. 
+What was the difference in the poll prediction of electoral votes and actual electoral votes.
 We hadn't included the variable `EV` when we first merged, but that's no problem, we'll just merge again in order to grab that variable:
 
 ```r
 last_polls %>%
   left_join(select(pres08, state, EV), by = "state") %>%
-  summarise(EV_pred = sum((margin > 0) * EV),
-            EV_actual = sum((elec_margin > 0) * EV))
+  summarise(EV_pred = sum( (margin > 0) * EV),
+            EV_actual = sum( (elec_margin > 0) * EV))
 #> # A tibble: 1 x 2
 #>   EV_pred EV_actual
 #>     <int>     <int>
@@ -305,7 +305,7 @@ data("pollsUS08", package = "qss")
 pollsUS08 <- mutate(pollsUS08, DaysToElection = ELECTION_DAY - middate)
 ```
 
-We'll produce the seven-day averages slightly differently than the method used in the text. 
+We'll produce the seven-day averages slightly differently than the method used in the text.
 For all dates in the data, we'll calculate the moving average.
 
 ```r
@@ -337,7 +337,7 @@ It is easier to plot this if the data are tidy, with `Obama` and `McCain` as cat
 
 ```r
 pop_vote_avg_tidy <-
-  pop_vote_avg %>% 
+  pop_vote_avg %>%
   gather(candidate, share, -date, na.rm = TRUE)
 pop_vote_avg_tidy
 #>           date candidate share
@@ -944,10 +944,10 @@ pop_vote_avg_tidy
 
 ```r
 ggplot(pop_vote_avg_tidy, aes(x = date, y = share,
-                              colour = forcats::fct_reorder2(candidate, date, share))) +
+                              colour = fct_reorder2(candidate, date, share))) +
   geom_point() +
   geom_line() +
-  scale_colour_manual("Candidate", 
+  scale_colour_manual("Candidate",
                       values = c(Obama = "blue", McCain = "red"))
 ```
 
@@ -956,12 +956,12 @@ ggplot(pop_vote_avg_tidy, aes(x = date, y = share,
 
 **Challenge** read [R for Data Science](http://r4ds.had.co.nz/) chapter [Iteration](http://r4ds.had.co.nz/iteration.html#the-map-functions) and use the function [map_df](https://www.rdocumentation.org/packages/purrr/topics/map_df) instead of a for loop.
 
-The 7-day average is similar to the simple method used by [Real Clear Politics](http://www.realclearpolitics.com/epolls/2016/president/us/general_election_trump_vs_clinton-5491.html). 
+The 7-day average is similar to the simple method used by [Real Clear Politics](http://www.realclearpolitics.com/epolls/2016/president/us/general_election_trump_vs_clinton-5491.html).
 The RCP average is simply the average of all polls in their data for the last seven days.
 Sites like [538](https://fivethirtyeight.com) and the [Huffpost Pollster](http://elections.huffingtonpost.com/pollster), on the other hand, also use what amounts to averaging polls, but using more sophisticated statistical methods to assign different weights to different polls.
 
 **Challenge** Why do we need to use different polls for the popular vote data? Why not simply average all the state polls?
-What would you have to do? 
+What would you have to do?
 Would the overall popular vote be useful in predicting state-level polling, or vice-versa? How would you use them?
 
 
@@ -977,7 +977,7 @@ data("face", package = "qss")
 Add Democrat and Republican vote shares, and the difference in shares:
 
 ```r
-face <- mutate(face, 
+face <- mutate(face,
                 d.share = d.votes / (d.votes + r.votes),
                 r.share = r.votes / (d.votes + r.votes),
                 diff.share = d.share - r.share)
@@ -1070,9 +1070,9 @@ ggplot() +
 
 <img src="prediction_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" />
 
-A more general way to plot the predictions of the model against the data 
+A more general way to plot the predictions of the model against the data
 is to use the methods described in [Ch 23.3.3](http://r4ds.had.co.nz/model-basics.html#visualising-models) of R4DS.
-Create an evenly spaced grid of values of `d.comp`, and add predictions 
+Create an evenly spaced grid of values of `d.comp`, and add predictions
 of the model to it.
 
 ```r
@@ -1112,7 +1112,7 @@ ggplot(data = face, mapping = aes(x = d.comp, y = diff.share)) +
 ```
 
 <img src="prediction_files/figure-html/unnamed-chunk-34-1.png" width="70%" style="display: block; margin: auto;" />
-The argument `method = "lm"` specifies that the function `lm` is to be used to generate fitted values. 
+The argument `method = "lm"` specifies that the function `lm` is to be used to generate fitted values.
 It is equivalent to running the regression `lm(y ~ x)` and plotting the regression line, where `y` and `x` are the aesthetics specified by the mappings.
 The argument `se = FALSE` tells the function not to plot the confidence interval of the regression (discussed later).
 
@@ -1267,7 +1267,7 @@ ggplot(pres, aes(x = Obama2008.z, y = Obama2012.z, label = state)) +
   geom_text() +
   coord_fixed() +
   scale_x_continuous("Obama's standardized vote share in 2008",
-                     limits = c(-4, 4)) +  
+                     limits = c(-4, 4)) +
   scale_y_continuous("Obama's standardized vote share in 2012",
                      limits = c(-4, 4))
 ```
@@ -1353,7 +1353,7 @@ Use `fit2_augment` to create a residual plot:
 fit2_resid_plot <-
   ggplot(florida, aes(x = pred, y = resid)) +
   geom_ref_line(h = 0) +
-  geom_point() +  
+  geom_point() +
   labs(x = "Fitted values", y = "residuals")
 fit2_resid_plot
 ```
@@ -1444,8 +1444,8 @@ Note this is an example of using non-syntactic column names in a tibble, as disc
 ```r
 ggplot() +
   geom_point(data = florida, mapping = aes(x = Perot96, y = Buchanan00)) +
-  geom_line(data = florida_grid, 
-             mapping = aes(x = Perot96, y = pred, 
+  geom_line(data = florida_grid,
+             mapping = aes(x = Perot96, y = pred,
                            colour = model)) +
   geom_label(data = filter(florida, county == "PalmBeach"),
              mapping = aes(x = Perot96, y = Buchanan00, label = county),
@@ -1487,9 +1487,9 @@ women %>%
 The diff in diff estimator
 
 ```r
-## drinking-water facilities
- 
-## irrigation facilities
+# drinking water facilities
+
+# irrigation facilities
 mean(women$irrigation[women$reserved == 1]) -
     mean(women$irrigation[women$reserved == 0])
 #> [1] -0.369
@@ -1500,7 +1500,7 @@ Mean values of `irrigation` and `water` in reserved and non-reserved districts.
 ```r
 women %>%
   group_by(reserved) %>%
-  summarise(irrigation = mean(irrigation), 
+  summarise(irrigation = mean(irrigation),
             water = mean(water))
 #> # A tibble: 2 x 3
 #>   reserved irrigation water
@@ -1515,7 +1515,7 @@ This works as long as we are careful about which group is first or second.
 ```r
 women %>%
   group_by(reserved) %>%
-  summarise(irrigation = mean(irrigation), 
+  summarise(irrigation = mean(irrigation),
             water = mean(water)) %>%
   summarise(diff_irrigation = diff(irrigation),
             diff_water = diff(water))
@@ -1530,7 +1530,7 @@ The other way uses **tidyr** [spread](https://www.rdocumentation.org/packages/ti
 ```r
 women %>%
   group_by(reserved) %>%
-  summarise(irrigation = mean(irrigation), 
+  summarise(irrigation = mean(irrigation),
             water = mean(water)) %>%
   gather(variable, value, -reserved) %>%
   spread(reserved, value) %>%
@@ -1628,7 +1628,7 @@ lm(primary2006 ~ Control + Hawthorne + Neighbors, data = social)
 Create predictions for each unique value of `messages`
 
 ```r
-unique_messages <- 
+unique_messages <-
   data_grid(social, messages) %>%
   add_predictions(fit)
 unique_messages
@@ -1676,7 +1676,7 @@ Calculating the regression average effect is also easier if we make the control 
 Use [fct_relevel](https://www.rdocumentation.org/packages/forcats/topics/fct_relevel) to make "Control"
 
 ```r
-fit.control <- 
+fit.control <-
  mutate(social, messages = fct_relevel(messages, "Control")) %>%
  lm(primary2006 ~ messages, data = .)
 fit.control
@@ -1752,7 +1752,7 @@ diff(ate$ate_Neighbors)
 
 ```r
 social.neighbor <- social %>%
-  filter((messages == "Control") | (messages == "Neighbors"))
+  filter( (messages == "Control") | (messages == "Neighbors"))
 
 fit.int <- lm(primary2006 ~ primary2004 + messages + primary2004:messages,
               data = social.neighbor)
@@ -1785,7 +1785,7 @@ lm(primary2006 ~ primary2004 * messages, data = social.neighbor)
 
 
 ```r
-social.neighbor <- 
+social.neighbor <-
   social.neighbor %>%
   mutate(age = 2008 - yearofbirth)
 
@@ -1856,7 +1856,7 @@ y.hat <-
 
 
 ```r
-ggplot(y.hat, aes(x = age, y = pred, 
+ggplot(y.hat, aes(x = age, y = pred,
                   colour = str_c(messages, " condition"))) +
   geom_line() +
   labs(colour = "", y = "predicted turnout rates") +
@@ -1945,7 +1945,7 @@ ggplot(mutate(MPs, winner = (margin > 0)),
        aes(x = margin, y = ln.net)) +
   geom_ref_line(v = 0) +
   geom_point() +
-  geom_smooth(method = lm, se = FALSE, mapping = aes(group = winner)) + 
+  geom_smooth(method = lm, se = FALSE, mapping = aes(group = winner)) +
   facet_grid(party ~ .) +
   labs(x = "margin of victory", y = "log net wealth at death")
 ```

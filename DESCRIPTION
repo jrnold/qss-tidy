@@ -18,7 +18,7 @@ Imports:
   intergraph,
   haven,
   maps,
-  qss,  
+  qss,
   tidytext,
   tidyverse,
   tm,
@@ -27,6 +27,7 @@ Imports:
   viridis
 Remotes:
   dgrtwo/gganimate,
+  jimhester/lintr,
   slowkow/ggrepel,
   kosukeimai/qss-package
 License: MIT + file LICENSE
@@ -35,5 +36,6 @@ LazyData: true
 URL: https://github.com/jrnold/qss-tidy
 BugReports: https://github.com/jrnold/qss-tidy/issues
 Suggests:
-    spelling
+  lintr,
+  spelling
 Language: en-US

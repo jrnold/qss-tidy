@@ -6,6 +6,9 @@ rmd_files:
   - measurement.Rmd
   - prediction.Rmd
   - discovery.Rmd
+  - discovery-textual.Rmd
+  - discovery-network.Rmd
+  - discovery-spatial.Rmd
   - probability.Rmd
   - uncertainty.Rmd
 before_chapter_script: "_common.R"

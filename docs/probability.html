@@ -252,7 +252,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;forcats&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;stringr&quot;</span>)</code></pre></div>
-<p>We will also, use the function <code>qss_data_url</code>:</p>
 </div>
 <div id="probability-1" class="section level2">
 <h2><span class="header-section-number">7.2</span> Probability</h2>
@@ -271,7 +270,7 @@ bday &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="d
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Probability that at least two</span><span class="ch">\n</span><span class="st"> people have the same birthday&quot;</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Number of people&quot;</span>)</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><strong>Note:</strong> The logarithm is used for numerical stability. Basically, “floating-point” numbers are approximations of numbers. If you perform arithmetic with numbers that are very large, very small, or vary differently in magnitudes, you could have problems. Logarithms help with some of those issues. See “Falling Into the Floating Point Trap” in <a href="http://www.burns-stat.com/pages/Tutor/R_inferno.pdf">The R Inforno</a> for a summary of floating point numbers. See these John Fox posts <a href="http://www.johndcook.com/blog/2008/09/26/comparing-three-methods-of-computing-standard-deviation/">1</a> <a href="http://www.johndcook.com/blog/2008/09/28/theoretical-explanation-for-numerical-results/">2</a> for an example of numerical stability gone wrong. Also see: <a href="http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/" class="uri">http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/</a>.</p>
 <div id="sampling-without-replacement" class="section level3">
 <h3><span class="header-section-number">7.2.1</span> Sampling without replacement</h3>
@@ -312,7 +311,7 @@ k &lt;-<span class="st"> </span><span class="dv">23</span>
 <h2><span class="header-section-number">7.3</span> Conditional Probability</h2>
 <div id="conditional-marginal-and-joint-probabilities" class="section level3">
 <h3><span class="header-section-number">7.3.1</span> Conditional, Marginal, and Joint Probabilities</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLVoters &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;probability&quot;</span>, <span class="st">&quot;FLVoters.csv&quot;</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(FLVoters, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)
 <span class="kw">dim</span>(FLVoters)
 <span class="co">#&gt; [1] 10000     6</span>
 FLVoters &lt;-<span class="st"> </span>FLVoters <span class="op">%&gt;%</span>
@@ -517,7 +516,7 @@ race_gender_indep
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">P</span>(<span class="st">&quot;race&quot;</span>) <span class="op">*</span><span class="st"> </span><span class="kw">P</span>(<span class="st">&quot;gender&quot;</span>)),
        <span class="dt">y =</span> <span class="kw">expression</span>(<span class="kw">P</span>(<span class="st">&quot;race and gender&quot;</span>)))</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>While the original code only calculates joint-independence value for values of age &gt; 60, and female, this calculates the joint probabilities for all combinations of the three variables, and facets by age and gender.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">joint_indep &lt;-
 <span class="st">  </span><span class="co"># all combinations of race, age, gender</span>
@@ -538,7 +537,7 @@ race_gender_indep
        <span class="dt">y =</span> <span class="st">&quot;P(race) * P(age) * P(gender)&quot;</span>,
        <span class="dt">title =</span> <span class="st">&quot;Joint Independence&quot;</span>)
     </code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>While code in <em>QSS</em> only calculates the conditional independence given female, the following code calculates conditional independence for all values of <code>gender</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cond_gender &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">left_join</span>(<span class="kw">select</span>(joint3, race, age_group, gender, <span class="dt">joint_prob =</span> prop),
@@ -576,7 +575,7 @@ indep_cond_gender &lt;-
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;P(race and age | gender)&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;P(race | gender) * P(age | gender)&quot;</span>,
        <span class="dt">title =</span> <span class="st">&quot;Marginal independence&quot;</span>)</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-22-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-21-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><strong>Monty-hall problem</strong></p>
 <p>The <code>for</code> loop approach in <em>QSS </em> is prefectly valid code, but here we provide a more functional approach to solving the problem. We will define a function to choose a door, repeat the function multiple times while storing the results in a data frame, and then summarize that data frame.</p>
 <p>This code doesn’t rely on any non-tidyverse code, but the following is another way to write it.</p>
@@ -615,7 +614,7 @@ results <span class="op">%&gt;%</span>
 <div id="predicting-race-using-surname-and-residence-location" class="section level3">
 <h3><span class="header-section-number">7.3.3</span> Predicting Race Using Surname and Residence Location</h3>
 <p>Start with the Census names files:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnames &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;probability&quot;</span>, <span class="st">&quot;names.csv&quot;</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;cnames&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)
 <span class="kw">glimpse</span>(cnames)
 <span class="co">#&gt; Observations: 151,671</span>
 <span class="co">#&gt; Variables: 7</span>
@@ -702,8 +701,8 @@ results <span class="op">%&gt;%</span>
 <span class="co">#&gt; 3     black 0.329</span>
 <span class="co">#&gt; 4  hispanic 0.227</span>
 <span class="co">#&gt; 5     white 0.197</span></code></pre></div>
-<p>Now add residence data</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLCensus &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;probability&quot;</span>, <span class="st">&quot;FLCensusVTD.csv&quot;</span>))</code></pre></div>
+<p>Now add residence data using the <code>FLCensus</code> data included in the</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;FLCensus&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
 <p><span class="math inline">\(P(race)\)</span> in Florida:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">race.prop &lt;-
 <span class="st">  </span>FLCensus <span class="op">%&gt;%</span>
@@ -724,7 +723,10 @@ race.prop
 </div>
 <div id="predicting-election-outcomes-with-uncertainty" class="section level3">
 <h3><span class="header-section-number">7.3.4</span> Predicting Election Outcomes with Uncertainty</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres08 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;probability&quot;</span>, <span class="st">&quot;pres08.csv&quot;</span>)) <span class="op">%&gt;%</span>
+<p>Load the <code>pres08</code> data from the <strong>qss</strong> package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;pres08&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
+<p>Add a column <code>p</code> which contains Obama’s vote share of the major parties:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres08 &lt;-<span class="st"> </span>pres08 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p =</span> Obama <span class="op">/</span><span class="st"> </span>(Obama <span class="op">+</span><span class="st"> </span>McCain))</code></pre></div>
 <p>Write a function to simulate the elections. <code>df</code> is the data frame (<code>pres08</code>) with the state, EV, and <code>p</code> columns. <code>n_draws</code> is the size of the binomial distribution to draw from. <code>.id</code> is the simulation number.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim_election &lt;-<span class="st"> </span><span class="cf">function</span>(.id, df, <span class="dt">n_draws =</span> <span class="dv">1000</span>) {
@@ -745,14 +747,12 @@ sim_results &lt;-<span class="st"> </span><span class="kw">map_df</span>(<span c
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="dv">10</span>, <span class="dt">fill =</span> <span class="st">&quot;gray30&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> ELECTION_EV, <span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Electoral Votes&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;density&quot;</span>)</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-37-1.png" width="70%" style="display: block; margin: auto;" /> Simulation mean, variance, and standard deviations:</p>
+<p><img src="probability_files/figure-html/unnamed-chunk-35-1.png" width="70%" style="display: block; margin: auto;" /> Simulation mean, variance, and standard deviations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim_results <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(EV) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise_all</span>(<span class="kw">funs</span>(mean, var, sd))
-<span class="co">#&gt; # A tibble: 1 x 3</span>
-<span class="co">#&gt;    mean   var    sd</span>
-<span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1   352   270  16.4</span></code></pre></div>
+<span class="co">#&gt;   mean var   sd</span>
+<span class="co">#&gt; 1  352 270 16.4</span></code></pre></div>
 <p>Theoretical probabilities from a binomial distribution:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># we cannot use n, because mutate will look for n() first.</span>
 n_draws &lt;-<span class="st"> </span><span class="dv">1000</span>
@@ -762,10 +762,8 @@ pres08 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">sum</span>(pb <span class="op">*</span><span class="st"> </span>EV),
             <span class="dt">V =</span> <span class="kw">sum</span>(pb <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>pb) <span class="op">*</span><span class="st"> </span>EV <span class="op">^</span><span class="st"> </span><span class="dv">2</span>),
             <span class="dt">sd =</span> <span class="kw">sqrt</span>(V))
-<span class="co">#&gt; # A tibble: 1 x 3</span>
-<span class="co">#&gt;    mean     V    sd</span>
-<span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1   352   269  16.4</span></code></pre></div>
+<span class="co">#&gt;   mean   V   sd</span>
+<span class="co">#&gt; 1  352 269 16.4</span></code></pre></div>
 </div>
 </div>
 <div id="large-sample-theorems" class="section level2">

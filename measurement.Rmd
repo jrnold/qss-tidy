@@ -8,17 +8,11 @@ library("forcats")
 library("broom")
 library("tidyr")
 ```
-```{r echo=FALSE}
-insert_fun("qss_data_url")
-```
-```{r qss_data_url-source,eval=FALSE}
-```
-
 
 ## Measuring Civilian Victimization during Wartime
 
 ```{r message=FALSE}
-afghan <- read_csv(qss_data_url("measurement", "afghan.csv"))
+data("afghan", package = "qss")
 ```
 
 Summarize the variables of interest
@@ -181,7 +175,7 @@ created by code-chunks.
 ## load village data
 
 ```{r message=FALSE}
-afghan.village <- read_csv(qss_data_url("measurement", "afghan-village.csv"))
+data("afghan.village", package = "qss")
 ```
 
 Box-plots of altitude
@@ -251,7 +245,7 @@ afghan %>%
 ## Measuring Political Polarization
 
 ```{r message=FALSE}
-congress <- read_csv(qss_data_url("measurement", "congress.csv"))
+data("congress", package = "qss")
 ```
 
 ```{r}
@@ -319,7 +313,7 @@ congress %>%
 
 Let's plot the Gini coefficient
 ```{r message=FALSE}
-USGini <- read_csv(qss_data_url("measurement", "USGini.csv"))
+data("USGini", package = "qss")
 ```
 
 ```{r}

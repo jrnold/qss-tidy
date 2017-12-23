@@ -297,14 +297,17 @@ UNpop
 <span class="co">#&gt; 5  1990   5320817</span>
 <span class="co">#&gt; 6  2000   6127700</span>
 <span class="co">#&gt; # ... with 1 more rows</span></code></pre></div>
+<p>Datasets can also be distributed with R packages. These are often smaller datasets used in examples and package tutorials.</p>
+<p>The function <code>data</code> with called without any arguments will list all the datasets distributed with installed packages.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>()</code></pre></div>
+<p>The <strong>qss</strong> library distributes the data sets used in the <em>QSS</em> textbook.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;UNpop&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
 <p>The single bracket, <code>[</code>, is useful to select rows and columns in simple cases, but the <strong>dplyr</strong> functions <code>slice()</code> to select rows by number, <code>filter</code> to select by certain criteria, or <code>select()</code> to select columns.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), ]
-<span class="co">#&gt; # A tibble: 3 x 2</span>
-<span class="co">#&gt;    year world.pop</span>
-<span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span>
-<span class="co">#&gt; 1  1950   2525779</span>
-<span class="co">#&gt; 2  1960   3026003</span>
-<span class="co">#&gt; 3  1970   3691173</span></code></pre></div>
+<span class="co">#&gt;   year world.pop</span>
+<span class="co">#&gt; 1 1950   2525779</span>
+<span class="co">#&gt; 2 1960   3026003</span>
+<span class="co">#&gt; 3 1970   3691173</span></code></pre></div>
 <p>is equivalent to</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)
 <span class="co">#&gt; # A tibble: 3 x 2</span>
@@ -314,36 +317,20 @@ UNpop
 <span class="co">#&gt; 2  1960   3026003</span>
 <span class="co">#&gt; 3  1970   3691173</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[, <span class="st">&quot;world.pop&quot;</span>]
-<span class="co">#&gt; # A tibble: 7 x 1</span>
-<span class="co">#&gt;   world.pop</span>
-<span class="co">#&gt;       &lt;int&gt;</span>
-<span class="co">#&gt; 1   2525779</span>
-<span class="co">#&gt; 2   3026003</span>
-<span class="co">#&gt; 3   3691173</span>
-<span class="co">#&gt; 4   4449049</span>
-<span class="co">#&gt; 5   5320817</span>
-<span class="co">#&gt; 6   6127700</span>
-<span class="co">#&gt; # ... with 1 more rows</span></code></pre></div>
+<span class="co">#&gt; [1] 2525779 3026003 3691173 4449049 5320817 6127700 6916183</span></code></pre></div>
 <p>is almost equivalent to</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">select</span>(UNpop, world.pop)
-<span class="co">#&gt; # A tibble: 7 x 1</span>
 <span class="co">#&gt;   world.pop</span>
-<span class="co">#&gt;       &lt;int&gt;</span>
 <span class="co">#&gt; 1   2525779</span>
 <span class="co">#&gt; 2   3026003</span>
 <span class="co">#&gt; 3   3691173</span>
 <span class="co">#&gt; 4   4449049</span>
 <span class="co">#&gt; 5   5320817</span>
 <span class="co">#&gt; 6   6127700</span>
-<span class="co">#&gt; # ... with 1 more rows</span></code></pre></div>
+<span class="co">#&gt; 7   6916183</span></code></pre></div>
 <p>However, note that <code>select()</code> <strong>always</strong> returns a tibble, and never a vector, even if only one column is selected. Also, note that since <code>world.pop</code> is a tibble, using <code>[</code> also returns tibbles rather than a vector if it is only one column.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="st">&quot;year&quot;</span>]
-<span class="co">#&gt; # A tibble: 3 x 1</span>
-<span class="co">#&gt;    year</span>
-<span class="co">#&gt;   &lt;int&gt;</span>
-<span class="co">#&gt; 1  1950</span>
-<span class="co">#&gt; 2  1960</span>
-<span class="co">#&gt; 3  1970</span></code></pre></div>
+<span class="co">#&gt; [1] 1950 1960 1970</span></code></pre></div>
 <p>is equivalent to</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>) <span class="op">%&gt;%</span>

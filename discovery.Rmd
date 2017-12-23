@@ -22,11 +22,6 @@ library("stringr")
 library("forcats")
 library("modelr")
 ```
-```{r echo=FALSE}
-insert_fun("qss_data_url")
-```
-```{r qss_data_url-source,eval=FALSE}
-```
 ```{r include=FALSE}
 knitr::opts_chunk$set(cache = FALSE)
 ```
@@ -394,7 +389,7 @@ See this [presentation](http://curleylab.psych.columbia.edu/netviz/netviz1.html#
 
 Examples: [Network Visualization Examples with the ggplot2 Package](https://cran.r-project.org/web/packages/ggCompNet/vignettes/examples-from-paper.html)
 
-```{r message=FALSE}
+```{r graph-setup,message=FALSE}
 library("igraph")
 library("intergraph")
 library("GGally")
@@ -404,13 +399,22 @@ library("GGally")
 
 ### Twitter Following Network
 
-```{r message=FALSE}
-twitter <- read_csv(qss_data_url("discovery", "twitter-following.csv"))
-senator <- read_csv(qss_data_url("discovery", "twitter-senator.csv"))
+```{r twitter.following,message=FALSE}
+data("twitter.following", package = "qss")
+```
+```{r twitter.senator,message=FALSE}
+data("twitter.senator", package = "qss")
+```
+
+Since the names `twitter.following` and `twitter.senator` are verbose, we'll
+simplify future code by copying their values to variables named `twitter` and `senator`, respectively.
+```{r}
+twitter <- twitter.following
+senator <- twitter.senator
 ```
 
 Simply use the `r RDoc("igraph::graph_from_edgelist")` function since `twitter` consists of edges (a link from a senator to another).
-SInce `graph_from_edgelist` expects a matrix, convert the data frame to a matrix using `r RDoc("base::as.matrix")`.
+Since `graph_from_edgelist` expects a matrix, convert the data frame to a matrix using `r RDoc("base::as.matrix")`.
 ```{r}
 twitter_adj <- graph_from_edgelist(as.matrix(twitter))
 ```
@@ -615,7 +619,9 @@ ggplot(tibble(x = rep(1:4, each = 2),
 ### United States Presidential Elections
 
 ```{r message=FALSE}
-pres08 <- read_csv(qss_data_url("discovery", "pres08.csv")) %>%
+data("pres08", package = "qss")
+
+pres08 <- pres08 %>%
   mutate(Dem = Obama / (Obama + McCain),
          Rep = McCain / (Obama + McCain))
 
@@ -713,7 +719,7 @@ ggplot(states) +
 
 We don't need to do the direct mapping since 
 ```{r message=FALSE}
-walmart <- read_csv(qss_data_url("discovery", "walmart.csv"))
+data("walmart", package = "qss")
 
 ggplot() +
   borders(database = "state") +

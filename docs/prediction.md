@@ -1,4 +1,9 @@
 
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Prediction
 
 ## Prerequisites
@@ -16,10 +21,6 @@ The packages [modelr](https://cran.r-project.org/package=modelr) and [broom](htt
 library("broom")
 library("modelr")
 ```
-
-We also use the R function
-
-
 
 ## Loops in R
 
@@ -41,7 +42,7 @@ see the **dplyr** functions [if_else](https://www.rdocumentation.org/packages/dp
 Load the election polls and election results for 2008,
 
 ```r
-polls08 <- read_csv(qss_data_url("UNCERTAINTY", "polls08.csv"))
+data("polls08", package = "qss")
 glimpse(polls08)
 #> Observations: 1,332
 #> Variables: 5
@@ -53,7 +54,7 @@ glimpse(polls08)
 ```
 
 ```r
-pres08 <- read_csv(qss_data_url("UNCERTAINTY", "pres08.csv"))
+data("pres08", package = "qss")
 glimpse(pres08)
 #> Observations: 51
 #> Variables: 5
@@ -197,7 +198,7 @@ ggplot(last_polls, aes(x = error)) +
   geom_histogram(binwidth = 1, boundary = 0)
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-15-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="prediction_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" />
 
 The text uses bin widths of 5%:
 
@@ -206,7 +207,7 @@ ggplot(last_polls, aes(x = error)) +
   geom_histogram(binwidth = 5, boundary = 0)
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="prediction_files/figure-html/unnamed-chunk-15-1.png" width="70%" style="display: block; margin: auto;" />
 
 **Challenge:** What other ways could you visualize the results? How would you show all states? What about plotting the absolute or squared errors instead of the errors?
 
@@ -227,7 +228,7 @@ ggplot(last_polls, aes(x = margin, y = elec_margin, label = state)) +
   labs(x = "Poll Results", y = "Actual Election Results")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="prediction_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;" />
 
 We can create a confusion matrix as follows.
 Create a new column `classification` which shows whether how the poll's classification was related to the actual election outcome ("true positive", "false positive", "false negative", "false positive").
@@ -294,13 +295,14 @@ last_polls %>%
 #> 1     349       364
 ```
 
-To look at predictions of the 
 
 
 ```r
-# load the data
-pollsUS08 <- read_csv(qss_data_url("prediction", "pollsUS08.csv")) %>%
-  mutate(DaysToElection = ELECTION_DAY - middate)
+data("pollsUS08", package = "qss")
+```
+
+```r
+pollsUS08 <- mutate(pollsUS08, DaysToElection = ELECTION_DAY - middate)
 ```
 
 We'll produce the seven-day averages slightly differently than the method used in the text. 
@@ -338,16 +340,605 @@ pop_vote_avg_tidy <-
   pop_vote_avg %>% 
   gather(candidate, share, -date, na.rm = TRUE)
 pop_vote_avg_tidy
-#> # A tibble: 598 x 3
-#>         date candidate share
-#> *     <date>     <chr> <dbl>
-#> 1 2008-01-09     Obama    49
-#> 2 2008-01-10     Obama    46
-#> 3 2008-01-11     Obama    45
-#> 4 2008-01-12     Obama    45
-#> 5 2008-01-13     Obama    45
-#> 6 2008-01-14     Obama    45
-#> # ... with 592 more rows
+#>           date candidate share
+#> 9   2008-01-09     Obama  49.0
+#> 10  2008-01-10     Obama  46.0
+#> 11  2008-01-11     Obama  45.0
+#> 12  2008-01-12     Obama  45.0
+#> 13  2008-01-13     Obama  45.0
+#> 14  2008-01-14     Obama  45.0
+#> 15  2008-01-15     Obama  45.0
+#> 16  2008-01-16     Obama  44.6
+#> 17  2008-01-17     Obama  45.4
+#> 18  2008-01-18     Obama  46.0
+#> 19  2008-01-19     Obama  47.0
+#> 20  2008-01-20     Obama  45.0
+#> 21  2008-01-21     Obama  44.2
+#> 22  2008-01-22     Obama  44.2
+#> 23  2008-01-23     Obama  43.3
+#> 24  2008-01-24     Obama  41.5
+#> 25  2008-01-25     Obama  41.5
+#> 26  2008-01-26     Obama  41.5
+#> 27  2008-01-27     Obama  42.0
+#> 30  2008-01-30     Obama  46.0
+#> 31  2008-01-31     Obama  46.0
+#> 32  2008-02-01     Obama  45.8
+#> 33  2008-02-02     Obama  47.0
+#> 34  2008-02-03     Obama  47.2
+#> 35  2008-02-04     Obama  46.7
+#> 36  2008-02-05     Obama  46.6
+#> 37  2008-02-06     Obama  47.0
+#> 38  2008-02-07     Obama  47.0
+#> 39  2008-02-08     Obama  47.5
+#> 40  2008-02-09     Obama  46.1
+#> 41  2008-02-10     Obama  45.8
+#> 42  2008-02-11     Obama  46.7
+#> 43  2008-02-12     Obama  46.8
+#> 44  2008-02-13     Obama  46.7
+#> 45  2008-02-14     Obama  46.7
+#> 46  2008-02-15     Obama  46.6
+#> 47  2008-02-16     Obama  47.2
+#> 48  2008-02-17     Obama  47.0
+#> 49  2008-02-18     Obama  46.6
+#> 50  2008-02-19     Obama  46.4
+#> 51  2008-02-20     Obama  47.0
+#> 52  2008-02-21     Obama  46.5
+#> 53  2008-02-22     Obama  47.4
+#> 54  2008-02-23     Obama  47.1
+#> 55  2008-02-24     Obama  47.2
+#> 56  2008-02-25     Obama  46.6
+#> 57  2008-02-26     Obama  46.7
+#> 58  2008-02-27     Obama  46.3
+#> 59  2008-02-28     Obama  46.8
+#> 60  2008-02-29     Obama  45.3
+#> 61  2008-03-01     Obama  44.8
+#> 62  2008-03-02     Obama  44.8
+#> 63  2008-03-03     Obama  45.0
+#> 64  2008-03-04     Obama  45.0
+#> 65  2008-03-05     Obama  45.2
+#> 66  2008-03-06     Obama  45.2
+#> 67  2008-03-07     Obama  45.8
+#> 68  2008-03-08     Obama  44.6
+#> 69  2008-03-09     Obama  45.1
+#> 70  2008-03-10     Obama  45.1
+#> 71  2008-03-11     Obama  45.2
+#> 72  2008-03-12     Obama  44.8
+#> 73  2008-03-13     Obama  44.0
+#> 74  2008-03-14     Obama  44.0
+#> 75  2008-03-15     Obama  45.3
+#> 76  2008-03-16     Obama  44.3
+#> 77  2008-03-17     Obama  44.9
+#> 78  2008-03-18     Obama  44.6
+#> 79  2008-03-19     Obama  44.0
+#> 80  2008-03-20     Obama  44.1
+#> 81  2008-03-21     Obama  44.8
+#> 82  2008-03-22     Obama  44.0
+#> 83  2008-03-23     Obama  43.9
+#> 84  2008-03-24     Obama  43.2
+#> 85  2008-03-25     Obama  43.1
+#> 86  2008-03-26     Obama  43.6
+#> 87  2008-03-27     Obama  43.5
+#> 88  2008-03-28     Obama  42.7
+#> 89  2008-03-29     Obama  42.7
+#> 90  2008-03-30     Obama  43.5
+#> 91  2008-03-31     Obama  43.6
+#> 92  2008-04-01     Obama  43.5
+#> 93  2008-04-02     Obama  43.3
+#> 94  2008-04-03     Obama  44.0
+#> 95  2008-04-04     Obama  44.2
+#> 96  2008-04-05     Obama  44.3
+#> 97  2008-04-06     Obama  43.5
+#> 98  2008-04-07     Obama  43.6
+#> 99  2008-04-08     Obama  42.7
+#> 100 2008-04-09     Obama  43.2
+#> 101 2008-04-10     Obama  43.2
+#> 102 2008-04-11     Obama  43.0
+#> 103 2008-04-12     Obama  42.8
+#> 104 2008-04-13     Obama  42.8
+#> 105 2008-04-14     Obama  43.0
+#> 106 2008-04-15     Obama  43.9
+#> 107 2008-04-16     Obama  44.7
+#> 108 2008-04-17     Obama  44.2
+#> 109 2008-04-18     Obama  44.6
+#> 110 2008-04-19     Obama  45.1
+#> 111 2008-04-20     Obama  45.2
+#> 112 2008-04-21     Obama  44.7
+#> 113 2008-04-22     Obama  45.0
+#> 114 2008-04-23     Obama  44.2
+#> 115 2008-04-24     Obama  45.0
+#> 116 2008-04-25     Obama  45.7
+#> 117 2008-04-26     Obama  45.2
+#> 118 2008-04-27     Obama  45.4
+#> 119 2008-04-28     Obama  45.7
+#> 120 2008-04-29     Obama  45.4
+#> 121 2008-04-30     Obama  45.4
+#> 122 2008-05-01     Obama  45.1
+#> 123 2008-05-02     Obama  45.3
+#> 124 2008-05-03     Obama  45.3
+#> 125 2008-05-04     Obama  45.4
+#> 126 2008-05-05     Obama  45.1
+#> 127 2008-05-06     Obama  45.2
+#> 128 2008-05-07     Obama  45.4
+#> 129 2008-05-08     Obama  45.7
+#> 130 2008-05-09     Obama  45.1
+#> 131 2008-05-10     Obama  46.4
+#> 132 2008-05-11     Obama  46.5
+#> 133 2008-05-12     Obama  47.8
+#> 134 2008-05-13     Obama  47.9
+#> 135 2008-05-14     Obama  46.0
+#> 136 2008-05-15     Obama  46.0
+#> 137 2008-05-16     Obama  45.7
+#> 138 2008-05-17     Obama  45.3
+#> 139 2008-05-18     Obama  45.1
+#> 140 2008-05-19     Obama  45.2
+#> 141 2008-05-20     Obama  44.0
+#> 142 2008-05-21     Obama  45.7
+#> 143 2008-05-22     Obama  45.6
+#> 144 2008-05-23     Obama  45.8
+#> 145 2008-05-24     Obama  45.4
+#> 146 2008-05-25     Obama  45.4
+#> 147 2008-05-26     Obama  45.3
+#> 148 2008-05-27     Obama  44.1
+#> 149 2008-05-28     Obama  43.9
+#> 150 2008-05-29     Obama  43.9
+#> 151 2008-05-30     Obama  43.2
+#> 152 2008-05-31     Obama  44.0
+#> 153 2008-06-01     Obama  44.5
+#> 154 2008-06-02     Obama  44.5
+#> 155 2008-06-03     Obama  46.5
+#> 156 2008-06-04     Obama  46.8
+#> 157 2008-06-05     Obama  46.3
+#> 158 2008-06-06     Obama  47.1
+#> 159 2008-06-07     Obama  46.9
+#> 160 2008-06-08     Obama  47.2
+#> 161 2008-06-09     Obama  46.9
+#> 162 2008-06-10     Obama  46.1
+#> 163 2008-06-11     Obama  45.8
+#> 164 2008-06-12     Obama  46.4
+#> 165 2008-06-13     Obama  46.2
+#> 166 2008-06-14     Obama  46.0
+#> 167 2008-06-15     Obama  45.3
+#> 168 2008-06-16     Obama  44.4
+#> 169 2008-06-17     Obama  45.4
+#> 170 2008-06-18     Obama  45.4
+#> 171 2008-06-19     Obama  44.5
+#> 172 2008-06-20     Obama  44.2
+#> 173 2008-06-21     Obama  44.9
+#> 174 2008-06-22     Obama  44.9
+#> 175 2008-06-23     Obama  45.6
+#> 176 2008-06-24     Obama  45.4
+#> 177 2008-06-25     Obama  45.4
+#> 178 2008-06-26     Obama  46.3
+#> 179 2008-06-27     Obama  46.6
+#> 180 2008-06-28     Obama  46.5
+#> 181 2008-06-29     Obama  46.4
+#> 182 2008-06-30     Obama  46.7
+#> 183 2008-07-01     Obama  46.4
+#> 184 2008-07-02     Obama  46.4
+#> 185 2008-07-03     Obama  46.4
+#> 186 2008-07-04     Obama  46.4
+#> 187 2008-07-05     Obama  45.8
+#> 188 2008-07-06     Obama  45.8
+#> 189 2008-07-07     Obama  45.0
+#> 190 2008-07-08     Obama  45.2
+#> 191 2008-07-09     Obama  44.6
+#> 192 2008-07-10     Obama  45.2
+#> 193 2008-07-11     Obama  45.1
+#> 194 2008-07-12     Obama  45.1
+#> 195 2008-07-13     Obama  45.1
+#> 196 2008-07-14     Obama  45.3
+#> 197 2008-07-15     Obama  45.9
+#> 198 2008-07-16     Obama  46.1
+#> 199 2008-07-17     Obama  45.5
+#> 200 2008-07-18     Obama  45.5
+#> 201 2008-07-19     Obama  45.2
+#> 202 2008-07-20     Obama  45.4
+#> 203 2008-07-21     Obama  45.4
+#> 204 2008-07-22     Obama  44.6
+#> 205 2008-07-23     Obama  45.3
+#> 206 2008-07-24     Obama  45.8
+#> 207 2008-07-25     Obama  45.8
+#> 208 2008-07-26     Obama  46.3
+#> 209 2008-07-27     Obama  46.5
+#> 210 2008-07-28     Obama  46.6
+#> 211 2008-07-29     Obama  47.0
+#> 212 2008-07-30     Obama  47.4
+#> 213 2008-07-31     Obama  46.6
+#> 214 2008-08-01     Obama  46.4
+#> 215 2008-08-02     Obama  45.2
+#> 216 2008-08-03     Obama  45.0
+#> 217 2008-08-04     Obama  44.8
+#> 218 2008-08-05     Obama  44.8
+#> 219 2008-08-06     Obama  44.5
+#> 220 2008-08-07     Obama  45.0
+#> 221 2008-08-08     Obama  45.2
+#> 222 2008-08-09     Obama  45.8
+#> 223 2008-08-10     Obama  45.9
+#> 224 2008-08-11     Obama  46.0
+#> 225 2008-08-12     Obama  45.7
+#> 226 2008-08-13     Obama  45.6
+#> 227 2008-08-14     Obama  45.7
+#> 228 2008-08-15     Obama  44.9
+#> 229 2008-08-16     Obama  45.0
+#> 230 2008-08-17     Obama  45.0
+#> 231 2008-08-18     Obama  44.8
+#> 232 2008-08-19     Obama  44.3
+#> 233 2008-08-20     Obama  44.6
+#> 234 2008-08-21     Obama  44.2
+#> 235 2008-08-22     Obama  44.5
+#> 236 2008-08-23     Obama  45.0
+#> 237 2008-08-24     Obama  44.8
+#> 238 2008-08-25     Obama  44.5
+#> 239 2008-08-26     Obama  45.6
+#> 240 2008-08-27     Obama  45.4
+#> 241 2008-08-28     Obama  46.0
+#> 242 2008-08-29     Obama  46.3
+#> 243 2008-08-30     Obama  46.8
+#> 244 2008-08-31     Obama  46.8
+#> 245 2008-09-01     Obama  47.5
+#> 246 2008-09-02     Obama  46.9
+#> 247 2008-09-03     Obama  46.9
+#> 248 2008-09-04     Obama  46.7
+#> 249 2008-09-05     Obama  46.5
+#> 250 2008-09-06     Obama  46.1
+#> 251 2008-09-07     Obama  45.7
+#> 252 2008-09-08     Obama  45.2
+#> 253 2008-09-09     Obama  45.4
+#> 254 2008-09-10     Obama  45.0
+#> 255 2008-09-11     Obama  45.0
+#> 256 2008-09-12     Obama  45.2
+#> 257 2008-09-13     Obama  45.3
+#> 258 2008-09-14     Obama  45.5
+#> 259 2008-09-15     Obama  46.0
+#> 260 2008-09-16     Obama  45.9
+#> 261 2008-09-17     Obama  46.4
+#> 262 2008-09-18     Obama  46.8
+#> 263 2008-09-19     Obama  46.8
+#> 264 2008-09-20     Obama  46.9
+#> 265 2008-09-21     Obama  47.5
+#> 266 2008-09-22     Obama  47.6
+#> 267 2008-09-23     Obama  47.5
+#> 268 2008-09-24     Obama  47.5
+#> 269 2008-09-25     Obama  47.5
+#> 270 2008-09-26     Obama  47.6
+#> 271 2008-09-27     Obama  47.9
+#> 272 2008-09-28     Obama  47.8
+#> 273 2008-09-29     Obama  48.0
+#> 274 2008-09-30     Obama  48.6
+#> 275 2008-10-01     Obama  48.8
+#> 276 2008-10-02     Obama  48.8
+#> 277 2008-10-03     Obama  49.1
+#> 278 2008-10-04     Obama  49.1
+#> 279 2008-10-05     Obama  49.0
+#> 280 2008-10-06     Obama  49.4
+#> 281 2008-10-07     Obama  49.2
+#> 282 2008-10-08     Obama  48.9
+#> 283 2008-10-09     Obama  49.2
+#> 284 2008-10-10     Obama  49.3
+#> 285 2008-10-11     Obama  49.3
+#> 286 2008-10-12     Obama  49.9
+#> 287 2008-10-13     Obama  49.8
+#> 288 2008-10-14     Obama  49.7
+#> 289 2008-10-15     Obama  50.3
+#> 290 2008-10-16     Obama  49.9
+#> 291 2008-10-17     Obama  49.7
+#> 292 2008-10-18     Obama  49.8
+#> 293 2008-10-19     Obama  49.4
+#> 294 2008-10-20     Obama  49.6
+#> 295 2008-10-21     Obama  50.0
+#> 296 2008-10-22     Obama  49.9
+#> 297 2008-10-23     Obama  50.0
+#> 298 2008-10-24     Obama  50.2
+#> 299 2008-10-25     Obama  50.3
+#> 300 2008-10-26     Obama  50.4
+#> 301 2008-10-27     Obama  50.4
+#> 302 2008-10-28     Obama  50.2
+#> 303 2008-10-29     Obama  50.1
+#> 304 2008-10-30     Obama  50.1
+#> 305 2008-10-31     Obama  50.4
+#> 306 2008-11-01     Obama  50.6
+#> 307 2008-11-02     Obama  51.0
+#> 308 2008-11-03     Obama  51.1
+#> 309 2008-11-04     Obama  51.3
+#> 318 2008-01-09    McCain  48.0
+#> 319 2008-01-10    McCain  46.5
+#> 320 2008-01-11    McCain  45.0
+#> 321 2008-01-12    McCain  45.4
+#> 322 2008-01-13    McCain  45.4
+#> 323 2008-01-14    McCain  45.4
+#> 324 2008-01-15    McCain  45.4
+#> 325 2008-01-16    McCain  43.4
+#> 326 2008-01-17    McCain  41.8
+#> 327 2008-01-18    McCain  41.8
+#> 328 2008-01-19    McCain  37.5
+#> 329 2008-01-20    McCain  39.0
+#> 330 2008-01-21    McCain  39.8
+#> 331 2008-01-22    McCain  39.8
+#> 332 2008-01-23    McCain  40.3
+#> 333 2008-01-24    McCain  42.0
+#> 334 2008-01-25    McCain  42.0
+#> 335 2008-01-26    McCain  42.0
+#> 336 2008-01-27    McCain  42.0
+#> 339 2008-01-30    McCain  46.3
+#> 340 2008-01-31    McCain  46.3
+#> 341 2008-02-01    McCain  45.5
+#> 342 2008-02-02    McCain  45.2
+#> 343 2008-02-03    McCain  44.5
+#> 344 2008-02-04    McCain  43.6
+#> 345 2008-02-05    McCain  43.5
+#> 346 2008-02-06    McCain  41.8
+#> 347 2008-02-07    McCain  41.8
+#> 348 2008-02-08    McCain  41.5
+#> 349 2008-02-09    McCain  41.3
+#> 350 2008-02-10    McCain  41.3
+#> 351 2008-02-11    McCain  41.5
+#> 352 2008-02-12    McCain  41.2
+#> 353 2008-02-13    McCain  41.5
+#> 354 2008-02-14    McCain  41.5
+#> 355 2008-02-15    McCain  41.1
+#> 356 2008-02-16    McCain  40.4
+#> 357 2008-02-17    McCain  40.8
+#> 358 2008-02-18    McCain  41.2
+#> 359 2008-02-19    McCain  41.9
+#> 360 2008-02-20    McCain  42.0
+#> 361 2008-02-21    McCain  42.5
+#> 362 2008-02-22    McCain  42.6
+#> 363 2008-02-23    McCain  43.4
+#> 364 2008-02-24    McCain  43.4
+#> 365 2008-02-25    McCain  44.0
+#> 366 2008-02-26    McCain  44.1
+#> 367 2008-02-27    McCain  44.1
+#> 368 2008-02-28    McCain  43.9
+#> 369 2008-02-29    McCain  45.4
+#> 370 2008-03-01    McCain  44.6
+#> 371 2008-03-02    McCain  44.6
+#> 372 2008-03-03    McCain  43.0
+#> 373 2008-03-04    McCain  44.5
+#> 374 2008-03-05    McCain  44.6
+#> 375 2008-03-06    McCain  44.6
+#> 376 2008-03-07    McCain  43.8
+#> 377 2008-03-08    McCain  45.4
+#> 378 2008-03-09    McCain  45.0
+#> 379 2008-03-10    McCain  45.0
+#> 380 2008-03-11    McCain  44.6
+#> 381 2008-03-12    McCain  44.6
+#> 382 2008-03-13    McCain  44.8
+#> 383 2008-03-14    McCain  45.0
+#> 384 2008-03-15    McCain  45.4
+#> 385 2008-03-16    McCain  46.3
+#> 386 2008-03-17    McCain  45.9
+#> 387 2008-03-18    McCain  45.6
+#> 388 2008-03-19    McCain  44.3
+#> 389 2008-03-20    McCain  44.7
+#> 390 2008-03-21    McCain  44.0
+#> 391 2008-03-22    McCain  43.4
+#> 392 2008-03-23    McCain  43.0
+#> 393 2008-03-24    McCain  44.0
+#> 394 2008-03-25    McCain  44.0
+#> 395 2008-03-26    McCain  45.8
+#> 396 2008-03-27    McCain  44.7
+#> 397 2008-03-28    McCain  45.6
+#> 398 2008-03-29    McCain  45.6
+#> 399 2008-03-30    McCain  45.4
+#> 400 2008-03-31    McCain  45.0
+#> 401 2008-04-01    McCain  45.5
+#> 402 2008-04-02    McCain  44.5
+#> 403 2008-04-03    McCain  45.8
+#> 404 2008-04-04    McCain  45.4
+#> 405 2008-04-05    McCain  45.5
+#> 406 2008-04-06    McCain  45.8
+#> 407 2008-04-07    McCain  45.4
+#> 408 2008-04-08    McCain  43.2
+#> 409 2008-04-09    McCain  43.6
+#> 410 2008-04-10    McCain  43.6
+#> 411 2008-04-11    McCain  42.7
+#> 412 2008-04-12    McCain  42.2
+#> 413 2008-04-13    McCain  42.6
+#> 414 2008-04-14    McCain  42.6
+#> 415 2008-04-15    McCain  43.7
+#> 416 2008-04-16    McCain  43.9
+#> 417 2008-04-17    McCain  44.4
+#> 418 2008-04-18    McCain  45.7
+#> 419 2008-04-19    McCain  45.3
+#> 420 2008-04-20    McCain  44.2
+#> 421 2008-04-21    McCain  44.5
+#> 422 2008-04-22    McCain  44.5
+#> 423 2008-04-23    McCain  44.2
+#> 424 2008-04-24    McCain  43.9
+#> 425 2008-04-25    McCain  44.0
+#> 426 2008-04-26    McCain  43.8
+#> 427 2008-04-27    McCain  44.6
+#> 428 2008-04-28    McCain  44.4
+#> 429 2008-04-29    McCain  44.9
+#> 430 2008-04-30    McCain  44.9
+#> 431 2008-05-01    McCain  44.6
+#> 432 2008-05-02    McCain  44.0
+#> 433 2008-05-03    McCain  44.3
+#> 434 2008-05-04    McCain  44.5
+#> 435 2008-05-05    McCain  44.1
+#> 436 2008-05-06    McCain  43.3
+#> 437 2008-05-07    McCain  43.4
+#> 438 2008-05-08    McCain  43.7
+#> 439 2008-05-09    McCain  44.0
+#> 440 2008-05-10    McCain  43.1
+#> 441 2008-05-11    McCain  43.2
+#> 442 2008-05-12    McCain  43.3
+#> 443 2008-05-13    McCain  44.1
+#> 444 2008-05-14    McCain  43.4
+#> 445 2008-05-15    McCain  43.0
+#> 446 2008-05-16    McCain  43.0
+#> 447 2008-05-17    McCain  42.9
+#> 448 2008-05-18    McCain  42.6
+#> 449 2008-05-19    McCain  42.9
+#> 450 2008-05-20    McCain  41.8
+#> 451 2008-05-21    McCain  42.6
+#> 452 2008-05-22    McCain  43.2
+#> 453 2008-05-23    McCain  44.1
+#> 454 2008-05-24    McCain  44.9
+#> 455 2008-05-25    McCain  44.9
+#> 456 2008-05-26    McCain  45.0
+#> 457 2008-05-27    McCain  45.5
+#> 458 2008-05-28    McCain  45.4
+#> 459 2008-05-29    McCain  45.4
+#> 460 2008-05-30    McCain  45.0
+#> 461 2008-05-31    McCain  44.7
+#> 462 2008-06-01    McCain  44.4
+#> 463 2008-06-02    McCain  44.4
+#> 464 2008-06-03    McCain  44.2
+#> 465 2008-06-04    McCain  44.5
+#> 466 2008-06-05    McCain  44.0
+#> 467 2008-06-06    McCain  43.8
+#> 468 2008-06-07    McCain  43.9
+#> 469 2008-06-08    McCain  43.4
+#> 470 2008-06-09    McCain  42.5
+#> 471 2008-06-10    McCain  41.5
+#> 472 2008-06-11    McCain  40.9
+#> 473 2008-06-12    McCain  41.2
+#> 474 2008-06-13    McCain  41.2
+#> 475 2008-06-14    McCain  40.6
+#> 476 2008-06-15    McCain  41.0
+#> 477 2008-06-16    McCain  40.9
+#> 478 2008-06-17    McCain  41.7
+#> 479 2008-06-18    McCain  41.1
+#> 480 2008-06-19    McCain  40.8
+#> 481 2008-06-20    McCain  40.5
+#> 482 2008-06-21    McCain  40.6
+#> 483 2008-06-22    McCain  40.2
+#> 484 2008-06-23    McCain  40.7
+#> 485 2008-06-24    McCain  40.9
+#> 486 2008-06-25    McCain  41.3
+#> 487 2008-06-26    McCain  41.6
+#> 488 2008-06-27    McCain  41.7
+#> 489 2008-06-28    McCain  41.9
+#> 490 2008-06-29    McCain  41.8
+#> 491 2008-06-30    McCain  42.0
+#> 492 2008-07-01    McCain  41.3
+#> 493 2008-07-02    McCain  41.3
+#> 494 2008-07-03    McCain  41.3
+#> 495 2008-07-04    McCain  41.3
+#> 496 2008-07-05    McCain  41.4
+#> 497 2008-07-06    McCain  41.4
+#> 498 2008-07-07    McCain  40.8
+#> 499 2008-07-08    McCain  41.8
+#> 500 2008-07-09    McCain  41.4
+#> 501 2008-07-10    McCain  41.4
+#> 502 2008-07-11    McCain  41.0
+#> 503 2008-07-12    McCain  41.3
+#> 504 2008-07-13    McCain  41.3
+#> 505 2008-07-14    McCain  41.5
+#> 506 2008-07-15    McCain  42.2
+#> 507 2008-07-16    McCain  41.9
+#> 508 2008-07-17    McCain  42.1
+#> 509 2008-07-18    McCain  43.3
+#> 510 2008-07-19    McCain  42.8
+#> 511 2008-07-20    McCain  42.4
+#> 512 2008-07-21    McCain  42.6
+#> 513 2008-07-22    McCain  41.3
+#> 514 2008-07-23    McCain  41.7
+#> 515 2008-07-24    McCain  41.7
+#> 516 2008-07-25    McCain  41.3
+#> 517 2008-07-26    McCain  41.7
+#> 518 2008-07-27    McCain  42.1
+#> 519 2008-07-28    McCain  41.6
+#> 520 2008-07-29    McCain  42.2
+#> 521 2008-07-30    McCain  43.0
+#> 522 2008-07-31    McCain  42.9
+#> 523 2008-08-01    McCain  43.1
+#> 524 2008-08-02    McCain  41.5
+#> 525 2008-08-03    McCain  41.1
+#> 526 2008-08-04    McCain  41.2
+#> 527 2008-08-05    McCain  41.3
+#> 528 2008-08-06    McCain  40.7
+#> 529 2008-08-07    McCain  40.7
+#> 530 2008-08-08    McCain  40.8
+#> 531 2008-08-09    McCain  42.0
+#> 532 2008-08-10    McCain  42.0
+#> 533 2008-08-11    McCain  42.8
+#> 534 2008-08-12    McCain  43.0
+#> 535 2008-08-13    McCain  43.6
+#> 536 2008-08-14    McCain  43.8
+#> 537 2008-08-15    McCain  43.8
+#> 538 2008-08-16    McCain  43.7
+#> 539 2008-08-17    McCain  43.6
+#> 540 2008-08-18    McCain  43.4
+#> 541 2008-08-19    McCain  42.7
+#> 542 2008-08-20    McCain  42.9
+#> 543 2008-08-21    McCain  42.5
+#> 544 2008-08-22    McCain  42.5
+#> 545 2008-08-23    McCain  43.1
+#> 546 2008-08-24    McCain  43.1
+#> 547 2008-08-25    McCain  42.5
+#> 548 2008-08-26    McCain  43.8
+#> 549 2008-08-27    McCain  43.5
+#> 550 2008-08-28    McCain  43.6
+#> 551 2008-08-29    McCain  44.1
+#> 552 2008-08-30    McCain  43.1
+#> 553 2008-08-31    McCain  42.7
+#> 554 2008-09-01    McCain  43.2
+#> 555 2008-09-02    McCain  42.5
+#> 556 2008-09-03    McCain  42.5
+#> 557 2008-09-04    McCain  42.5
+#> 558 2008-09-05    McCain  42.8
+#> 559 2008-09-06    McCain  44.3
+#> 560 2008-09-07    McCain  45.5
+#> 561 2008-09-08    McCain  45.3
+#> 562 2008-09-09    McCain  46.2
+#> 563 2008-09-10    McCain  46.3
+#> 564 2008-09-11    McCain  46.5
+#> 565 2008-09-12    McCain  46.3
+#> 566 2008-09-13    McCain  45.7
+#> 567 2008-09-14    McCain  45.5
+#> 568 2008-09-15    McCain  45.7
+#> 569 2008-09-16    McCain  45.5
+#> 570 2008-09-17    McCain  45.6
+#> 571 2008-09-18    McCain  45.5
+#> 572 2008-09-19    McCain  45.2
+#> 573 2008-09-20    McCain  45.0
+#> 574 2008-09-21    McCain  45.0
+#> 575 2008-09-22    McCain  44.5
+#> 576 2008-09-23    McCain  44.4
+#> 577 2008-09-24    McCain  44.4
+#> 578 2008-09-25    McCain  44.3
+#> 579 2008-09-26    McCain  44.1
+#> 580 2008-09-27    McCain  44.2
+#> 581 2008-09-28    McCain  43.6
+#> 582 2008-09-29    McCain  43.8
+#> 583 2008-09-30    McCain  43.5
+#> 584 2008-10-01    McCain  43.4
+#> 585 2008-10-02    McCain  43.2
+#> 586 2008-10-03    McCain  43.2
+#> 587 2008-10-04    McCain  43.0
+#> 588 2008-10-05    McCain  43.0
+#> 589 2008-10-06    McCain  43.0
+#> 590 2008-10-07    McCain  43.1
+#> 591 2008-10-08    McCain  42.5
+#> 592 2008-10-09    McCain  42.5
+#> 593 2008-10-10    McCain  42.3
+#> 594 2008-10-11    McCain  42.2
+#> 595 2008-10-12    McCain  42.0
+#> 596 2008-10-13    McCain  41.9
+#> 597 2008-10-14    McCain  42.0
+#> 598 2008-10-15    McCain  42.5
+#> 599 2008-10-16    McCain  42.7
+#> 600 2008-10-17    McCain  42.8
+#> 601 2008-10-18    McCain  43.0
+#> 602 2008-10-19    McCain  43.1
+#> 603 2008-10-20    McCain  42.9
+#> 604 2008-10-21    McCain  42.9
+#> 605 2008-10-22    McCain  42.5
+#> 606 2008-10-23    McCain  42.5
+#> 607 2008-10-24    McCain  42.6
+#> 608 2008-10-25    McCain  42.4
+#> 609 2008-10-26    McCain  42.6
+#> 610 2008-10-27    McCain  42.8
+#> 611 2008-10-28    McCain  43.0
+#> 612 2008-10-29    McCain  43.3
+#> 613 2008-10-30    McCain  43.4
+#> 614 2008-10-31    McCain  43.7
+#> 615 2008-11-01    McCain  44.0
+#> 616 2008-11-02    McCain  44.2
+#> 617 2008-11-03    McCain  44.2
+#> 618 2008-11-04    McCain  44.2
 ```
 
 
@@ -381,7 +972,7 @@ Would the overall popular vote be useful in predicting state-level polling, or v
 Load the `face` dataset:
 
 ```r
-face <- read_csv(qss_data_url("prediction", "face.csv"))
+data("face", package = "qss")
 ```
 Add Democrat and Republican vote shares, and the difference in shares:
 
@@ -533,22 +1124,64 @@ See the [R for Data Science](http://r4ds.had.co.nz/) chapter [Relational data](h
 
 
 ```r
-pres12 <- read_csv(qss_data_url("prediction", "pres12.csv"))
+data("pres12", package = "qss")
 ```
 
 
 ```r
 full_join(pres08, pres12, by = "state")
-#> # A tibble: 51 x 9
-#>   state.name state Obama.x McCain  EV.x margin Obama.y Romney  EV.y
-#>        <chr> <chr>   <int>  <int> <int>  <int>   <int>  <int> <int>
-#> 1    Alabama    AL      39     60     9    -21      38     61     9
-#> 2     Alaska    AK      38     59     3    -21      41     55     3
-#> 3    Arizona    AZ      45     54    10     -9      45     54    11
-#> 4   Arkansas    AR      39     59     6    -20      37     61     6
-#> 5 California    CA      61     37    55     24      60     37    55
-#> 6   Colorado    CO      54     45     9      9      51     46     9
-#> # ... with 45 more rows
+#>        state.name state Obama.x McCain EV.x margin Obama.y Romney EV.y
+#> 1         Alabama    AL      39     60    9    -21      38     61    9
+#> 2          Alaska    AK      38     59    3    -21      41     55    3
+#> 3         Arizona    AZ      45     54   10     -9      45     54   11
+#> 4        Arkansas    AR      39     59    6    -20      37     61    6
+#> 5      California    CA      61     37   55     24      60     37   55
+#> 6        Colorado    CO      54     45    9      9      51     46    9
+#> 7     Connecticut    CT      61     38    7     23      58     41    7
+#> 8            D.C.    DC      92      7    3     85      91      7    3
+#> 9        Delaware    DE      62     37    3     25      59     40    3
+#> 10        Florida    FL      51     48   27      3      50     49   29
+#> 11        Georgia    GA      47     52   15     -5      45     53   16
+#> 12         Hawaii    HI      72     27    4     45      71     28    4
+#> 13          Idaho    ID      36     62    4    -26      33     65    4
+#> 14       Illinois    IL      62     37   21     25      58     41   20
+#> 15        Indiana    IN      50     49   11      1      44     54   11
+#> 16           Iowa    IA      54     44    7     10      52     46    6
+#> 17         Kansas    KS      42     57    6    -15      38     60    6
+#> 18       Kentucky    KY      41     57    8    -16      38     60    8
+#> 19      Louisiana    LA      40     59    9    -19      41     58    8
+#> 20          Maine    ME      58     40    4     18      56     41    4
+#> 21       Maryland    MD      62     36   10     26      62     36   10
+#> 22  Massachusetts    MA      62     36   12     26      61     38   11
+#> 23       Michigan    MI      57     41   17     16      54     45   16
+#> 24      Minnesota    MN      54     44   10     10      53     45   10
+#> 25    Mississippi    MS      43     56    6    -13      44     55    6
+#> 26       Missouri    MO      48     49   11     -1      44     54   10
+#> 27        Montana    MT      47     50    3     -3      42     55    3
+#> 28       Nebraska    NE      42     57    5    -15      38     60    5
+#> 29         Nevada    NV      55     43    5     12      52     46    6
+#> 30  New Hampshire    NH      54     45    4      9      52     46    4
+#> 31     New Jersey    NJ      57     42   15     15      58     41   14
+#> 32     New Mexico    NM      57     42    5     15      53     43    5
+#> 33       New York    NY      63     36   31     27      63     35   29
+#> 34 North Carolina    NC      50     49   15      1      48     50   15
+#> 35   North Dakota    ND      45     53    3     -8      39     58    3
+#> 36           Ohio    OH      51     47   20      4      51     48   18
+#> 37       Oklahoma    OK      34     66    7    -32      33     67    7
+#> 38         Oregon    OR      57     40    7     17      54     42    7
+#> 39   Pennsylvania    PA      55     44   21     11      52     47   20
+#> 40   Rhode Island    RI      63     35    4     28      63     35    4
+#> 41 South Carolina    SC      45     54    8     -9      44     55    9
+#> 42   South Dakota    SD      45     53    3     -8      40     58    3
+#> 43      Tennessee    TN      42     57   11    -15      39     59   11
+#> 44          Texas    TX      44     55   34    -11      41     57   38
+#> 45           Utah    UT      34     63    5    -29      25     73    6
+#> 46        Vermont    VT      67     30    3     37      67     31    3
+#> 47       Virginia    VA      53     46   13      7      51     47   13
+#> 48     Washington    WA      58     40   11     18      56     41   12
+#> 49  West Virginia    WV      43     56    5    -13      36     62    5
+#> 50      Wisconsin    WI      56     42   10     14      53     46   10
+#> 51        Wyoming    WY      33     65    3    -32      28     69    3
 ```
 
 *Note: this could be a question. How would you change the .x, .y suffixes to something more informative*
@@ -558,16 +1191,58 @@ use the `suffix` argument:
 ```r
 pres <- full_join(pres08, pres12, by = "state", suffix = c("_08", "_12"))
 pres
-#> # A tibble: 51 x 9
-#>   state.name state Obama_08 McCain EV_08 margin Obama_12 Romney EV_12
-#>        <chr> <chr>    <int>  <int> <int>  <int>    <int>  <int> <int>
-#> 1    Alabama    AL       39     60     9    -21       38     61     9
-#> 2     Alaska    AK       38     59     3    -21       41     55     3
-#> 3    Arizona    AZ       45     54    10     -9       45     54    11
-#> 4   Arkansas    AR       39     59     6    -20       37     61     6
-#> 5 California    CA       61     37    55     24       60     37    55
-#> 6   Colorado    CO       54     45     9      9       51     46     9
-#> # ... with 45 more rows
+#>        state.name state Obama_08 McCain EV_08 margin Obama_12 Romney EV_12
+#> 1         Alabama    AL       39     60     9    -21       38     61     9
+#> 2          Alaska    AK       38     59     3    -21       41     55     3
+#> 3         Arizona    AZ       45     54    10     -9       45     54    11
+#> 4        Arkansas    AR       39     59     6    -20       37     61     6
+#> 5      California    CA       61     37    55     24       60     37    55
+#> 6        Colorado    CO       54     45     9      9       51     46     9
+#> 7     Connecticut    CT       61     38     7     23       58     41     7
+#> 8            D.C.    DC       92      7     3     85       91      7     3
+#> 9        Delaware    DE       62     37     3     25       59     40     3
+#> 10        Florida    FL       51     48    27      3       50     49    29
+#> 11        Georgia    GA       47     52    15     -5       45     53    16
+#> 12         Hawaii    HI       72     27     4     45       71     28     4
+#> 13          Idaho    ID       36     62     4    -26       33     65     4
+#> 14       Illinois    IL       62     37    21     25       58     41    20
+#> 15        Indiana    IN       50     49    11      1       44     54    11
+#> 16           Iowa    IA       54     44     7     10       52     46     6
+#> 17         Kansas    KS       42     57     6    -15       38     60     6
+#> 18       Kentucky    KY       41     57     8    -16       38     60     8
+#> 19      Louisiana    LA       40     59     9    -19       41     58     8
+#> 20          Maine    ME       58     40     4     18       56     41     4
+#> 21       Maryland    MD       62     36    10     26       62     36    10
+#> 22  Massachusetts    MA       62     36    12     26       61     38    11
+#> 23       Michigan    MI       57     41    17     16       54     45    16
+#> 24      Minnesota    MN       54     44    10     10       53     45    10
+#> 25    Mississippi    MS       43     56     6    -13       44     55     6
+#> 26       Missouri    MO       48     49    11     -1       44     54    10
+#> 27        Montana    MT       47     50     3     -3       42     55     3
+#> 28       Nebraska    NE       42     57     5    -15       38     60     5
+#> 29         Nevada    NV       55     43     5     12       52     46     6
+#> 30  New Hampshire    NH       54     45     4      9       52     46     4
+#> 31     New Jersey    NJ       57     42    15     15       58     41    14
+#> 32     New Mexico    NM       57     42     5     15       53     43     5
+#> 33       New York    NY       63     36    31     27       63     35    29
+#> 34 North Carolina    NC       50     49    15      1       48     50    15
+#> 35   North Dakota    ND       45     53     3     -8       39     58     3
+#> 36           Ohio    OH       51     47    20      4       51     48    18
+#> 37       Oklahoma    OK       34     66     7    -32       33     67     7
+#> 38         Oregon    OR       57     40     7     17       54     42     7
+#> 39   Pennsylvania    PA       55     44    21     11       52     47    20
+#> 40   Rhode Island    RI       63     35     4     28       63     35     4
+#> 41 South Carolina    SC       45     54     8     -9       44     55     9
+#> 42   South Dakota    SD       45     53     3     -8       40     58     3
+#> 43      Tennessee    TN       42     57    11    -15       39     59    11
+#> 44          Texas    TX       44     55    34    -11       41     57    38
+#> 45           Utah    UT       34     63     5    -29       25     73     6
+#> 46        Vermont    VT       67     30     3     37       67     31     3
+#> 47       Virginia    VA       53     46    13      7       51     47    13
+#> 48     Washington    WA       58     40    11     18       56     41    12
+#> 49  West Virginia    WV       43     56     5    -13       36     62     5
+#> 50      Wisconsin    WI       56     42    10     14       53     46    10
+#> 51        Wyoming    WY       33     65     3    -32       28     69     3
 ```
 
 
@@ -576,9 +1251,13 @@ The **dplyr** equivalent functions for [cbind](https://www.rdocumentation.org/pa
 
 ```r
 pres <- pres %>%
-  mutate(Obama2008.z = scale(Obama_08),
-         Obama2012.z = scale(Obama_12))
+  mutate(Obama2008.z = as.numeric(scale(Obama_08)),
+         Obama2012.z = as.numeric(scale(Obama_12)))
 ```
+
+We need to use the `as.numeric` function because `scale()` always returns a matrix.
+This will not produce an error in the code chunk above, since the columns of a data frame
+can be matrices, but will produce errors in some of the following code if it were omitted.
 
 Scatter plot of states with vote shares in 2008 and 2012
 
@@ -602,17 +1281,13 @@ To calculate the bottom and top quartiles
 pres %>%
   filter(Obama2008.z < quantile(Obama2008.z, 0.25)) %>%
   summarise(improve = mean(Obama2012.z > Obama2008.z))
-#> # A tibble: 1 x 1
 #>   improve
-#>     <dbl>
 #> 1   0.583
 
 pres %>%
   filter(Obama2008.z < quantile(Obama2008.z, 0.75)) %>%
   summarise(improve = mean(Obama2012.z > Obama2008.z))
-#> # A tibble: 1 x 1
 #>   improve
-#>     <dbl>
 #> 1     0.5
 ```
 
@@ -622,7 +1297,7 @@ pres %>%
 
 
 ```r
-florida <- read_csv(qss_data_url("prediction", "florida.csv"))
+data("florida", package = "qss")
 fit2 <- lm(Buchanan00 ~ Perot96, data = florida)
 fit2
 #> 
@@ -702,9 +1377,7 @@ arrange(florida) %>%
   arrange(desc(abs(resid))) %>%
   select(county, resid) %>%
   head()
-#> # A tibble: 6 x 2
 #>       county resid
-#>        <chr> <dbl>
 #> 1  PalmBeach  2302
 #> 2    Broward  -613
 #> 3        Lee  -357
@@ -795,7 +1468,7 @@ See [Graphics for communication](http://r4ds.had.co.nz/graphics-for-communicatio
 Load data
 
 ```r
-women <- read_csv(qss_data_url("prediction", "women.csv"))
+data("women", package = "qss")
 ```
 
 proportion of female politicians in reserved GP vs. unreserved GP
@@ -897,7 +1570,7 @@ lm(irrigation ~ reserved, data = women)
 
 
 ```r
-social <- read_csv(qss_data_url("prediction", "social.csv"))
+data("social", package = "qss")
 glimpse(social)
 #> Observations: 305,866
 #> Variables: 6
@@ -905,15 +1578,15 @@ glimpse(social)
 #> $ yearofbirth <int> 1941, 1947, 1951, 1950, 1982, 1981, 1959, 1956, 19...
 #> $ primary2004 <int> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0,...
 #> $ messages    <chr> "Civic Duty", "Civic Duty", "Hawthorne", "Hawthorn...
-#> $ primary2008 <int> 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1,...
+#> $ primary2006 <int> 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1,...
 #> $ hhsize      <int> 2, 2, 3, 3, 3, 3, 3, 3, 2, 2, 1, 2, 2, 1, 2, 2, 1,...
 levels(social$messages)
 #> NULL
-fit <- lm(primary2008 ~ messages, data = social)
+fit <- lm(primary2006 ~ messages, data = social)
 fit
 #> 
 #> Call:
-#> lm(formula = primary2008 ~ messages, data = social)
+#> lm(formula = primary2006 ~ messages, data = social)
 #> 
 #> Coefficients:
 #>       (Intercept)    messagesControl  messagesHawthorne  
@@ -942,10 +1615,10 @@ for (i in unique(social$messages)) {
 We created a variable for each level of `messages` even though we will exclude one of them.
 
 ```r
-lm(primary2008 ~ Control + Hawthorne + Neighbors, data = social)
+lm(primary2006 ~ Control + Hawthorne + Neighbors, data = social)
 #> 
 #> Call:
-#> lm(formula = primary2008 ~ Control + Hawthorne + Neighbors, data = social)
+#> lm(formula = primary2006 ~ Control + Hawthorne + Neighbors, data = social)
 #> 
 #> Coefficients:
 #> (Intercept)      Control    Hawthorne    Neighbors  
@@ -973,9 +1646,9 @@ Compare to the sample averages
 ```r
 social %>%
   group_by(messages) %>%
-  summarise(mean(primary2008))
+  summarise(mean(primary2006))
 #> # A tibble: 4 x 2
-#>     messages `mean(primary2008)`
+#>     messages `mean(primary2006)`
 #>        <chr>               <dbl>
 #> 1 Civic Duty               0.315
 #> 2    Control               0.297
@@ -986,11 +1659,11 @@ social %>%
 Linear regression without intercept.
 
 ```r
-fit.noint <- lm(primary2008 ~ -1 + messages, data = social)
+fit.noint <- lm(primary2006 ~ -1 + messages, data = social)
 fit.noint
 #> 
 #> Call:
-#> lm(formula = primary2008 ~ -1 + messages, data = social)
+#> lm(formula = primary2006 ~ -1 + messages, data = social)
 #> 
 #> Coefficients:
 #> messagesCivic Duty     messagesControl   messagesHawthorne  
@@ -1005,11 +1678,11 @@ Use [fct_relevel](https://www.rdocumentation.org/packages/forcats/topics/fct_rel
 ```r
 fit.control <- 
  mutate(social, messages = fct_relevel(messages, "Control")) %>%
- lm(primary2008 ~ messages, data = .)
+ lm(primary2006 ~ messages, data = .)
 fit.control
 #> 
 #> Call:
-#> lm(formula = primary2008 ~ messages, data = .)
+#> lm(formula = primary2006 ~ messages, data = .)
 #> 
 #> Coefficients:
 #>        (Intercept)  messagesCivic Duty   messagesHawthorne  
@@ -1023,11 +1696,11 @@ Difference in means
 ```r
 social %>%
   group_by(messages) %>%
-  summarise(primary2008 = mean(primary2008)) %>%
-  mutate(Control = primary2008[messages == "Control"],
-         diff = primary2008 - Control)
+  summarise(primary2006 = mean(primary2006)) %>%
+  mutate(Control = primary2006[messages == "Control"],
+         diff = primary2006 - Control)
 #> # A tibble: 4 x 4
-#>     messages primary2008 Control   diff
+#>     messages primary2006 Control   diff
 #>        <chr>       <dbl>   <dbl>  <dbl>
 #> 1 Civic Duty       0.315   0.297 0.0179
 #> 2    Control       0.297   0.297 0.0000
@@ -1056,8 +1729,8 @@ Average treatment effect (ate) among those who voted in 2004 primary
 ate <-
   social %>%
   group_by(primary2004, messages) %>%
-  summarise(primary2008 = mean(primary2008)) %>%
-  spread(messages, primary2008) %>%
+  summarise(primary2006 = mean(primary2006)) %>%
+  spread(messages, primary2006) %>%
   mutate(ate_Neighbors = Neighbors - Control) %>%
   select(primary2004, Neighbors, Control, ate_Neighbors)
 ate
@@ -1081,12 +1754,12 @@ diff(ate$ate_Neighbors)
 social.neighbor <- social %>%
   filter((messages == "Control") | (messages == "Neighbors"))
 
-fit.int <- lm(primary2008 ~ primary2004 + messages + primary2004:messages,
+fit.int <- lm(primary2006 ~ primary2004 + messages + primary2004:messages,
               data = social.neighbor)
 fit.int
 #> 
 #> Call:
-#> lm(formula = primary2008 ~ primary2004 + messages + primary2004:messages, 
+#> lm(formula = primary2006 ~ primary2004 + messages + primary2004:messages, 
 #>     data = social.neighbor)
 #> 
 #> Coefficients:
@@ -1098,10 +1771,10 @@ fit.int
 
 
 ```r
-lm(primary2008 ~ primary2004 * messages, data = social.neighbor)
+lm(primary2006 ~ primary2004 * messages, data = social.neighbor)
 #> 
 #> Call:
-#> lm(formula = primary2008 ~ primary2004 * messages, data = social.neighbor)
+#> lm(formula = primary2006 ~ primary2004 * messages, data = social.neighbor)
 #> 
 #> Coefficients:
 #>                   (Intercept)                    primary2004  
@@ -1120,11 +1793,11 @@ summary(social.neighbor$age)
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #>    22.0    43.0    52.0    51.8    61.0   108.0
 
-fit.age <- lm(primary2008 ~ age * messages, data = social.neighbor)
+fit.age <- lm(primary2006 ~ age * messages, data = social.neighbor)
 fit.age
 #> 
 #> Call:
-#> lm(formula = primary2008 ~ age * messages, data = social.neighbor)
+#> lm(formula = primary2006 ~ age * messages, data = social.neighbor)
 #> 
 #> Coefficients:
 #>           (Intercept)                    age      messagesNeighbors  
@@ -1157,12 +1830,12 @@ Though note that the coefficients will be be different since by default `poly` c
 However, you really shouldn't interpret the coefficients directly anyways, so this should matter.
 
 ```r
-fit.age2 <- lm(primary2008 ~ poly(age, 2) * messages,
+fit.age2 <- lm(primary2006 ~ poly(age, 2) * messages,
                data = social.neighbor)
 fit.age2
 #> 
 #> Call:
-#> lm(formula = primary2008 ~ poly(age, 2) * messages, data = social.neighbor)
+#> lm(formula = primary2006 ~ poly(age, 2) * messages, data = social.neighbor)
 #> 
 #> Coefficients:
 #>                     (Intercept)                    poly(age, 2)1  
@@ -1210,7 +1883,7 @@ y.hat %>%
 
 
 ```r
-MPs <- read_csv(qss_data_url("prediction", "MPs.csv"))
+data("MPs", package = "qss")
 
 MPs_labour <- filter(MPs, party == "labour")
 MPs_tory <- filter(MPs, party == "tory")

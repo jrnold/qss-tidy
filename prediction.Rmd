@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Prediction
 
 ## Prerequisites
@@ -12,13 +17,6 @@ The packages `r pkg_link("modelr")` and `r pkg_link("broom")` are used to wrangl
 ```{r message=FALSE}
 library("broom")
 library("modelr")
-```
-
-We also use the R function
-```{r echo=FALSE}
-insert_fun("qss_data_url")
-```
-```{r qss_data_url-source,eval=FALSE}
 ```
 
 ## Loops in R
@@ -40,11 +38,11 @@ see the **dplyr** functions `r rdoc("dplyr", "if_else")`, `r rdoc("dplyr", "reco
 
 Load the election polls and election results for 2008,
 ```{r polls08,message=FALSE}
-polls08 <- read_csv(qss_data_url("UNCERTAINTY", "polls08.csv"))
+data("polls08", package = "qss")
 glimpse(polls08)
 ```
 ```{r pres08,message=FALSE}
-pres08 <- read_csv(qss_data_url("UNCERTAINTY", "pres08.csv"))
+data("pres08", package = "qss")
 glimpse(pres08)
 ```
 
@@ -208,12 +206,12 @@ last_polls %>%
             EV_actual = sum((elec_margin > 0) * EV))
 ```
 
-To look at predictions of the 
 
 ```{r message=FALSE}
-# load the data
-pollsUS08 <- read_csv(qss_data_url("prediction", "pollsUS08.csv")) %>%
-  mutate(DaysToElection = ELECTION_DAY - middate)
+data("pollsUS08", package = "qss")
+```
+```{r}
+pollsUS08 <- mutate(pollsUS08, DaysToElection = ELECTION_DAY - middate)
 ```
 
 We'll produce the seven-day averages slightly differently than the method used in the text. 
@@ -278,7 +276,7 @@ Would the overall popular vote be useful in predicting state-level polling, or v
 
 Load the `face` dataset:
 ```{r face,message=FALSE}
-face <- read_csv(qss_data_url("prediction", "face.csv"))
+data("face", package = "qss")
 ```
 Add Democrat and Republican vote shares, and the difference in shares:
 ```{r face_shares}
@@ -374,7 +372,7 @@ The argument `se = FALSE` tells the function not to plot the confidence interval
 See the `r R4DS` chapter [Relational data](http://r4ds.had.co.nz/relational-data.html).
 
 ```{r pres12,message=FALSE}
-pres12 <- read_csv(qss_data_url("prediction", "pres12.csv"))
+data("pres12", package = "qss")
 ```
 
 ```{r}
@@ -394,9 +392,13 @@ The **dplyr** equivalent functions for `r rdoc("base", "cbind")` is `r rdoc("dpl
 
 ```{r}
 pres <- pres %>%
-  mutate(Obama2008.z = scale(Obama_08),
-         Obama2012.z = scale(Obama_12))
+  mutate(Obama2008.z = as.numeric(scale(Obama_08)),
+         Obama2012.z = as.numeric(scale(Obama_12)))
 ```
+
+We need to use the `as.numeric` function because `scale()` always returns a matrix.
+This will not produce an error in the code chunk above, since the columns of a data frame
+can be matrices, but will produce errors in some of the following code if it were omitted.
 
 Scatter plot of states with vote shares in 2008 and 2012
 ```{r}
@@ -427,7 +429,7 @@ pres %>%
 ### Model Fit
 
 ```{r message=FALSE}
-florida <- read_csv(qss_data_url("prediction", "florida.csv"))
+data("florida", package = "qss")
 fit2 <- lm(Buchanan00 ~ Perot96, data = florida)
 fit2
 ```
@@ -537,7 +539,7 @@ See [Graphics for communication](http://r4ds.had.co.nz/graphics-for-communicatio
 
 Load data
 ```{r message=FALSE}
-women <- read_csv(qss_data_url("prediction", "women.csv"))
+data("women", package = "qss")
 ```
 
 proportion of female politicians in reserved GP vs. unreserved GP
@@ -597,10 +599,10 @@ lm(irrigation ~ reserved, data = women)
 ### Regression with multiple predictors
 
 ```{r message=FALSE}
-social <- read_csv(qss_data_url("prediction", "social.csv"))
+data("social", package = "qss")
 glimpse(social)
 levels(social$messages)
-fit <- lm(primary2008 ~ messages, data = social)
+fit <- lm(primary2006 ~ messages, data = social)
 fit
 ```
 
@@ -621,7 +623,7 @@ for (i in unique(social$messages)) {
 ```
 We created a variable for each level of `messages` even though we will exclude one of them.
 ```{r}
-lm(primary2008 ~ Control + Hawthorne + Neighbors, data = social)
+lm(primary2006 ~ Control + Hawthorne + Neighbors, data = social)
 ```
 
 Create predictions for each unique value of `messages`
@@ -636,12 +638,12 @@ Compare to the sample averages
 ```{r}
 social %>%
   group_by(messages) %>%
-  summarise(mean(primary2008))
+  summarise(mean(primary2006))
 ```
 
 Linear regression without intercept.
 ```{r}
-fit.noint <- lm(primary2008 ~ -1 + messages, data = social)
+fit.noint <- lm(primary2006 ~ -1 + messages, data = social)
 fit.noint
 ```
 
@@ -650,7 +652,7 @@ Use `r rdoc("forcats", "fct_relevel")` to make "Control"
 ```{r}
 fit.control <- 
  mutate(social, messages = fct_relevel(messages, "Control")) %>%
- lm(primary2008 ~ messages, data = .)
+ lm(primary2006 ~ messages, data = .)
 fit.control
 ```
 
@@ -658,9 +660,9 @@ Difference in means
 ```{r}
 social %>%
   group_by(messages) %>%
-  summarise(primary2008 = mean(primary2008)) %>%
-  mutate(Control = primary2008[messages == "Control"],
-         diff = primary2008 - Control)
+  summarise(primary2006 = mean(primary2006)) %>%
+  mutate(Control = primary2006[messages == "Control"],
+         diff = primary2006 - Control)
 ```
 
 Adjusted R-squared is included in the output of `broom::glance()`
@@ -677,8 +679,8 @@ Average treatment effect (ate) among those who voted in 2004 primary
 ate <-
   social %>%
   group_by(primary2004, messages) %>%
-  summarise(primary2008 = mean(primary2008)) %>%
-  spread(messages, primary2008) %>%
+  summarise(primary2006 = mean(primary2006)) %>%
+  spread(messages, primary2006) %>%
   mutate(ate_Neighbors = Neighbors - Control) %>%
   select(primary2004, Neighbors, Control, ate_Neighbors)
 ate
@@ -693,13 +695,13 @@ diff(ate$ate_Neighbors)
 social.neighbor <- social %>%
   filter((messages == "Control") | (messages == "Neighbors"))
 
-fit.int <- lm(primary2008 ~ primary2004 + messages + primary2004:messages,
+fit.int <- lm(primary2006 ~ primary2004 + messages + primary2004:messages,
               data = social.neighbor)
 fit.int
 ```
 
 ```{r}
-lm(primary2008 ~ primary2004 * messages, data = social.neighbor)
+lm(primary2006 ~ primary2004 * messages, data = social.neighbor)
 ```
 
 ```{r}
@@ -709,7 +711,7 @@ social.neighbor <-
 
 summary(social.neighbor$age)
 
-fit.age <- lm(primary2008 ~ age * messages, data = social.neighbor)
+fit.age <- lm(primary2006 ~ age * messages, data = social.neighbor)
 fit.age
 ```
 
@@ -728,7 +730,7 @@ You can use `r rdoc("base", "poly")` function to calculate polynomials instead o
 Though note that the coefficients will be be different since by default `poly` calculates orthogonal polynomials instead of the natural (raw) polynomials.
 However, you really shouldn't interpret the coefficients directly anyways, so this should matter.
 ```{r}
-fit.age2 <- lm(primary2008 ~ poly(age, 2) * messages,
+fit.age2 <- lm(primary2006 ~ poly(age, 2) * messages,
                data = social.neighbor)
 fit.age2
 ```
@@ -762,7 +764,7 @@ y.hat %>%
 ## Regression Discontinuity Design
 
 ```{r message=FALSE}
-MPs <- read_csv(qss_data_url("prediction", "MPs.csv"))
+data("MPs", package = "qss")
 
 MPs_labour <- filter(MPs, party == "labour")
 MPs_tory <- filter(MPs, party == "tory")

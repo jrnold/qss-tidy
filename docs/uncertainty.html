@@ -256,7 +256,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">library</span>(<span class="st">&quot;stringr&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;modelr&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;broom&quot;</span>)</code></pre></div>
-<p>We will also, use the function <code>qss_data_url</code>:</p>
 </div>
 <div id="estimation" class="section level2">
 <h2><span class="header-section-number">8.2</span> Estimation</h2>
@@ -326,7 +325,7 @@ diff_means &lt;-
 <span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> PATE, <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;sampling distribution&quot;</span>)
 <span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-7-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-6-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim_pate_se &lt;-<span class="st"> </span><span class="cf">function</span>(mu0, mu1, sd0, sd1) {
   PATE &lt;-<span class="st"> </span>mu1 <span class="op">-</span><span class="st"> </span>mu0
   smpl &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">Y0 =</span> <span class="kw">rnorm</span>(n, <span class="dt">mean =</span> mu0, <span class="dt">sd =</span> sd0),
@@ -389,12 +388,15 @@ props &lt;-<span class="st"> </span><span class="kw">map_df</span>(MoE, moe_pop_
        <span class="dt">x =</span> <span class="st">&quot;population proportion&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;sample size&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p><a href="https://www.rdocumentation.org/packages/readr/topics/read_csv">read_csv</a> already recognizes the date columns, so we don’t need to convert them.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ELECTION_DATE &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="dv">20081104</span>)
-pres08 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;uncertainty&quot;</span>, <span class="st">&quot;pres08.csv&quot;</span>))
-
-polls08 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;uncertainty&quot;</span>, <span class="st">&quot;polls08.csv&quot;</span>)) <span class="op">%&gt;%</span>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><a href="https://www.rdocumentation.org/packages/readr/topics/read_csv">read_csv</a> already recognizes the date columns, so we don’t need to convert them. The 2008 election was on Nov 11, 2008, so we’ll store that in a variable.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ELECTION_DATE &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="dv">20081104</span>)</code></pre></div>
+<p>Load the final vote shares,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;pres08&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
+<p>and polling data</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;polls08&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
+<p>We need to add an additional column to the <code>polls08</code> data frame which contains the number of days until the election:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">polls08 &lt;-<span class="st"> </span>polls08 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">DaysToElection =</span> <span class="kw">as.integer</span>(ELECTION_DATE <span class="op">-</span><span class="st"> </span>middate))</code></pre></div>
 <p>For each state calculate the mean of the latest polls,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">poll_pred &lt;-
@@ -445,7 +447,7 @@ poll_pred
 <span class="st">  </span><span class="kw">scale_colour_discrete</span>(<span class="st">&quot;CI includes result?&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_fixed</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" /> Proportion of polls with confidence intervals that include the election outcome?</p>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" /> Proportion of polls with confidence intervals that include the election outcome?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">poll_pred <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="kw">mean</span>(covers))
 <span class="co">#&gt; # A tibble: 1 x 1</span>
@@ -473,18 +475,20 @@ poll_pred <span class="op">%&gt;%</span>
 </div>
 <div id="analyais-of-randomized-controlled-trials" class="section level3">
 <h3><span class="header-section-number">8.2.4</span> Analyais of Randomized Controlled Trials</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">STAR &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;uncertainty&quot;</span>, <span class="st">&quot;STAR.csv&quot;</span>)) <span class="op">%&gt;%</span>
+<p>Load the <code>STAR</code> data from the <strong>qss</strong> package,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;STAR&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
+<p>Add meaningful labels to the <code>classtype</code> variable:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">STAR &lt;-<span class="st"> </span>STAR <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">classtype =</span> <span class="kw">factor</span>(classtype,
                             <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;small class&quot;</span>, <span class="st">&quot;regular class&quot;</span>,
-                                       <span class="st">&quot;regular class with aid&quot;</span>)))
-
-classtype_means &lt;-<span class="st"> </span>
+                                       <span class="st">&quot;regular class with aid&quot;</span>)))</code></pre></div>
+<p>Summarize scores by classroom type:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">classtype_means &lt;-<span class="st"> </span>
 <span class="st">  </span>STAR <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(classtype) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">g4reading =</span> <span class="kw">mean</span>(g4reading, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))
-
-classtypes_used &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;small class&quot;</span>, <span class="st">&quot;regular class&quot;</span>)
-
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">g4reading =</span> <span class="kw">mean</span>(g4reading, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</code></pre></div>
+<p>Plot the distribution of scores by classroom type:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">classtypes_used &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;small class&quot;</span>, <span class="st">&quot;regular class&quot;</span>)
 <span class="kw">ggplot</span>(<span class="kw">filter</span>(STAR,
               classtype <span class="op">%in%</span><span class="st"> </span>classtypes_used,
               <span class="op">!</span><span class="kw">is.na</span>(g4reading)),
@@ -495,9 +499,8 @@ classtypes_used &lt;-<span class="st"> </span><span class="kw">c</span>(<span cl
              <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_grid</span>(classtype <span class="op">~</span><span class="st"> </span>.) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Fourth grade reading score&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Density&quot;</span>)</code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">alpha &lt;-<span class="st"> </span><span class="fl">0.05</span>
-
 star_estimates &lt;-<span class="st"> </span>
 <span class="st">  </span>STAR <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(g4reading)) <span class="op">%&gt;%</span>
@@ -829,7 +832,7 @@ z.score
 <span class="co">#&gt; sample estimates:</span>
 <span class="co">#&gt; mean of x mean of y </span>
 <span class="co">#&gt;       723       720</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;uncertainty&quot;</span>, <span class="st">&quot;resume.csv&quot;</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;resume&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)
 
 x &lt;-<span class="st"> </span>resume <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>(race, call) <span class="op">%&gt;%</span>
@@ -935,10 +938,12 @@ se.star &lt;-<span class="st"> </span><span class="kw">sqrt</span>(p1.star <span
 <h2><span class="header-section-number">8.4</span> Linear Regression Model with Uncertainty</h2>
 <div id="linear-regression-as-a-generative-model" class="section level3">
 <h3><span class="header-section-number">8.4.1</span> Linear Regression as a Generative Model</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;uncertainty&quot;</span>, <span class="st">&quot;minwage.csv&quot;</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">fullPropBefore =</span> fullBefore <span class="op">/</span><span class="st"> </span>(fullBefore <span class="op">+</span><span class="st"> </span>partBefore),
-         <span class="dt">fullPropAfter =</span> fullAfter <span class="op">/</span><span class="st"> </span>(fullAfter <span class="op">+</span><span class="st"> </span>partAfter),
-         <span class="dt">NJ =</span> <span class="kw">as.integer</span>(location <span class="op">==</span><span class="st"> &quot;PA&quot;</span>))</code></pre></div>
+<p>Load the minimum wage date included with the <strong>qss</strong> package:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;minwage&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage &lt;-<span class="st"> </span><span class="kw">mutate</span>(minwage,
+                  <span class="dt">fullPropBefore =</span> fullBefore <span class="op">/</span><span class="st"> </span>(fullBefore <span class="op">+</span><span class="st"> </span>partBefore),
+                  <span class="dt">fullPropAfter =</span> fullAfter <span class="op">/</span><span class="st"> </span>(fullAfter <span class="op">+</span><span class="st"> </span>partAfter),
+                  <span class="dt">NJ =</span> <span class="kw">as.integer</span>(location <span class="op">==</span><span class="st"> &quot;PA&quot;</span>))</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit_minwage &lt;-<span class="st"> </span><span class="kw">lm</span>(fullPropAfter <span class="op">~</span><span class="st"> </span><span class="op">-</span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>NJ <span class="op">+</span><span class="st"> </span>fullPropBefore <span class="op">+</span>
 <span class="st">                    </span>wageBefore <span class="op">+</span><span class="st"> </span>chain, <span class="dt">data =</span> minwage)
 fit_minwage
@@ -977,7 +982,7 @@ fit_minwage1
 <div id="inference-about-coefficients" class="section level3">
 <h3><span class="header-section-number">8.4.2</span> Inference about coefficients</h3>
 <p>Use the <a href="https://www.rdocumentation.org/packages/broom/topics/tidy">tidy</a> function to return the coefficients, including confidence intervals, as a data frame:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">women &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;uncertainty&quot;</span>, <span class="st">&quot;women.csv&quot;</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;women&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)
 fit_women &lt;-<span class="st"> </span><span class="kw">lm</span>(water <span class="op">~</span><span class="st"> </span>reserved, <span class="dt">data =</span> women)
 <span class="kw">summary</span>(fit_women)
 <span class="co">#&gt; </span>
@@ -1040,7 +1045,7 @@ fit_women &lt;-<span class="st"> </span><span class="kw">lm</span>(water <span c
 </div>
 <div id="inference-about-predictions" class="section level3">
 <h3><span class="header-section-number">8.4.3</span> Inference about predictions</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MPs &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;uncertainty&quot;</span>, <span class="st">&quot;MPs.csv&quot;</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;MPs&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)
 MPs_labour &lt;-<span class="st"> </span><span class="kw">filter</span>(MPs, party <span class="op">==</span><span class="st"> &quot;labour&quot;</span>)
 MPs_tory &lt;-<span class="st"> </span><span class="kw">filter</span>(MPs, party <span class="op">==</span><span class="st"> &quot;tory&quot;</span>)
 labour_fit1 &lt;-<span class="st"> </span><span class="kw">lm</span>(ln.net <span class="op">~</span><span class="st"> </span>margin, <span class="dt">data =</span> <span class="kw">filter</span>(MPs_labour, margin <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>))
@@ -1103,7 +1108,7 @@ tory_y1 &lt;-<span class="st"> </span><span class="kw">augment</span>(tory_fit2,
               <span class="dt">data =</span> tory_y1, <span class="dt">alpha =</span> <span class="fl">0.3</span>) <span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> margin, <span class="dt">y =</span> .fitted), <span class="dt">data =</span> tory_y1) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Margin of vitory&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;log net wealth&quot;</span>)</code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tory_y1 &lt;-<span class="st"> </span><span class="kw">augment</span>(tory_fit1, <span class="dt">newdata =</span> <span class="kw">tibble</span>(<span class="dt">margin =</span> <span class="dv">0</span>))
 tory_y1
 <span class="co">#&gt;   margin .fitted .se.fit</span>

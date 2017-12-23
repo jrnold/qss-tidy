@@ -27,8 +27,6 @@ library("modelr")
 
 
 
-
-
 ## Textual data
 
 
@@ -71,12 +69,12 @@ corpus_tidy
 #> # A tibble: 85 x 8
 #>   author       datetimestamp description heading       id language origin
 #>    <lgl>              <dttm>       <lgl>   <lgl>    <chr>    <chr>  <lgl>
-#> 1     NA 2017-12-22 15:22:19          NA      NA fp01.txt       en     NA
-#> 2     NA 2017-12-22 15:22:19          NA      NA fp02.txt       en     NA
-#> 3     NA 2017-12-22 15:22:19          NA      NA fp03.txt       en     NA
-#> 4     NA 2017-12-22 15:22:19          NA      NA fp04.txt       en     NA
-#> 5     NA 2017-12-22 15:22:19          NA      NA fp05.txt       en     NA
-#> 6     NA 2017-12-22 15:22:19          NA      NA fp06.txt       en     NA
+#> 1     NA 2017-12-22 19:13:22          NA      NA fp01.txt       en     NA
+#> 2     NA 2017-12-22 19:13:22          NA      NA fp02.txt       en     NA
+#> 3     NA 2017-12-22 19:13:22          NA      NA fp03.txt       en     NA
+#> 4     NA 2017-12-22 19:13:22          NA      NA fp04.txt       en     NA
+#> 5     NA 2017-12-22 19:13:22          NA      NA fp05.txt       en     NA
+#> 6     NA 2017-12-22 19:13:22          NA      NA fp06.txt       en     NA
 #> # ... with 79 more rows, and 1 more variables: text <chr>
 ```
 
@@ -166,14 +164,14 @@ filter(dtm, document == 12) %>%
   {wordcloud(.$word, .$n, max.words = 20)}
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" />
 
 ```r
 filter(dtm, document == 24) %>%
   {wordcloud(.$word, .$n, max.words = 20)}
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 Use the function [bind_tf_idf](https://www.rdocumentation.org/packages/tidytext/topics/bind_tf_idf) to add a column with the tf-idf to the data frame.
@@ -558,7 +556,7 @@ ggplot(mutate(author_data,
        y = "Federalist Papers", x = "Predicted values")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-35-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ## Network Data
@@ -593,12 +591,23 @@ library("GGally")
 
 
 ```r
-twitter <- read_csv(qss_data_url("discovery", "twitter-following.csv"))
-senator <- read_csv(qss_data_url("discovery", "twitter-senator.csv"))
+data("twitter.following", package = "qss")
+```
+
+```r
+data("twitter.senator", package = "qss")
+```
+
+Since the names `twitter.following` and `twitter.senator` are verbose, we'll
+simplify future code by copying their values to variables named `twitter` and `senator`, respectively.
+
+```r
+twitter <- twitter.following
+senator <- twitter.senator
 ```
 
 Simply use the  function since `twitter` consists of edges (a link from a senator to another).
-SInce `graph_from_edgelist` expects a matrix, convert the data frame to a matrix using .
+Since `graph_from_edgelist` expects a matrix, convert the data frame to a matrix using .
 
 ```r
 twitter_adj <- graph_from_edgelist(as.matrix(twitter))
@@ -607,7 +616,7 @@ twitter_adj <- graph_from_edgelist(as.matrix(twitter))
 
 ```r
 environment(degree)
-#> <environment: namespace:igraph>
+#> <environment: namespace:sna>
 ```
 
 Add in- and out-degree varibles to the `senator` data frame:
@@ -638,9 +647,7 @@ or using the  function:
 top_n(senator, 3, indegree) %>%
   arrange(desc(indegree)) %>%
   select(name, party, state, indegree, outdegree)
-#> # A tibble: 5 x 5
 #>                name party state indegree outdegree
-#>               <chr> <chr> <chr>    <dbl>     <dbl>
 #> 1        Tom Cotton     R    AR       64        15
 #> 2 Richard J. Durbin     D    IL       60        87
 #> 3     John Barrasso     R    WY       58        79
@@ -655,9 +662,7 @@ And we can find the senators with the three highest out-degrees similarly,
 top_n(senator, 3, outdegree) %>%
   arrange(desc(outdegree)) %>%
   select(name, party, state, indegree, outdegree)
-#> # A tibble: 4 x 5
 #>               name party state indegree outdegree
-#>              <chr> <chr> <chr>    <dbl>     <dbl>
 #> 1     Thad Cochran     R    MS       55        89
 #> 2     Steve Daines     R    MT       30        88
 #> 3      John McCain     R    AZ       41        88
@@ -689,7 +694,7 @@ senator %>%
   labs(main = "Closeness", x = "Incoming path", y = "Outgoing path")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" />
 
 What does the reference line indicate? What does that say about senators twitter
 networks?
@@ -709,7 +714,7 @@ senator %>%
   labs(main = "Betweenness", x = "Directed", y = "Undirected")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 We've covered three different methods of calculating the importance of a node in a network: degree, closeness, and centrality. 
@@ -729,7 +734,7 @@ senator <- mutate(senator, page_rank = page_rank(twitter_adj)[["vector"]])
 ggnet(twitter_adj, mode = "target")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -780,11 +785,6 @@ glimpse(us.cities)
 
 ```r
 usa_map <- map_data("usa")
-#> 
-#> Attaching package: 'maps'
-#> The following object is masked from 'package:purrr':
-#> 
-#>     map
 capitals <- filter(us.cities,
                    capital == 2, 
                    !country.etc %in% c("HI", "AK"))
@@ -801,7 +801,7 @@ ggplot() +
        size = "Population")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -817,7 +817,7 @@ ggplot() +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -858,14 +858,16 @@ ggplot(tibble(x = rep(1:4, each = 2),
   theme(panel.grid = element_blank())
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-52-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ### United States Presidential Elections
 
 
 ```r
-pres08 <- read_csv(qss_data_url("discovery", "pres08.csv")) %>%
+data("pres08", package = "qss")
+
+pres08 <- pres08 %>%
   mutate(Dem = Obama / (Obama + McCain),
          Rep = McCain / (Obama + McCain))
 ```
@@ -878,7 +880,7 @@ ggplot() +
   theme_void() 
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-54-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-52-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -891,7 +893,7 @@ ggplot() +
   theme_void()
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-53-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -937,7 +939,7 @@ ggplot(states) +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" />
 
 For plotting the purple states, I use  since the `color` column contains the RGB values to use in the plot:
 
@@ -951,7 +953,7 @@ ggplot(states) +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" />
 
 However, plotting purple states is not a good data visualization.
 Even though the colors are a proportional mixture of red and blue, human visual perception doesn't work that way.
@@ -969,7 +971,7 @@ ggplot(states) +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -979,7 +981,7 @@ ggplot(states) +
 We don't need to do the direct mapping since 
 
 ```r
-walmart <- read_csv(qss_data_url("discovery", "walmart.csv"))
+data("walmart", package = "qss")
 
 ggplot() +
   borders(database = "state") +
@@ -992,7 +994,7 @@ ggplot() +
   theme_void()
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-60-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" />
 We don't need to worry about colors since `ggplot` handles that.
 I use [guides](http://docs.ggplot2.org/current/guides.html) to so that the colors or not transparent
 in the legend (see *R for Data Science* chapter[Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html)).
@@ -1021,7 +1023,7 @@ years <- c(1975, 1985, 1995, 2005)
 walk(years, ~ print(map_walmart(.x, walmart)))
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-61-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-61-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-61-4.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-4.png" width="70%" style="display: block; margin: auto;" />
 
 
 ### Animation in R
@@ -1058,4 +1060,4 @@ walmart_animated <-
 gganimate(walmart_animated)
 ```
 
-![unnamed-chunk-64](discovery_files/figure-html/unnamed-chunk-64-.gif)
+![unnamed-chunk-62](discovery_files/figure-html/unnamed-chunk-62-.gif)

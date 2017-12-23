@@ -51,6 +51,19 @@ class(UNpop)
 UNpop
 ```
 
+
+Datasets can also be distributed with R packages. 
+These are often smaller datasets used in examples and package tutorials.
+
+The function `data` with called without any arguments will list all the datasets distributed with installed packages.
+```{r eval=FALSE}
+data()
+```
+The **qss** library distributes the data sets used in the *QSS* textbook.
+```{r}
+data("UNpop", package = "qss")
+```
+
 The single bracket, `[`, is useful to select rows and columns in simple cases,
 but the **dplyr** functions `slice()` to select rows by number, `filter` to select by certain criteria, or `select()` to select columns.
 
@@ -97,6 +110,8 @@ UNpop %>%
 
 The function `n()` when used in a **dplyr** function returns the number of rows
 in the data frame (or the number of rows in the group if used with `group_by`).
+
+
 
 ### Saving Objects
 

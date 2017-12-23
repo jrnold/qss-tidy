@@ -283,12 +283,12 @@ corpus_tidy
 <span class="co">#&gt; # A tibble: 85 x 8</span>
 <span class="co">#&gt;   author       datetimestamp description heading       id language origin</span>
 <span class="co">#&gt;    &lt;lgl&gt;              &lt;dttm&gt;       &lt;lgl&gt;   &lt;lgl&gt;    &lt;chr&gt;    &lt;chr&gt;  &lt;lgl&gt;</span>
-<span class="co">#&gt; 1     NA 2017-12-22 15:22:19          NA      NA fp01.txt       en     NA</span>
-<span class="co">#&gt; 2     NA 2017-12-22 15:22:19          NA      NA fp02.txt       en     NA</span>
-<span class="co">#&gt; 3     NA 2017-12-22 15:22:19          NA      NA fp03.txt       en     NA</span>
-<span class="co">#&gt; 4     NA 2017-12-22 15:22:19          NA      NA fp04.txt       en     NA</span>
-<span class="co">#&gt; 5     NA 2017-12-22 15:22:19          NA      NA fp05.txt       en     NA</span>
-<span class="co">#&gt; 6     NA 2017-12-22 15:22:19          NA      NA fp06.txt       en     NA</span>
+<span class="co">#&gt; 1     NA 2017-12-22 19:13:22          NA      NA fp01.txt       en     NA</span>
+<span class="co">#&gt; 2     NA 2017-12-22 19:13:22          NA      NA fp02.txt       en     NA</span>
+<span class="co">#&gt; 3     NA 2017-12-22 19:13:22          NA      NA fp03.txt       en     NA</span>
+<span class="co">#&gt; 4     NA 2017-12-22 19:13:22          NA      NA fp04.txt       en     NA</span>
+<span class="co">#&gt; 5     NA 2017-12-22 19:13:22          NA      NA fp05.txt       en     NA</span>
+<span class="co">#&gt; 6     NA 2017-12-22 19:13:22          NA      NA fp06.txt       en     NA</span>
 <span class="co">#&gt; # ... with 79 more rows, and 1 more variables: text &lt;chr&gt;</span></code></pre></div>
 <p>The <code>text</code> column contains the text of the documents themselves. Since most of the metadata columns are either missings or irrelevant for our purposes, we’ll delete those columns, keeping only the document (<code>id</code>) and <code>text</code> columns.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corpus_tidy &lt;-<span class="st"> </span><span class="kw">select</span>(corpus_tidy, id, text)</code></pre></div>
@@ -340,10 +340,10 @@ tokens &lt;-<span class="st"> </span><span class="kw">anti_join</span>(tokens, s
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;wordcloud&quot;</span>)
 <span class="kw">filter</span>(dtm, document <span class="op">==</span><span class="st"> </span><span class="dv">12</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span>{<span class="kw">wordcloud</span>(.<span class="op">$</span>word, .<span class="op">$</span>n, <span class="dt">max.words =</span> <span class="dv">20</span>)}</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(dtm, document <span class="op">==</span><span class="st"> </span><span class="dv">24</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span>{<span class="kw">wordcloud</span>(.<span class="op">$</span>word, .<span class="op">$</span>n, <span class="dt">max.words =</span> <span class="dv">20</span>)}</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Use the function <a href="https://www.rdocumentation.org/packages/tidytext/topics/bind_tf_idf">bind_tf_idf</a> to add a column with the tf-idf to the data frame.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm &lt;-<span class="st"> </span><span class="kw">bind_tf_idf</span>(dtm, word, document, n)
 dtm
@@ -779,7 +779,7 @@ test <span class="op">%&gt;%</span>
                                  <span class="st">&quot;Disputed&quot;</span> =<span class="st"> </span><span class="dv">17</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">colour =</span> <span class="st">&quot;Author&quot;</span>, <span class="dt">shape =</span> <span class="st">&quot;Author&quot;</span>, 
        <span class="dt">y =</span> <span class="st">&quot;Federalist Papers&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Predicted values&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-35-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="network-data" class="section level2">
@@ -800,12 +800,15 @@ test <span class="op">%&gt;%</span>
 <span class="kw">library</span>(<span class="st">&quot;GGally&quot;</span>)</code></pre></div>
 <div id="twitter-following-network" class="section level3">
 <h3><span class="header-section-number">6.3.1</span> Twitter Following Network</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">twitter &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;discovery&quot;</span>, <span class="st">&quot;twitter-following.csv&quot;</span>))
-senator &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;discovery&quot;</span>, <span class="st">&quot;twitter-senator.csv&quot;</span>))</code></pre></div>
-<p>Simply use the function since <code>twitter</code> consists of edges (a link from a senator to another). SInce <code>graph_from_edgelist</code> expects a matrix, convert the data frame to a matrix using .</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;twitter.following&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;twitter.senator&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
+<p>Since the names <code>twitter.following</code> and <code>twitter.senator</code> are verbose, we’ll simplify future code by copying their values to variables named <code>twitter</code> and <code>senator</code>, respectively.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">twitter &lt;-<span class="st"> </span>twitter.following
+senator &lt;-<span class="st"> </span>twitter.senator</code></pre></div>
+<p>Simply use the function since <code>twitter</code> consists of edges (a link from a senator to another). Since <code>graph_from_edgelist</code> expects a matrix, convert the data frame to a matrix using .</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">twitter_adj &lt;-<span class="st"> </span><span class="kw">graph_from_edgelist</span>(<span class="kw">as.matrix</span>(twitter))</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">environment</span>(degree)
-<span class="co">#&gt; &lt;environment: namespace:igraph&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: namespace:sna&gt;</span></code></pre></div>
 <p>Add in- and out-degree varibles to the <code>senator</code> data frame:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">senator &lt;-
 <span class="st">  </span><span class="kw">mutate</span>(senator,
@@ -825,9 +828,7 @@ senator &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span cla
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">top_n</span>(senator, <span class="dv">3</span>, indegree) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(indegree)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(name, party, state, indegree, outdegree)
-<span class="co">#&gt; # A tibble: 5 x 5</span>
 <span class="co">#&gt;                name party state indegree outdegree</span>
-<span class="co">#&gt;               &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1        Tom Cotton     R    AR       64        15</span>
 <span class="co">#&gt; 2 Richard J. Durbin     D    IL       60        87</span>
 <span class="co">#&gt; 3     John Barrasso     R    WY       58        79</span>
@@ -838,9 +839,7 @@ senator &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span cla
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">top_n</span>(senator, <span class="dv">3</span>, outdegree) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(outdegree)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(name, party, state, indegree, outdegree)
-<span class="co">#&gt; # A tibble: 4 x 5</span>
 <span class="co">#&gt;               name party state indegree outdegree</span>
-<span class="co">#&gt;              &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1     Thad Cochran     R    MS       55        89</span>
 <span class="co">#&gt; 2     Steve Daines     R    MT       30        88</span>
 <span class="co">#&gt; 3      John McCain     R    AZ       41        88</span>
@@ -864,7 +863,7 @@ senator <span class="op">%&gt;%</span>
 <span class="st">  </span>scale_colour_parties <span class="op">+</span>
 <span class="st">  </span>scale_shape_parties <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">main =</span> <span class="st">&quot;Closeness&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Incoming path&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Outgoing path&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>What does the reference line indicate? What does that say about senators twitter networks?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">senator <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">betweenness_dir =</span> igraph<span class="op">::</span><span class="kw">betweenness</span>(twitter_adj, <span class="dt">directed =</span> <span class="ot">TRUE</span>),
@@ -876,7 +875,7 @@ senator <span class="op">%&gt;%</span>
 <span class="st">  </span>scale_colour_parties <span class="op">+</span>
 <span class="st">  </span>scale_shape_parties <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">main =</span> <span class="st">&quot;Betweenness&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Directed&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Undirected&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>We’ve covered three different methods of calculating the importance of a node in a network: degree, closeness, and centrality. But what do they mean? What’s the “best” measure of importance? The answer to the the former is “it depends on the question”. There are probably other papers out there on this, but Borgatti (2005) is a good discussion:</p>
 <blockquote>
 <p>Borgatti, Stephen. 2005. “Centrality and Network Flow”. <em>Social Networks</em>. <a href="https://dx.doi.org/doi:10.1016/j.socnet.2004.11.008">DOI</a></p>
@@ -884,7 +883,7 @@ senator <span class="op">%&gt;%</span>
 <p>Add and plot page-rank:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">senator &lt;-<span class="st"> </span><span class="kw">mutate</span>(senator, <span class="dt">page_rank =</span> <span class="kw">page_rank</span>(twitter_adj)[[<span class="st">&quot;vector&quot;</span>]])
 <span class="kw">ggnet</span>(twitter_adj, <span class="dt">mode =</span> <span class="st">&quot;target&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="spatial-data-in-r" class="section level2">
@@ -919,11 +918,6 @@ senator <span class="op">%&gt;%</span>
 <span class="co">#&gt; $ long        &lt;dbl&gt; -99.7, -81.5, -122.3, -84.2, -73.8, -123.1, -106.6...</span>
 <span class="co">#&gt; $ capital     &lt;int&gt; 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">usa_map &lt;-<span class="st"> </span><span class="kw">map_data</span>(<span class="st">&quot;usa&quot;</span>)
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: &#39;maps&#39;</span>
-<span class="co">#&gt; The following object is masked from &#39;package:purrr&#39;:</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     map</span>
 capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
                    capital <span class="op">==</span><span class="st"> </span><span class="dv">2</span>, 
                    <span class="op">!</span>country.etc <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;HI&quot;</span>, <span class="st">&quot;AK&quot;</span>))
@@ -938,7 +932,7 @@ capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
 <span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>, <span class="dt">title =</span> <span class="st">&quot;US State Capitals&quot;</span>,
        <span class="dt">size =</span> <span class="st">&quot;Population&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cal_cities &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities, country.etc <span class="op">==</span><span class="st"> &quot;CA&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">top_n</span>(<span class="dv">7</span>, pop)
 
@@ -949,7 +943,7 @@ capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
 <span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div id="colors-in-r" class="section level3">
 <h3><span class="header-section-number">6.4.1</span> Colors in R</h3>
 <p>For more resources on using colors in R</p>
@@ -980,18 +974,20 @@ capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
 <span class="st">  </span><span class="kw">scale_alpha_identity</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid =</span> <span class="kw">element_blank</span>())</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-52-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="united-states-presidential-elections" class="section level3">
 <h3><span class="header-section-number">6.4.2</span> United States Presidential Elections</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres08 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;discovery&quot;</span>, <span class="st">&quot;pres08.csv&quot;</span>)) <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;pres08&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)
+
+pres08 &lt;-<span class="st"> </span>pres08 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Dem =</span> Obama <span class="op">/</span><span class="st"> </span>(Obama <span class="op">+</span><span class="st"> </span>McCain),
          <span class="dt">Rep =</span> McCain <span class="op">/</span><span class="st"> </span>(Obama <span class="op">+</span><span class="st"> </span>McCain))</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;blue&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>() </code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-54-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-52-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cal_color &lt;-<span class="st"> </span><span class="kw">filter</span>(pres08, state <span class="op">==</span><span class="st"> &quot;CA&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span>{<span class="kw">rgb</span>(<span class="dt">red =</span> .<span class="op">$</span>Rep, <span class="dt">green =</span> <span class="dv">0</span>, <span class="dt">blue =</span> .<span class="op">$</span>Dem)}
   
@@ -999,7 +995,7 @@ capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
 <span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>, <span class="dt">fill =</span> cal_color) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>()</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-53-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># America as red and blue states</span>
 <span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) <span class="co"># create a map </span>
 <span class="cf">for</span> (i  <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(pres08)) {
@@ -1036,7 +1032,7 @@ capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
 <span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;Rep&quot;</span> =<span class="st"> &quot;red&quot;</span>, <span class="st">&quot;Dem&quot;</span> =<span class="st"> &quot;blue&quot;</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>For plotting the purple states, I use since the <code>color</code> column contains the RGB values to use in the plot:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(states) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="dt">group =</span> group, <span class="dt">x =</span> long, <span class="dt">y =</span> lat,
@@ -1045,7 +1041,7 @@ capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
 <span class="st">  </span><span class="kw">scale_fill_identity</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>However, plotting purple states is not a good data visualization. Even though the colors are a proportional mixture of red and blue, human visual perception doesn’t work that way.</p>
 <p>The proportion of the democratic vote is best thought of a diverging scale with 0.5 is midpoint. And since the Democratic Party is associated with the color blue and the Republican Party is associated with the color red. The Color Brewer palette <a href="http://colorbrewer2.org/#type=diverging&amp;scheme=RdBu&amp;n=11">RdBu</a> is an example:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(states) <span class="op">+</span>
@@ -1054,12 +1050,12 @@ capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
 <span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="expansion-of-walmart" class="section level3">
 <h3><span class="header-section-number">6.4.3</span> Expansion of Walmart</h3>
 <p>We don’t need to do the direct mapping since</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">walmart &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;discovery&quot;</span>, <span class="st">&quot;walmart.csv&quot;</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;walmart&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)
 
 <span class="kw">ggplot</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) <span class="op">+</span>
@@ -1070,7 +1066,7 @@ capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
 <span class="st">  </span><span class="kw">scale_size_identity</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="kw">guide_legend</span>(<span class="dt">override.aes =</span> <span class="kw">list</span>(<span class="dt">alpha =</span> <span class="dv">1</span>))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>()</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-60-1.png" width="70%" style="display: block; margin: auto;" /> We don’t need to worry about colors since <code>ggplot</code> handles that. I use <a href="http://docs.ggplot2.org/current/guides.html">guides</a> to so that the colors or not transparent in the legend (see <em>R for Data Science</em> chapter<a href="http://r4ds.had.co.nz/graphics-for-communication.html">Graphics for communication</a>).</p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" /> We don’t need to worry about colors since <code>ggplot</code> handles that. I use <a href="http://docs.ggplot2.org/current/guides.html">guides</a> to so that the colors or not transparent in the legend (see <em>R for Data Science</em> chapter<a href="http://r4ds.had.co.nz/graphics-for-communication.html">Graphics for communication</a>).</p>
 <p>To make a plot showing all Walmart stores opened up through that year, I write a function, that takes the year and dataset as parameters.</p>
 <p>Since I am calling the function for its side effect (printing the plot) rather than the value it returns, I use the <a href="https://www.rdocumentation.org/packages/purrr/topics/walk">walk</a> function rather than <a href="https://www.rdocumentation.org/packages/purrr/topics/map">map</a>. See <a href="http://r4ds.had.co.nz/">R for Data Science</a>, <a href="http://r4ds.had.co.nz/iteration.html#walk">Chapter 21.8: Walk</a> for more information.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">map_walmart &lt;-<span class="st"> </span><span class="cf">function</span>(year, .data) {
@@ -1089,7 +1085,7 @@ capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
 
 years &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1975</span>, <span class="dv">1985</span>, <span class="dv">1995</span>, <span class="dv">2005</span>)
 <span class="kw">walk</span>(years, <span class="op">~</span><span class="st"> </span><span class="kw">print</span>(<span class="kw">map_walmart</span>(.x, walmart)))</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-61-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-61-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-61-4.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-59-4.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="animation-in-r" class="section level3">
 <h3><span class="header-section-number">6.4.4</span> Animation in R</h3>
@@ -1112,8 +1108,8 @@ devtools<span class="op">::</span><span class="kw">install_github</span>(<span c
 <span class="st">    </span><span class="kw">theme_void</span>()
 <span class="kw">gganimate</span>(walmart_animated)</code></pre></div>
 <div class="figure">
-<img src="discovery_files/figure-html/unnamed-chunk-64-.gif" alt="unnamed-chunk-64" />
-<p class="caption">unnamed-chunk-64</p>
+<img src="discovery_files/figure-html/unnamed-chunk-62-.gif" alt="unnamed-chunk-62" />
+<p class="caption">unnamed-chunk-62</p>
 </div>
 
 </div>

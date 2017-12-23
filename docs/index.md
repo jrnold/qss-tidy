@@ -13,12 +13,14 @@ documentclass: book
 This is tidyverse R code to supplement the book, [Quantitative Social Science: An Introduction](http://press.princeton.edu/titles/11025.html), by Kosuke Imai, to
 be published by Princeton University Press in March 2017.
 
-The R code included with the text of QSS and the supplementary materials relies mostly on base R functions. 
-This translates the code examples provided with QSS to tidyverse R code. 
-[Tidyverse](https://github.com/tidyverse/tidyverse) refers to a set of packages (**ggplot2**, **dplyr**, **tidyr**, **readr**, **purrr**, **tibble**,  and a few others) that share common data representations, especially the use of data frames for return values. The book [R for Data Science](http://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemond is an introduction. 
+The R code included with the text of *QSS* and the supplementary materials relies mostly on base R functions. 
+This translates the code examples provided with *QSS* to tidyverse R code. 
+[Tidyverse](https://github.com/tidyverse/tidyverse) refers to a set of packages (**ggplot2**, **dplyr**, **tidyr**, **readr**, **purrr**, **tibble**,  and a few others) that share common data representations, especially the use of data frames for return values. 
 
+These notes do not aim to teach tidyverse, The book [R for Data Science](http://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemond is an introduction. 
 
-I wrote this code while teaching course that employed both texts in order to make the excellent examples and statistical material in QSS more compatible with the modern data science R approach in R4DS.
+I wrote this code while teaching course that employed both texts in order to make the excellent examples and statistical material in *QSS* more compatible with the modern data science using R approach in *R4DS*.
+
 
 ## Colonphon
 
@@ -31,7 +33,6 @@ install_github("jrnold/qss-tidy")
 It install's the **qsstidy** package which contains no code or data, but will install the needed dependencies.
 
 Additionally, the [gganimate](https://cran.r-project.org/package=gganimate) package requires installing [ffmpeg](https://ffmpeg.org/) with libvpx support.
-
 
 
 The source of the book is available [here](https://github.com/jrnold/qsstidy) and was built with versions of packages below:

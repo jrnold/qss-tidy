@@ -82,18 +82,31 @@ UNpop
 #> # ... with 1 more rows
 ```
 
+
+Datasets can also be distributed with R packages. 
+These are often smaller datasets used in examples and package tutorials.
+
+The function `data` with called without any arguments will list all the datasets distributed with installed packages.
+
+```r
+data()
+```
+The **qss** library distributes the data sets used in the *QSS* textbook.
+
+```r
+data("UNpop", package = "qss")
+```
+
 The single bracket, `[`, is useful to select rows and columns in simple cases,
 but the **dplyr** functions `slice()` to select rows by number, `filter` to select by certain criteria, or `select()` to select columns.
 
 
 ```r
 UNpop[c(1, 2, 3), ]
-#> # A tibble: 3 x 2
-#>    year world.pop
-#>   <int>     <int>
-#> 1  1950   2525779
-#> 2  1960   3026003
-#> 3  1970   3691173
+#>   year world.pop
+#> 1 1950   2525779
+#> 2 1960   3026003
+#> 3 1970   3691173
 ```
 is equivalent to 
 
@@ -110,31 +123,20 @@ UNpop %>% slice(1:3)
 
 ```r
 UNpop[, "world.pop"]
-#> # A tibble: 7 x 1
-#>   world.pop
-#>       <int>
-#> 1   2525779
-#> 2   3026003
-#> 3   3691173
-#> 4   4449049
-#> 5   5320817
-#> 6   6127700
-#> # ... with 1 more rows
+#> [1] 2525779 3026003 3691173 4449049 5320817 6127700 6916183
 ```
 is almost equivalent to 
 
 ```r
 select(UNpop, world.pop)
-#> # A tibble: 7 x 1
 #>   world.pop
-#>       <int>
 #> 1   2525779
 #> 2   3026003
 #> 3   3691173
 #> 4   4449049
 #> 5   5320817
 #> 6   6127700
-#> # ... with 1 more rows
+#> 7   6916183
 ```
 However, note that `select()` **always** returns a tibble, and never a vector, 
 even if only one column is selected.
@@ -144,12 +146,7 @@ rather than a vector if it is only one column.
 
 ```r
 UNpop[1:3, "year"]
-#> # A tibble: 3 x 1
-#>    year
-#>   <int>
-#> 1  1950
-#> 2  1960
-#> 3  1970
+#> [1] 1950 1960 1970
 ```
 is equivalent to 
 
@@ -188,6 +185,8 @@ UNpop %>%
 
 The function `n()` when used in a **dplyr** function returns the number of rows
 in the data frame (or the number of rows in the group if used with `group_by`).
+
+
 
 ### Saving Objects
 

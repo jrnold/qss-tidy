@@ -18,6 +18,7 @@ Imports:
   intergraph,
   haven,
   maps,
+  qss,  
   tidytext,
   tidyverse,
   tm,
@@ -26,7 +27,8 @@ Imports:
   viridis
 Remotes:
   dgrtwo/gganimate,
-  slowkow/ggrepel
+  slowkow/ggrepel,
+  kosukeimai/qss-package
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

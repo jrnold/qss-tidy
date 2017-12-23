@@ -13,13 +13,6 @@ library("tidyverse")
 library("forcats")
 library("stringr")
 ```
-We will also, use the function `qss_data_url`:
-```{r echo=FALSE}
-insert_fun("qss_data_url")
-```
-```{r qss_data_url-source,eval=FALSE}
-```
-
 
 ## Probability
 
@@ -106,7 +99,7 @@ choose(84, 6)
 
 
 ```{r message=FALSE}
-FLVoters <- read_csv(qss_data_url("probability", "FLVoters.csv"))
+data(FLVoters, package = "qss")
 dim(FLVoters)
 FLVoters <- FLVoters %>%
   na.omit()
@@ -390,7 +383,7 @@ Can we make this even more general? What about a function that takes a data fram
 
 Start with the Census names files:
 ```{r cnames,message=FALSE}
-cnames <- read_csv(qss_data_url("probability", "names.csv"))
+data("cnames", package = "qss")
 glimpse(cnames)
 ```
 
@@ -465,9 +458,9 @@ FLVoters %>%
   arrange(desc(fp))
 ```
 
-Now add residence data
+Now add residence data using the `FLCensus` data included in the 
 ```{r message=FALSE}
-FLCensus <- read_csv(qss_data_url("probability", "FLCensusVTD.csv"))
+data("FLCensus", package = "qss")
 ```
 
 $P(race)$ in Florida:
@@ -484,8 +477,13 @@ race.prop
 
 ### Predicting Election Outcomes with Uncertainty
 
-```{r message=FALSE}
-pres08 <- read_csv(qss_data_url("probability", "pres08.csv")) %>%
+Load the `pres08` data from the **qss** package.
+```{r pres08,message=FALSE}
+data("pres08", package = "qss")
+```
+Add a column `p` which contains Obama's vote share of the major parties:
+```{r pres08_mutate}
+pres08 <- pres08 %>%
   mutate(p = Obama / (Obama + McCain))
 ```
 

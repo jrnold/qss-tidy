@@ -13,10 +13,6 @@ library("stringr")
 library("modelr")
 library("broom")
 ```
-We will also, use the function `qss_data_url`:
-
-
-
 
 
 ## Estimation
@@ -104,7 +100,7 @@ ggplot(diff_means, aes(x = diff)) +
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-7-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-6-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -193,16 +189,30 @@ ggplot(props, aes(x = p, y = n, colour = factor(MoE))) +
   theme(legend.position = "bottom")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 [read_csv](https://www.rdocumentation.org/packages/readr/topics/read_csv) already recognizes the date columns, so we don't need to convert them.
+The 2008 election was on Nov 11, 2008, so we'll store that in a variable.
 
 ```r
 ELECTION_DATE <- ymd(20081104)
-pres08 <- read_csv(qss_data_url("uncertainty", "pres08.csv"))
+```
+Load the final vote shares,
 
-polls08 <- read_csv(qss_data_url("uncertainty", "polls08.csv")) %>%
+```r
+data("pres08", package = "qss")
+```
+and polling data
+
+```r
+data("polls08", package = "qss")
+```
+We need to add an additional column to the `polls08` data frame which contains
+the number of days until the election:
+
+```r
+polls08 <- polls08 %>%
   mutate(DaysToElection = as.integer(ELECTION_DATE - middate))
 ```
 For each state calculate the mean of the latest polls,
@@ -263,7 +273,7 @@ ggplot(poll_pred, aes(x = actual, y = Obama,
   theme(legend.position = "bottom")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" />
 Proportion of polls with confidence intervals that include the election outcome?
 
 ```r
@@ -302,20 +312,34 @@ poll_pred %>%
 
 ### Analyais of Randomized Controlled Trials
 
+Load the `STAR` data from the **qss** package,
 
 ```r
-STAR <- read_csv(qss_data_url("uncertainty", "STAR.csv")) %>%
+data("STAR", package = "qss")
+```
+
+Add meaningful labels to the `classtype` variable:
+
+```r
+STAR <- STAR %>%
   mutate(classtype = factor(classtype,
                             labels = c("small class", "regular class",
                                        "regular class with aid")))
+```
 
+Summarize scores by classroom type:
+
+```r
 classtype_means <- 
   STAR %>%
   group_by(classtype) %>%
   summarise(g4reading = mean(g4reading, na.rm = TRUE))
+```
 
+Plot the distribution of scores by classroom type:
+
+```r
 classtypes_used <- c("small class", "regular class")
-
 ggplot(filter(STAR,
               classtype %in% classtypes_used,
               !is.na(g4reading)),
@@ -328,13 +352,12 @@ ggplot(filter(STAR,
   labs(x = "Fourth grade reading score", y = "Density")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
 ```r
 alpha <- 0.05
-
 star_estimates <- 
   STAR %>%
   filter(!is.na(g4reading)) %>%
@@ -717,7 +740,7 @@ t.test(filter(STAR, classtype == "small class")$g4reading,
 
 
 ```r
-resume <- read_csv(qss_data_url("uncertainty", "resume.csv"))
+data("resume", package = "qss")
 
 x <- resume %>%
   count(race, call) %>%
@@ -831,12 +854,18 @@ power.t.test(delta = 0.25, sd = 1, type = "two.sample",
 
 ### Linear Regression as a Generative Model
 
+Load the minimum wage date included with the **qss** package:
 
 ```r
-minwage <- read_csv(qss_data_url("uncertainty", "minwage.csv")) %>%
-  mutate(fullPropBefore = fullBefore / (fullBefore + partBefore),
-         fullPropAfter = fullAfter / (fullAfter + partAfter),
-         NJ = as.integer(location == "PA"))
+data("minwage", package = "qss")
+```
+  
+
+```r
+minwage <- mutate(minwage,
+                  fullPropBefore = fullBefore / (fullBefore + partBefore),
+                  fullPropAfter = fullAfter / (fullAfter + partAfter),
+                  NJ = as.integer(location == "PA"))
 ```
 
 
@@ -884,7 +913,7 @@ gather_predictions(slice(minwage, 1), fit_minwage, fit_minwage1) %>%
 Use the [tidy](https://www.rdocumentation.org/packages/broom/topics/tidy) function to return the coefficients, including confidence intervals, as a data frame:
 
 ```r
-women <- read_csv(qss_data_url("uncertainty", "women.csv"))
+data("women", package = "qss")
 fit_women <- lm(water ~ reserved, data = women)
 summary(fit_women)
 #> 
@@ -954,7 +983,7 @@ tidy(fit_minwage, conf.int = TRUE)
 
 
 ```r
-MPs <- read_csv(qss_data_url("uncertainty", "MPs.csv"))
+data("MPs", package = "qss")
 MPs_labour <- filter(MPs, party == "labour")
 MPs_tory <- filter(MPs, party == "tory")
 labour_fit1 <- lm(ln.net ~ margin, data = filter(MPs_labour, margin < 0))
@@ -1037,7 +1066,7 @@ ggplot() +
   labs(x = "Margin of vitory", y = "log net wealth")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r

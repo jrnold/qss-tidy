@@ -15,10 +15,6 @@ library("tidyverse")
 library("forcats")
 library("stringr")
 ```
-We will also, use the function `qss_data_url`:
-
-
-
 
 ## Probability
 
@@ -42,7 +38,7 @@ ggplot(bday, aes(x = k , y = pr)) +
   labs(x = "Number of people")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" />
 
 **Note:** The logarithm is used for numerical stability. Basically,  "floating-point" numbers are approximations of numbers. If you perform arithmetic with numbers that are very large, very small, or vary differently in magnitudes, you could have problems. Logarithms help with some of those issues.
 See "Falling Into the Floating Point Trap" in [The R Inforno](http://www.burns-stat.com/pages/Tutor/R_inferno.pdf) for a summary of floating point numbers.
@@ -119,7 +115,7 @@ choose(84, 6)
 
 
 ```r
-FLVoters <- read_csv(qss_data_url("probability", "FLVoters.csv"))
+data(FLVoters, package = "qss")
 dim(FLVoters)
 #> [1] 10000     6
 FLVoters <- FLVoters %>%
@@ -399,7 +395,7 @@ ggplot(race_gender_indep,
        y = expression(P("race and gender")))
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 While the original code only calculates joint-independence value for values of
@@ -429,7 +425,7 @@ ggplot(joint_indep, aes(x = prob, y = indep_prob, colour = race)) +
     
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 While code in *QSS* only calculates the conditional independence given female,
@@ -482,7 +478,7 @@ inner_join(select(indep_cond_gender, race, age_group, gender, indep_prob),
        title = "Marginal independence")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-22-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-21-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 **Monty-hall problem**
@@ -542,7 +538,7 @@ Can we make this even more general? What about a function that takes a data fram
 Start with the Census names files:
 
 ```r
-cnames <- read_csv(qss_data_url("probability", "names.csv"))
+data("cnames", package = "qss")
 glimpse(cnames)
 #> Observations: 151,671
 #> Variables: 7
@@ -666,10 +662,10 @@ FLVoters %>%
 #> 5     white 0.197
 ```
 
-Now add residence data
+Now add residence data using the `FLCensus` data included in the 
 
 ```r
-FLCensus <- read_csv(qss_data_url("probability", "FLCensusVTD.csv"))
+data("FLCensus", package = "qss")
 ```
 
 $P(race)$ in Florida:
@@ -695,9 +691,15 @@ race.prop
 
 ### Predicting Election Outcomes with Uncertainty
 
+Load the `pres08` data from the **qss** package.
 
 ```r
-pres08 <- read_csv(qss_data_url("probability", "pres08.csv")) %>%
+data("pres08", package = "qss")
+```
+Add a column `p` which contains Obama's vote share of the major parties:
+
+```r
+pres08 <- pres08 %>%
   mutate(p = Obama / (Obama + McCain))
 ```
 
@@ -735,17 +737,15 @@ ggplot(sim_results, aes(x = EV, y = ..density..)) +
   labs(x = "Electoral Votes", y = "density")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-37-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-35-1.png" width="70%" style="display: block; margin: auto;" />
 Simulation mean, variance, and standard deviations:
 
 ```r
 sim_results %>%
   select(EV) %>%
   summarise_all(funs(mean, var, sd))
-#> # A tibble: 1 x 3
-#>    mean   var    sd
-#>   <dbl> <dbl> <dbl>
-#> 1   352   270  16.4
+#>   mean var   sd
+#> 1  352 270 16.4
 ```
 
 Theoretical probabilities from a binomial distribution:
@@ -759,10 +759,8 @@ pres08 %>%
   summarise(mean = sum(pb * EV),
             V = sum(pb * (1 - pb) * EV ^ 2),
             sd = sqrt(V))
-#> # A tibble: 1 x 3
-#>    mean     V    sd
-#>   <dbl> <dbl> <dbl>
-#> 1   352   269  16.4
+#>   mean   V   sd
+#> 1  352 269 16.4
 ```
 
 ## Large Sample Theorems

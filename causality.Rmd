@@ -6,12 +6,6 @@ This chapter only uses the tidyverse package
 ```{r}
 library("tidyverse")
 ```
-and the `qss_data_url` helper function to download data from the QSS site,
-```{r echo=FALSE}
-insert_fun("qss_data_url")
-```
-```{r qss_data_url-source,eval=FALSE}
-````
 
 ## Racial Discrimination in the Labor Market
 
@@ -19,7 +13,7 @@ The code in the book uses `table` and `addmargins` to construct the table.
 However, this can be done easily with `dplyr` using grouping and summarizing.
 
 ```{r message=FALSE}
-resume <- read_csv(qss_data_url("causality", "resume.csv"))
+data("resume", package = "qss")
 ```
 
 In addition to the functions shown in the text,
@@ -222,7 +216,7 @@ resume %>%
  
 Load the data using the **readr** function `r RDoc("readr::read_csv")`
 ```{r message=FALSE}
-social <- read_csv(qss_data_url("causality", "social.csv"))
+data("social", package = "qss")
 summary(social)
 ```
 

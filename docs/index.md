@@ -22,18 +22,16 @@ These notes do not aim to teach tidyverse, The book [R for Data Science](http://
 I wrote this code while teaching course that employed both texts in order to make the excellent examples and statistical material in *QSS* more compatible with the modern data science using R approach in *R4DS*.
 
 
-## Colonphon
+## Colophon
 
-To install the R packages used in this work run the following code:
+To install the R packages used in this work run the following code, installs the **qsstidy** package which contains no code or data, but will install the needed dependencies.
 
 ```r
 # install.packages("devtools")
 install_github("jrnold/qss-tidy")
 ```
-It install's the **qsstidy** package which contains no code or data, but will install the needed dependencies.
 
 Additionally, the [gganimate](https://cran.r-project.org/package=gganimate) package requires installing [ffmpeg](https://ffmpeg.org/) with libvpx support.
-
 
 The source of the book is available [here](https://github.com/jrnold/qsstidy) and was built with versions of packages below:
 

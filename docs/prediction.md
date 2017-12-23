@@ -1116,7 +1116,7 @@ The argument `method = "lm"` specifies that the function `lm` is to be used to g
 It is equivalent to running the regression `lm(y ~ x)` and plotting the regression line, where `y` and `x` are the aesthetics specified by the mappings.
 The argument `se = FALSE` tells the function not to plot the confidence interval of the regression (discussed later).
 
-### Regresion towards the mean
+### Regression towards the mean
 
 ### Merging Data Sets in R
 
@@ -1721,7 +1721,7 @@ glance(fit)$adj.r.squared
 ```
 
 
-### Heterogenous Treatment Effects
+### Heterogeneous Treatment Effects
 
 Average treatment effect (ate) among those who voted in 2004 primary
 

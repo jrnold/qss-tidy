@@ -42,7 +42,7 @@ It is much better to organize your code in projects.
 When reading from csv files use `readr::read_csv` instead of the base R function `read.csv`. 
 It is slightly faster, and returns a `tibble` instead of a data frame.
 See `r R4DS` [Ch 11: Data Import](http://r4ds.had.co.nz/tibbles.html#introduction-4)
-for more dicussion.
+for more discussion.
 
 We also can load it directly from a URL.
 ```{r}

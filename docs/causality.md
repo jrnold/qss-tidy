@@ -1,7 +1,7 @@
 
 # Causality
 
-## Prerequistes
+## Prerequisites
 
 This chapter only uses the tidyverse package
 

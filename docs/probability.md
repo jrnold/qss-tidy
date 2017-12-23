@@ -41,7 +41,7 @@ ggplot(bday, aes(x = k , y = pr)) +
 <img src="probability_files/figure-html/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" />
 
 **Note:** The logarithm is used for numerical stability. Basically,  "floating-point" numbers are approximations of numbers. If you perform arithmetic with numbers that are very large, very small, or vary differently in magnitudes, you could have problems. Logarithms help with some of those issues.
-See "Falling Into the Floating Point Trap" in [The R Inforno](http://www.burns-stat.com/pages/Tutor/R_inferno.pdf) for a summary of floating point numbers.
+See "Falling Into the Floating Point Trap" in [The R Inferno](http://www.burns-stat.com/pages/Tutor/R_inferno.pdf) for a summary of floating point numbers.
 See these John Fox posts [1](http://www.johndcook.com/blog/2008/09/26/comparing-three-methods-of-computing-standard-deviation/) [2](http://www.johndcook.com/blog/2008/09/28/theoretical-explanation-for-numerical-results/) for an example of numerical stability gone wrong.
 Also see: http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/.
 
@@ -483,7 +483,7 @@ inner_join(select(indep_cond_gender, race, age_group, gender, indep_prob),
 
 **Monty-hall problem**
 
-The `for` loop approach in *QSS * is prefectly valid code, but here we provide a more
+The `for` loop approach in *QSS * is valid code, but here we provide a more
 functional approach to solving the problem. 
 We will define a function to choose a door, repeat the function multiple times while storing
 the results in a data frame, and then summarize that data frame.
@@ -817,7 +817,7 @@ sims <- 1000
 n_samp <- 1000
 ```
 
-Write functions to calculate the mean of a binomial distribution with size, `size`, and probabability, `p`,
+Write functions to calculate the mean of a binomial distribution with size, `size`, and probability, `p`,
 
 ```r
 binom_mean <- function(size, p) {
@@ -833,7 +833,7 @@ binom_var <- function(size, p) {
 ```
 
 Write a function that takes `n_samp` samples from a binomial distribution with 
-size, `size`, and probability of succes, `p`, and returns a data frame with the 
+size, `size`, and probability of success, `p`, and returns a data frame with the 
 z-score of the sample distribution:
 
 ```r

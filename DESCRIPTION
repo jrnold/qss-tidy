@@ -34,3 +34,6 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/jrnold/qss-tidy
 BugReports: https://github.com/jrnold/qss-tidy/issues
+Suggests:
+    spelling
+Language: en-US

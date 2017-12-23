@@ -462,7 +462,7 @@ author_data %>%
 ```
 
 Create the cross-validation data-sets using . 
-As in the chapter, I will use a leave-one-out cross-validation, which is a k-fold crossvalidation where k is the number of observations. 
+As in the chapter, I will use a leave-one-out cross-validation, which is a k-fold cross-validation where k is the number of observations. 
 To simplify this, I define the `crossv_loo` function that runs `crossv_kfold` with `k = nrow(data)`.
 
 ```r
@@ -564,7 +564,7 @@ ggplot(mutate(author_data,
 Network data is area for which the tidyverse is not well suited.
 The [igraph](https://cran.r-project.org/package=igraph), [sna](https://cran.r-project.org/package=sna), and [network](https://cran.r-project.org/package=network) packages are the best in class. 
 See the Social Network Analysis section of the [Social Sciences Task View](https://cran.r-project.org/web/views/SocialSciences.html).
-See this tutorial by Katherin Ognyanova, [Static and dynamic nework visualization with R](https://rpubs.com/kateto/netviz), for a good overview of network visualization with those packages in R.
+See this tutorial by Katherin Ognyanova, [Static and dynamic network visualization with R](https://rpubs.com/kateto/netviz), for a good overview of network visualization with those packages in R.
 
 There are several packages that plot networks in ggplot2.
 
@@ -619,7 +619,7 @@ environment(degree)
 #> <environment: namespace:sna>
 ```
 
-Add in- and out-degree varibles to the `senator` data frame:
+Add in- and out-degree variables to the `senator` data frame:
 
 ```r
 senator <-
@@ -761,7 +761,7 @@ Here are few tutorials on plotting spatial data in ggplot2:
 
 - [Making Maps with R](http://eriqande.github.io/rep-res-web/lectures/making-maps-with-R.html)
 - [Plotting Data on a World Map](https://www.r-bloggers.com/r-beginners-plotting-locations-on-to-a-world-map/)
-- [Introduciton to Spatial Data and ggplot2](https://rpubs.com/m_dev/Intro-to-Spatial-Data-and-ggplot2)
+- [Introduction to Spatial Data and ggplot2](https://rpubs.com/m_dev/Intro-to-Spatial-Data-and-ggplot2)
 
 
 ```r

@@ -310,7 +310,7 @@ poll_pred %>%
 
 
 
-### Analyais of Randomized Controlled Trials
+### Analysis of Randomized Controlled Trials
 
 Load the `STAR` data from the **qss** package,
 

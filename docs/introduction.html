@@ -6,9 +6,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>QSS Tidyverse Code</title>
-  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
 
   <meta property="og:title" content="QSS Tidyverse Code" />
   <meta property="og:type" content="book" />
@@ -26,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2017-02-03">
+<meta name="date" content="2017-12-22">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -35,7 +34,6 @@
   
 <link rel="prev" href="index.html">
 <link rel="next" href="causality.html">
-
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -94,13 +92,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <body>
 
 
+
   <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
 
     <div class="book-summary">
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#colonphon"><i class="fa fa-check"></i><b>1.1</b> Colonphon</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
 <li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i><b>2.1</b> Prerequisites</a></li>
 <li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#introduction-to-r"><i class="fa fa-check"></i><b>2.2</b> Introduction to R</a><ul>
@@ -110,12 +111,123 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.2.4" data-path="introduction.html"><a href="introduction.html#style-guide"><i class="fa fa-check"></i><b>2.2.4</b> Style Guide</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="causality.html"><a href="causality.html"><i class="fa fa-check"></i><b>3</b> Causality</a></li>
-<li class="chapter" data-level="4" data-path="measurement.html"><a href="measurement.html"><i class="fa fa-check"></i><b>4</b> Measurement</a></li>
-<li class="chapter" data-level="5" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>5</b> Prediction</a></li>
-<li class="chapter" data-level="6" data-path="discovery.html"><a href="discovery.html"><i class="fa fa-check"></i><b>6</b> Discovery</a></li>
-<li class="chapter" data-level="7" data-path="probability.html"><a href="probability.html"><i class="fa fa-check"></i><b>7</b> Probability</a></li>
-<li class="chapter" data-level="8" data-path="uncertainty.html"><a href="uncertainty.html"><i class="fa fa-check"></i><b>8</b> Uncertainty</a></li>
+<li class="chapter" data-level="3" data-path="causality.html"><a href="causality.html"><i class="fa fa-check"></i><b>3</b> Causality</a><ul>
+<li class="chapter" data-level="3.1" data-path="causality.html"><a href="causality.html#prerequistes"><i class="fa fa-check"></i><b>3.1</b> Prerequistes</a></li>
+<li class="chapter" data-level="3.2" data-path="causality.html"><a href="causality.html#racial-discrimination-in-the-labor-market"><i class="fa fa-check"></i><b>3.2</b> Racial Discrimination in the Labor Market</a></li>
+<li class="chapter" data-level="3.3" data-path="causality.html"><a href="causality.html#subsetting-data-in-r"><i class="fa fa-check"></i><b>3.3</b> Subsetting Data in R</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="causality.html"><a href="causality.html#subsetting"><i class="fa fa-check"></i><b>3.3.1</b> Subsetting</a></li>
+<li class="chapter" data-level="3.3.2" data-path="causality.html"><a href="causality.html#simple-conditional-statements"><i class="fa fa-check"></i><b>3.3.2</b> Simple conditional statements</a></li>
+<li class="chapter" data-level="3.3.3" data-path="causality.html"><a href="causality.html#factor-variables"><i class="fa fa-check"></i><b>3.3.3</b> Factor Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="causality.html"><a href="causality.html#causal-affects-and-the-counterfactual"><i class="fa fa-check"></i><b>3.4</b> Causal Affects and the Counterfactual</a></li>
+<li class="chapter" data-level="3.5" data-path="causality.html"><a href="causality.html#observational-studies"><i class="fa fa-check"></i><b>3.5</b> Observational Studies</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="causality.html"><a href="causality.html#confounding-bias"><i class="fa fa-check"></i><b>3.5.1</b> Confounding Bias</a></li>
+<li class="chapter" data-level="3.5.2" data-path="causality.html"><a href="causality.html#before-and-after-and-difference-in-difference-designs"><i class="fa fa-check"></i><b>3.5.2</b> Before and After and Difference-in-Difference Designs</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="causality.html"><a href="causality.html#descriptive-statistics-for-a-single-variable"><i class="fa fa-check"></i><b>3.6</b> Descriptive Statistics for a Single Variable</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="measurement.html"><a href="measurement.html"><i class="fa fa-check"></i><b>4</b> Measurement</a><ul>
+<li class="chapter" data-level="4.1" data-path="measurement.html"><a href="measurement.html#prerequisites-1"><i class="fa fa-check"></i><b>4.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="4.2" data-path="measurement.html"><a href="measurement.html#measuring-civilian-victimization-during-wartime"><i class="fa fa-check"></i><b>4.2</b> Measuring Civilian Victimization during Wartime</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="measurement.html"><a href="measurement.html#handling-missing-data-in-r"><i class="fa fa-check"></i><b>4.2.1</b> Handling Missing Data in R</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="measurement.html"><a href="measurement.html#visualizing-the-univariate-distribution"><i class="fa fa-check"></i><b>4.3</b> Visualizing the Univariate Distribution</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="measurement.html"><a href="measurement.html#barplot"><i class="fa fa-check"></i><b>4.3.1</b> Barplot</a></li>
+<li class="chapter" data-level="4.3.2" data-path="measurement.html"><a href="measurement.html#boxplot"><i class="fa fa-check"></i><b>4.3.2</b> Boxplot</a></li>
+<li class="chapter" data-level="4.3.3" data-path="measurement.html"><a href="measurement.html#printing-and-saving-graphics"><i class="fa fa-check"></i><b>4.3.3</b> Printing and saving graphics</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="measurement.html"><a href="measurement.html#survey-sampling"><i class="fa fa-check"></i><b>4.4</b> Survey Sampling</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="measurement.html"><a href="measurement.html#the-role-of-randomization"><i class="fa fa-check"></i><b>4.4.1</b> The Role of Randomization</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="measurement.html"><a href="measurement.html#load-village-data"><i class="fa fa-check"></i><b>4.5</b> load village data</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="measurement.html"><a href="measurement.html#non-response-and-other-sources-of-bias"><i class="fa fa-check"></i><b>4.5.1</b> Non-response and other sources of bias</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="measurement.html"><a href="measurement.html#measuring-political-polarization"><i class="fa fa-check"></i><b>4.6</b> Measuring Political Polarization</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="measurement.html"><a href="measurement.html#correlation"><i class="fa fa-check"></i><b>4.6.1</b> Correlation</a></li>
+<li class="chapter" data-level="4.6.2" data-path="measurement.html"><a href="measurement.html#quantile-quantile-plot"><i class="fa fa-check"></i><b>4.6.2</b> Quantile-Quantile Plot</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="measurement.html"><a href="measurement.html#clustering"><i class="fa fa-check"></i><b>4.7</b> Clustering</a><ul>
+<li class="chapter" data-level="4.7.1" data-path="measurement.html"><a href="measurement.html#matrices"><i class="fa fa-check"></i><b>4.7.1</b> Matrices</a></li>
+<li class="chapter" data-level="4.7.2" data-path="measurement.html"><a href="measurement.html#lists"><i class="fa fa-check"></i><b>4.7.2</b> Lists</a></li>
+<li class="chapter" data-level="4.7.3" data-path="measurement.html"><a href="measurement.html#k-means-algorithms"><i class="fa fa-check"></i><b>4.7.3</b> k-means algorithms</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>5</b> Prediction</a><ul>
+<li class="chapter" data-level="5.1" data-path="prediction.html"><a href="prediction.html#prerequisites-2"><i class="fa fa-check"></i><b>5.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="5.2" data-path="prediction.html"><a href="prediction.html#loops-in-r"><i class="fa fa-check"></i><b>5.2</b> Loops in R</a></li>
+<li class="chapter" data-level="5.3" data-path="prediction.html"><a href="prediction.html#general-conditional-statements-in-r"><i class="fa fa-check"></i><b>5.3</b> General Conditional Statements in R</a></li>
+<li class="chapter" data-level="5.4" data-path="prediction.html"><a href="prediction.html#poll-predictions"><i class="fa fa-check"></i><b>5.4</b> Poll Predictions</a></li>
+<li class="chapter" data-level="5.5" data-path="prediction.html"><a href="prediction.html#linear-regression"><i class="fa fa-check"></i><b>5.5</b> Linear Regression</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="prediction.html"><a href="prediction.html#facial-appearance-and-election-outcomes"><i class="fa fa-check"></i><b>5.5.1</b> Facial Appearance and Election Outcomes</a></li>
+<li class="chapter" data-level="5.5.2" data-path="prediction.html"><a href="prediction.html#correlation-1"><i class="fa fa-check"></i><b>5.5.2</b> Correlation</a></li>
+<li class="chapter" data-level="5.5.3" data-path="prediction.html"><a href="prediction.html#least-squares"><i class="fa fa-check"></i><b>5.5.3</b> Least Squares</a></li>
+<li class="chapter" data-level="5.5.4" data-path="prediction.html"><a href="prediction.html#regresion-towards-the-mean"><i class="fa fa-check"></i><b>5.5.4</b> Regresion towards the mean</a></li>
+<li class="chapter" data-level="5.5.5" data-path="prediction.html"><a href="prediction.html#merging-data-sets-in-r"><i class="fa fa-check"></i><b>5.5.5</b> Merging Data Sets in R</a></li>
+<li class="chapter" data-level="5.5.6" data-path="prediction.html"><a href="prediction.html#model-fit"><i class="fa fa-check"></i><b>5.5.6</b> Model Fit</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="prediction.html"><a href="prediction.html#regression-and-causation"><i class="fa fa-check"></i><b>5.6</b> Regression and Causation</a><ul>
+<li class="chapter" data-level="5.6.1" data-path="prediction.html"><a href="prediction.html#regression-with-multiple-predictors"><i class="fa fa-check"></i><b>5.6.1</b> Regression with multiple predictors</a></li>
+<li class="chapter" data-level="5.6.2" data-path="prediction.html"><a href="prediction.html#heterogenous-treatment-effects"><i class="fa fa-check"></i><b>5.6.2</b> Heterogenous Treatment Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="prediction.html"><a href="prediction.html#regression-discontinuity-design"><i class="fa fa-check"></i><b>5.7</b> Regression Discontinuity Design</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="discovery.html"><a href="discovery.html"><i class="fa fa-check"></i><b>6</b> Discovery</a><ul>
+<li class="chapter" data-level="6.1" data-path="discovery.html"><a href="discovery.html#prerequisites-3"><i class="fa fa-check"></i><b>6.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="6.2" data-path="discovery.html"><a href="discovery.html#textual-data"><i class="fa fa-check"></i><b>6.2</b> Textual data</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="discovery.html"><a href="discovery.html#document-term-matrix"><i class="fa fa-check"></i><b>6.2.1</b> Document-Term Matrix</a></li>
+<li class="chapter" data-level="6.2.2" data-path="discovery.html"><a href="discovery.html#topic-discovery"><i class="fa fa-check"></i><b>6.2.2</b> Topic Discovery</a></li>
+<li class="chapter" data-level="6.2.3" data-path="discovery.html"><a href="discovery.html#authorship-prediction"><i class="fa fa-check"></i><b>6.2.3</b> Authorship Prediction</a></li>
+<li class="chapter" data-level="6.2.4" data-path="discovery.html"><a href="discovery.html#cross-validation"><i class="fa fa-check"></i><b>6.2.4</b> Cross-Validation</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="discovery.html"><a href="discovery.html#network-data"><i class="fa fa-check"></i><b>6.3</b> Network Data</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="discovery.html"><a href="discovery.html#twitter-following-network"><i class="fa fa-check"></i><b>6.3.1</b> Twitter Following Network</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="discovery.html"><a href="discovery.html#spatial-data-in-r"><i class="fa fa-check"></i><b>6.4</b> Spatial Data in R</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="discovery.html"><a href="discovery.html#colors-in-r"><i class="fa fa-check"></i><b>6.4.1</b> Colors in R</a></li>
+<li class="chapter" data-level="6.4.2" data-path="discovery.html"><a href="discovery.html#united-states-presidential-elections"><i class="fa fa-check"></i><b>6.4.2</b> United States Presidential Elections</a></li>
+<li class="chapter" data-level="6.4.3" data-path="discovery.html"><a href="discovery.html#expansion-of-walmart"><i class="fa fa-check"></i><b>6.4.3</b> Expansion of Walmart</a></li>
+<li class="chapter" data-level="6.4.4" data-path="discovery.html"><a href="discovery.html#animation-in-r"><i class="fa fa-check"></i><b>6.4.4</b> Animation in R</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="probability.html"><a href="probability.html"><i class="fa fa-check"></i><b>7</b> Probability</a><ul>
+<li class="chapter" data-level="7.1" data-path="probability.html"><a href="probability.html#prerequisites-4"><i class="fa fa-check"></i><b>7.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="7.2" data-path="probability.html"><a href="probability.html#probability-1"><i class="fa fa-check"></i><b>7.2</b> Probability</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="probability.html"><a href="probability.html#sampling-without-replacement"><i class="fa fa-check"></i><b>7.2.1</b> Sampling without replacement</a></li>
+<li class="chapter" data-level="7.2.2" data-path="probability.html"><a href="probability.html#combinations"><i class="fa fa-check"></i><b>7.2.2</b> Combinations</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="probability.html"><a href="probability.html#conditional-probability"><i class="fa fa-check"></i><b>7.3</b> Conditional Probability</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="probability.html"><a href="probability.html#conditional-marginal-and-joint-probabilities"><i class="fa fa-check"></i><b>7.3.1</b> Conditional, Marginal, and Joint Probabilities</a></li>
+<li class="chapter" data-level="7.3.2" data-path="probability.html"><a href="probability.html#independence"><i class="fa fa-check"></i><b>7.3.2</b> Independence</a></li>
+<li class="chapter" data-level="7.3.3" data-path="probability.html"><a href="probability.html#predicting-race-using-surname-and-residence-location"><i class="fa fa-check"></i><b>7.3.3</b> Predicting Race Using Surname and Residence Location</a></li>
+<li class="chapter" data-level="7.3.4" data-path="probability.html"><a href="probability.html#predicting-election-outcomes-with-uncertainty"><i class="fa fa-check"></i><b>7.3.4</b> Predicting Election Outcomes with Uncertainty</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="probability.html"><a href="probability.html#large-sample-theorems"><i class="fa fa-check"></i><b>7.4</b> Large Sample Theorems</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="probability.html"><a href="probability.html#law-of-large-numbers"><i class="fa fa-check"></i><b>7.4.1</b> Law of Large Numbers</a></li>
+<li class="chapter" data-level="7.4.2" data-path="probability.html"><a href="probability.html#central-limit-theorem"><i class="fa fa-check"></i><b>7.4.2</b> Central Limit Theorem</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="uncertainty.html"><a href="uncertainty.html"><i class="fa fa-check"></i><b>8</b> Uncertainty</a><ul>
+<li class="chapter" data-level="8.1" data-path="uncertainty.html"><a href="uncertainty.html#prerequisites-5"><i class="fa fa-check"></i><b>8.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="8.2" data-path="uncertainty.html"><a href="uncertainty.html#estimation"><i class="fa fa-check"></i><b>8.2</b> Estimation</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="uncertainty.html"><a href="uncertainty.html#standard-errors"><i class="fa fa-check"></i><b>8.2.1</b> Standard Errors</a></li>
+<li class="chapter" data-level="8.2.2" data-path="uncertainty.html"><a href="uncertainty.html#confidence-intervals"><i class="fa fa-check"></i><b>8.2.2</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="8.2.3" data-path="uncertainty.html"><a href="uncertainty.html#margin-of-error-and-sample-size-calculation-in-polls"><i class="fa fa-check"></i><b>8.2.3</b> Margin of Error and Sample Size Calculation in Polls</a></li>
+<li class="chapter" data-level="8.2.4" data-path="uncertainty.html"><a href="uncertainty.html#analyais-of-randomized-controlled-trials"><i class="fa fa-check"></i><b>8.2.4</b> Analyais of Randomized Controlled Trials</a></li>
+<li class="chapter" data-level="8.2.5" data-path="uncertainty.html"><a href="uncertainty.html#analysis-based-on-students-t-distribution"><i class="fa fa-check"></i><b>8.2.5</b> Analysis Based on Student’s t-Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="uncertainty.html"><a href="uncertainty.html#hypothesis-testing"><i class="fa fa-check"></i><b>8.3</b> Hypothesis Testing</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="uncertainty.html"><a href="uncertainty.html#tea-testing-experiment"><i class="fa fa-check"></i><b>8.3.1</b> Tea-Testing Experiment</a></li>
+<li class="chapter" data-level="8.3.2" data-path="uncertainty.html"><a href="uncertainty.html#the-general-framework"><i class="fa fa-check"></i><b>8.3.2</b> The General Framework</a></li>
+<li class="chapter" data-level="8.3.3" data-path="uncertainty.html"><a href="uncertainty.html#one-sample-tests"><i class="fa fa-check"></i><b>8.3.3</b> One-Sample Tests</a></li>
+<li class="chapter" data-level="8.3.4" data-path="uncertainty.html"><a href="uncertainty.html#two-sample-tests"><i class="fa fa-check"></i><b>8.3.4</b> Two-sample tests</a></li>
+<li class="chapter" data-level="8.3.5" data-path="uncertainty.html"><a href="uncertainty.html#power-analysis"><i class="fa fa-check"></i><b>8.3.5</b> Power Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="uncertainty.html"><a href="uncertainty.html#linear-regression-model-with-uncertainty"><i class="fa fa-check"></i><b>8.4</b> Linear Regression Model with Uncertainty</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="uncertainty.html"><a href="uncertainty.html#linear-regression-as-a-generative-model"><i class="fa fa-check"></i><b>8.4.1</b> Linear Regression as a Generative Model</a></li>
+<li class="chapter" data-level="8.4.2" data-path="uncertainty.html"><a href="uncertainty.html#inference-about-coefficients"><i class="fa fa-check"></i><b>8.4.2</b> Inference about coefficients</a></li>
+<li class="chapter" data-level="8.4.3" data-path="uncertainty.html"><a href="uncertainty.html#inference-about-predictions"><i class="fa fa-check"></i><b>8.4.3</b> Inference about predictions</a></li>
+</ul></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -143,17 +255,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>and the <strong>rio</strong> package to load multiple types of files.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;rio&quot;</span>)</code></pre></div>
 <p>We also create a helper function for loading in the data. We will also, use the function <code>qss_data_url</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qss_data_url &lt;-
-function(chapter, file) {
-  stringr::<span class="kw">str_c</span>(<span class="st">&quot;https://raw.githubusercontent.com/kosukeimai/qss/master/&quot;</span>,
-        stringr::<span class="kw">str_to_upper</span>(chapter), <span class="st">&quot;/&quot;</span>, file)
-}</code></pre></div>
 <p>This function returns the URL to a data set.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qss_data_url</span>(<span class="st">&quot;intro&quot;</span>, <span class="st">&quot;Kenya.csv&quot;</span>)
 <span class="co">#&gt; [1] &quot;https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/Kenya.csv&quot;</span></code></pre></div>
 <p>Since URLs can be used for paths to files, this can be used to easily load data directly from the site:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;intro&quot;</span>, <span class="st">&quot;Kenya.csv&quot;</span>))
-<span class="co">#&gt; # A tibble: 30 × 8</span>
+<span class="co">#&gt; # A tibble: 30 x 8</span>
 <span class="co">#&gt;   country    period   age births deaths py.men py.women    l_x</span>
 <span class="co">#&gt;     &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;</span>
 <span class="co">#&gt; 1     KEN 1950-1955   0-4      0  398.3   2983     2978 100000</span>
@@ -180,7 +287,7 @@ function(chapter, file) {
 <span class="kw">class</span>(UNpop)
 <span class="co">#&gt; [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</span>
 UNpop
-<span class="co">#&gt; # A tibble: 7 × 2</span>
+<span class="co">#&gt; # A tibble: 7 x 2</span>
 <span class="co">#&gt;    year world.pop</span>
 <span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span>
 <span class="co">#&gt; 1  1950   2525779</span>
@@ -192,22 +299,22 @@ UNpop
 <span class="co">#&gt; # ... with 1 more rows</span></code></pre></div>
 <p>The single bracket, <code>[</code>, is useful to select rows and columns in simple cases, but the <strong>dplyr</strong> functions <code>slice()</code> to select rows by number, <code>filter</code> to select by certain criteria, or <code>select()</code> to select columns.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), ]
-<span class="co">#&gt; # A tibble: 3 × 2</span>
+<span class="co">#&gt; # A tibble: 3 x 2</span>
 <span class="co">#&gt;    year world.pop</span>
 <span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span>
 <span class="co">#&gt; 1  1950   2525779</span>
 <span class="co">#&gt; 2  1960   3026003</span>
 <span class="co">#&gt; 3  1970   3691173</span></code></pre></div>
 <p>is equivalent to</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop %&gt;%<span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span>:<span class="dv">3</span>)
-<span class="co">#&gt; # A tibble: 3 × 2</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)
+<span class="co">#&gt; # A tibble: 3 x 2</span>
 <span class="co">#&gt;    year world.pop</span>
 <span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span>
 <span class="co">#&gt; 1  1950   2525779</span>
 <span class="co">#&gt; 2  1960   3026003</span>
 <span class="co">#&gt; 3  1970   3691173</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[, <span class="st">&quot;world.pop&quot;</span>]
-<span class="co">#&gt; # A tibble: 7 × 1</span>
+<span class="co">#&gt; # A tibble: 7 x 1</span>
 <span class="co">#&gt;   world.pop</span>
 <span class="co">#&gt;       &lt;int&gt;</span>
 <span class="co">#&gt; 1   2525779</span>
@@ -219,7 +326,7 @@ UNpop
 <span class="co">#&gt; # ... with 1 more rows</span></code></pre></div>
 <p>is almost equivalent to</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">select</span>(UNpop, world.pop)
-<span class="co">#&gt; # A tibble: 7 × 1</span>
+<span class="co">#&gt; # A tibble: 7 x 1</span>
 <span class="co">#&gt;   world.pop</span>
 <span class="co">#&gt;       &lt;int&gt;</span>
 <span class="co">#&gt; 1   2525779</span>
@@ -230,31 +337,31 @@ UNpop
 <span class="co">#&gt; 6   6127700</span>
 <span class="co">#&gt; # ... with 1 more rows</span></code></pre></div>
 <p>However, note that <code>select()</code> <strong>always</strong> returns a tibble, and never a vector, even if only one column is selected. Also, note that since <code>world.pop</code> is a tibble, using <code>[</code> also returns tibbles rather than a vector if it is only one column.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[<span class="dv">1</span>:<span class="dv">3</span>, <span class="st">&quot;year&quot;</span>]
-<span class="co">#&gt; # A tibble: 3 × 1</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="st">&quot;year&quot;</span>]
+<span class="co">#&gt; # A tibble: 3 x 1</span>
 <span class="co">#&gt;    year</span>
 <span class="co">#&gt;   &lt;int&gt;</span>
 <span class="co">#&gt; 1  1950</span>
 <span class="co">#&gt; 2  1960</span>
 <span class="co">#&gt; 3  1970</span></code></pre></div>
-<p>is almost equivalent to</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop %&gt;%
-<span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span>:<span class="dv">3</span>) %&gt;%
+<p>is equivalent to</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(year)
-<span class="co">#&gt; # A tibble: 3 × 1</span>
+<span class="co">#&gt; # A tibble: 3 x 1</span>
 <span class="co">#&gt;    year</span>
 <span class="co">#&gt;   &lt;int&gt;</span>
 <span class="co">#&gt; 1  1950</span>
 <span class="co">#&gt; 2  1960</span>
 <span class="co">#&gt; 3  1970</span></code></pre></div>
-<p>For this example using these functions and <code>%&gt;%</code> to chain them together may seem a little excessive, but later we will see how chaining simple functions together like that becomes a very powerful way to build up complicated logic.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop$world.pop[<span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">1</span>, <span class="dt">to =</span> <span class="kw">nrow</span>(UNpop), <span class="dt">by =</span> <span class="dv">2</span>)]
+<p>For this example using these functions and <code>%&gt;%</code> to chain them together may seem verbose, but later we can produce more complicated transformations of the data by chaining together simple functions.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop<span class="op">$</span>world.pop[<span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">1</span>, <span class="dt">to =</span> <span class="kw">nrow</span>(UNpop), <span class="dt">by =</span> <span class="dv">2</span>)]
 <span class="co">#&gt; [1] 2525779 3691173 5320817 6916183</span></code></pre></div>
 <p>can be rewritten as</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop %&gt;%
-<span class="st">  </span><span class="kw">slice</span>(<span class="kw">seq</span>(<span class="dv">1</span>, <span class="kw">n</span>(), <span class="dt">by =</span> <span class="dv">2</span>)) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">slice</span>(<span class="kw">seq</span>(<span class="dv">1</span>, <span class="kw">n</span>(), <span class="dt">by =</span> <span class="dv">2</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(world.pop) 
-<span class="co">#&gt; # A tibble: 4 × 1</span>
+<span class="co">#&gt; # A tibble: 4 x 1</span>
 <span class="co">#&gt;   world.pop</span>
 <span class="co">#&gt;       &lt;int&gt;</span>
 <span class="co">#&gt; 1   2525779</span>
@@ -265,16 +372,17 @@ UNpop
 </div>
 <div id="saving-objects" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Saving Objects</h3>
-<p><strong>Do not save</strong> the work space using <code>save.image</code>. This is an extremely bad idea for reproducibility. See <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/workflow-projects.html">Workflow Projects</a>. You should uncheck the options in RStudio to avoid saving and restoring from <code>.RData</code> files. This will help ensure that your R code runs the way you think it does, instead of depending on some long forgotten code that is only saved in the workspace image.</p>
+<p><strong>Do not save</strong> the work space using <code>save.image</code>. This is an extremely bad idea for reproducibility.</p>
+<p>See the <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/workflow-projects.html">Workflow Projects</a>. You should uncheck the options in RStudio to avoid saving and restoring from <code>.RData</code> files. This will help ensure that your R code runs the way you think it does, instead of depending on some long forgotten code that is only saved in the workspace image.</p>
 <p>Everything important should be in a script. Anything saved or loaded from file should be done explicitly.</p>
 <p>As with reading CSV files, use the <strong>readr</strong> package functions. In this case, <code>write_csv</code> writes a csv file</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write_csv</span>(UNpop, <span class="st">&quot;UNpop.csv&quot;</span>)</code></pre></div>
 </div>
 <div id="packages" class="section level3">
 <h3><span class="header-section-number">2.2.3</span> Packages</h3>
-<p>Instead of <strong>foreign</strong> for reading and writing Stata and SPSS files, use <strong>haven</strong>. One reason to do so is that it is better maintained. The R function <code>read.dta</code> does not read files created by the most recent versions of Stata (13+).</p>
+<p>To read and write Stata and SPSS</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">read_dta</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;INTRO&quot;</span>, <span class="st">&quot;UNpop.dta&quot;</span>))
-<span class="co">#&gt; # A tibble: 7 × 2</span>
+<span class="co">#&gt; # A tibble: 7 x 2</span>
 <span class="co">#&gt;    year world_pop</span>
 <span class="co">#&gt;   &lt;dbl&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  1950      2526</span>
@@ -315,10 +423,10 @@ UNpop
 <span class="co">#&gt; 5 1990      5321</span>
 <span class="co">#&gt; 6 2000      6128</span>
 <span class="co">#&gt; 7 2010      6916</span></code></pre></div>
+<p>R also includes the <strong>foreign</strong> package, which contains functions for reading and writing <strong>haven</strong>. One reason to do so is that it is better maintained. For R function <code>read.dta</code> does not read files created by the most recent versions of Stata (13+).</p>
 </div>
 <div id="style-guide" class="section level3">
 <h3><span class="header-section-number">2.2.4</span> Style Guide</h3>
-<p>Follow <a href="http://adv-r.had.co.nz/Style.html">Hadley Wickham’s Style Guide</a> not the Google R style guide.</p>
 <p>In addition to <a href="https://cran.r-project.org/package=lintr">lintr</a> the R package <a href="https://cran.r-project.org/package=formatR">formatR</a> has methods to clean up your code.</p>
 
 </div>
@@ -330,8 +438,9 @@ UNpop
         </div>
       </div>
 <a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="causality.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
-
+<a href="causality.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
@@ -340,7 +449,7 @@ UNpop
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
 <script>
-require(["gitbook"], function(gitbook) {
+gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": false,
 "fontsettings": {
@@ -360,6 +469,17 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

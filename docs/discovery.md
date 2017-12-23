@@ -50,68 +50,39 @@ See [Tidy Text Mining with R](http://tidytextmining.com/) for a full introductio
 In tidy data, each row is an observation and each column is a variable.
 In the **tidytext** package, documents are stored as data frames with **one-term-per-row**.
 
-
-**Original**
-
-```r
-## load the raw corpus
-corpus.raw <- Corpus(DirSource(directory = "federalist", pattern = "fp")) 
-corpus.raw
-
-## make lower case
-corpus.prep <- tm_map(corpus.raw, content_transformer(tolower)) 
-## remove white space
-corpus.prep <- tm_map(corpus.prep, stripWhitespace) 
-## remove punctuation 
-corpus.prep <- tm_map(corpus.prep, removePunctuation)
-
-## remove numbers
-corpus.prep <- tm_map(corpus.prep, removeNumbers) 
-
-head(stopwords("english"))
-
-## remove stop words 
-corpus <- tm_map(corpus.prep, removeWords, stopwords("english")) 
-
-## finally stem remaining words
-corpus <- tm_map(corpus, stemDocument) 
-
-## the output is truncated here to save space
-content(corpus[[10]]) # Essay No. 10
-```
-
 We can cast data into the **tidytext** format either from the `Corpus` object, 
 or, after processing, from the document-term matrix object.
 
 
-
 ```r
 DIR_SOURCE <- file.path("qss", "DISCOVERY", "federalist")
-corpus_raw <- Corpus(DirSource(directory = DIR_SOURCE, pattern = "fp")) 
+corpus_raw <- VCorpus(DirSource(directory = DIR_SOURCE, pattern = "fp"))
 corpus_raw
 #> <<VCorpus>>
 #> Metadata:  corpus specific: 0, document level (indexed): 0
 #> Content:  documents: 85
 ```
 
-Use the [tidy](https://www.rdocumentation.org/packages/tidyytext/topics/tidy.Corpus) function to convert it to a data frame with one row per document.
+Use the function [tidy](https://www.rdocumentation.org/packages/tidyytext/topics/tidy.Corpus) to convert the  to a data frame with one row per document.
 
 ```r
-corpus_tidy <- tidy(corpus_raw)
+corpus_tidy <- tidy(corpus_raw, "corpus")
 corpus_tidy
-#> # A tibble: 85 × 8
+#> # A tibble: 85 x 8
 #>   author       datetimestamp description heading       id language origin
 #>    <lgl>              <dttm>       <lgl>   <lgl>    <chr>    <chr>  <lgl>
-#> 1     NA 2017-02-03 17:57:31          NA      NA fp01.txt       en     NA
-#> 2     NA 2017-02-03 17:57:31          NA      NA fp02.txt       en     NA
-#> 3     NA 2017-02-03 17:57:31          NA      NA fp03.txt       en     NA
-#> 4     NA 2017-02-03 17:57:31          NA      NA fp04.txt       en     NA
-#> 5     NA 2017-02-03 17:57:31          NA      NA fp05.txt       en     NA
-#> 6     NA 2017-02-03 17:57:31          NA      NA fp06.txt       en     NA
+#> 1     NA 2017-12-22 15:22:19          NA      NA fp01.txt       en     NA
+#> 2     NA 2017-12-22 15:22:19          NA      NA fp02.txt       en     NA
+#> 3     NA 2017-12-22 15:22:19          NA      NA fp03.txt       en     NA
+#> 4     NA 2017-12-22 15:22:19          NA      NA fp04.txt       en     NA
+#> 5     NA 2017-12-22 15:22:19          NA      NA fp05.txt       en     NA
+#> 6     NA 2017-12-22 15:22:19          NA      NA fp06.txt       en     NA
 #> # ... with 79 more rows, and 1 more variables: text <chr>
 ```
+
 The `text` column contains the text of the documents themselves.
-Since most of the metadata is irrelevant, we'll delete those columns, 
+Since most of the metadata columns are either missings or irrelevant for 
+our purposes, we'll delete those columns, 
 keeping only the document (`id`) and `text` columns.
 
 ```r
@@ -120,14 +91,12 @@ corpus_tidy <- select(corpus_tidy, id, text)
 Also, we want to extract the essay number and use that as the document id rather than its file name.
 
 ```r
-corpus_tidy <- mutate(corpus_tidy, 
-                      document = as.integer(str_extract(id, "\\d+"))) %>%
+corpus_tidy <- 
+  mutate(corpus_tidy, document = as.integer(str_extract(id, "\\d+"))) %>%
   select(-id)
 ```
 
-
-
-The  tokenizes the document texts.
+The function  tokenizes the document texts:
 
 ```r
 tokens <- corpus_tidy %>%
@@ -138,7 +107,7 @@ tokens <- corpus_tidy %>%
   # drop any empty strings
   filter(word != "")
 tokens
-#> # A tibble: 187,412 × 2
+#> # A tibble: 202,089 x 2
 #>   document      word
 #>      <int>     <chr>
 #> 1        1     after
@@ -147,7 +116,7 @@ tokens
 #> 4        1    experi
 #> 5        1        of
 #> 6        1       the
-#> # ... with 1.874e+05 more rows
+#> # ... with 2.021e+05 more rows
 ```
 
 
@@ -163,17 +132,7 @@ tokens <- anti_join(tokens, stop_words, by = "word")
 ```
 
 
-
 ### Document-Term Matrix
-
-**Original:**
-
-```r
-dtm <- DocumentTermMatrix(corpus)
-dtm
-inspect(dtm[1:5, 1:8])
-dtm.mat <- as.matrix(dtm)
-```
 
 In `tokens` there is one observation for each token (word) in the each document.
 This is almost equivalent to a document-term matrix.
@@ -184,9 +143,7 @@ and a column with the number of times the term appeared in the document.
 ```r
 dtm <- count(tokens, document, word)
 head(dtm)
-#> Source: local data frame [6 x 3]
-#> Groups: document [1]
-#> 
+#> # A tibble: 6 x 3
 #>   document       word     n
 #>      <int>      <chr> <int>
 #> 1        1        abl     1
@@ -200,14 +157,6 @@ head(dtm)
 
 ### Topic Discovery
 
-**Original:**
-
-```r
-library(wordcloud)
-
-wordcloud(colnames(dtm.mat), dtm.mat[12, ], max.words = 20)  # essay No. 12
-wordcloud(colnames(dtm.mat), dtm.mat[24, ], max.words = 20)  # essay No. 24
-```
 
 Plot the word-clouds for essays 12 and 24:
 
@@ -217,53 +166,31 @@ filter(dtm, document == 12) %>%
   {wordcloud(.$word, .$n, max.words = 20)}
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" />
 
 ```r
 filter(dtm, document == 24) %>%
   {wordcloud(.$word, .$n, max.words = 20)}
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
-
-**Original:**
-
-```r
-stemCompletion(c("revenu", "commerc", "peac", "army"), corpus.prep)
-```
+<img src="discovery_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" />
 
 
-**Original:**
-
-```r
-dtm.tfidf <- weightTfIdf(dtm) # tf-idf calculation
-
-dtm.tfidf.mat <- as.matrix(dtm.tfidf)  # convert to matrix
-
-## 10 most important words for Paper No. 12
-head(sort(dtm.tfidf.mat[12, ], decreasing = TRUE), n = 10)
-
-## 10 most important words for Paper No. 24
-head(sort(dtm.tfidf.mat[24, ], decreasing = TRUE), n = 10)
-```
-
-**tidyverse:** Use the function [bind_tf_idf](https://www.rdocumentation.org/packages/tidytext/topics/bind_tf_idf) to add a column with the tf-idf to the data frame.
+Use the function [bind_tf_idf](https://www.rdocumentation.org/packages/tidytext/topics/bind_tf_idf) to add a column with the tf-idf to the data frame.
 
 ```r
 dtm <- bind_tf_idf(dtm, word, document, n)
 dtm
-#> Source: local data frame [38,764 x 6]
-#> Groups: document [85]
-#> 
+#> # A tibble: 38,847 x 6
 #>   document       word     n      tf   idf   tf_idf
 #>      <int>      <chr> <int>   <dbl> <dbl>    <dbl>
-#> 1        1        abl     1 0.00176 0.705 0.001241
-#> 2        1     absurd     1 0.00176 1.735 0.003054
-#> 3        1      accid     1 0.00176 3.750 0.006601
-#> 4        1     accord     1 0.00176 0.754 0.001327
-#> 5        1 acknowledg     1 0.00176 1.552 0.002733
-#> 6        1        act     1 0.00176 0.400 0.000704
-#> # ... with 3.876e+04 more rows
+#> 1        1        abl     1 0.00145 0.705 0.001022
+#> 2        1     absurd     1 0.00145 1.735 0.002514
+#> 3        1      accid     1 0.00145 3.750 0.005434
+#> 4        1     accord     1 0.00145 0.754 0.001092
+#> 5        1 acknowledg     1 0.00145 1.552 0.002250
+#> 6        1        act     1 0.00145 0.400 0.000579
+#> # ... with 3.884e+04 more rows
 ```
 
 The 10 most important words for Paper No. 12 are
@@ -272,17 +199,15 @@ The 10 most important words for Paper No. 12 are
 dtm %>%
   filter(document == 12) %>%
   top_n(10, tf_idf)
-#> Source: local data frame [10 x 6]
-#> Groups: document [1]
-#> 
-#>   document       word     n      tf   idf tf_idf
-#>      <int>      <chr> <int>   <dbl> <dbl>  <dbl>
-#> 1       12       cent     2 0.00240  4.44 0.0107
-#> 2       12      coast     3 0.00360  3.75 0.0135
-#> 3       12    commerc     8 0.00959  1.11 0.0107
-#> 4       12 contraband     3 0.00360  4.44 0.0160
-#> 5       12      excis     5 0.00600  2.65 0.0159
-#> 6       12     gallon     2 0.00240  4.44 0.0107
+#> # A tibble: 10 x 6
+#>   document       word     n      tf   idf  tf_idf
+#>      <int>      <chr> <int>   <dbl> <dbl>   <dbl>
+#> 1       12       cent     2 0.00199  4.44 0.00884
+#> 2       12      coast     3 0.00299  3.75 0.01119
+#> 3       12    commerc     8 0.00796  1.11 0.00884
+#> 4       12 contraband     3 0.00299  4.44 0.01326
+#> 5       12      excis     5 0.00498  2.65 0.01319
+#> 6       12     gallon     2 0.00199  4.44 0.00884
 #> # ... with 4 more rows
 ```
 and for Paper No. 24,
@@ -291,49 +216,21 @@ and for Paper No. 24,
 dtm %>%
   filter(document == 24) %>%
   top_n(10, tf_idf)
-#> Source: local data frame [10 x 6]
-#> Groups: document [1]
-#> 
+#> # A tibble: 10 x 6
 #>   document     word     n      tf   idf  tf_idf
 #>      <int>    <chr> <int>   <dbl> <dbl>   <dbl>
-#> 1       24     armi     7 0.01034  1.26 0.01308
-#> 2       24  arsenal     2 0.00295  3.75 0.01108
-#> 3       24     dock     3 0.00443  4.44 0.01969
-#> 4       24 frontier     3 0.00443  2.83 0.01255
-#> 5       24 garrison     6 0.00886  2.83 0.02511
-#> 6       24   nearer     2 0.00295  3.34 0.00988
+#> 1       24     armi     7 0.00858  1.26 0.01085
+#> 2       24  arsenal     2 0.00245  3.75 0.00919
+#> 3       24     dock     3 0.00368  4.44 0.01633
+#> 4       24 frontier     3 0.00368  2.83 0.01042
+#> 5       24 garrison     6 0.00735  2.83 0.02083
+#> 6       24   nearer     2 0.00245  3.34 0.00820
 #> # ... with 4 more rows
 ```
 
 The slightly different results from the book are due to tokenization differences.
 
-**Original:**
-
-```r
-k <- 4  # number of clusters
-## subset The Federalist papers written by Hamilton
-hamilton <- c(1, 6:9, 11:13, 15:17, 21:36, 59:61, 65:85)
-dtm.tfidf.hamilton <- dtm.tfidf.mat[hamilton, ]
-
-## run k-means
-km.out <- kmeans(dtm.tfidf.hamilton, centers = k)
-km.out$iter # check the convergence; number of iterations may vary
-
-## label each centroid with the corresponding term
-colnames(km.out$centers) <- colnames(dtm.tfidf.hamilton)
-
-for (i in 1:k) { # loop for each cluster
-    cat("CLUSTER", i, "\n")
-    cat("Top 10 words:\n") # 10 most important terms at the centroid
-    print(head(sort(km.out$centers[i, ], decreasing = TRUE), n = 10))
-    cat("\n")
-    cat("Federalist Papers classified: \n") # extract essays classified
-    print(rownames(dtm.tfidf.hamilton)[km.out$cluster == i])
-    cat("\n")
-}
-```
-
-**tidyverse:** Subset those documents known to have been written by Hamilton.
+Subset those documents known to have been written by Hamilton.
 
 ```r
 HAMILTON_ESSAYS <- c(1, 6:9, 11:13, 15:17, 21:36, 59:61, 65:85)
@@ -371,15 +268,15 @@ dim(km_out$centers)
 ```r
 hamilton_words <- bind_cols(hamilton_words, as_tibble(t(km_out$centers)))
 hamilton_words
-#> # A tibble: 3,850 × 5
-#>         word      `1`      `2`      `3`     `4`
-#>        <chr>    <dbl>    <dbl>    <dbl>   <dbl>
-#> 1        abl 0.000262 0.000000 0.001004 0.00113
-#> 2     absurd 0.000272 0.001430 0.000678 0.00000
-#> 3      accid 0.000000 0.000000 0.000292 0.00000
-#> 4     accord 0.000319 0.001381 0.000499 0.00000
-#> 5 acknowledg 0.000000 0.000767 0.000556 0.00000
-#> 6        act 0.000927 0.000838 0.000657 0.00000
+#> # A tibble: 3,850 x 5
+#>         word      `1`      `2`     `3`      `4`
+#>        <chr>    <dbl>    <dbl>   <dbl>    <dbl>
+#> 1        abl 0.000939 0.000743 0.00000 0.000000
+#> 2     absurd 0.000000 0.000517 0.00000 0.000882
+#> 3      accid 0.000000 0.000202 0.00000 0.000000
+#> 4     accord 0.000000 0.000399 0.00000 0.000852
+#> 5 acknowledg 0.000000 0.000388 0.00000 0.000473
+#> 6        act 0.000000 0.000560 0.00176 0.000631
 #> # ... with 3,844 more rows
 ```
 To find the top 10 words in each centroid, we use `top_n` with `group_by`:
@@ -399,13 +296,13 @@ for (i in 1:CLUSTERS) {
       str_c(filter(top_words_cluster, cluster == i)$word, collapse = ", "),
       "\n\n")
 }
-#> CLUSTER  1 :  offic, accus, presid, treati, appoint, senat, nomin, governor, impeach, pardon 
+#> CLUSTER  1 :  presid, appoint, senat, claus, expir, fill, recess, session, unfound, vacanc 
 #> 
-#> CLUSTER  2 :  court, appeal, jurisdict, inferior, suprem, trial, tribun, cogniz, juri, appel 
+#> CLUSTER  2 :  offic, presid, tax, land, revenu, armi, militia, senat, taxat, claus 
 #> 
-#> CLUSTER  3 :  confederaci, tax, war, land, revenu, armi, militari, militia, taxat, claus 
+#> CLUSTER  3 :  sedit, guilt, chief, clemenc, impun, plead, crime, pardon, treason, conniv 
 #> 
-#> CLUSTER  4 :  presid, appoint, senat, claus, expir, fill, recess, session, unfound, vacanc
+#> CLUSTER  4 :  court, jurisdict, inferior, suprem, trial, tribun, cogniz, juri, impeach, appel
 ```
 
 This is alternative code that prints out a table:
@@ -420,12 +317,12 @@ gather(hamilton_words, cluster, value, -word) %>%
 
 
 
-cluster   top_words                                                                      
---------  -------------------------------------------------------------------------------
-1         offic, accus, presid, treati, appoint, senat, nomin, governor, impeach, pardon 
-2         court, appeal, jurisdict, inferior, suprem, trial, tribun, cogniz, juri, appel 
-3         confederaci, tax, war, land, revenu, armi, militari, militia, taxat, claus     
-4         presid, appoint, senat, claus, expir, fill, recess, session, unfound, vacanc   
+cluster   top_words                                                                       
+--------  --------------------------------------------------------------------------------
+1         presid, appoint, senat, claus, expir, fill, recess, session, unfound, vacanc    
+2         offic, presid, tax, land, revenu, armi, militia, senat, taxat, claus            
+3         sedit, guilt, chief, clemenc, impun, plead, crime, pardon, treason, conniv      
+4         court, jurisdict, inferior, suprem, trial, tribun, cogniz, juri, impeach, appel 
 
 Or to print out the documents in each cluster,
 
@@ -438,42 +335,18 @@ enframe(km_out$cluster, "document", "cluster") %>%
 
 
 
- cluster  documents                                                                                                                                         
---------  --------------------------------------------------------------------------------------------------------------------------------------------------
-       1  65, 66, 68, 69, 74, 75, 76, 77, 79                                                                                                                
-       2  81, 82, 83                                                                                                                                        
-       3  1, 6, 7, 8, 9, 11, 12, 13, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 59, 60, 61, 70, 71, 72, 73, 78, 80, 84, 85 
-       4  67                                                                                                                                                
+ cluster  documents                                                                                                                                                                     
+--------  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+       1  67                                                                                                                                                                            
+       2  1, 6, 7, 8, 9, 11, 12, 13, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 59, 60, 61, 66, 68, 69, 70, 71, 72, 73, 75, 76, 77, 78, 79, 80, 84, 85 
+       3  74                                                                                                                                                                            
+       4  65, 81, 82, 83                                                                                                                                                                
 
 
 
 ### Authorship Prediction
 
-**Original:**
-
-```r
-## document-term matrix converted to matrix for manipulation 
-dtm1 <- as.matrix(DocumentTermMatrix(corpus.prep)) 
-tfm <- dtm1 / rowSums(dtm1) * 1000 # term frequency per 1000 words
-
-## words of interest
-words <- c("although", "always", "commonly", "consequently",
-           "considerable", "enough", "there", "upon", "while", "whilst")
-
-## select only these words
-tfm <- tfm[, words]
-
-## essays written by Madison: `hamilton' defined earlier
-madison <- c(10, 14, 37:48, 58)
-
-## average among Hamilton/Madison essays
-tfm.ave <- rbind(colSums(tfm[hamilton, ]) / length(hamilton), 
-                 colSums(tfm[madison, ]) / length(madison))
-tfm.ave
-```
-
-
-**tidyverse:** We'll create a data-frame with the known 
+We'll create a data-frame with the known 
 
 ```r
 MADISON_ESSAYS <- c(10, 14, 37:48, 58)
@@ -527,39 +400,17 @@ hm_tfm %>%
 
 word            Hamilton     Jay   Madison
 -------------  ---------  ------  --------
-although           0.013   0.584     0.222
-always             0.563   0.999     0.166
-commonly           0.198   0.139     0.000
-consequently       0.019   0.503     0.371
-considerable       0.406   0.087     0.133
-enough             0.295   0.000     0.000
-there              3.303   1.026     0.917
-upon               3.291   0.120     0.164
-while              0.274   0.207     0.000
-whilst             0.005   0.000     0.315
+although           0.012   0.543     0.206
+always             0.522   0.929     0.154
+commonly           0.184   0.129     0.000
+consequently       0.018   0.469     0.344
+considerable       0.377   0.081     0.123
+enough             0.274   0.000     0.000
+there              3.065   0.954     0.849
+upon               3.054   0.112     0.152
+while              0.255   0.192     0.000
+whilst             0.005   0.000     0.292
 
-
-**Original:**
-
-```r
-author <- rep(NA, nrow(dtm1)) # a vector with missing values
-author[hamilton] <- 1  # 1 if Hamilton
-author[madison] <- -1  # -1 if Madison
-
-## data frame for regression
-author.data <- data.frame(author = author[c(hamilton, madison)], 
-                          tfm[c(hamilton, madison), ])
-
-hm.fit <- lm(author ~ upon + there + consequently + whilst, 
-             data = author.data)
-hm.fit
-
-hm.fitted <- fitted(hm.fit) # fitted values
-sd(hm.fitted)
-```
-
-
-**tidyverse:**
 
 ```r
 author_data <- 
@@ -580,7 +431,7 @@ hm_fit
 #> 
 #> Coefficients:
 #>  (Intercept)          upon         there  consequently        whilst  
-#>       -0.195         0.213         0.118        -0.596        -0.910
+#>       -0.195         0.229         0.127        -0.644        -0.984
 
 author_data <- author_data %>%
   add_predictions(hm_fit) %>%
@@ -595,15 +446,6 @@ tokenization procedure, and in particular, the document size normalization.
 
 ### Cross-Validation
 
-**Original:**
-
-```r
-## proportion of correctly classified essays by Hamilton
-mean(hm.fitted[author.data$author == 1] > 0)
-
-## proportion of correctly classified essays by Madison
-mean(hm.fitted[author.data$author == -1] < 0)
-```
 
 **tidyverse:** For cross-validation, I rely on the [modelr](https://cran.r-project.org/package=modelr) package function `RDoc("modelr::crossv_kfold")`. See the tutorial [Cross validation of linear regression with modelr](https://rpubs.com/dgrtwo/cv-modelr) for more on using **modelr** for cross validation or [k-fold cross-validation with modelr and broom](https://drsimonj.svbtle.com/k-fold-cross-validation-with-modelr-and-broom).
 
@@ -614,7 +456,7 @@ author_data %>%
   filter(!is.na(author)) %>%
   group_by(author) %>%
   summarise(`Proportion Correct` = mean(author == pred_author))
-#> # A tibble: 2 × 2
+#> # A tibble: 2 x 2
 #>     author `Proportion Correct`
 #>      <chr>                <dbl>
 #> 1 Hamilton                    1
@@ -657,45 +499,11 @@ test <- map2_df(models, cv$test,
 test %>%
   group_by(author) %>%
   summarise(mean(correct))
-#> # A tibble: 2 × 2
+#> # A tibble: 2 x 2
 #>     author `mean(correct)`
 #>      <chr>           <dbl>
 #> 1 Hamilton           1.000
 #> 2  Madison           0.786
-```
-
-
-
-**Original:**
-
-```r
-n <- nrow(author.data)
-hm.classify <- rep(NA, n) # a container vector with missing values 
-
-for (i in 1:n) {
-    ## fit the model to the data after removing the ith observation
-    sub.fit <- lm(author ~ upon + there + consequently + whilst, 
-                  data = author.data[-i, ]) # exclude ith row
-    ## predict the authorship for the ith observation
-    hm.classify[i] <- predict(sub.fit, newdata = author.data[i, ])
-}
-
-## proportion of correctly classified essays by Hamilton
-mean(hm.classify[author.data$author == 1] > 0)
-
-## proportion of correctly classified essays by Madison
-mean(hm.classify[author.data$author == -1] < 0)
-```
-
-**Original:**
-
-```r
-disputed <- c(49, 50:57, 62, 63) # 11 essays with disputed authorship
-tf.disputed <- as.data.frame(tfm[disputed, ])
-
-## prediction of disputed authorship
-pred <- predict(hm.fit, newdata = tf.disputed)
-pred # predicted values
 ```
 
 **tidyverse:**
@@ -714,38 +522,21 @@ author_data %>%
 
  document     pred  pred_author 
 ---------  -------  ------------
-       18   -0.359  Madison     
-       19   -0.586  Madison     
+       18   -0.360  Madison     
+       19   -0.587  Madison     
        20   -0.055  Madison     
        49   -0.966  Madison     
-       50   -0.002  Madison     
-       51   -1.522  Madison     
+       50   -0.003  Madison     
+       51   -1.520  Madison     
        52   -0.195  Madison     
        53   -0.506  Madison     
-       54   -0.520  Madison     
+       54   -0.521  Madison     
        55    0.094  Hamilton    
        56   -0.550  Madison     
-       57   -1.219  Madison     
-       62   -0.944  Madison     
+       57   -1.221  Madison     
+       62   -0.946  Madison     
        63   -0.184  Madison     
 
-
-```r
-par(cex = 1.25)
-## fitted values for essays authored by Hamilton; red squares
-plot(hamilton, hm.fitted[author.data$author == 1], pch = 15, 
-     xlim = c(1, 85), ylim  = c(-2, 2), col = "red", 
-     xlab = "Federalist Papers", ylab = "Predicted values")
-abline(h = 0, lty = "dashed")
-
-## essays authored by Madison; blue circles
-points(madison, hm.fitted[author.data$author == -1], 
-       pch = 16, col = "blue")
-
-## disputed authorship; black triangles
-points(disputed, pred, pch = 17) 
-
-```
 
 
 ```r
@@ -767,7 +558,7 @@ ggplot(mutate(author_data,
        y = "Federalist Papers", x = "Predicted values")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ## Network Data
@@ -800,41 +591,12 @@ library("GGally")
 
 ### Twitter Following Network
 
-**Original:**
-
-```r
-twitter <- read.csv("twitter-following.csv")
-senator <- read.csv("twitter-senator.csv")
-```
-
-**tidyverse:**
 
 ```r
 twitter <- read_csv(qss_data_url("discovery", "twitter-following.csv"))
 senator <- read_csv(qss_data_url("discovery", "twitter-senator.csv"))
 ```
 
-**Original:**
-
-```r
-n <- nrow(senator) # number of senators
-
-## initialize adjacency matrix
-twitter.adj <- matrix(0, nrow = n, ncol = n)
-
-## assign screen names to rows and columns
-colnames(twitter.adj) <- rownames(twitter.adj) <- senator$screen_name
-
-## change `0' to `1' when edge goes from node `i' to node `j'
-for (i in 1:nrow(twitter)) {
-    twitter.adj[twitter$following[i], twitter$followed[i]] <- 1
-}
-
-twitter.adj <- graph.adjacency(twitter.adj, mode = "directed", diag = FALSE)
-
-```
-
-**tidyverse:**
 Simply use the  function since `twitter` consists of edges (a link from a senator to another).
 SInce `graph_from_edgelist` expects a matrix, convert the data frame to a matrix using .
 
@@ -843,29 +605,12 @@ twitter_adj <- graph_from_edgelist(as.matrix(twitter))
 ```
 
 
-**original:**
-
-```r
-senator$indegree <- degree(twitter.adj, mode = "in")
-senator$outdegree <- degree(twitter.adj, mode = "out") 
-
-in.order <- order(senator$indegree, decreasing = TRUE)
-out.order <- order(senator$outdegree, decreasing = TRUE)
-
-## 3 greatest indegree
-senator[in.order[1:3], ]
-
-## 3 greatest outdegree
-senator[out.order[1:3], ]
-```
-
-
 ```r
 environment(degree)
-#> <environment: namespace:sna>
+#> <environment: namespace:igraph>
 ```
 
-**tidyverse:** Add in- and out-degree varibles to the `senator` data frame:
+Add in- and out-degree varibles to the `senator` data frame:
 
 ```r
 senator <-
@@ -880,7 +625,7 @@ Now find the senators with the 3 greatest in-degrees
 arrange(senator, desc(indegree)) %>%
   slice(1:3) %>%
   select(name, party, state, indegree, outdegree)
-#> # A tibble: 3 × 5
+#> # A tibble: 3 x 5
 #>                name party state indegree outdegree
 #>               <chr> <chr> <chr>    <dbl>     <dbl>
 #> 1        Tom Cotton     R    AR       64        15
@@ -893,7 +638,7 @@ or using the  function:
 top_n(senator, 3, indegree) %>%
   arrange(desc(indegree)) %>%
   select(name, party, state, indegree, outdegree)
-#> # A tibble: 5 × 5
+#> # A tibble: 5 x 5
 #>                name party state indegree outdegree
 #>               <chr> <chr> <chr>    <dbl>     <dbl>
 #> 1        Tom Cotton     R    AR       64        15
@@ -910,7 +655,7 @@ And we can find the senators with the three highest out-degrees similarly,
 top_n(senator, 3, outdegree) %>%
   arrange(desc(outdegree)) %>%
   select(name, party, state, indegree, outdegree)
-#> # A tibble: 4 × 5
+#> # A tibble: 4 x 5
 #>               name party state indegree outdegree
 #>              <chr> <chr> <chr>    <dbl>     <dbl>
 #> 1     Thad Cochran     R    MS       55        89
@@ -921,35 +666,6 @@ top_n(senator, 3, outdegree) %>%
 
 
 
-**original:**
-
-```r
-n <- nrow(senator)
-## color: Democrats = `blue', Republicans = `red', Independent = `black'
-col <- rep("red", n)
-col[senator$party == "D"] <- "blue"
-col[senator$party == "I"] <- "black"
-
-## pch: Democrats = circle, Republicans = diamond, Independent = cross
-pch <- rep(16, n)
-pch[senator$party == "D"] <- 17
-pch[senator$party == "I"] <- 4
-
-par(cex = 1.25)
-## plot for comparing two closeness measures (incoming vs. outgoing)
-plot(closeness(twitter.adj, mode = "in"), 
-     closeness(twitter.adj, mode = "out"), pch = pch, col = col, 
-     main = "Closeness", xlab = "Incoming path", ylab = "Outgoing path")
-
-## plot for comparing directed and undirected betweenness
-plot(betweenness(twitter.adj, directed = TRUE), 
-     betweenness(twitter.adj, directed = FALSE), pch = pch, col = col,
-     main = "Betweenness", xlab = "Directed", ylab = "Undirected")
-
-```
-
-
-**tidyverse**
 
 ```r
 # Define scales to reuse for the plots
@@ -973,7 +689,7 @@ senator %>%
   labs(main = "Closeness", x = "Incoming path", y = "Outgoing path")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" />
 
 What does the reference line indicate? What does that say about senators twitter
 networks?
@@ -993,7 +709,7 @@ senator %>%
   labs(main = "Betweenness", x = "Directed", y = "Undirected")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-62-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 We've covered three different methods of calculating the importance of a node in a network: degree, closeness, and centrality. 
@@ -1005,18 +721,6 @@ discussion:
 > Borgatti, Stephen. 2005. "Centrality and Network Flow". *Social Networks*.
   [DOI](https://dx.doi.org/doi:10.1016/j.socnet.2004.11.008)
 
-**Original:**
-
-```r
-senator$pagerank <- page.rank(twitter.adj)$vector
-
-par(cex = 1.25)
-## `col' parameter is defined earlier
-plot(twitter.adj, vertex.size = senator$pagerank * 1000, 
-     vertex.color = col, vertex.label = NA, 
-     edge.arrow.size = 0.1, edge.width = 0.5)
-```
-
 
 Add and plot page-rank:
 
@@ -1025,7 +729,7 @@ senator <- mutate(senator, page_rank = page_rank(twitter_adj)[["vector"]])
 ggnet(twitter_adj, mode = "target")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-64-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -1076,6 +780,11 @@ glimpse(us.cities)
 
 ```r
 usa_map <- map_data("usa")
+#> 
+#> Attaching package: 'maps'
+#> The following object is masked from 'package:purrr':
+#> 
+#>     map
 capitals <- filter(us.cities,
                    capital == 2, 
                    !country.etc %in% c("HI", "AK"))
@@ -1092,7 +801,7 @@ ggplot() +
        size = "Population")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-67-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -1108,7 +817,7 @@ ggplot() +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-68-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -1149,24 +858,11 @@ ggplot(tibble(x = rep(1:4, each = 2),
   theme(panel.grid = element_blank())
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-69-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-52-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ### United States Presidential Elections
 
-**Original:**
-
-```r
-pres08 <- read.csv("pres08.csv")
-## two-party vote share
-pres08$Dem <- pres08$Obama / (pres08$Obama + pres08$McCain)
-pres08$Rep <- pres08$McCain / (pres08$Obama + pres08$McCain) ## color for California
-cal.color <- rgb(red = pres08$Rep[pres08$state == "CA"],
-                 blue = pres08$Dem[pres08$state == "CA"],
-                 green = 0)
-```
-
-**tidyverse:**
 
 ```r
 pres08 <- read_csv(qss_data_url("discovery", "pres08.csv")) %>%
@@ -1174,18 +870,6 @@ pres08 <- read_csv(qss_data_url("discovery", "pres08.csv")) %>%
          Rep = McCain / (Obama + McCain))
 ```
 
-**Original:**
-
-```r
-## California as a blue state
-map(database = "state", regions = "California", col = "blue",
-    fill = TRUE)
-## California as a purple state
-map(database = "state", regions = "California", col = cal.color,
-    fill = TRUE)
-```
-
-**tidyverse:**
 
 ```r
 ggplot() +
@@ -1194,7 +878,7 @@ ggplot() +
   theme_void() 
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-73-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-54-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -1207,7 +891,7 @@ ggplot() +
   theme_void()
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-74-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -1253,7 +937,7 @@ ggplot(states) +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-76-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" />
 
 For plotting the purple states, I use  since the `color` column contains the RGB values to use in the plot:
 
@@ -1267,7 +951,7 @@ ggplot(states) +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-77-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" />
 
 However, plotting purple states is not a good data visualization.
 Even though the colors are a proportional mixture of red and blue, human visual perception doesn't work that way.
@@ -1285,30 +969,14 @@ ggplot(states) +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-78-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
 
 ### Expansion of Walmart
 
-**Original:**
-
-```r
-walmart <- read.csv("walmart.csv")
-## red = WalMartStore, blue = SuperCenter, green = DistributionCenter
-walmart$storecolors <- NA # create an empty vector
-walmart$storecolors[walmart$type == "Wal-MartStore"] <-
-    rgb(red = 1, green = 0, blue = 0, alpha = 1/3)
-walmart$storecolors[walmart$type == "SuperCenter"] <-
-    rgb(red = 0, green = 0, blue = 1, alpha = 1/3)
-walmart$storecolors[walmart$type == "DistributionCenter"] <-
-rgb(red = 0, green = 1, blue = 0, alpha = 1/3)
-## larger circles for DistributionCenter
-walmart$storesize <- ifelse(walmart$type == "DistributionCenter", 1, 0.5)
-```
-
-**tidyverse:** We don't need to do the direct mapping since 
+We don't need to do the direct mapping since 
 
 ```r
 walmart <- read_csv(qss_data_url("discovery", "walmart.csv"))
@@ -1324,7 +992,7 @@ ggplot() +
   theme_void()
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-80-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-60-1.png" width="70%" style="display: block; margin: auto;" />
 We don't need to worry about colors since `ggplot` handles that.
 I use [guides](http://docs.ggplot2.org/current/guides.html) to so that the colors or not transparent
 in the legend (see *R for Data Science* chapter[Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html)).
@@ -1353,7 +1021,7 @@ years <- c(1975, 1985, 1995, 2005)
 walk(years, ~ print(map_walmart(.x, walmart)))
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-81-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-81-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-81-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-81-4.png" width="70%" style="display: block; margin: auto;" />
+<img src="discovery_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-61-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-61-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-61-4.png" width="70%" style="display: block; margin: auto;" />
 
 
 ### Animation in R
@@ -1390,4 +1058,4 @@ walmart_animated <-
 gganimate(walmart_animated)
 ```
 
-![unnamed-chunk-84](discovery_files/figure-html/unnamed-chunk-84-.gif)
+![unnamed-chunk-64](discovery_files/figure-html/unnamed-chunk-64-.gif)

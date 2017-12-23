@@ -2,7 +2,7 @@
 ---
 title: "QSS Tidyverse Code"
 author: "Jeffrey B. Arnold"
-date: "2017-02-03"
+date: "2017-12-22"
 github-repo: jrnold/qss-tidy
 site: "bookdown::bookdown_site"
 documentclass: book
@@ -40,65 +40,82 @@ The source of the book is available [here](https://github.com/jrnold/qsstidy) an
 ```
 #> Session info -------------------------------------------------------------
 #>  setting  value                       
-#>  version  R version 3.3.2 (2016-10-31)
-#>  system   x86_64, darwin13.4.0        
+#>  version  R version 3.4.3 (2017-11-30)
+#>  system   x86_64, darwin15.6.0        
 #>  ui       X11                         
 #>  language (EN)                        
 #>  collate  en_US.UTF-8                 
 #>  tz       America/Los_Angeles         
-#>  date     2017-02-03
+#>  date     2017-12-22
 #> Packages -----------------------------------------------------------------
-#>  package    * version     date       source                            
-#>  animation  * 2.4         2015-08-16 cran (@2.4)                       
-#>  assertthat   0.1         2013-12-06 CRAN (R 3.3.0)                    
-#>  backports    1.0.5       2017-01-18 cran (@1.0.5)                     
-#>  bookdown     0.3         2016-11-28 CRAN (R 3.3.2)                    
-#>  broom        0.4.1       2016-06-24 CRAN (R 3.3.0)                    
-#>  codetools    0.2-15      2016-10-05 CRAN (R 3.3.2)                    
-#>  colorspace   1.3-2       2016-12-14 CRAN (R 3.3.2)                    
-#>  DBI          0.5-1       2016-09-10 CRAN (R 3.3.0)                    
-#>  devtools     1.12.0.9000 2017-01-24 Github (hadley/devtools@1ce84b0)  
-#>  digest       0.6.12      2017-01-27 cran (@0.6.12)                    
-#>  dplyr      * 0.5.0       2016-06-24 CRAN (R 3.3.0)                    
-#>  evaluate     0.10        2016-10-11 CRAN (R 3.3.0)                    
-#>  foreign      0.8-67      2016-09-13 CRAN (R 3.3.2)                    
-#>  ggplot2    * 2.2.1.9000  2017-01-28 Github (hadley/ggplot2@96297bf)   
-#>  gtable       0.2.0       2016-02-26 CRAN (R 3.3.0)                    
-#>  haven        1.0.0       2016-09-23 CRAN (R 3.3.0)                    
-#>  hms          0.3         2016-11-22 CRAN (R 3.3.2)                    
-#>  htmltools    0.3.5       2016-03-21 CRAN (R 3.3.0)                    
-#>  httr         1.2.1       2016-07-03 cran (@1.2.1)                     
-#>  jsonlite     1.2         2016-12-31 CRAN (R 3.3.2)                    
-#>  knitr        1.15.1      2016-11-22 CRAN (R 3.3.2)                    
-#>  lattice      0.20-34     2016-09-06 CRAN (R 3.3.2)                    
-#>  lazyeval     0.2.0       2016-06-12 CRAN (R 3.3.0)                    
-#>  lubridate    1.6.0       2016-09-13 CRAN (R 3.3.0)                    
-#>  magrittr     1.5         2014-11-22 CRAN (R 3.3.0)                    
-#>  memoise      1.0.0       2016-01-29 CRAN (R 3.3.0)                    
-#>  mnormt       1.5-5       2016-10-15 CRAN (R 3.3.0)                    
-#>  modelr       0.1.0       2016-08-31 CRAN (R 3.3.0)                    
-#>  munsell      0.4.3       2016-02-13 CRAN (R 3.3.0)                    
-#>  nlme         3.1-128     2016-05-10 CRAN (R 3.3.2)                    
-#>  pkgbuild     0.0.0.9000  2017-01-24 Github (r-pkgs/pkgbuild@65eace0)  
-#>  pkgload      0.0.0.9000  2017-01-24 Github (r-pkgs/pkgload@def2b10)   
-#>  plyr         1.8.4       2016-06-08 CRAN (R 3.3.0)                    
-#>  psych        1.6.12      2017-01-08 CRAN (R 3.3.2)                    
-#>  purrr      * 0.2.2       2016-06-18 CRAN (R 3.3.0)                    
-#>  R6           2.2.0       2016-10-05 CRAN (R 3.3.0)                    
-#>  Rcpp         0.12.9.1    2017-01-24 Github (RcppCore/Rcpp@5a99a86)    
-#>  readr      * 1.0.0       2016-08-03 CRAN (R 3.3.0)                    
-#>  readxl       0.1.1       2016-03-28 CRAN (R 3.3.0)                    
-#>  reshape2     1.4.2       2016-10-22 CRAN (R 3.3.0)                    
-#>  rmarkdown    1.3         2017-01-24 Github (rstudio/rmarkdown@5b74148)
-#>  rprojroot    1.2         2017-01-16 cran (@1.2)                       
-#>  rvest        0.3.2       2016-06-17 CRAN (R 3.3.0)                    
-#>  scales       0.4.1       2016-11-09 CRAN (R 3.3.2)                    
-#>  stringi      1.1.2       2016-10-01 CRAN (R 3.3.0)                    
-#>  stringr    * 1.1.0       2016-08-19 CRAN (R 3.3.1)                    
-#>  tibble     * 1.2         2016-08-26 CRAN (R 3.3.0)                    
-#>  tidyr      * 0.6.1       2017-01-10 cran (@0.6.1)                     
-#>  tidyverse  * 1.1.0       2017-01-20 CRAN (R 3.3.2)                    
-#>  withr        1.0.2       2016-06-20 CRAN (R 3.3.0)                    
-#>  xml2         1.1.1       2017-01-24 Github (hadley/xml2@a97f4a0)      
-#>  yaml         2.1.14      2016-11-12 CRAN (R 3.3.2)
+#>  package    * version date       source        
+#>  animation  * 2.5     2017-03-30 cran (@2.5)   
+#>  assertthat   0.2.0   2017-04-11 CRAN (R 3.4.0)
+#>  backports    1.1.2   2017-12-13 CRAN (R 3.4.3)
+#>  base       * 3.4.3   2017-12-07 local         
+#>  bindr        0.1     2016-11-13 CRAN (R 3.4.0)
+#>  bindrcpp     0.2     2017-06-17 CRAN (R 3.4.0)
+#>  bookdown     0.5     2017-08-20 CRAN (R 3.4.1)
+#>  broom        0.4.3   2017-11-20 CRAN (R 3.4.3)
+#>  cellranger   1.1.0   2016-07-27 CRAN (R 3.4.0)
+#>  cli          1.0.0   2017-11-05 cran (@1.0.0) 
+#>  colorspace   1.3-2   2016-12-14 CRAN (R 3.4.0)
+#>  compiler     3.4.3   2017-12-07 local         
+#>  crayon       1.3.4   2017-09-16 CRAN (R 3.4.1)
+#>  datasets   * 3.4.3   2017-12-07 local         
+#>  devtools     1.13.4  2017-11-09 CRAN (R 3.4.2)
+#>  digest       0.6.13  2017-12-14 CRAN (R 3.4.3)
+#>  dplyr      * 0.7.4   2017-09-28 CRAN (R 3.4.2)
+#>  evaluate     0.10.1  2017-06-24 CRAN (R 3.4.1)
+#>  forcats    * 0.2.0   2017-01-23 CRAN (R 3.4.0)
+#>  foreign      0.8-69  2017-06-22 CRAN (R 3.4.3)
+#>  ggplot2    * 2.2.1   2016-12-30 CRAN (R 3.4.0)
+#>  glue         1.2.0   2017-10-29 CRAN (R 3.4.2)
+#>  graphics   * 3.4.3   2017-12-07 local         
+#>  grDevices  * 3.4.3   2017-12-07 local         
+#>  grid         3.4.3   2017-12-07 local         
+#>  gtable       0.2.0   2016-02-26 CRAN (R 3.4.0)
+#>  haven        1.1.0   2017-07-09 CRAN (R 3.4.1)
+#>  hms          0.4.0   2017-11-23 CRAN (R 3.4.3)
+#>  htmltools    0.3.6   2017-04-28 CRAN (R 3.4.0)
+#>  httr         1.3.1   2017-08-20 CRAN (R 3.4.1)
+#>  jsonlite     1.5     2017-06-01 CRAN (R 3.4.0)
+#>  knitr        1.17    2017-08-10 CRAN (R 3.4.1)
+#>  lattice      0.20-35 2017-03-25 CRAN (R 3.4.3)
+#>  lazyeval     0.2.1   2017-10-29 CRAN (R 3.4.2)
+#>  lubridate    1.7.1   2017-11-03 cran (@1.7.1) 
+#>  magrittr     1.5     2014-11-22 CRAN (R 3.4.0)
+#>  memoise      1.1.0   2017-04-21 CRAN (R 3.4.0)
+#>  methods      3.4.3   2017-12-07 local         
+#>  mnormt       1.5-5   2016-10-15 CRAN (R 3.4.0)
+#>  modelr       0.1.1   2017-07-24 CRAN (R 3.4.1)
+#>  munsell      0.4.3   2016-02-13 CRAN (R 3.4.0)
+#>  nlme         3.1-131 2017-02-06 CRAN (R 3.4.3)
+#>  parallel     3.4.3   2017-12-07 local         
+#>  pkgconfig    2.0.1   2017-03-21 CRAN (R 3.4.0)
+#>  plyr         1.8.4   2016-06-08 CRAN (R 3.4.0)
+#>  psych        1.7.8   2017-09-09 CRAN (R 3.4.1)
+#>  purrr      * 0.2.4   2017-10-18 cran (@0.2.4) 
+#>  R6           2.2.2   2017-06-17 CRAN (R 3.4.0)
+#>  Rcpp         0.12.14 2017-11-23 CRAN (R 3.4.3)
+#>  readr      * 1.1.1   2017-05-16 CRAN (R 3.4.0)
+#>  readxl       1.0.0   2017-04-18 CRAN (R 3.4.0)
+#>  reshape2     1.4.3   2017-12-11 CRAN (R 3.4.3)
+#>  rlang        0.1.4   2017-11-05 CRAN (R 3.4.2)
+#>  rmarkdown    1.8     2017-11-17 CRAN (R 3.4.2)
+#>  rprojroot    1.3-1   2017-12-18 CRAN (R 3.4.3)
+#>  rstudioapi   0.7     2017-09-07 CRAN (R 3.4.1)
+#>  rvest        0.3.2   2016-06-17 CRAN (R 3.4.0)
+#>  scales       0.5.0   2017-08-24 CRAN (R 3.4.1)
+#>  stats      * 3.4.3   2017-12-07 local         
+#>  stringi      1.1.6   2017-11-17 CRAN (R 3.4.2)
+#>  stringr    * 1.2.0   2017-02-18 CRAN (R 3.4.0)
+#>  tibble     * 1.3.4   2017-08-22 CRAN (R 3.4.1)
+#>  tidyr      * 0.7.2   2017-10-16 cran (@0.7.2) 
+#>  tidyverse  * 1.2.1   2017-11-14 CRAN (R 3.4.2)
+#>  tools        3.4.3   2017-12-07 local         
+#>  utils      * 3.4.3   2017-12-07 local         
+#>  withr        2.1.1   2017-12-19 cran (@2.1.1) 
+#>  xml2         1.1.1   2017-01-24 CRAN (R 3.4.0)
+#>  yaml         2.1.16  2017-12-12 CRAN (R 3.4.3)
 ```

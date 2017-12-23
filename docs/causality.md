@@ -11,13 +11,6 @@ library("tidyverse")
 and the `qss_data_url` helper function to download data from the QSS site,
 
 
-```r
-qss_data_url <-
-function(chapter, file) {
-  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
-        stringr::str_to_upper(chapter), "/", file)
-}
-```
 
 ## Racial Discrimination in the Labor Market
 
@@ -43,7 +36,7 @@ summary(resume)
 #>                                                           3rd Qu.:0.00  
 #>                                                           Max.   :1.00
 head(resume)
-#> # A tibble: 6 × 4
+#> # A tibble: 6 x 4
 #>   firstname    sex  race  call
 #>       <chr>  <chr> <chr> <int>
 #> 1   Allison female white     0
@@ -73,9 +66,8 @@ race_call_tab <-
   group_by(race, call) %>%
   count()
 race_call_tab
-#> Source: local data frame [4 x 3]
-#> Groups: race [?]
-#> 
+#> # A tibble: 4 x 3
+#> # Groups:   race, call [4]
 #>    race  call     n
 #>   <chr> <int> <int>
 #> 1 black     0  2278
@@ -94,9 +86,8 @@ race_call_rate <-
   filter(call == 1) %>%
   select(race, call_rate)
 race_call_rate
-#> Source: local data frame [2 x 2]
-#> Groups: race [2]
-#> 
+#> # A tibble: 2 x 2
+#> # Groups:   race [2]
 #>    race call_rate
 #>   <chr>     <dbl>
 #> 1 black    0.0645
@@ -109,7 +100,7 @@ data,
 ```r
 resume %>%
   summarise(call_back = mean(call))
-#> # A tibble: 1 × 1
+#> # A tibble: 1 x 1
 #>   call_back
 #>       <dbl>
 #> 1    0.0805
@@ -131,7 +122,7 @@ resumeB <-
 dim(resumeB)
 #> [1] 2435    4
 head(resumeB)
-#> # A tibble: 6 × 4
+#> # A tibble: 6 x 4
 #>   firstname    sex  race  call
 #>       <chr>  <chr> <chr> <int>
 #> 1   Lakisha female black     0
@@ -147,7 +138,7 @@ And to calculate the callback rate
 ```r
 resumeB %>%
   summarise(call_rate = mean(call))
-#> # A tibble: 1 × 1
+#> # A tibble: 1 x 1
 #>   call_rate
 #>       <dbl>
 #> 1    0.0645
@@ -161,7 +152,7 @@ resumeBf <-
   filter(race == "black", sex == "female") %>%
   select(call, firstname)
 head(resumeBf)
-#> # A tibble: 6 × 2
+#> # A tibble: 6 x 2
 #>    call firstname
 #>   <int>     <chr>
 #> 1     0   Lakisha
@@ -191,7 +182,7 @@ resumeW <- resume %>%
   group_by(sex) %>%
   summarise(white_rate = mean(call))
 resumeW
-#> # A tibble: 2 × 2
+#> # A tibble: 2 x 2
 #>      sex white_rate
 #>    <chr>      <dbl>
 #> 1 female     0.0989
@@ -202,7 +193,7 @@ Then, merge `resumeB` and `resumeW` on `sex` and calculate the difference for bo
 ```r
 inner_join(resumeB, resumeW, by = "sex") %>%
   mutate(race_gap = white_rate - black_rate)
-#> # A tibble: 2 × 4
+#> # A tibble: 2 x 4
 #>      sex black_rate white_rate race_gap
 #>    <chr>      <dbl>      <dbl>    <dbl>
 #> 1 female     0.0663     0.0989   0.0326
@@ -220,9 +211,8 @@ resume_race_sex <-
   group_by(race, sex) %>%
   summarise(call = mean(call))
 head(resume_race_sex)
-#> Source: local data frame [4 x 3]
-#> Groups: race [2]
-#> 
+#> # A tibble: 4 x 3
+#> # Groups:   race [2]
 #>    race    sex   call
 #>   <chr>  <chr>  <dbl>
 #> 1 black female 0.0663
@@ -239,7 +229,7 @@ resume_sex <-
   ungroup() %>%
   spread(race, call)
 resume_sex
-#> # A tibble: 2 × 3
+#> # A tibble: 2 x 3
 #>      sex  black  white
 #> *  <chr>  <dbl>  <dbl>
 #> 1 female 0.0663 0.0989
@@ -250,7 +240,7 @@ Now we can calculate the race wage differences by sex as before,
 ```r
 resume_sex %>%
   mutate(call_diff = white - black)
-#> # A tibble: 2 × 4
+#> # A tibble: 2 x 4
 #>      sex  black  white call_diff
 #>    <chr>  <dbl>  <dbl>     <dbl>
 #> 1 female 0.0663 0.0989    0.0326
@@ -266,7 +256,7 @@ resume %>%
   ungroup() %>%
   spread(race, call) %>%
   mutate(call_diff = white - black)
-#> # A tibble: 2 × 4
+#> # A tibble: 2 x 4
 #>      sex  black  white call_diff
 #>    <chr>  <dbl>  <dbl>     <dbl>
 #> 1 female 0.0663 0.0989    0.0326
@@ -286,9 +276,8 @@ resume %>%
   mutate(BlackFemale = if_else(race == "black" & sex == "female", 1, 0)) %>%
   group_by(BlackFemale, race, sex) %>%
   count()
-#> Source: local data frame [4 x 4]
-#> Groups: BlackFemale, race [?]
-#> 
+#> # A tibble: 4 x 4
+#> # Groups:   BlackFemale, race, sex [4]
 #>   BlackFemale  race    sex     n
 #>         <dbl> <chr>  <chr> <int>
 #> 1           0 black   male   549
@@ -314,7 +303,7 @@ resume %>%
     .$race == "white" & .$sex == "male" ~ "WhiteMale",
     TRUE ~ as.character(NA)
   )))
-#> # A tibble: 4,870 × 5
+#> # A tibble: 4,870 x 5
 #>   firstname    sex  race  call        type
 #>       <chr>  <chr> <chr> <int>      <fctr>
 #> 1   Allison female white     0 WhiteFemale
@@ -343,7 +332,7 @@ For example, there is no reason to use `tapply`, as that can use `group_by` and 
 resume %>%
   group_by(type) %>%
   summarise(call = mean(call))
-#> # A tibble: 4 × 2
+#> # A tibble: 4 x 2
 #>          type   call
 #>         <chr>  <dbl>
 #> 1 BlackFemale 0.0663
@@ -358,9 +347,8 @@ What's nice about this approach is that we wouldn't have needed to create the fa
 resume %>%
   group_by(race, sex) %>%
   summarise(call = mean(call))
-#> Source: local data frame [4 x 3]
-#> Groups: race [?]
-#> 
+#> # A tibble: 4 x 3
+#> # Groups:   race [?]
 #>    race    sex   call
 #>   <chr>  <chr>  <dbl>
 #> 1 black female 0.0663
@@ -378,7 +366,7 @@ resume %>%
   group_by(firstname) %>%
   summarise(call = mean(call)) %>%
   arrange(call)
-#> # A tibble: 36 × 2
+#> # A tibble: 36 x 2
 #>   firstname   call
 #>       <chr>  <dbl>
 #> 1     Aisha 0.0222
@@ -421,7 +409,7 @@ gotv_by_group <-
   group_by(messages) %>%
   summarize(turnout = mean(primary2006))
 gotv_by_group
-#> # A tibble: 4 × 2
+#> # A tibble: 4 x 2
 #>     messages turnout
 #>        <chr>   <dbl>
 #> 1 Civic Duty   0.315
@@ -443,7 +431,7 @@ Subtract the control group turnout from all groups
 ```r
 gotv_by_group %>%
   mutate(diff_control = turnout - gotv_control)
-#> # A tibble: 4 × 3
+#> # A tibble: 4 x 3
 #>     messages turnout diff_control
 #>        <chr>   <dbl>        <dbl>
 #> 1 Civic Duty   0.315       0.0179
@@ -458,7 +446,7 @@ We could have also done this in one step like,
 gotv_by_group %>%
   mutate(control = mean(turnout[messages == "Control"]),
          control_diff = turnout - control)
-#> # A tibble: 4 × 4
+#> # A tibble: 4 x 4
 #>     messages turnout control control_diff
 #>        <chr>   <dbl>   <dbl>        <dbl>
 #> 1 Civic Duty   0.315   0.297       0.0179
@@ -473,7 +461,7 @@ We can compare the differences of variables across the groups easily using a gro
 gotv_by_group %>%
   mutate(control = mean(turnout[messages == "Control"]),
          control_diff = turnout - control)
-#> # A tibble: 4 × 4
+#> # A tibble: 4 x 4
 #>     messages turnout control control_diff
 #>        <chr>   <dbl>   <dbl>        <dbl>
 #> 1 Civic Duty   0.315   0.297       0.0179
@@ -493,7 +481,7 @@ social %>%
          female = (sex == "female")) %>%
   select(-age, -sex) %>%
   summarise_all(mean)
-#> # A tibble: 4 × 6
+#> # A tibble: 4 x 6
 #>     messages yearofbirth primary2004 primary2006 hhsize female
 #>        <chr>       <dbl>       <dbl>       <dbl>  <dbl>  <dbl>
 #> 1 Civic Duty        1956       0.399       0.315   2.19  0.500
@@ -556,7 +544,7 @@ So we'll add a state variable to the data.
 ```r
 minwage %>%
   count(location)
-#> # A tibble: 5 × 2
+#> # A tibble: 5 x 2
 #>    location     n
 #>       <chr> <int>
 #> 1 centralNJ    45
@@ -587,7 +575,7 @@ minwage %>%
   group_by(state) %>%
   summarise(prop_after = mean(wageAfter < NJ_MINWAGE),
             prop_Before = mean(wageBefore < NJ_MINWAGE))
-#> # A tibble: 2 × 3
+#> # A tibble: 2 x 3
 #>   state prop_after prop_Before
 #>   <chr>      <dbl>       <dbl>
 #> 1    NJ    0.00344       0.911
@@ -611,7 +599,7 @@ full_prop_by_state <-
   group_by(state) %>%
   summarise(fullPropAfter = mean(fullPropAfter))
 full_prop_by_state
-#> # A tibble: 2 × 2
+#> # A tibble: 2 x 2
 #>   state fullPropAfter
 #>   <chr>         <dbl>
 #> 1    NJ         0.320
@@ -630,7 +618,7 @@ or using **tidyr** functions `spread` (R4DS Ch 11: Tidy Data):
 ```r
 spread(full_prop_by_state, state, fullPropAfter) %>%
   mutate(diff = NJ - PA)
-#> # A tibble: 1 × 3
+#> # A tibble: 1 x 3
 #>      NJ    PA   diff
 #>   <dbl> <dbl>  <dbl>
 #> 1  0.32 0.272 0.0481
@@ -672,9 +660,8 @@ full_prop_by_state_chain <-
   group_by(state, chain) %>%
   summarise(fullPropAfter = mean(fullPropAfter))
 full_prop_by_state_chain
-#> Source: local data frame [8 x 3]
-#> Groups: state [?]
-#> 
+#> # A tibble: 8 x 3
+#> # Groups:   state [?]
 #>   state      chain fullPropAfter
 #>   <chr>      <chr>         <dbl>
 #> 1    NJ burgerking         0.358
@@ -725,7 +712,7 @@ full_prop_state_chain_diff <-
   full_join(chains_nj, chains_pa, by = "chain") %>%
   mutate(diff = NJ - PA)
 full_prop_state_chain_diff
-#> # A tibble: 4 × 4
+#> # A tibble: 4 x 4
 #>        chain    NJ    PA   diff
 #>        <chr> <dbl> <dbl>  <dbl>
 #> 1 burgerking 0.358 0.321 0.0364
@@ -743,7 +730,7 @@ Q: In the code above why did I remove the `state` variable and rename the `fullP
 full_prop_by_state_chain %>%
   spread(state, fullPropAfter) %>%
   mutate(diff = NJ - PA)
-#> # A tibble: 4 × 4
+#> # A tibble: 4 x 4
 #>        chain    NJ    PA   diff
 #>        <chr> <dbl> <dbl>  <dbl>
 #> 1 burgerking 0.358 0.321 0.0364
@@ -769,7 +756,7 @@ The before-and-after analysis is the difference between the full-time employment
 ```r
 filter(minwage, state == "NJ") %>%
   summarise(diff = mean(fullPropAfter) - mean(fullPropBefore))
-#> # A tibble: 1 × 1
+#> # A tibble: 1 x 1
 #>     diff
 #>    <dbl>
 #> 1 0.0239
@@ -798,7 +785,7 @@ full_prop_by_state <-
   gather(period, fullProp, -state) %>%
   mutate(period = recode(period, fullPropAfter = 1, fullPropBefore = 0))
 full_prop_by_state
-#> # A tibble: 4 × 3
+#> # A tibble: 4 x 3
 #>   state period fullProp
 #>   <chr>  <dbl>    <dbl>
 #> 1    NJ      1    0.320
@@ -845,7 +832,7 @@ minwage %>%
   group_by(state) %>%
   summarise(wageAfter = IQR(wageAfter),
             wageBefore = IQR(wageBefore))
-#> # A tibble: 2 × 3
+#> # A tibble: 2 x 3
 #>   state wageAfter wageBefore
 #>   <chr>     <dbl>      <dbl>
 #> 1    NJ     0.000       0.62
@@ -862,7 +849,7 @@ minwage %>%
                wageAfter_var = var(wageAfter),
                wageBefore_sd = sd(wageBefore),
                wageBefore_var = var(wageBefore))
-#> # A tibble: 2 × 5
+#> # A tibble: 2 x 5
 #>   state wageAfter_sd wageAfter_var wageBefore_sd wageBefore_var
 #>   <chr>        <dbl>         <dbl>         <dbl>          <dbl>
 #> 1    NJ        0.106        0.0112         0.343          0.118
@@ -874,7 +861,7 @@ or, more compactly, using `summarise_at`:
 minwage %>%
   group_by(state) %>%
   summarise_at(vars(wageAfter, wageBefore), funs(sd, var))
-#> # A tibble: 2 × 5
+#> # A tibble: 2 x 5
 #>   state wageAfter_sd wageBefore_sd wageAfter_var wageBefore_var
 #>   <chr>        <dbl>         <dbl>         <dbl>          <dbl>
 #> 1    NJ        0.106         0.343        0.0112          0.118

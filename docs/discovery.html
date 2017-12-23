@@ -6,9 +6,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>QSS Tidyverse Code</title>
-  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
 
   <meta property="og:title" content="QSS Tidyverse Code" />
   <meta property="og:type" content="book" />
@@ -26,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2017-02-03">
+<meta name="date" content="2017-12-22">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -35,7 +34,6 @@
   
 <link rel="prev" href="prediction.html">
 <link rel="next" href="probability.html">
-
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -94,19 +92,87 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <body>
 
 
+
   <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
 
     <div class="book-summary">
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
-<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
-<li class="chapter" data-level="3" data-path="causality.html"><a href="causality.html"><i class="fa fa-check"></i><b>3</b> Causality</a></li>
-<li class="chapter" data-level="4" data-path="measurement.html"><a href="measurement.html"><i class="fa fa-check"></i><b>4</b> Measurement</a></li>
-<li class="chapter" data-level="5" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>5</b> Prediction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#colonphon"><i class="fa fa-check"></i><b>1.1</b> Colonphon</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i><b>2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#introduction-to-r"><i class="fa fa-check"></i><b>2.2</b> Introduction to R</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="introduction.html"><a href="introduction.html#data-files"><i class="fa fa-check"></i><b>2.2.1</b> Data Files</a></li>
+<li class="chapter" data-level="2.2.2" data-path="introduction.html"><a href="introduction.html#saving-objects"><i class="fa fa-check"></i><b>2.2.2</b> Saving Objects</a></li>
+<li class="chapter" data-level="2.2.3" data-path="introduction.html"><a href="introduction.html#packages"><i class="fa fa-check"></i><b>2.2.3</b> Packages</a></li>
+<li class="chapter" data-level="2.2.4" data-path="introduction.html"><a href="introduction.html#style-guide"><i class="fa fa-check"></i><b>2.2.4</b> Style Guide</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="causality.html"><a href="causality.html"><i class="fa fa-check"></i><b>3</b> Causality</a><ul>
+<li class="chapter" data-level="3.1" data-path="causality.html"><a href="causality.html#prerequistes"><i class="fa fa-check"></i><b>3.1</b> Prerequistes</a></li>
+<li class="chapter" data-level="3.2" data-path="causality.html"><a href="causality.html#racial-discrimination-in-the-labor-market"><i class="fa fa-check"></i><b>3.2</b> Racial Discrimination in the Labor Market</a></li>
+<li class="chapter" data-level="3.3" data-path="causality.html"><a href="causality.html#subsetting-data-in-r"><i class="fa fa-check"></i><b>3.3</b> Subsetting Data in R</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="causality.html"><a href="causality.html#subsetting"><i class="fa fa-check"></i><b>3.3.1</b> Subsetting</a></li>
+<li class="chapter" data-level="3.3.2" data-path="causality.html"><a href="causality.html#simple-conditional-statements"><i class="fa fa-check"></i><b>3.3.2</b> Simple conditional statements</a></li>
+<li class="chapter" data-level="3.3.3" data-path="causality.html"><a href="causality.html#factor-variables"><i class="fa fa-check"></i><b>3.3.3</b> Factor Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="causality.html"><a href="causality.html#causal-affects-and-the-counterfactual"><i class="fa fa-check"></i><b>3.4</b> Causal Affects and the Counterfactual</a></li>
+<li class="chapter" data-level="3.5" data-path="causality.html"><a href="causality.html#observational-studies"><i class="fa fa-check"></i><b>3.5</b> Observational Studies</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="causality.html"><a href="causality.html#confounding-bias"><i class="fa fa-check"></i><b>3.5.1</b> Confounding Bias</a></li>
+<li class="chapter" data-level="3.5.2" data-path="causality.html"><a href="causality.html#before-and-after-and-difference-in-difference-designs"><i class="fa fa-check"></i><b>3.5.2</b> Before and After and Difference-in-Difference Designs</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="causality.html"><a href="causality.html#descriptive-statistics-for-a-single-variable"><i class="fa fa-check"></i><b>3.6</b> Descriptive Statistics for a Single Variable</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="measurement.html"><a href="measurement.html"><i class="fa fa-check"></i><b>4</b> Measurement</a><ul>
+<li class="chapter" data-level="4.1" data-path="measurement.html"><a href="measurement.html#prerequisites-1"><i class="fa fa-check"></i><b>4.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="4.2" data-path="measurement.html"><a href="measurement.html#measuring-civilian-victimization-during-wartime"><i class="fa fa-check"></i><b>4.2</b> Measuring Civilian Victimization during Wartime</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="measurement.html"><a href="measurement.html#handling-missing-data-in-r"><i class="fa fa-check"></i><b>4.2.1</b> Handling Missing Data in R</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="measurement.html"><a href="measurement.html#visualizing-the-univariate-distribution"><i class="fa fa-check"></i><b>4.3</b> Visualizing the Univariate Distribution</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="measurement.html"><a href="measurement.html#barplot"><i class="fa fa-check"></i><b>4.3.1</b> Barplot</a></li>
+<li class="chapter" data-level="4.3.2" data-path="measurement.html"><a href="measurement.html#boxplot"><i class="fa fa-check"></i><b>4.3.2</b> Boxplot</a></li>
+<li class="chapter" data-level="4.3.3" data-path="measurement.html"><a href="measurement.html#printing-and-saving-graphics"><i class="fa fa-check"></i><b>4.3.3</b> Printing and saving graphics</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="measurement.html"><a href="measurement.html#survey-sampling"><i class="fa fa-check"></i><b>4.4</b> Survey Sampling</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="measurement.html"><a href="measurement.html#the-role-of-randomization"><i class="fa fa-check"></i><b>4.4.1</b> The Role of Randomization</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="measurement.html"><a href="measurement.html#load-village-data"><i class="fa fa-check"></i><b>4.5</b> load village data</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="measurement.html"><a href="measurement.html#non-response-and-other-sources-of-bias"><i class="fa fa-check"></i><b>4.5.1</b> Non-response and other sources of bias</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="measurement.html"><a href="measurement.html#measuring-political-polarization"><i class="fa fa-check"></i><b>4.6</b> Measuring Political Polarization</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="measurement.html"><a href="measurement.html#correlation"><i class="fa fa-check"></i><b>4.6.1</b> Correlation</a></li>
+<li class="chapter" data-level="4.6.2" data-path="measurement.html"><a href="measurement.html#quantile-quantile-plot"><i class="fa fa-check"></i><b>4.6.2</b> Quantile-Quantile Plot</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="measurement.html"><a href="measurement.html#clustering"><i class="fa fa-check"></i><b>4.7</b> Clustering</a><ul>
+<li class="chapter" data-level="4.7.1" data-path="measurement.html"><a href="measurement.html#matrices"><i class="fa fa-check"></i><b>4.7.1</b> Matrices</a></li>
+<li class="chapter" data-level="4.7.2" data-path="measurement.html"><a href="measurement.html#lists"><i class="fa fa-check"></i><b>4.7.2</b> Lists</a></li>
+<li class="chapter" data-level="4.7.3" data-path="measurement.html"><a href="measurement.html#k-means-algorithms"><i class="fa fa-check"></i><b>4.7.3</b> k-means algorithms</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>5</b> Prediction</a><ul>
+<li class="chapter" data-level="5.1" data-path="prediction.html"><a href="prediction.html#prerequisites-2"><i class="fa fa-check"></i><b>5.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="5.2" data-path="prediction.html"><a href="prediction.html#loops-in-r"><i class="fa fa-check"></i><b>5.2</b> Loops in R</a></li>
+<li class="chapter" data-level="5.3" data-path="prediction.html"><a href="prediction.html#general-conditional-statements-in-r"><i class="fa fa-check"></i><b>5.3</b> General Conditional Statements in R</a></li>
+<li class="chapter" data-level="5.4" data-path="prediction.html"><a href="prediction.html#poll-predictions"><i class="fa fa-check"></i><b>5.4</b> Poll Predictions</a></li>
+<li class="chapter" data-level="5.5" data-path="prediction.html"><a href="prediction.html#linear-regression"><i class="fa fa-check"></i><b>5.5</b> Linear Regression</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="prediction.html"><a href="prediction.html#facial-appearance-and-election-outcomes"><i class="fa fa-check"></i><b>5.5.1</b> Facial Appearance and Election Outcomes</a></li>
+<li class="chapter" data-level="5.5.2" data-path="prediction.html"><a href="prediction.html#correlation-1"><i class="fa fa-check"></i><b>5.5.2</b> Correlation</a></li>
+<li class="chapter" data-level="5.5.3" data-path="prediction.html"><a href="prediction.html#least-squares"><i class="fa fa-check"></i><b>5.5.3</b> Least Squares</a></li>
+<li class="chapter" data-level="5.5.4" data-path="prediction.html"><a href="prediction.html#regresion-towards-the-mean"><i class="fa fa-check"></i><b>5.5.4</b> Regresion towards the mean</a></li>
+<li class="chapter" data-level="5.5.5" data-path="prediction.html"><a href="prediction.html#merging-data-sets-in-r"><i class="fa fa-check"></i><b>5.5.5</b> Merging Data Sets in R</a></li>
+<li class="chapter" data-level="5.5.6" data-path="prediction.html"><a href="prediction.html#model-fit"><i class="fa fa-check"></i><b>5.5.6</b> Model Fit</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="prediction.html"><a href="prediction.html#regression-and-causation"><i class="fa fa-check"></i><b>5.6</b> Regression and Causation</a><ul>
+<li class="chapter" data-level="5.6.1" data-path="prediction.html"><a href="prediction.html#regression-with-multiple-predictors"><i class="fa fa-check"></i><b>5.6.1</b> Regression with multiple predictors</a></li>
+<li class="chapter" data-level="5.6.2" data-path="prediction.html"><a href="prediction.html#heterogenous-treatment-effects"><i class="fa fa-check"></i><b>5.6.2</b> Heterogenous Treatment Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="prediction.html"><a href="prediction.html#regression-discontinuity-design"><i class="fa fa-check"></i><b>5.7</b> Regression Discontinuity Design</a></li>
+</ul></li>
 <li class="chapter" data-level="6" data-path="discovery.html"><a href="discovery.html"><i class="fa fa-check"></i><b>6</b> Discovery</a><ul>
-<li class="chapter" data-level="6.1" data-path="discovery.html"><a href="discovery.html#prerequisites"><i class="fa fa-check"></i><b>6.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="6.1" data-path="discovery.html"><a href="discovery.html#prerequisites-3"><i class="fa fa-check"></i><b>6.1</b> Prerequisites</a></li>
 <li class="chapter" data-level="6.2" data-path="discovery.html"><a href="discovery.html#textual-data"><i class="fa fa-check"></i><b>6.2</b> Textual data</a><ul>
 <li class="chapter" data-level="6.2.1" data-path="discovery.html"><a href="discovery.html#document-term-matrix"><i class="fa fa-check"></i><b>6.2.1</b> Document-Term Matrix</a></li>
 <li class="chapter" data-level="6.2.2" data-path="discovery.html"><a href="discovery.html#topic-discovery"><i class="fa fa-check"></i><b>6.2.2</b> Topic Discovery</a></li>
@@ -123,8 +189,45 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.4.4" data-path="discovery.html"><a href="discovery.html#animation-in-r"><i class="fa fa-check"></i><b>6.4.4</b> Animation in R</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="probability.html"><a href="probability.html"><i class="fa fa-check"></i><b>7</b> Probability</a></li>
-<li class="chapter" data-level="8" data-path="uncertainty.html"><a href="uncertainty.html"><i class="fa fa-check"></i><b>8</b> Uncertainty</a></li>
+<li class="chapter" data-level="7" data-path="probability.html"><a href="probability.html"><i class="fa fa-check"></i><b>7</b> Probability</a><ul>
+<li class="chapter" data-level="7.1" data-path="probability.html"><a href="probability.html#prerequisites-4"><i class="fa fa-check"></i><b>7.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="7.2" data-path="probability.html"><a href="probability.html#probability-1"><i class="fa fa-check"></i><b>7.2</b> Probability</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="probability.html"><a href="probability.html#sampling-without-replacement"><i class="fa fa-check"></i><b>7.2.1</b> Sampling without replacement</a></li>
+<li class="chapter" data-level="7.2.2" data-path="probability.html"><a href="probability.html#combinations"><i class="fa fa-check"></i><b>7.2.2</b> Combinations</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="probability.html"><a href="probability.html#conditional-probability"><i class="fa fa-check"></i><b>7.3</b> Conditional Probability</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="probability.html"><a href="probability.html#conditional-marginal-and-joint-probabilities"><i class="fa fa-check"></i><b>7.3.1</b> Conditional, Marginal, and Joint Probabilities</a></li>
+<li class="chapter" data-level="7.3.2" data-path="probability.html"><a href="probability.html#independence"><i class="fa fa-check"></i><b>7.3.2</b> Independence</a></li>
+<li class="chapter" data-level="7.3.3" data-path="probability.html"><a href="probability.html#predicting-race-using-surname-and-residence-location"><i class="fa fa-check"></i><b>7.3.3</b> Predicting Race Using Surname and Residence Location</a></li>
+<li class="chapter" data-level="7.3.4" data-path="probability.html"><a href="probability.html#predicting-election-outcomes-with-uncertainty"><i class="fa fa-check"></i><b>7.3.4</b> Predicting Election Outcomes with Uncertainty</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="probability.html"><a href="probability.html#large-sample-theorems"><i class="fa fa-check"></i><b>7.4</b> Large Sample Theorems</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="probability.html"><a href="probability.html#law-of-large-numbers"><i class="fa fa-check"></i><b>7.4.1</b> Law of Large Numbers</a></li>
+<li class="chapter" data-level="7.4.2" data-path="probability.html"><a href="probability.html#central-limit-theorem"><i class="fa fa-check"></i><b>7.4.2</b> Central Limit Theorem</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="uncertainty.html"><a href="uncertainty.html"><i class="fa fa-check"></i><b>8</b> Uncertainty</a><ul>
+<li class="chapter" data-level="8.1" data-path="uncertainty.html"><a href="uncertainty.html#prerequisites-5"><i class="fa fa-check"></i><b>8.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="8.2" data-path="uncertainty.html"><a href="uncertainty.html#estimation"><i class="fa fa-check"></i><b>8.2</b> Estimation</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="uncertainty.html"><a href="uncertainty.html#standard-errors"><i class="fa fa-check"></i><b>8.2.1</b> Standard Errors</a></li>
+<li class="chapter" data-level="8.2.2" data-path="uncertainty.html"><a href="uncertainty.html#confidence-intervals"><i class="fa fa-check"></i><b>8.2.2</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="8.2.3" data-path="uncertainty.html"><a href="uncertainty.html#margin-of-error-and-sample-size-calculation-in-polls"><i class="fa fa-check"></i><b>8.2.3</b> Margin of Error and Sample Size Calculation in Polls</a></li>
+<li class="chapter" data-level="8.2.4" data-path="uncertainty.html"><a href="uncertainty.html#analyais-of-randomized-controlled-trials"><i class="fa fa-check"></i><b>8.2.4</b> Analyais of Randomized Controlled Trials</a></li>
+<li class="chapter" data-level="8.2.5" data-path="uncertainty.html"><a href="uncertainty.html#analysis-based-on-students-t-distribution"><i class="fa fa-check"></i><b>8.2.5</b> Analysis Based on Student’s t-Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="uncertainty.html"><a href="uncertainty.html#hypothesis-testing"><i class="fa fa-check"></i><b>8.3</b> Hypothesis Testing</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="uncertainty.html"><a href="uncertainty.html#tea-testing-experiment"><i class="fa fa-check"></i><b>8.3.1</b> Tea-Testing Experiment</a></li>
+<li class="chapter" data-level="8.3.2" data-path="uncertainty.html"><a href="uncertainty.html#the-general-framework"><i class="fa fa-check"></i><b>8.3.2</b> The General Framework</a></li>
+<li class="chapter" data-level="8.3.3" data-path="uncertainty.html"><a href="uncertainty.html#one-sample-tests"><i class="fa fa-check"></i><b>8.3.3</b> One-Sample Tests</a></li>
+<li class="chapter" data-level="8.3.4" data-path="uncertainty.html"><a href="uncertainty.html#two-sample-tests"><i class="fa fa-check"></i><b>8.3.4</b> Two-sample tests</a></li>
+<li class="chapter" data-level="8.3.5" data-path="uncertainty.html"><a href="uncertainty.html#power-analysis"><i class="fa fa-check"></i><b>8.3.5</b> Power Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="uncertainty.html"><a href="uncertainty.html#linear-regression-model-with-uncertainty"><i class="fa fa-check"></i><b>8.4</b> Linear Regression Model with Uncertainty</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="uncertainty.html"><a href="uncertainty.html#linear-regression-as-a-generative-model"><i class="fa fa-check"></i><b>8.4.1</b> Linear Regression as a Generative Model</a></li>
+<li class="chapter" data-level="8.4.2" data-path="uncertainty.html"><a href="uncertainty.html#inference-about-coefficients"><i class="fa fa-check"></i><b>8.4.2</b> Inference about coefficients</a></li>
+<li class="chapter" data-level="8.4.3" data-path="uncertainty.html"><a href="uncertainty.html#inference-about-predictions"><i class="fa fa-check"></i><b>8.4.3</b> Inference about predictions</a></li>
+</ul></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -151,7 +254,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Spatial data: <a href="https://cran.r-project.org/package=ggplot2">ggplot2</a> has some built-in support for maps. The <a href="https://cran.r-project.org/package=map">map</a> package provides map data.</li>
 </ul>
 <p>See the <a href="http://r4ds.had.co.nz/">R for Data Science</a> section <a href="http://r4ds.had.co.nz/tidy-data.html#non-tidy-data">12.7 Non-tidy data</a> and this post on <a href="http://simplystatistics.org/2016/02/17/non-tidy-data/">Non-tidy data</a> by Jeff Leek for more on non-tidy data.</p>
-<div id="prerequisites" class="section level2">
+<div id="prerequisites-3" class="section level2">
 <h2><span class="header-section-number">6.1</span> Prerequisites</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;lubridate&quot;</span>)
@@ -167,67 +270,42 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>This section will primarily use the <a href="https://cran.r-project.org/package=tidytext">tidytext</a> package. It is a relatively new package. The <a href="https://cran.r-project.org/package=tm">tm</a> and <a href="https://cran.r-project.org/package=quanteda">quanteda</a> (by Ken Benoit) packages are more established and use the document-term matrix format as described in the QSS chapter. The <strong>tidytext</strong> package stores everything in a data frame; this may be less efficient than the other packages, but has the benefit of being able to easily take advantage of the tidyverse ecosystem. If your corpus is not too large, this shouldn’t be an issue.</p>
 <p>See <a href="http://tidytextmining.com/">Tidy Text Mining with R</a> for a full introduction to using <strong>tidytext</strong>.</p>
 <p>In tidy data, each row is an observation and each column is a variable. In the <strong>tidytext</strong> package, documents are stored as data frames with <strong>one-term-per-row</strong>.</p>
-<p><strong>Original</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## load the raw corpus
-corpus.raw &lt;-<span class="st"> </span><span class="kw">Corpus</span>(<span class="kw">DirSource</span>(<span class="dt">directory =</span> <span class="st">&quot;federalist&quot;</span>, <span class="dt">pattern =</span> <span class="st">&quot;fp&quot;</span>)) 
-corpus.raw
-
-## make lower case
-corpus.prep &lt;-<span class="st"> </span><span class="kw">tm_map</span>(corpus.raw, <span class="kw">content_transformer</span>(tolower)) 
-## remove white space
-corpus.prep &lt;-<span class="st"> </span><span class="kw">tm_map</span>(corpus.prep, stripWhitespace) 
-## remove punctuation 
-corpus.prep &lt;-<span class="st"> </span><span class="kw">tm_map</span>(corpus.prep, removePunctuation)
-
-## remove numbers
-corpus.prep &lt;-<span class="st"> </span><span class="kw">tm_map</span>(corpus.prep, removeNumbers) 
-
-<span class="kw">head</span>(<span class="kw">stopwords</span>(<span class="st">&quot;english&quot;</span>))
-
-## remove stop words 
-corpus &lt;-<span class="st"> </span><span class="kw">tm_map</span>(corpus.prep, removeWords, <span class="kw">stopwords</span>(<span class="st">&quot;english&quot;</span>)) 
-
-## finally stem remaining words
-corpus &lt;-<span class="st"> </span><span class="kw">tm_map</span>(corpus, stemDocument) 
-
-## the output is truncated here to save space
-<span class="kw">content</span>(corpus[[<span class="dv">10</span>]]) <span class="co"># Essay No. 10</span></code></pre></div>
 <p>We can cast data into the <strong>tidytext</strong> format either from the <code>Corpus</code> object, or, after processing, from the document-term matrix object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DIR_SOURCE &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&quot;qss&quot;</span>, <span class="st">&quot;DISCOVERY&quot;</span>, <span class="st">&quot;federalist&quot;</span>)
-corpus_raw &lt;-<span class="st"> </span><span class="kw">Corpus</span>(<span class="kw">DirSource</span>(<span class="dt">directory =</span> DIR_SOURCE, <span class="dt">pattern =</span> <span class="st">&quot;fp&quot;</span>)) 
+corpus_raw &lt;-<span class="st"> </span><span class="kw">VCorpus</span>(<span class="kw">DirSource</span>(<span class="dt">directory =</span> DIR_SOURCE, <span class="dt">pattern =</span> <span class="st">&quot;fp&quot;</span>))
 corpus_raw
 <span class="co">#&gt; &lt;&lt;VCorpus&gt;&gt;</span>
 <span class="co">#&gt; Metadata:  corpus specific: 0, document level (indexed): 0</span>
 <span class="co">#&gt; Content:  documents: 85</span></code></pre></div>
-<p>Use the <a href="https://www.rdocumentation.org/packages/tidyytext/topics/tidy.Corpus">tidy</a> function to convert it to a data frame with one row per document.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corpus_tidy &lt;-<span class="st"> </span><span class="kw">tidy</span>(corpus_raw)
+<p>Use the function <a href="https://www.rdocumentation.org/packages/tidyytext/topics/tidy.Corpus">tidy</a> to convert the to a data frame with one row per document.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corpus_tidy &lt;-<span class="st"> </span><span class="kw">tidy</span>(corpus_raw, <span class="st">&quot;corpus&quot;</span>)
 corpus_tidy
-<span class="co">#&gt; # A tibble: 85 × 8</span>
+<span class="co">#&gt; # A tibble: 85 x 8</span>
 <span class="co">#&gt;   author       datetimestamp description heading       id language origin</span>
 <span class="co">#&gt;    &lt;lgl&gt;              &lt;dttm&gt;       &lt;lgl&gt;   &lt;lgl&gt;    &lt;chr&gt;    &lt;chr&gt;  &lt;lgl&gt;</span>
-<span class="co">#&gt; 1     NA 2017-02-03 17:57:31          NA      NA fp01.txt       en     NA</span>
-<span class="co">#&gt; 2     NA 2017-02-03 17:57:31          NA      NA fp02.txt       en     NA</span>
-<span class="co">#&gt; 3     NA 2017-02-03 17:57:31          NA      NA fp03.txt       en     NA</span>
-<span class="co">#&gt; 4     NA 2017-02-03 17:57:31          NA      NA fp04.txt       en     NA</span>
-<span class="co">#&gt; 5     NA 2017-02-03 17:57:31          NA      NA fp05.txt       en     NA</span>
-<span class="co">#&gt; 6     NA 2017-02-03 17:57:31          NA      NA fp06.txt       en     NA</span>
+<span class="co">#&gt; 1     NA 2017-12-22 15:22:19          NA      NA fp01.txt       en     NA</span>
+<span class="co">#&gt; 2     NA 2017-12-22 15:22:19          NA      NA fp02.txt       en     NA</span>
+<span class="co">#&gt; 3     NA 2017-12-22 15:22:19          NA      NA fp03.txt       en     NA</span>
+<span class="co">#&gt; 4     NA 2017-12-22 15:22:19          NA      NA fp04.txt       en     NA</span>
+<span class="co">#&gt; 5     NA 2017-12-22 15:22:19          NA      NA fp05.txt       en     NA</span>
+<span class="co">#&gt; 6     NA 2017-12-22 15:22:19          NA      NA fp06.txt       en     NA</span>
 <span class="co">#&gt; # ... with 79 more rows, and 1 more variables: text &lt;chr&gt;</span></code></pre></div>
-<p>The <code>text</code> column contains the text of the documents themselves. Since most of the metadata is irrelevant, we’ll delete those columns, keeping only the document (<code>id</code>) and <code>text</code> columns.</p>
+<p>The <code>text</code> column contains the text of the documents themselves. Since most of the metadata columns are either missings or irrelevant for our purposes, we’ll delete those columns, keeping only the document (<code>id</code>) and <code>text</code> columns.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corpus_tidy &lt;-<span class="st"> </span><span class="kw">select</span>(corpus_tidy, id, text)</code></pre></div>
 <p>Also, we want to extract the essay number and use that as the document id rather than its file name.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corpus_tidy &lt;-<span class="st"> </span><span class="kw">mutate</span>(corpus_tidy, 
-                      <span class="dt">document =</span> <span class="kw">as.integer</span>(<span class="kw">str_extract</span>(id, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">d+&quot;</span>))) %&gt;%
-<span class="st">  </span><span class="kw">select</span>(-id)</code></pre></div>
-<p>The tokenizes the document texts.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tokens &lt;-<span class="st"> </span>corpus_tidy %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corpus_tidy &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(corpus_tidy, <span class="dt">document =</span> <span class="kw">as.integer</span>(<span class="kw">str_extract</span>(id, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">d+&quot;</span>))) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>id)</code></pre></div>
+<p>The function tokenizes the document texts:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tokens &lt;-<span class="st"> </span>corpus_tidy <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># tokenizes into words and stems them</span>
-<span class="st">  </span><span class="kw">unnest_tokens</span>(word, text, <span class="dt">token =</span> <span class="st">&quot;word_stems&quot;</span>) %&gt;%
+<span class="st">  </span><span class="kw">unnest_tokens</span>(word, text, <span class="dt">token =</span> <span class="st">&quot;word_stems&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># remove any numbers in the strings</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">word =</span> <span class="kw">str_replace_all</span>(word, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">d+&quot;</span>, <span class="st">&quot;&quot;</span>)) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">word =</span> <span class="kw">str_replace_all</span>(word, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">d+&quot;</span>, <span class="st">&quot;&quot;</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># drop any empty strings</span>
-<span class="st">  </span><span class="kw">filter</span>(word !=<span class="st"> &quot;&quot;</span>)
+<span class="st">  </span><span class="kw">filter</span>(word <span class="op">!=</span><span class="st"> &quot;&quot;</span>)
 tokens
-<span class="co">#&gt; # A tibble: 187,412 × 2</span>
+<span class="co">#&gt; # A tibble: 202,089 x 2</span>
 <span class="co">#&gt;   document      word</span>
 <span class="co">#&gt;      &lt;int&gt;     &lt;chr&gt;</span>
 <span class="co">#&gt; 1        1     after</span>
@@ -236,24 +314,17 @@ tokens
 <span class="co">#&gt; 4        1    experi</span>
 <span class="co">#&gt; 5        1        of</span>
 <span class="co">#&gt; 6        1       the</span>
-<span class="co">#&gt; # ... with 1.874e+05 more rows</span></code></pre></div>
+<span class="co">#&gt; # ... with 2.021e+05 more rows</span></code></pre></div>
 <p>The <code>unnest_tokens</code> function uses the <a href="https://cran.r-project.org/package=tokenizers">tokenizers</a> package to tokenize the text. By default, it uses the function which removes punctuation, and lowercases the words. I set the tokenizer to to stem the word, using the <a href="https://cran.r-project.org/package=SnowballC">SnowballC</a> package.</p>
 <p>We can remove stop-words with an <a href="https://www.rdocumentation.org/packages/dplyr/topics/anti_join">anti_join</a> on the dataset <a href="https://www.rdocumentation.org/packages/tidytext/topics/stop_words">stop_words</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;stop_words&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;tidytext&quot;</span>)
 tokens &lt;-<span class="st"> </span><span class="kw">anti_join</span>(tokens, stop_words, <span class="dt">by =</span> <span class="st">&quot;word&quot;</span>)</code></pre></div>
 <div id="document-term-matrix" class="section level3">
 <h3><span class="header-section-number">6.2.1</span> Document-Term Matrix</h3>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm &lt;-<span class="st"> </span><span class="kw">DocumentTermMatrix</span>(corpus)
-dtm
-<span class="kw">inspect</span>(dtm[<span class="dv">1</span>:<span class="dv">5</span>, <span class="dv">1</span>:<span class="dv">8</span>])
-dtm.mat &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(dtm)</code></pre></div>
 <p>In <code>tokens</code> there is one observation for each token (word) in the each document. This is almost equivalent to a document-term matrix. For a document-term matrix we need documents, and terms as the keys for the data and a column with the number of times the term appeared in the document.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm &lt;-<span class="st"> </span><span class="kw">count</span>(tokens, document, word)
 <span class="kw">head</span>(dtm)
-<span class="co">#&gt; Source: local data frame [6 x 3]</span>
-<span class="co">#&gt; Groups: document [1]</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt; # A tibble: 6 x 3</span>
 <span class="co">#&gt;   document       word     n</span>
 <span class="co">#&gt;      &lt;int&gt;      &lt;chr&gt; &lt;int&gt;</span>
 <span class="co">#&gt; 1        1        abl     1</span>
@@ -265,152 +336,107 @@ dtm.mat &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(dtm)</co
 </div>
 <div id="topic-discovery" class="section level3">
 <h3><span class="header-section-number">6.2.2</span> Topic Discovery</h3>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(wordcloud)
-
-<span class="kw">wordcloud</span>(<span class="kw">colnames</span>(dtm.mat), dtm.mat[<span class="dv">12</span>, ], <span class="dt">max.words =</span> <span class="dv">20</span>)  <span class="co"># essay No. 12</span>
-<span class="kw">wordcloud</span>(<span class="kw">colnames</span>(dtm.mat), dtm.mat[<span class="dv">24</span>, ], <span class="dt">max.words =</span> <span class="dv">20</span>)  <span class="co"># essay No. 24</span></code></pre></div>
 <p>Plot the word-clouds for essays 12 and 24:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;wordcloud&quot;</span>)
-<span class="kw">filter</span>(dtm, document ==<span class="st"> </span><span class="dv">12</span>) %&gt;%
-<span class="st">  </span>{<span class="kw">wordcloud</span>(.$word, .$n, <span class="dt">max.words =</span> <span class="dv">20</span>)}</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(dtm, document ==<span class="st"> </span><span class="dv">24</span>) %&gt;%
-<span class="st">  </span>{<span class="kw">wordcloud</span>(.$word, .$n, <span class="dt">max.words =</span> <span class="dv">20</span>)}</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stemCompletion</span>(<span class="kw">c</span>(<span class="st">&quot;revenu&quot;</span>, <span class="st">&quot;commerc&quot;</span>, <span class="st">&quot;peac&quot;</span>, <span class="st">&quot;army&quot;</span>), corpus.prep)</code></pre></div>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm.tfidf &lt;-<span class="st"> </span><span class="kw">weightTfIdf</span>(dtm) <span class="co"># tf-idf calculation</span>
-
-dtm.tfidf.mat &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(dtm.tfidf)  <span class="co"># convert to matrix</span>
-
-## 10 most important words for Paper No. 12
-<span class="kw">head</span>(<span class="kw">sort</span>(dtm.tfidf.mat[<span class="dv">12</span>, ], <span class="dt">decreasing =</span> <span class="ot">TRUE</span>), <span class="dt">n =</span> <span class="dv">10</span>)
-
-## 10 most important words for Paper No. 24
-<span class="kw">head</span>(<span class="kw">sort</span>(dtm.tfidf.mat[<span class="dv">24</span>, ], <span class="dt">decreasing =</span> <span class="ot">TRUE</span>), <span class="dt">n =</span> <span class="dv">10</span>)</code></pre></div>
-<p><strong>tidyverse:</strong> Use the function <a href="https://www.rdocumentation.org/packages/tidytext/topics/bind_tf_idf">bind_tf_idf</a> to add a column with the tf-idf to the data frame.</p>
+<span class="kw">filter</span>(dtm, document <span class="op">==</span><span class="st"> </span><span class="dv">12</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span>{<span class="kw">wordcloud</span>(.<span class="op">$</span>word, .<span class="op">$</span>n, <span class="dt">max.words =</span> <span class="dv">20</span>)}</code></pre></div>
+<p><img src="discovery_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(dtm, document <span class="op">==</span><span class="st"> </span><span class="dv">24</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span>{<span class="kw">wordcloud</span>(.<span class="op">$</span>word, .<span class="op">$</span>n, <span class="dt">max.words =</span> <span class="dv">20</span>)}</code></pre></div>
+<p><img src="discovery_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>Use the function <a href="https://www.rdocumentation.org/packages/tidytext/topics/bind_tf_idf">bind_tf_idf</a> to add a column with the tf-idf to the data frame.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm &lt;-<span class="st"> </span><span class="kw">bind_tf_idf</span>(dtm, word, document, n)
 dtm
-<span class="co">#&gt; Source: local data frame [38,764 x 6]</span>
-<span class="co">#&gt; Groups: document [85]</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt; # A tibble: 38,847 x 6</span>
 <span class="co">#&gt;   document       word     n      tf   idf   tf_idf</span>
 <span class="co">#&gt;      &lt;int&gt;      &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1        1        abl     1 0.00176 0.705 0.001241</span>
-<span class="co">#&gt; 2        1     absurd     1 0.00176 1.735 0.003054</span>
-<span class="co">#&gt; 3        1      accid     1 0.00176 3.750 0.006601</span>
-<span class="co">#&gt; 4        1     accord     1 0.00176 0.754 0.001327</span>
-<span class="co">#&gt; 5        1 acknowledg     1 0.00176 1.552 0.002733</span>
-<span class="co">#&gt; 6        1        act     1 0.00176 0.400 0.000704</span>
-<span class="co">#&gt; # ... with 3.876e+04 more rows</span></code></pre></div>
+<span class="co">#&gt; 1        1        abl     1 0.00145 0.705 0.001022</span>
+<span class="co">#&gt; 2        1     absurd     1 0.00145 1.735 0.002514</span>
+<span class="co">#&gt; 3        1      accid     1 0.00145 3.750 0.005434</span>
+<span class="co">#&gt; 4        1     accord     1 0.00145 0.754 0.001092</span>
+<span class="co">#&gt; 5        1 acknowledg     1 0.00145 1.552 0.002250</span>
+<span class="co">#&gt; 6        1        act     1 0.00145 0.400 0.000579</span>
+<span class="co">#&gt; # ... with 3.884e+04 more rows</span></code></pre></div>
 <p>The 10 most important words for Paper No. 12 are</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(document ==<span class="st"> </span><span class="dv">12</span>) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(document <span class="op">==</span><span class="st"> </span><span class="dv">12</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">top_n</span>(<span class="dv">10</span>, tf_idf)
-<span class="co">#&gt; Source: local data frame [10 x 6]</span>
-<span class="co">#&gt; Groups: document [1]</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;   document       word     n      tf   idf tf_idf</span>
-<span class="co">#&gt;      &lt;int&gt;      &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       12       cent     2 0.00240  4.44 0.0107</span>
-<span class="co">#&gt; 2       12      coast     3 0.00360  3.75 0.0135</span>
-<span class="co">#&gt; 3       12    commerc     8 0.00959  1.11 0.0107</span>
-<span class="co">#&gt; 4       12 contraband     3 0.00360  4.44 0.0160</span>
-<span class="co">#&gt; 5       12      excis     5 0.00600  2.65 0.0159</span>
-<span class="co">#&gt; 6       12     gallon     2 0.00240  4.44 0.0107</span>
+<span class="co">#&gt; # A tibble: 10 x 6</span>
+<span class="co">#&gt;   document       word     n      tf   idf  tf_idf</span>
+<span class="co">#&gt;      &lt;int&gt;      &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1       12       cent     2 0.00199  4.44 0.00884</span>
+<span class="co">#&gt; 2       12      coast     3 0.00299  3.75 0.01119</span>
+<span class="co">#&gt; 3       12    commerc     8 0.00796  1.11 0.00884</span>
+<span class="co">#&gt; 4       12 contraband     3 0.00299  4.44 0.01326</span>
+<span class="co">#&gt; 5       12      excis     5 0.00498  2.65 0.01319</span>
+<span class="co">#&gt; 6       12     gallon     2 0.00199  4.44 0.00884</span>
 <span class="co">#&gt; # ... with 4 more rows</span></code></pre></div>
 <p>and for Paper No. 24,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(document ==<span class="st"> </span><span class="dv">24</span>) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(document <span class="op">==</span><span class="st"> </span><span class="dv">24</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">top_n</span>(<span class="dv">10</span>, tf_idf)
-<span class="co">#&gt; Source: local data frame [10 x 6]</span>
-<span class="co">#&gt; Groups: document [1]</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt; # A tibble: 10 x 6</span>
 <span class="co">#&gt;   document     word     n      tf   idf  tf_idf</span>
 <span class="co">#&gt;      &lt;int&gt;    &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       24     armi     7 0.01034  1.26 0.01308</span>
-<span class="co">#&gt; 2       24  arsenal     2 0.00295  3.75 0.01108</span>
-<span class="co">#&gt; 3       24     dock     3 0.00443  4.44 0.01969</span>
-<span class="co">#&gt; 4       24 frontier     3 0.00443  2.83 0.01255</span>
-<span class="co">#&gt; 5       24 garrison     6 0.00886  2.83 0.02511</span>
-<span class="co">#&gt; 6       24   nearer     2 0.00295  3.34 0.00988</span>
+<span class="co">#&gt; 1       24     armi     7 0.00858  1.26 0.01085</span>
+<span class="co">#&gt; 2       24  arsenal     2 0.00245  3.75 0.00919</span>
+<span class="co">#&gt; 3       24     dock     3 0.00368  4.44 0.01633</span>
+<span class="co">#&gt; 4       24 frontier     3 0.00368  2.83 0.01042</span>
+<span class="co">#&gt; 5       24 garrison     6 0.00735  2.83 0.02083</span>
+<span class="co">#&gt; 6       24   nearer     2 0.00245  3.34 0.00820</span>
 <span class="co">#&gt; # ... with 4 more rows</span></code></pre></div>
 <p>The slightly different results from the book are due to tokenization differences.</p>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">k &lt;-<span class="st"> </span><span class="dv">4</span>  <span class="co"># number of clusters</span>
-## subset The Federalist papers written by Hamilton
-hamilton &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">6</span>:<span class="dv">9</span>, <span class="dv">11</span>:<span class="dv">13</span>, <span class="dv">15</span>:<span class="dv">17</span>, <span class="dv">21</span>:<span class="dv">36</span>, <span class="dv">59</span>:<span class="dv">61</span>, <span class="dv">65</span>:<span class="dv">85</span>)
-dtm.tfidf.hamilton &lt;-<span class="st"> </span>dtm.tfidf.mat[hamilton, ]
-
-## run k-means
-km.out &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dtm.tfidf.hamilton, <span class="dt">centers =</span> k)
-km.out$iter <span class="co"># check the convergence; number of iterations may vary</span>
-
-## label each centroid with the corresponding term
-<span class="kw">colnames</span>(km.out$centers) &lt;-<span class="st"> </span><span class="kw">colnames</span>(dtm.tfidf.hamilton)
-
-for (i in <span class="dv">1</span>:k) { <span class="co"># loop for each cluster</span>
-    <span class="kw">cat</span>(<span class="st">&quot;CLUSTER&quot;</span>, i, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
-    <span class="kw">cat</span>(<span class="st">&quot;Top 10 words:</span><span class="ch">\n</span><span class="st">&quot;</span>) <span class="co"># 10 most important terms at the centroid</span>
-    <span class="kw">print</span>(<span class="kw">head</span>(<span class="kw">sort</span>(km.out$centers[i, ], <span class="dt">decreasing =</span> <span class="ot">TRUE</span>), <span class="dt">n =</span> <span class="dv">10</span>))
-    <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
-    <span class="kw">cat</span>(<span class="st">&quot;Federalist Papers classified: </span><span class="ch">\n</span><span class="st">&quot;</span>) <span class="co"># extract essays classified</span>
-    <span class="kw">print</span>(<span class="kw">rownames</span>(dtm.tfidf.hamilton)[km.out$cluster ==<span class="st"> </span>i])
-    <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
-}</code></pre></div>
-<p><strong>tidyverse:</strong> Subset those documents known to have been written by Hamilton.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HAMILTON_ESSAYS &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">6</span>:<span class="dv">9</span>, <span class="dv">11</span>:<span class="dv">13</span>, <span class="dv">15</span>:<span class="dv">17</span>, <span class="dv">21</span>:<span class="dv">36</span>, <span class="dv">59</span>:<span class="dv">61</span>, <span class="dv">65</span>:<span class="dv">85</span>)
-dtm_hamilton &lt;-<span class="st"> </span><span class="kw">filter</span>(dtm, document %in%<span class="st"> </span>HAMILTON_ESSAYS)</code></pre></div>
+<p>Subset those documents known to have been written by Hamilton.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HAMILTON_ESSAYS &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">6</span><span class="op">:</span><span class="dv">9</span>, <span class="dv">11</span><span class="op">:</span><span class="dv">13</span>, <span class="dv">15</span><span class="op">:</span><span class="dv">17</span>, <span class="dv">21</span><span class="op">:</span><span class="dv">36</span>, <span class="dv">59</span><span class="op">:</span><span class="dv">61</span>, <span class="dv">65</span><span class="op">:</span><span class="dv">85</span>)
+dtm_hamilton &lt;-<span class="st"> </span><span class="kw">filter</span>(dtm, document <span class="op">%in%</span><span class="st"> </span>HAMILTON_ESSAYS)</code></pre></div>
 <p>The <a href="https://www.rdocumentation.org/packages/stats/topics/kmeans">kmeans</a> function expects the input to be rows for observations and columns for each variable: in our case that would be documents as rows, and words as columns, with the tf-idf as the cell values. We could use <code>spread</code> to do this, but that would be a large matrix.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">CLUSTERS &lt;-<span class="st"> </span><span class="dv">4</span>
 km_out &lt;-
 <span class="st">  </span><span class="kw">kmeans</span>(<span class="kw">cast_dtm</span>(dtm_hamilton, document, word, tf_idf), <span class="dt">centers =</span> CLUSTERS, <span class="dt">nstart =</span> <span class="dv">10</span>)
-km_out$iter         
+km_out<span class="op">$</span>iter         
 <span class="co">#&gt; [1] 3</span></code></pre></div>
 <p>Data frame with the unique terms used by Hamilton. I extract these from the column names of the DTM after <code>cast_dtm</code> to ensure that the order is the same as the k-means results.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hamilton_words &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">tibble</span>(<span class="dt">word =</span> <span class="kw">colnames</span>(<span class="kw">cast_dtm</span>(dtm_hamilton, document, word, tf_idf)))</code></pre></div>
 <p>The centers of the clusters is a cluster x word matrix. We want to transpose it and then append columns to <code>hamilton_words</code> so the location of each word in the cluster is listed.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(km_out$centers)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(km_out<span class="op">$</span>centers)
 <span class="co">#&gt; [1]    4 3850</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hamilton_words &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(hamilton_words, <span class="kw">as_tibble</span>(<span class="kw">t</span>(km_out$centers)))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hamilton_words &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(hamilton_words, <span class="kw">as_tibble</span>(<span class="kw">t</span>(km_out<span class="op">$</span>centers)))
 hamilton_words
-<span class="co">#&gt; # A tibble: 3,850 × 5</span>
-<span class="co">#&gt;         word      `1`      `2`      `3`     `4`</span>
-<span class="co">#&gt;        &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;</span>
-<span class="co">#&gt; 1        abl 0.000262 0.000000 0.001004 0.00113</span>
-<span class="co">#&gt; 2     absurd 0.000272 0.001430 0.000678 0.00000</span>
-<span class="co">#&gt; 3      accid 0.000000 0.000000 0.000292 0.00000</span>
-<span class="co">#&gt; 4     accord 0.000319 0.001381 0.000499 0.00000</span>
-<span class="co">#&gt; 5 acknowledg 0.000000 0.000767 0.000556 0.00000</span>
-<span class="co">#&gt; 6        act 0.000927 0.000838 0.000657 0.00000</span>
+<span class="co">#&gt; # A tibble: 3,850 x 5</span>
+<span class="co">#&gt;         word      `1`      `2`     `3`      `4`</span>
+<span class="co">#&gt;        &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1        abl 0.000939 0.000743 0.00000 0.000000</span>
+<span class="co">#&gt; 2     absurd 0.000000 0.000517 0.00000 0.000882</span>
+<span class="co">#&gt; 3      accid 0.000000 0.000202 0.00000 0.000000</span>
+<span class="co">#&gt; 4     accord 0.000000 0.000399 0.00000 0.000852</span>
+<span class="co">#&gt; 5 acknowledg 0.000000 0.000388 0.00000 0.000473</span>
+<span class="co">#&gt; 6        act 0.000000 0.000560 0.00176 0.000631</span>
 <span class="co">#&gt; # ... with 3,844 more rows</span></code></pre></div>
 <p>To find the top 10 words in each centroid, we use <code>top_n</code> with <code>group_by</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">top_words_cluster &lt;-<span class="st"> </span>
-<span class="st">  </span><span class="kw">gather</span>(hamilton_words, cluster, value, -word) %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(cluster) %&gt;%
+<span class="st">  </span><span class="kw">gather</span>(hamilton_words, cluster, value, <span class="op">-</span>word) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(cluster) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">top_n</span>(<span class="dv">10</span>, value)</code></pre></div>
 <p>We can print them out using a for loop</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">for (i in <span class="dv">1</span>:CLUSTERS) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>CLUSTERS) {
   <span class="kw">cat</span>(<span class="st">&quot;CLUSTER &quot;</span>, i, <span class="st">&quot;: &quot;</span>,
-      <span class="kw">str_c</span>(<span class="kw">filter</span>(top_words_cluster, cluster ==<span class="st"> </span>i)$word, <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>),
+      <span class="kw">str_c</span>(<span class="kw">filter</span>(top_words_cluster, cluster <span class="op">==</span><span class="st"> </span>i)<span class="op">$</span>word, <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>),
       <span class="st">&quot;</span><span class="ch">\n\n</span><span class="st">&quot;</span>)
 }
-<span class="co">#&gt; CLUSTER  1 :  offic, accus, presid, treati, appoint, senat, nomin, governor, impeach, pardon </span>
+<span class="co">#&gt; CLUSTER  1 :  presid, appoint, senat, claus, expir, fill, recess, session, unfound, vacanc </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; CLUSTER  2 :  court, appeal, jurisdict, inferior, suprem, trial, tribun, cogniz, juri, appel </span>
+<span class="co">#&gt; CLUSTER  2 :  offic, presid, tax, land, revenu, armi, militia, senat, taxat, claus </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; CLUSTER  3 :  confederaci, tax, war, land, revenu, armi, militari, militia, taxat, claus </span>
+<span class="co">#&gt; CLUSTER  3 :  sedit, guilt, chief, clemenc, impun, plead, crime, pardon, treason, conniv </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; CLUSTER  4 :  presid, appoint, senat, claus, expir, fill, recess, session, unfound, vacanc</span></code></pre></div>
+<span class="co">#&gt; CLUSTER  4 :  court, jurisdict, inferior, suprem, trial, tribun, cogniz, juri, impeach, appel</span></code></pre></div>
 <p>This is alternative code that prints out a table:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gather</span>(hamilton_words, cluster, value, -word) %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(cluster) %&gt;%
-<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">10</span>, value) %&gt;%
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">top_words =</span> <span class="kw">str_c</span>(word, <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>)) %&gt;%
-<span class="st">  </span>knitr::<span class="kw">kable</span>()</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gather</span>(hamilton_words, cluster, value, <span class="op">-</span>word) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(cluster) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">10</span>, value) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">top_words =</span> <span class="kw">str_c</span>(word, <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>()</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -421,27 +447,27 @@ hamilton_words
 <tbody>
 <tr class="odd">
 <td align="left">1</td>
-<td align="left">offic, accus, presid, treati, appoint, senat, nomin, governor, impeach, pardon</td>
+<td align="left">presid, appoint, senat, claus, expir, fill, recess, session, unfound, vacanc</td>
 </tr>
 <tr class="even">
 <td align="left">2</td>
-<td align="left">court, appeal, jurisdict, inferior, suprem, trial, tribun, cogniz, juri, appel</td>
+<td align="left">offic, presid, tax, land, revenu, armi, militia, senat, taxat, claus</td>
 </tr>
 <tr class="odd">
 <td align="left">3</td>
-<td align="left">confederaci, tax, war, land, revenu, armi, militari, militia, taxat, claus</td>
+<td align="left">sedit, guilt, chief, clemenc, impun, plead, crime, pardon, treason, conniv</td>
 </tr>
 <tr class="even">
 <td align="left">4</td>
-<td align="left">presid, appoint, senat, claus, expir, fill, recess, session, unfound, vacanc</td>
+<td align="left">court, jurisdict, inferior, suprem, trial, tribun, cogniz, juri, impeach, appel</td>
 </tr>
 </tbody>
 </table>
 <p>Or to print out the documents in each cluster,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">enframe</span>(km_out$cluster, <span class="st">&quot;document&quot;</span>, <span class="st">&quot;cluster&quot;</span>) %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(cluster) %&gt;%
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">documents =</span> <span class="kw">str_c</span>(document, <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>)) %&gt;%
-<span class="st">  </span>knitr::<span class="kw">kable</span>()</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">enframe</span>(km_out<span class="op">$</span>cluster, <span class="st">&quot;document&quot;</span>, <span class="st">&quot;cluster&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(cluster) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">documents =</span> <span class="kw">str_c</span>(document, <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>()</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -452,47 +478,28 @@ hamilton_words
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">65, 66, 68, 69, 74, 75, 76, 77, 79</td>
+<td align="left">67</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="left">81, 82, 83</td>
+<td align="left">1, 6, 7, 8, 9, 11, 12, 13, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 59, 60, 61, 66, 68, 69, 70, 71, 72, 73, 75, 76, 77, 78, 79, 80, 84, 85</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="left">1, 6, 7, 8, 9, 11, 12, 13, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 59, 60, 61, 70, 71, 72, 73, 78, 80, 84, 85</td>
+<td align="left">74</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="left">67</td>
+<td align="left">65, 81, 82, 83</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div id="authorship-prediction" class="section level3">
 <h3><span class="header-section-number">6.2.3</span> Authorship Prediction</h3>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## document-term matrix converted to matrix for manipulation 
-dtm1 &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">DocumentTermMatrix</span>(corpus.prep)) 
-tfm &lt;-<span class="st"> </span>dtm1 /<span class="st"> </span><span class="kw">rowSums</span>(dtm1) *<span class="st"> </span><span class="dv">1000</span> <span class="co"># term frequency per 1000 words</span>
-
-## words of interest
-words &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;although&quot;</span>, <span class="st">&quot;always&quot;</span>, <span class="st">&quot;commonly&quot;</span>, <span class="st">&quot;consequently&quot;</span>,
-           <span class="st">&quot;considerable&quot;</span>, <span class="st">&quot;enough&quot;</span>, <span class="st">&quot;there&quot;</span>, <span class="st">&quot;upon&quot;</span>, <span class="st">&quot;while&quot;</span>, <span class="st">&quot;whilst&quot;</span>)
-
-## select only these words
-tfm &lt;-<span class="st"> </span>tfm[, words]
-
-## essays written by Madison: `hamilton&#39; defined earlier
-madison &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">14</span>, <span class="dv">37</span>:<span class="dv">48</span>, <span class="dv">58</span>)
-
-## average among Hamilton/Madison essays
-tfm.ave &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">colSums</span>(tfm[hamilton, ]) /<span class="st"> </span><span class="kw">length</span>(hamilton), 
-                 <span class="kw">colSums</span>(tfm[madison, ]) /<span class="st"> </span><span class="kw">length</span>(madison))
-tfm.ave</code></pre></div>
-<p><strong>tidyverse:</strong> We’ll create a data-frame with the known</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MADISON_ESSAYS &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">14</span>, <span class="dv">37</span>:<span class="dv">48</span>, <span class="dv">58</span>)
-JAY_ESSAYS &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>:<span class="dv">5</span>, <span class="dv">64</span>)
+<p>We’ll create a data-frame with the known</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MADISON_ESSAYS &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">14</span>, <span class="dv">37</span><span class="op">:</span><span class="dv">48</span>, <span class="dv">58</span>)
+JAY_ESSAYS &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">64</span>)
 known_essays &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(<span class="kw">tibble</span>(<span class="dt">document =</span> MADISON_ESSAYS,
                                  <span class="dt">author =</span> <span class="st">&quot;Madison&quot;</span>),
                           <span class="kw">tibble</span>(<span class="dt">document =</span> HAMILTON_ESSAYS,
@@ -504,29 +511,29 @@ known_essays &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(<sp
                   <span class="st">&quot;considerable&quot;</span>, <span class="st">&quot;enough&quot;</span>, <span class="st">&quot;there&quot;</span>, <span class="st">&quot;upon&quot;</span>, <span class="st">&quot;while&quot;</span>, <span class="st">&quot;whilst&quot;</span>))
 
 hm_tfm &lt;-
-<span class="st">  </span><span class="kw">unnest_tokens</span>(corpus_tidy, word, text) %&gt;%
-<span class="st">  </span><span class="kw">count</span>(document, word) %&gt;%
+<span class="st">  </span><span class="kw">unnest_tokens</span>(corpus_tidy, word, text) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">count</span>(document, word) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># term freq per 1000 words</span>
-<span class="st">  </span><span class="kw">group_by</span>(document) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">count =</span> n /<span class="st"> </span><span class="kw">sum</span>(n) *<span class="st"> </span><span class="dv">1000</span>) %&gt;%
-<span class="st">  </span><span class="kw">select</span>(-n) %&gt;%
-<span class="st">  </span><span class="kw">inner_join</span>(STYLE_WORDS, <span class="dt">by =</span> <span class="st">&quot;word&quot;</span>) %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(document) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">count =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n) <span class="op">*</span><span class="st"> </span><span class="dv">1000</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>n) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">inner_join</span>(STYLE_WORDS, <span class="dt">by =</span> <span class="st">&quot;word&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># merge known essays</span>
-<span class="st">  </span><span class="kw">left_join</span>(known_essays, <span class="dt">by =</span> <span class="st">&quot;document&quot;</span>) %&gt;%
+<span class="st">  </span><span class="kw">left_join</span>(known_essays, <span class="dt">by =</span> <span class="st">&quot;document&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># make wide with each word a column</span>
 <span class="st">  </span><span class="co"># fill empty values with 0</span>
 <span class="st">  </span><span class="kw">spread</span>(word, count, <span class="dt">fill =</span> <span class="dv">0</span>)</code></pre></div>
 <p>Calculate average usage by each author of each word</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hm_tfm %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hm_tfm <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># remove docs with no author</span>
-<span class="st">  </span><span class="kw">filter</span>(!<span class="kw">is.na</span>(author)) %&gt;%
+<span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(author)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># convert back to long (tidy) format to make it easier to summarize</span>
-<span class="st">  </span><span class="kw">gather</span>(word, count, -document, -author) %&gt;%
+<span class="st">  </span><span class="kw">gather</span>(word, count, <span class="op">-</span>document, <span class="op">-</span>author) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># calculate averge document word usage by author</span>
-<span class="st">  </span><span class="kw">group_by</span>(author, word) %&gt;%
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">avg_count =</span> <span class="kw">mean</span>(count)) %&gt;%
-<span class="st">  </span><span class="kw">spread</span>(author, avg_count) %&gt;%
-<span class="st">  </span>knitr::<span class="kw">kable</span>()</code></pre></div>
+<span class="st">  </span><span class="kw">group_by</span>(author, word) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">avg_count =</span> <span class="kw">mean</span>(count)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">spread</span>(author, avg_count) <span class="op">%&gt;%</span>
+<span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>()</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -539,91 +546,75 @@ hm_tfm &lt;-
 <tbody>
 <tr class="odd">
 <td align="left">although</td>
-<td align="right">0.013</td>
-<td align="right">0.584</td>
-<td align="right">0.222</td>
+<td align="right">0.012</td>
+<td align="right">0.543</td>
+<td align="right">0.206</td>
 </tr>
 <tr class="even">
 <td align="left">always</td>
-<td align="right">0.563</td>
-<td align="right">0.999</td>
-<td align="right">0.166</td>
+<td align="right">0.522</td>
+<td align="right">0.929</td>
+<td align="right">0.154</td>
 </tr>
 <tr class="odd">
 <td align="left">commonly</td>
-<td align="right">0.198</td>
-<td align="right">0.139</td>
+<td align="right">0.184</td>
+<td align="right">0.129</td>
 <td align="right">0.000</td>
 </tr>
 <tr class="even">
 <td align="left">consequently</td>
-<td align="right">0.019</td>
-<td align="right">0.503</td>
-<td align="right">0.371</td>
+<td align="right">0.018</td>
+<td align="right">0.469</td>
+<td align="right">0.344</td>
 </tr>
 <tr class="odd">
 <td align="left">considerable</td>
-<td align="right">0.406</td>
-<td align="right">0.087</td>
-<td align="right">0.133</td>
+<td align="right">0.377</td>
+<td align="right">0.081</td>
+<td align="right">0.123</td>
 </tr>
 <tr class="even">
 <td align="left">enough</td>
-<td align="right">0.295</td>
+<td align="right">0.274</td>
 <td align="right">0.000</td>
 <td align="right">0.000</td>
 </tr>
 <tr class="odd">
 <td align="left">there</td>
-<td align="right">3.303</td>
-<td align="right">1.026</td>
-<td align="right">0.917</td>
+<td align="right">3.065</td>
+<td align="right">0.954</td>
+<td align="right">0.849</td>
 </tr>
 <tr class="even">
 <td align="left">upon</td>
-<td align="right">3.291</td>
-<td align="right">0.120</td>
-<td align="right">0.164</td>
+<td align="right">3.054</td>
+<td align="right">0.112</td>
+<td align="right">0.152</td>
 </tr>
 <tr class="odd">
 <td align="left">while</td>
-<td align="right">0.274</td>
-<td align="right">0.207</td>
+<td align="right">0.255</td>
+<td align="right">0.192</td>
 <td align="right">0.000</td>
 </tr>
 <tr class="even">
 <td align="left">whilst</td>
 <td align="right">0.005</td>
 <td align="right">0.000</td>
-<td align="right">0.315</td>
+<td align="right">0.292</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">author &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, <span class="kw">nrow</span>(dtm1)) <span class="co"># a vector with missing values</span>
-author[hamilton] &lt;-<span class="st"> </span><span class="dv">1</span>  <span class="co"># 1 if Hamilton</span>
-author[madison] &lt;-<span class="st"> </span>-<span class="dv">1</span>  <span class="co"># -1 if Madison</span>
-
-## data frame for regression
-author.data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">author =</span> author[<span class="kw">c</span>(hamilton, madison)], 
-                          tfm[<span class="kw">c</span>(hamilton, madison), ])
-
-hm.fit &lt;-<span class="st"> </span><span class="kw">lm</span>(author ~<span class="st"> </span>upon +<span class="st"> </span>there +<span class="st"> </span>consequently +<span class="st"> </span>whilst, 
-             <span class="dt">data =</span> author.data)
-hm.fit
-
-hm.fitted &lt;-<span class="st"> </span><span class="kw">fitted</span>(hm.fit) <span class="co"># fitted values</span>
-<span class="kw">sd</span>(hm.fitted)</code></pre></div>
-<p><strong>tidyverse:</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">author_data &lt;-<span class="st"> </span>
-<span class="st">  </span>hm_tfm %&gt;%
-<span class="st">  </span><span class="kw">ungroup</span>() %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(<span class="kw">is.na</span>(author) |<span class="st"> </span>author !=<span class="st"> &quot;Jay&quot;</span>) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">author2 =</span> <span class="kw">case_when</span>(.$author ==<span class="st"> &quot;Hamilton&quot;</span> ~<span class="st"> </span><span class="dv">1</span>,
-                             .$author ==<span class="st"> &quot;Madison&quot;</span> ~<span class="st"> </span>-<span class="dv">1</span>,
-                             <span class="ot">TRUE</span> ~<span class="st"> </span><span class="ot">NA_real_</span>))
+<span class="st">  </span>hm_tfm <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="kw">is.na</span>(author) <span class="op">|</span><span class="st"> </span>author <span class="op">!=</span><span class="st"> &quot;Jay&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">author2 =</span> <span class="kw">case_when</span>(.<span class="op">$</span>author <span class="op">==</span><span class="st"> &quot;Hamilton&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,
+                             .<span class="op">$</span>author <span class="op">==</span><span class="st"> &quot;Madison&quot;</span> <span class="op">~</span><span class="st"> </span><span class="op">-</span><span class="dv">1</span>,
+                             <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="ot">NA_real_</span>))
 
-hm_fit &lt;-<span class="st"> </span><span class="kw">lm</span>(author2 ~<span class="st"> </span>upon +<span class="st"> </span>there +<span class="st"> </span>consequently +<span class="st"> </span>whilst,
+hm_fit &lt;-<span class="st"> </span><span class="kw">lm</span>(author2 <span class="op">~</span><span class="st"> </span>upon <span class="op">+</span><span class="st"> </span>there <span class="op">+</span><span class="st"> </span>consequently <span class="op">+</span><span class="st"> </span>whilst,
              <span class="dt">data =</span> author_data)
 hm_fit
 <span class="co">#&gt; </span>
@@ -633,94 +624,64 @@ hm_fit
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Coefficients:</span>
 <span class="co">#&gt;  (Intercept)          upon         there  consequently        whilst  </span>
-<span class="co">#&gt;       -0.195         0.213         0.118        -0.596        -0.910</span>
+<span class="co">#&gt;       -0.195         0.229         0.127        -0.644        -0.984</span>
 
-author_data &lt;-<span class="st"> </span>author_data %&gt;%
-<span class="st">  </span><span class="kw">add_predictions</span>(hm_fit) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pred_author =</span> <span class="kw">if_else</span>(pred &gt;=<span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;Hamilton&quot;</span>, <span class="st">&quot;Madison&quot;</span>))
+author_data &lt;-<span class="st"> </span>author_data <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predictions</span>(hm_fit) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pred_author =</span> <span class="kw">if_else</span>(pred <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;Hamilton&quot;</span>, <span class="st">&quot;Madison&quot;</span>))
 
-<span class="kw">sd</span>(author_data$pred)
+<span class="kw">sd</span>(author_data<span class="op">$</span>pred)
 <span class="co">#&gt; [1] 0.79</span></code></pre></div>
 <p>These coefficients are a little different, probably due to differences in the tokenization procedure, and in particular, the document size normalization.</p>
 </div>
 <div id="cross-validation" class="section level3">
 <h3><span class="header-section-number">6.2.4</span> Cross-Validation</h3>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## proportion of correctly classified essays by Hamilton
-<span class="kw">mean</span>(hm.fitted[author.data$author ==<span class="st"> </span><span class="dv">1</span>] &gt;<span class="st"> </span><span class="dv">0</span>)
-
-## proportion of correctly classified essays by Madison
-<span class="kw">mean</span>(hm.fitted[author.data$author ==<span class="st"> </span>-<span class="dv">1</span>] &lt;<span class="st"> </span><span class="dv">0</span>)</code></pre></div>
 <p><strong>tidyverse:</strong> For cross-validation, I rely on the <a href="https://cran.r-project.org/package=modelr">modelr</a> package function <code>RDoc(&quot;modelr::crossv_kfold&quot;)</code>. See the tutorial <a href="https://rpubs.com/dgrtwo/cv-modelr">Cross validation of linear regression with modelr</a> for more on using <strong>modelr</strong> for cross validation or <a href="https://drsimonj.svbtle.com/k-fold-cross-validation-with-modelr-and-broom">k-fold cross-validation with modelr and broom</a>.</p>
 <p>In sample, this regression perfectly predicts the authorship of the documents with known authors.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">author_data %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(!<span class="kw">is.na</span>(author)) %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(author) %&gt;%
-<span class="st">  </span><span class="kw">summarise</span>(<span class="st">`</span><span class="dt">Proportion Correct</span><span class="st">`</span> =<span class="st"> </span><span class="kw">mean</span>(author ==<span class="st"> </span>pred_author))
-<span class="co">#&gt; # A tibble: 2 × 2</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">author_data <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(author)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(author) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="st">`</span><span class="dt">Proportion Correct</span><span class="st">`</span> =<span class="st"> </span><span class="kw">mean</span>(author <span class="op">==</span><span class="st"> </span>pred_author))
+<span class="co">#&gt; # A tibble: 2 x 2</span>
 <span class="co">#&gt;     author `Proportion Correct`</span>
 <span class="co">#&gt;      &lt;chr&gt;                &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 Hamilton                    1</span>
 <span class="co">#&gt; 2  Madison                    1</span></code></pre></div>
 <p>Create the cross-validation data-sets using . As in the chapter, I will use a leave-one-out cross-validation, which is a k-fold crossvalidation where k is the number of observations. To simplify this, I define the <code>crossv_loo</code> function that runs <code>crossv_kfold</code> with <code>k = nrow(data)</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">crossv_loo &lt;-<span class="st"> </span>function(data, <span class="dt">id =</span> <span class="st">&quot;.id&quot;</span>) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">crossv_loo &lt;-<span class="st"> </span><span class="cf">function</span>(data, <span class="dt">id =</span> <span class="st">&quot;.id&quot;</span>) {
   <span class="kw">crossv_kfold</span>(data, <span class="dt">k =</span> <span class="kw">nrow</span>(data), <span class="dt">id =</span> id)
 }
 
 <span class="co"># leave one out cross-validation object</span>
-cv &lt;-<span class="st"> </span>author_data %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(!<span class="kw">is.na</span>(author)) %&gt;%
+cv &lt;-<span class="st"> </span>author_data <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(author)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">crossv_loo</span>()</code></pre></div>
 <p>Now estimate the model for each training dataset</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span>purrr::<span class="kw">map</span>(cv$train, ~<span class="st"> </span><span class="kw">lm</span>(author2 ~<span class="st"> </span>upon +<span class="st"> </span>there +<span class="st"> </span>consequently +<span class="st"> </span>whilst,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map</span>(cv<span class="op">$</span>train, <span class="op">~</span><span class="st"> </span><span class="kw">lm</span>(author2 <span class="op">~</span><span class="st"> </span>upon <span class="op">+</span><span class="st"> </span>there <span class="op">+</span><span class="st"> </span>consequently <span class="op">+</span><span class="st"> </span>whilst,
                               <span class="dt">data =</span> ., <span class="dt">model =</span> <span class="ot">FALSE</span>))</code></pre></div>
 <p>Note that I use <code>purrr::map</code> to ensure that the correct <code>map()</code> function is used since the <strong>maps</strong> package also defines a <code>map</code>.</p>
 <p>Now calculate the test performance on the held out observation,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test &lt;-<span class="st"> </span><span class="kw">map2_df</span>(models, cv$test, 
-                function(mod, test) {
-                  <span class="kw">add_predictions</span>(<span class="kw">as.data.frame</span>(test), mod) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test &lt;-<span class="st"> </span><span class="kw">map2_df</span>(models, cv<span class="op">$</span>test, 
+                <span class="cf">function</span>(mod, test) {
+                  <span class="kw">add_predictions</span>(<span class="kw">as.data.frame</span>(test), mod) <span class="op">%&gt;%</span>
 <span class="st">                    </span><span class="kw">mutate</span>(<span class="dt">pred_author =</span> 
-                             <span class="kw">if_else</span>(pred &gt;=<span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;Hamilton&quot;</span>, <span class="st">&quot;Madison&quot;</span>),
-                           <span class="dt">correct =</span> (pred_author ==<span class="st"> </span>author))
+                             <span class="kw">if_else</span>(pred <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;Hamilton&quot;</span>, <span class="st">&quot;Madison&quot;</span>),
+                           <span class="dt">correct =</span> (pred_author <span class="op">==</span><span class="st"> </span>author))
                 })
-test %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(author) %&gt;%
+test <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(author) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="kw">mean</span>(correct))
-<span class="co">#&gt; # A tibble: 2 × 2</span>
+<span class="co">#&gt; # A tibble: 2 x 2</span>
 <span class="co">#&gt;     author `mean(correct)`</span>
 <span class="co">#&gt;      &lt;chr&gt;           &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 Hamilton           1.000</span>
 <span class="co">#&gt; 2  Madison           0.786</span></code></pre></div>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n &lt;-<span class="st"> </span><span class="kw">nrow</span>(author.data)
-hm.classify &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, n) <span class="co"># a container vector with missing values </span>
-
-for (i in <span class="dv">1</span>:n) {
-    ## fit the model to the data after removing the ith observation
-    sub.fit &lt;-<span class="st"> </span><span class="kw">lm</span>(author ~<span class="st"> </span>upon +<span class="st"> </span>there +<span class="st"> </span>consequently +<span class="st"> </span>whilst, 
-                  <span class="dt">data =</span> author.data[-i, ]) <span class="co"># exclude ith row</span>
-    ## predict the authorship for the ith observation
-    hm.classify[i] &lt;-<span class="st"> </span><span class="kw">predict</span>(sub.fit, <span class="dt">newdata =</span> author.data[i, ])
-}
-
-## proportion of correctly classified essays by Hamilton
-<span class="kw">mean</span>(hm.classify[author.data$author ==<span class="st"> </span><span class="dv">1</span>] &gt;<span class="st"> </span><span class="dv">0</span>)
-
-## proportion of correctly classified essays by Madison
-<span class="kw">mean</span>(hm.classify[author.data$author ==<span class="st"> </span>-<span class="dv">1</span>] &lt;<span class="st"> </span><span class="dv">0</span>)</code></pre></div>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">disputed &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">49</span>, <span class="dv">50</span>:<span class="dv">57</span>, <span class="dv">62</span>, <span class="dv">63</span>) <span class="co"># 11 essays with disputed authorship</span>
-tf.disputed &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(tfm[disputed, ])
-
-## prediction of disputed authorship
-pred &lt;-<span class="st"> </span><span class="kw">predict</span>(hm.fit, <span class="dt">newdata =</span> tf.disputed)
-pred <span class="co"># predicted values</span></code></pre></div>
 <p><strong>tidyverse:</strong> When adding prediction with <code>add_predictions</code> it added predictions for missing values as well.</p>
 <p>Table of authorship of disputed papers</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">author_data %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(<span class="kw">is.na</span>(author)) %&gt;%
-<span class="st">  </span><span class="kw">select</span>(document, pred, pred_author) %&gt;%
-<span class="st">  </span>knitr::<span class="kw">kable</span>()</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">author_data <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="kw">is.na</span>(author)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(document, pred, pred_author) <span class="op">%&gt;%</span>
+<span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>()</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -732,12 +693,12 @@ pred <span class="co"># predicted values</span></code></pre></div>
 <tbody>
 <tr class="odd">
 <td align="right">18</td>
-<td align="right">-0.359</td>
+<td align="right">-0.360</td>
 <td align="left">Madison</td>
 </tr>
 <tr class="even">
 <td align="right">19</td>
-<td align="right">-0.586</td>
+<td align="right">-0.587</td>
 <td align="left">Madison</td>
 </tr>
 <tr class="odd">
@@ -752,12 +713,12 @@ pred <span class="co"># predicted values</span></code></pre></div>
 </tr>
 <tr class="odd">
 <td align="right">50</td>
-<td align="right">-0.002</td>
+<td align="right">-0.003</td>
 <td align="left">Madison</td>
 </tr>
 <tr class="even">
 <td align="right">51</td>
-<td align="right">-1.522</td>
+<td align="right">-1.520</td>
 <td align="left">Madison</td>
 </tr>
 <tr class="odd">
@@ -772,7 +733,7 @@ pred <span class="co"># predicted values</span></code></pre></div>
 </tr>
 <tr class="odd">
 <td align="right">54</td>
-<td align="right">-0.520</td>
+<td align="right">-0.521</td>
 <td align="left">Madison</td>
 </tr>
 <tr class="even">
@@ -787,12 +748,12 @@ pred <span class="co"># predicted values</span></code></pre></div>
 </tr>
 <tr class="even">
 <td align="right">57</td>
-<td align="right">-1.219</td>
+<td align="right">-1.221</td>
 <td align="left">Madison</td>
 </tr>
 <tr class="odd">
 <td align="right">62</td>
-<td align="right">-0.944</td>
+<td align="right">-0.946</td>
 <td align="left">Madison</td>
 </tr>
 <tr class="even">
@@ -802,36 +763,23 @@ pred <span class="co"># predicted values</span></code></pre></div>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">cex =</span> <span class="fl">1.25</span>)
-## fitted values for essays authored by Hamilton; red squares
-<span class="kw">plot</span>(hamilton, hm.fitted[author.data$author ==<span class="st"> </span><span class="dv">1</span>], <span class="dt">pch =</span> <span class="dv">15</span>, 
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">85</span>), <span class="dt">ylim  =</span> <span class="kw">c</span>(-<span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, 
-     <span class="dt">xlab =</span> <span class="st">&quot;Federalist Papers&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Predicted values&quot;</span>)
-<span class="kw">abline</span>(<span class="dt">h =</span> <span class="dv">0</span>, <span class="dt">lty =</span> <span class="st">&quot;dashed&quot;</span>)
-
-## essays authored by Madison; blue circles
-<span class="kw">points</span>(madison, hm.fitted[author.data$author ==<span class="st"> </span>-<span class="dv">1</span>], 
-       <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)
-
-## disputed authorship; black triangles
-<span class="kw">points</span>(disputed, pred, <span class="dt">pch =</span> <span class="dv">17</span>) </code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">disputed_essays &lt;-<span class="st"> </span><span class="kw">filter</span>(author_data, <span class="kw">is.na</span>(author))$document
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">disputed_essays &lt;-<span class="st"> </span><span class="kw">filter</span>(author_data, <span class="kw">is.na</span>(author))<span class="op">$</span>document
 
 <span class="kw">ggplot</span>(<span class="kw">mutate</span>(author_data,
               <span class="dt">author =</span> <span class="kw">fct_explicit_na</span>(<span class="kw">factor</span>(author), <span class="st">&quot;Disputed&quot;</span>)),
-       <span class="kw">aes</span>(<span class="dt">y =</span> document, <span class="dt">x =</span> pred, <span class="dt">colour =</span> author, <span class="dt">shape =</span> author)) +
-<span class="st">  </span><span class="kw">geom_ref_line</span>(<span class="dt">v =</span> <span class="dv">0</span>) +
-<span class="st">  </span><span class="kw">geom_point</span>() +
+       <span class="kw">aes</span>(<span class="dt">y =</span> document, <span class="dt">x =</span> pred, <span class="dt">colour =</span> author, <span class="dt">shape =</span> author)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_ref_line</span>(<span class="dt">v =</span> <span class="dv">0</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">10</span>, <span class="dv">80</span>, <span class="dt">by =</span> <span class="dv">10</span>),
-                     <span class="dt">minor_breaks =</span> <span class="kw">seq</span>(<span class="dv">5</span>, <span class="dv">80</span>, <span class="dt">by =</span> <span class="dv">5</span>)) +
+                     <span class="dt">minor_breaks =</span> <span class="kw">seq</span>(<span class="dv">5</span>, <span class="dv">80</span>, <span class="dt">by =</span> <span class="dv">5</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;Madison&quot;</span> =<span class="st"> &quot;blue&quot;</span>,
                                 <span class="st">&quot;Hamilton&quot;</span> =<span class="st"> &quot;red&quot;</span>,
-                                <span class="st">&quot;Disputed&quot;</span> =<span class="st"> &quot;black&quot;</span>)) +
+                                <span class="st">&quot;Disputed&quot;</span> =<span class="st"> &quot;black&quot;</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_shape_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;Madison&quot;</span> =<span class="st"> </span><span class="dv">16</span>, <span class="st">&quot;Hamilton&quot;</span> =<span class="st"> </span><span class="dv">15</span>, 
-                                 <span class="st">&quot;Disputed&quot;</span> =<span class="st"> </span><span class="dv">17</span>)) +
+                                 <span class="st">&quot;Disputed&quot;</span> =<span class="st"> </span><span class="dv">17</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">colour =</span> <span class="st">&quot;Author&quot;</span>, <span class="dt">shape =</span> <span class="st">&quot;Author&quot;</span>, 
        <span class="dt">y =</span> <span class="st">&quot;Federalist Papers&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Predicted values&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="network-data" class="section level2">
@@ -852,63 +800,32 @@ pred <span class="co"># predicted values</span></code></pre></div>
 <span class="kw">library</span>(<span class="st">&quot;GGally&quot;</span>)</code></pre></div>
 <div id="twitter-following-network" class="section level3">
 <h3><span class="header-section-number">6.3.1</span> Twitter Following Network</h3>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">twitter &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;twitter-following.csv&quot;</span>)
-senator &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;twitter-senator.csv&quot;</span>)</code></pre></div>
-<p><strong>tidyverse:</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">twitter &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;discovery&quot;</span>, <span class="st">&quot;twitter-following.csv&quot;</span>))
 senator &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;discovery&quot;</span>, <span class="st">&quot;twitter-senator.csv&quot;</span>))</code></pre></div>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n &lt;-<span class="st"> </span><span class="kw">nrow</span>(senator) <span class="co"># number of senators</span>
-
-## initialize adjacency matrix
-twitter.adj &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> n, <span class="dt">ncol =</span> n)
-
-## assign screen names to rows and columns
-<span class="kw">colnames</span>(twitter.adj) &lt;-<span class="st"> </span><span class="kw">rownames</span>(twitter.adj) &lt;-<span class="st"> </span>senator$screen_name
-
-## change `0&#39; to `1&#39; when edge goes from node `i&#39; to node `j&#39;
-for (i in <span class="dv">1</span>:<span class="kw">nrow</span>(twitter)) {
-    twitter.adj[twitter$following[i], twitter$followed[i]] &lt;-<span class="st"> </span><span class="dv">1</span>
-}
-
-twitter.adj &lt;-<span class="st"> </span><span class="kw">graph.adjacency</span>(twitter.adj, <span class="dt">mode =</span> <span class="st">&quot;directed&quot;</span>, <span class="dt">diag =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><strong>tidyverse:</strong> Simply use the function since <code>twitter</code> consists of edges (a link from a senator to another). SInce <code>graph_from_edgelist</code> expects a matrix, convert the data frame to a matrix using .</p>
+<p>Simply use the function since <code>twitter</code> consists of edges (a link from a senator to another). SInce <code>graph_from_edgelist</code> expects a matrix, convert the data frame to a matrix using .</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">twitter_adj &lt;-<span class="st"> </span><span class="kw">graph_from_edgelist</span>(<span class="kw">as.matrix</span>(twitter))</code></pre></div>
-<p><strong>original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">senator$indegree &lt;-<span class="st"> </span><span class="kw">degree</span>(twitter.adj, <span class="dt">mode =</span> <span class="st">&quot;in&quot;</span>)
-senator$outdegree &lt;-<span class="st"> </span><span class="kw">degree</span>(twitter.adj, <span class="dt">mode =</span> <span class="st">&quot;out&quot;</span>) 
-
-in.order &lt;-<span class="st"> </span><span class="kw">order</span>(senator$indegree, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)
-out.order &lt;-<span class="st"> </span><span class="kw">order</span>(senator$outdegree, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)
-
-## 3 greatest indegree
-senator[in.order[<span class="dv">1</span>:<span class="dv">3</span>], ]
-
-## 3 greatest outdegree
-senator[out.order[<span class="dv">1</span>:<span class="dv">3</span>], ]</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">environment</span>(degree)
-<span class="co">#&gt; &lt;environment: namespace:sna&gt;</span></code></pre></div>
-<p><strong>tidyverse:</strong> Add in- and out-degree varibles to the <code>senator</code> data frame:</p>
+<span class="co">#&gt; &lt;environment: namespace:igraph&gt;</span></code></pre></div>
+<p>Add in- and out-degree varibles to the <code>senator</code> data frame:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">senator &lt;-
 <span class="st">  </span><span class="kw">mutate</span>(senator,
-         <span class="dt">indegree =</span> igraph::<span class="kw">degree</span>(twitter_adj, <span class="dt">mode =</span> <span class="st">&quot;in&quot;</span>),
-         <span class="dt">outdegree =</span> igraph::<span class="kw">degree</span>(twitter_adj, <span class="dt">mode =</span> <span class="st">&quot;out&quot;</span>))</code></pre></div>
+         <span class="dt">indegree =</span> igraph<span class="op">::</span><span class="kw">degree</span>(twitter_adj, <span class="dt">mode =</span> <span class="st">&quot;in&quot;</span>),
+         <span class="dt">outdegree =</span> igraph<span class="op">::</span><span class="kw">degree</span>(twitter_adj, <span class="dt">mode =</span> <span class="st">&quot;out&quot;</span>))</code></pre></div>
 <p>Now find the senators with the 3 greatest in-degrees</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(senator, <span class="kw">desc</span>(indegree)) %&gt;%
-<span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span>:<span class="dv">3</span>) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(senator, <span class="kw">desc</span>(indegree)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(name, party, state, indegree, outdegree)
-<span class="co">#&gt; # A tibble: 3 × 5</span>
+<span class="co">#&gt; # A tibble: 3 x 5</span>
 <span class="co">#&gt;                name party state indegree outdegree</span>
 <span class="co">#&gt;               &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1        Tom Cotton     R    AR       64        15</span>
 <span class="co">#&gt; 2 Richard J. Durbin     D    IL       60        87</span>
 <span class="co">#&gt; 3     John Barrasso     R    WY       58        79</span></code></pre></div>
 <p>or using the function:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">top_n</span>(senator, <span class="dv">3</span>, indegree) %&gt;%
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(indegree)) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">top_n</span>(senator, <span class="dv">3</span>, indegree) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(indegree)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(name, party, state, indegree, outdegree)
-<span class="co">#&gt; # A tibble: 5 × 5</span>
+<span class="co">#&gt; # A tibble: 5 x 5</span>
 <span class="co">#&gt;                name party state indegree outdegree</span>
 <span class="co">#&gt;               &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1        Tom Cotton     R    AR       64        15</span>
@@ -918,39 +835,16 @@ senator[out.order[<span class="dv">1</span>:<span class="dv">3</span>], ]</code>
 <span class="co">#&gt; 5    Orrin G. Hatch     R    UT       58        50</span></code></pre></div>
 <p>The <code>top_n</code> function catches that three senators are tied for 3rd highest outdegree, whereas the simply sorting and slicing cannot.</p>
 <p>And we can find the senators with the three highest out-degrees similarly,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">top_n</span>(senator, <span class="dv">3</span>, outdegree) %&gt;%
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(outdegree)) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">top_n</span>(senator, <span class="dv">3</span>, outdegree) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(outdegree)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(name, party, state, indegree, outdegree)
-<span class="co">#&gt; # A tibble: 4 × 5</span>
+<span class="co">#&gt; # A tibble: 4 x 5</span>
 <span class="co">#&gt;               name party state indegree outdegree</span>
 <span class="co">#&gt;              &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1     Thad Cochran     R    MS       55        89</span>
 <span class="co">#&gt; 2     Steve Daines     R    MT       30        88</span>
 <span class="co">#&gt; 3      John McCain     R    AZ       41        88</span>
 <span class="co">#&gt; 4 Joe Manchin, III     D    WV       43        88</span></code></pre></div>
-<p><strong>original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n &lt;-<span class="st"> </span><span class="kw">nrow</span>(senator)
-## color: Democrats = `blue&#39;, Republicans = `red&#39;, Independent = `black&#39;
-col &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;red&quot;</span>, n)
-col[senator$party ==<span class="st"> &quot;D&quot;</span>] &lt;-<span class="st"> &quot;blue&quot;</span>
-col[senator$party ==<span class="st"> &quot;I&quot;</span>] &lt;-<span class="st"> &quot;black&quot;</span>
-
-## pch: Democrats = circle, Republicans = diamond, Independent = cross
-pch &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">16</span>, n)
-pch[senator$party ==<span class="st"> &quot;D&quot;</span>] &lt;-<span class="st"> </span><span class="dv">17</span>
-pch[senator$party ==<span class="st"> &quot;I&quot;</span>] &lt;-<span class="st"> </span><span class="dv">4</span>
-
-<span class="kw">par</span>(<span class="dt">cex =</span> <span class="fl">1.25</span>)
-## plot for comparing two closeness measures (incoming vs. outgoing)
-<span class="kw">plot</span>(<span class="kw">closeness</span>(twitter.adj, <span class="dt">mode =</span> <span class="st">&quot;in&quot;</span>), 
-     <span class="kw">closeness</span>(twitter.adj, <span class="dt">mode =</span> <span class="st">&quot;out&quot;</span>), <span class="dt">pch =</span> pch, <span class="dt">col =</span> col, 
-     <span class="dt">main =</span> <span class="st">&quot;Closeness&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;Incoming path&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Outgoing path&quot;</span>)
-
-## plot for comparing directed and undirected betweenness
-<span class="kw">plot</span>(<span class="kw">betweenness</span>(twitter.adj, <span class="dt">directed =</span> <span class="ot">TRUE</span>), 
-     <span class="kw">betweenness</span>(twitter.adj, <span class="dt">directed =</span> <span class="ot">FALSE</span>), <span class="dt">pch =</span> pch, <span class="dt">col =</span> col,
-     <span class="dt">main =</span> <span class="st">&quot;Betweenness&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;Directed&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Undirected&quot;</span>)</code></pre></div>
-<p><strong>tidyverse</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Define scales to reuse for the plots</span>
 scale_colour_parties &lt;-<span class="st"> </span><span class="kw">scale_colour_manual</span>(<span class="st">&quot;Party&quot;</span>, <span class="dt">values =</span> <span class="kw">c</span>(<span class="dt">R =</span> <span class="st">&quot;red&quot;</span>,
                                                        <span class="dt">D =</span> <span class="st">&quot;blue&quot;</span>,
@@ -960,45 +854,37 @@ scale_shape_parties &lt;-<span class="st"> </span><span class="kw">scale_shape_m
                                                               <span class="dt">I =</span> <span class="dv">4</span>))
 
 
-senator %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">closeness_in =</span> igraph::<span class="kw">closeness</span>(twitter_adj, <span class="dt">mode =</span> <span class="st">&quot;in&quot;</span>),
-         <span class="dt">closeness_out =</span> igraph::<span class="kw">closeness</span>(twitter_adj, <span class="dt">mode =</span> <span class="st">&quot;out&quot;</span>)) %&gt;%
+senator <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">closeness_in =</span> igraph<span class="op">::</span><span class="kw">closeness</span>(twitter_adj, <span class="dt">mode =</span> <span class="st">&quot;in&quot;</span>),
+         <span class="dt">closeness_out =</span> igraph<span class="op">::</span><span class="kw">closeness</span>(twitter_adj, <span class="dt">mode =</span> <span class="st">&quot;out&quot;</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> closeness_in, <span class="dt">y =</span> closeness_out,
-             <span class="dt">colour =</span> party, <span class="dt">shape =</span> party)) +
-<span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> <span class="dv">0</span>, <span class="dt">slope =</span> <span class="dv">1</span>, <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) +
-<span class="st">  </span><span class="kw">geom_point</span>() +
-<span class="st">  </span>scale_colour_parties +
-<span class="st">  </span>scale_shape_parties +
+             <span class="dt">colour =</span> party, <span class="dt">shape =</span> party)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> <span class="dv">0</span>, <span class="dt">slope =</span> <span class="dv">1</span>, <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span>scale_colour_parties <span class="op">+</span>
+<span class="st">  </span>scale_shape_parties <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">main =</span> <span class="st">&quot;Closeness&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Incoming path&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Outgoing path&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>What does the reference line indicate? What does that say about senators twitter networks?</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">senator %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">betweenness_dir =</span> igraph::<span class="kw">betweenness</span>(twitter_adj, <span class="dt">directed =</span> <span class="ot">TRUE</span>),
-         <span class="dt">betweenness_undir =</span> igraph::<span class="kw">betweenness</span>(twitter_adj, <span class="dt">directed =</span> <span class="ot">FALSE</span>)) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">senator <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">betweenness_dir =</span> igraph<span class="op">::</span><span class="kw">betweenness</span>(twitter_adj, <span class="dt">directed =</span> <span class="ot">TRUE</span>),
+         <span class="dt">betweenness_undir =</span> igraph<span class="op">::</span><span class="kw">betweenness</span>(twitter_adj, <span class="dt">directed =</span> <span class="ot">FALSE</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> betweenness_dir, <span class="dt">y =</span> betweenness_undir, <span class="dt">colour =</span> party,
-             <span class="dt">shape =</span> party)) +
-<span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> <span class="dv">0</span>, <span class="dt">slope =</span> <span class="dv">1</span>, <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) +
-<span class="st">  </span><span class="kw">geom_point</span>() +
-<span class="st">  </span>scale_colour_parties +
-<span class="st">  </span>scale_shape_parties +
+             <span class="dt">shape =</span> party)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> <span class="dv">0</span>, <span class="dt">slope =</span> <span class="dv">1</span>, <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span>scale_colour_parties <span class="op">+</span>
+<span class="st">  </span>scale_shape_parties <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">main =</span> <span class="st">&quot;Betweenness&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Directed&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Undirected&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-62-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>We’ve covered three different methods of calculating the importance of a node in a network: degree, closeness, and centrality. But what do they mean? What’s the “best” measure of importance? The answer to the the former is “it depends on the question”. There are probably other papers out there on this, but Borgatti (2005) is a good discussion:</p>
 <blockquote>
 <p>Borgatti, Stephen. 2005. “Centrality and Network Flow”. <em>Social Networks</em>. <a href="https://dx.doi.org/doi:10.1016/j.socnet.2004.11.008">DOI</a></p>
 </blockquote>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">senator$pagerank &lt;-<span class="st"> </span><span class="kw">page.rank</span>(twitter.adj)$vector
-
-<span class="kw">par</span>(<span class="dt">cex =</span> <span class="fl">1.25</span>)
-## `col&#39; parameter is defined earlier
-<span class="kw">plot</span>(twitter.adj, <span class="dt">vertex.size =</span> senator$pagerank *<span class="st"> </span><span class="dv">1000</span>, 
-     <span class="dt">vertex.color =</span> col, <span class="dt">vertex.label =</span> <span class="ot">NA</span>, 
-     <span class="dt">edge.arrow.size =</span> <span class="fl">0.1</span>, <span class="dt">edge.width =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p>Add and plot page-rank:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">senator &lt;-<span class="st"> </span><span class="kw">mutate</span>(senator, <span class="dt">page_rank =</span> <span class="kw">page_rank</span>(twitter_adj)[[<span class="st">&quot;vector&quot;</span>]])
 <span class="kw">ggnet</span>(twitter_adj, <span class="dt">mode =</span> <span class="st">&quot;target&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-64-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="spatial-data-in-r" class="section level2">
@@ -1033,32 +919,37 @@ senator %&gt;%
 <span class="co">#&gt; $ long        &lt;dbl&gt; -99.7, -81.5, -122.3, -84.2, -73.8, -123.1, -106.6...</span>
 <span class="co">#&gt; $ capital     &lt;int&gt; 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">usa_map &lt;-<span class="st"> </span><span class="kw">map_data</span>(<span class="st">&quot;usa&quot;</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: &#39;maps&#39;</span>
+<span class="co">#&gt; The following object is masked from &#39;package:purrr&#39;:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     map</span>
 capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
-                   capital ==<span class="st"> </span><span class="dv">2</span>, 
-                   !country.etc %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;HI&quot;</span>, <span class="st">&quot;AK&quot;</span>))
-<span class="kw">ggplot</span>() +
-<span class="st">  </span><span class="kw">geom_map</span>(<span class="dt">map =</span> usa_map) +
-<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;usa&quot;</span>) +
+                   capital <span class="op">==</span><span class="st"> </span><span class="dv">2</span>, 
+                   <span class="op">!</span>country.etc <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;HI&quot;</span>, <span class="st">&quot;AK&quot;</span>))
+<span class="kw">ggplot</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_map</span>(<span class="dt">map =</span> usa_map) <span class="op">+</span>
+<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;usa&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat, <span class="dt">size =</span> pop), 
-             <span class="dt">data =</span> capitals) +
+             <span class="dt">data =</span> capitals) <span class="op">+</span>
 <span class="st">  </span><span class="co"># scale size area ensures: 0 = no area</span>
-<span class="st">  </span><span class="kw">scale_size_area</span>() +
-<span class="st">  </span><span class="kw">coord_quickmap</span>() +
-<span class="st">  </span><span class="kw">theme_void</span>() +
+<span class="st">  </span><span class="kw">scale_size_area</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>, <span class="dt">title =</span> <span class="st">&quot;US State Capitals&quot;</span>,
        <span class="dt">size =</span> <span class="st">&quot;Population&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-67-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cal_cities &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities, country.etc ==<span class="st"> &quot;CA&quot;</span>) %&gt;%
+<p><img src="discovery_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cal_cities &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities, country.etc <span class="op">==</span><span class="st"> &quot;CA&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">top_n</span>(<span class="dv">7</span>, pop)
 
-<span class="kw">ggplot</span>() +
-<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>) +
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat), <span class="dt">data =</span> cal_cities) +
-<span class="st">  </span><span class="kw">geom_text_repel</span>(<span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat, <span class="dt">label =</span> name), <span class="dt">data =</span> cal_cities) +
-<span class="st">  </span><span class="kw">coord_quickmap</span>() +
-<span class="st">  </span><span class="kw">theme_minimal</span>() +
+<span class="kw">ggplot</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat), <span class="dt">data =</span> cal_cities) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_text_repel</span>(<span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat, <span class="dt">label =</span> name), <span class="dt">data =</span> cal_cities) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-68-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div id="colors-in-r" class="section level3">
 <h3><span class="header-section-number">6.4.1</span> Colors in R</h3>
 <p>For more resources on using colors in R</p>
@@ -1079,179 +970,150 @@ capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
 <li>See the <a href="https://cran.r-project.org/package=viridis">viridis</a>, <a href="https://cran.r-project.org/package=ggthemes">ggthemes</a>, <a href="https://cran.r-project.org/package=dichromat">dichromat</a>, and <a href="https://cran.r-project.org/package=pals">pals</a> packages for color palettes.</li>
 </ul>
 <p>Use <a href="http://docs.ggplot2.org/current/scale_identity.html">scale_identity</a> for the color and alpha scales since the values of the variables are the values of the scale itself (the color names, and the alpha values).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">rep</span>(<span class="dv">1</span>:<span class="dv">4</span>, <span class="dt">each =</span> <span class="dv">2</span>),
-              <span class="dt">y =</span> x +<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.2</span>), <span class="dt">times =</span> <span class="dv">2</span>),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">each =</span> <span class="dv">2</span>),
+              <span class="dt">y =</span> x <span class="op">+</span><span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.2</span>), <span class="dt">times =</span> <span class="dv">2</span>),
               <span class="dt">colour =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="dt">each =</span> <span class="dv">4</span>),
               <span class="dt">alpha =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>)),
-  <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y, <span class="dt">colour =</span> colour, <span class="dt">alpha =</span> alpha)) +
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">15</span>) +
-<span class="st">  </span><span class="kw">scale_color_identity</span>() +
-<span class="st">  </span><span class="kw">scale_alpha_identity</span>() +
-<span class="st">  </span><span class="kw">theme_bw</span>() +
+  <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y, <span class="dt">colour =</span> colour, <span class="dt">alpha =</span> alpha)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">15</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_color_identity</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_alpha_identity</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid =</span> <span class="kw">element_blank</span>())</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-69-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-52-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="united-states-presidential-elections" class="section level3">
 <h3><span class="header-section-number">6.4.2</span> United States Presidential Elections</h3>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres08 &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;pres08.csv&quot;</span>)
-## two-party vote share
-pres08$Dem &lt;-<span class="st"> </span>pres08$Obama /<span class="st"> </span>(pres08$Obama +<span class="st"> </span>pres08$McCain)
-pres08$Rep &lt;-<span class="st"> </span>pres08$McCain /<span class="st"> </span>(pres08$Obama +<span class="st"> </span>pres08$McCain) ## color for California
-cal.color &lt;-<span class="st"> </span><span class="kw">rgb</span>(<span class="dt">red =</span> pres08$Rep[pres08$state ==<span class="st"> &quot;CA&quot;</span>],
-                 <span class="dt">blue =</span> pres08$Dem[pres08$state ==<span class="st"> &quot;CA&quot;</span>],
-                 <span class="dt">green =</span> <span class="dv">0</span>)</code></pre></div>
-<p><strong>tidyverse:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres08 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;discovery&quot;</span>, <span class="st">&quot;pres08.csv&quot;</span>)) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Dem =</span> Obama /<span class="st"> </span>(Obama +<span class="st"> </span>McCain),
-         <span class="dt">Rep =</span> McCain /<span class="st"> </span>(Obama +<span class="st"> </span>McCain))</code></pre></div>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## California as a blue state
-<span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>,
-    <span class="dt">fill =</span> <span class="ot">TRUE</span>)
-## California as a purple state
-<span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>, <span class="dt">col =</span> cal.color,
-    <span class="dt">fill =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><strong>tidyverse:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>() +
-<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;blue&quot;</span>) +
-<span class="st">  </span><span class="kw">coord_quickmap</span>() +
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres08 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;discovery&quot;</span>, <span class="st">&quot;pres08.csv&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Dem =</span> Obama <span class="op">/</span><span class="st"> </span>(Obama <span class="op">+</span><span class="st"> </span>McCain),
+         <span class="dt">Rep =</span> McCain <span class="op">/</span><span class="st"> </span>(Obama <span class="op">+</span><span class="st"> </span>McCain))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;blue&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>() </code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-73-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cal_color &lt;-<span class="st"> </span><span class="kw">filter</span>(pres08, state ==<span class="st"> &quot;CA&quot;</span>) %&gt;%
-<span class="st">  </span>{<span class="kw">rgb</span>(<span class="dt">red =</span> .$Rep, <span class="dt">green =</span> <span class="dv">0</span>, <span class="dt">blue =</span> .$Dem)}
+<p><img src="discovery_files/figure-html/unnamed-chunk-54-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cal_color &lt;-<span class="st"> </span><span class="kw">filter</span>(pres08, state <span class="op">==</span><span class="st"> &quot;CA&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span>{<span class="kw">rgb</span>(<span class="dt">red =</span> .<span class="op">$</span>Rep, <span class="dt">green =</span> <span class="dv">0</span>, <span class="dt">blue =</span> .<span class="op">$</span>Dem)}
   
-<span class="kw">ggplot</span>() +
-<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>, <span class="dt">fill =</span> cal_color) +
-<span class="st">  </span><span class="kw">coord_quickmap</span>() +
+<span class="kw">ggplot</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>, <span class="dt">fill =</span> cal_color) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>()</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-74-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># America as red and blue states</span>
 <span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) <span class="co"># create a map </span>
-for (i  in <span class="dv">1</span>:<span class="kw">nrow</span>(pres08)) {
-    if ((pres08$state[i] !=<span class="st"> &quot;HI&quot;</span>) &amp;<span class="st"> </span>(pres08$state[i] !=<span class="st"> &quot;AK&quot;</span>) &amp;
-<span class="st">        </span>(pres08$state[i] !=<span class="st"> &quot;DC&quot;</span>)) {
-        <span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> pres08$state.name[i],
-            <span class="dt">col =</span> <span class="kw">ifelse</span>(pres08$Rep[i] &gt;<span class="st"> </span>pres08$Dem[i], <span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>),
+<span class="cf">for</span> (i  <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(pres08)) {
+    <span class="cf">if</span> ((pres08<span class="op">$</span>state[i] <span class="op">!=</span><span class="st"> &quot;HI&quot;</span>) <span class="op">&amp;</span><span class="st"> </span>(pres08<span class="op">$</span>state[i] <span class="op">!=</span><span class="st"> &quot;AK&quot;</span>) <span class="op">&amp;</span>
+<span class="st">        </span>(pres08<span class="op">$</span>state[i] <span class="op">!=</span><span class="st"> &quot;DC&quot;</span>)) {
+        <span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> pres08<span class="op">$</span>state.name[i],
+            <span class="dt">col =</span> <span class="kw">ifelse</span>(pres08<span class="op">$</span>Rep[i] <span class="op">&gt;</span><span class="st"> </span>pres08<span class="op">$</span>Dem[i], <span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>),
             <span class="dt">fill =</span> <span class="ot">TRUE</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>)
     }
 }
 
 ## America as purple states 
 <span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) <span class="co"># create a map </span>
-for (i in <span class="dv">1</span>:<span class="kw">nrow</span>(pres08)) {
-    if ((pres08$state[i] !=<span class="st"> &quot;HI&quot;</span>) &amp;<span class="st"> </span>(pres08$state[i] !=<span class="st"> &quot;AK&quot;</span>) &amp;
-<span class="st">        </span>(pres08$state[i] !=<span class="st"> &quot;DC&quot;</span>)) {
-        <span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> pres08$state.name[i],
-            <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dt">red =</span> pres08$Rep[i], <span class="dt">blue =</span> pres08$Dem[i],
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(pres08)) {
+    <span class="cf">if</span> ((pres08<span class="op">$</span>state[i] <span class="op">!=</span><span class="st"> &quot;HI&quot;</span>) <span class="op">&amp;</span><span class="st"> </span>(pres08<span class="op">$</span>state[i] <span class="op">!=</span><span class="st"> &quot;AK&quot;</span>) <span class="op">&amp;</span>
+<span class="st">        </span>(pres08<span class="op">$</span>state[i] <span class="op">!=</span><span class="st"> &quot;DC&quot;</span>)) {
+        <span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> pres08<span class="op">$</span>state.name[i],
+            <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dt">red =</span> pres08<span class="op">$</span>Rep[i], <span class="dt">blue =</span> pres08<span class="op">$</span>Dem[i],
                <span class="dt">green =</span> <span class="dv">0</span>), <span class="dt">fill =</span> <span class="ot">TRUE</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>)
     }
 }                      </code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">states &lt;-<span class="st"> </span><span class="kw">map_data</span>(<span class="st">&quot;state&quot;</span>) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">states &lt;-<span class="st"> </span><span class="kw">map_data</span>(<span class="st">&quot;state&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">left_join</span>(<span class="kw">mutate</span>(pres08, <span class="dt">state.name =</span> <span class="kw">str_to_lower</span>(state.name)),
-            <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;region&quot;</span> =<span class="st"> &quot;state.name&quot;</span>)) %&gt;%
+            <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;region&quot;</span> =<span class="st"> &quot;state.name&quot;</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># drops DC</span>
-<span class="st">  </span><span class="kw">filter</span>(!<span class="kw">is.na</span>(EV)) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">party =</span> <span class="kw">if_else</span>(Dem &gt;<span class="st"> </span>Rep, <span class="st">&quot;Dem&quot;</span>, <span class="st">&quot;Rep&quot;</span>),
-         <span class="dt">color =</span> <span class="kw">map2_chr</span>(Dem, Rep, ~<span class="st"> </span><span class="kw">rgb</span>(<span class="dt">blue =</span> .x, <span class="dt">red =</span> .y, <span class="dt">green =</span> <span class="dv">0</span>)))
+<span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(EV)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">party =</span> <span class="kw">if_else</span>(Dem <span class="op">&gt;</span><span class="st"> </span>Rep, <span class="st">&quot;Dem&quot;</span>, <span class="st">&quot;Rep&quot;</span>),
+         <span class="dt">color =</span> <span class="kw">map2_chr</span>(Dem, Rep, <span class="op">~</span><span class="st"> </span><span class="kw">rgb</span>(<span class="dt">blue =</span> .x, <span class="dt">red =</span> .y, <span class="dt">green =</span> <span class="dv">0</span>)))
 
-<span class="kw">ggplot</span>(states) +
+<span class="kw">ggplot</span>(states) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="dt">group =</span> group, <span class="dt">x =</span> long, <span class="dt">y =</span> lat,
-                   <span class="dt">fill =</span> party)) +
-<span class="st">  </span><span class="kw">coord_quickmap</span>() +
-<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;Rep&quot;</span> =<span class="st"> &quot;red&quot;</span>, <span class="st">&quot;Dem&quot;</span> =<span class="st"> &quot;blue&quot;</span>)) +
-<span class="st">  </span><span class="kw">theme_void</span>() +
+                   <span class="dt">fill =</span> party)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;Rep&quot;</span> =<span class="st"> &quot;red&quot;</span>, <span class="st">&quot;Dem&quot;</span> =<span class="st"> &quot;blue&quot;</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-76-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>For plotting the purple states, I use since the <code>color</code> column contains the RGB values to use in the plot:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(states) +
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(states) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="dt">group =</span> group, <span class="dt">x =</span> long, <span class="dt">y =</span> lat,
-                   <span class="dt">fill =</span> color)) +
-<span class="st">  </span><span class="kw">coord_quickmap</span>() +
-<span class="st">  </span><span class="kw">scale_fill_identity</span>() +
-<span class="st">  </span><span class="kw">theme_void</span>() +
+                   <span class="dt">fill =</span> color)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_identity</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-77-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>However, plotting purple states is not a good data visualization. Even though the colors are a proportional mixture of red and blue, human visual perception doesn’t work that way.</p>
 <p>The proportion of the democratic vote is best thought of a diverging scale with 0.5 is midpoint. And since the Democratic Party is associated with the color blue and the Republican Party is associated with the color red. The Color Brewer palette <a href="http://colorbrewer2.org/#type=diverging&amp;scheme=RdBu&amp;n=11">RdBu</a> is an example:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(states) +
-<span class="st">  </span><span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="dt">group =</span> group, <span class="dt">x =</span> long, <span class="dt">y =</span> lat, <span class="dt">fill =</span> Dem)) +
-<span class="st">  </span><span class="kw">scale_fill_distiller</span>(<span class="st">&quot;% Obama&quot;</span>, <span class="dt">direction =</span> <span class="dv">1</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">type =</span> <span class="st">&quot;div&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>) +
-<span class="st">  </span><span class="kw">coord_quickmap</span>() +
-<span class="st">  </span><span class="kw">theme_void</span>() +
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(states) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="dt">group =</span> group, <span class="dt">x =</span> long, <span class="dt">y =</span> lat, <span class="dt">fill =</span> Dem)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_distiller</span>(<span class="st">&quot;% Obama&quot;</span>, <span class="dt">direction =</span> <span class="dv">1</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">type =</span> <span class="st">&quot;div&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-78-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="expansion-of-walmart" class="section level3">
 <h3><span class="header-section-number">6.4.3</span> Expansion of Walmart</h3>
-<p><strong>Original:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">walmart &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;walmart.csv&quot;</span>)
-## red = WalMartStore, blue = SuperCenter, green = DistributionCenter
-walmart$storecolors &lt;-<span class="st"> </span><span class="ot">NA</span> <span class="co"># create an empty vector</span>
-walmart$storecolors[walmart$type ==<span class="st"> &quot;Wal-MartStore&quot;</span>] &lt;-
-<span class="st">    </span><span class="kw">rgb</span>(<span class="dt">red =</span> <span class="dv">1</span>, <span class="dt">green =</span> <span class="dv">0</span>, <span class="dt">blue =</span> <span class="dv">0</span>, <span class="dt">alpha =</span> <span class="dv">1</span>/<span class="dv">3</span>)
-walmart$storecolors[walmart$type ==<span class="st"> &quot;SuperCenter&quot;</span>] &lt;-
-<span class="st">    </span><span class="kw">rgb</span>(<span class="dt">red =</span> <span class="dv">0</span>, <span class="dt">green =</span> <span class="dv">0</span>, <span class="dt">blue =</span> <span class="dv">1</span>, <span class="dt">alpha =</span> <span class="dv">1</span>/<span class="dv">3</span>)
-walmart$storecolors[walmart$type ==<span class="st"> &quot;DistributionCenter&quot;</span>] &lt;-
-<span class="kw">rgb</span>(<span class="dt">red =</span> <span class="dv">0</span>, <span class="dt">green =</span> <span class="dv">1</span>, <span class="dt">blue =</span> <span class="dv">0</span>, <span class="dt">alpha =</span> <span class="dv">1</span>/<span class="dv">3</span>)
-## larger circles for DistributionCenter
-walmart$storesize &lt;-<span class="st"> </span><span class="kw">ifelse</span>(walmart$type ==<span class="st"> &quot;DistributionCenter&quot;</span>, <span class="dv">1</span>, <span class="fl">0.5</span>)</code></pre></div>
-<p><strong>tidyverse:</strong> We don’t need to do the direct mapping since</p>
+<p>We don’t need to do the direct mapping since</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">walmart &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">qss_data_url</span>(<span class="st">&quot;discovery&quot;</span>, <span class="st">&quot;walmart.csv&quot;</span>))
 
-<span class="kw">ggplot</span>() +
-<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) +
+<span class="kw">ggplot</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat, <span class="dt">colour =</span> type, <span class="dt">size =</span> size),
              <span class="dt">data =</span> <span class="kw">mutate</span>(walmart, 
-                           <span class="dt">size =</span> <span class="kw">if_else</span>(type ==<span class="st"> &quot;DistributionCenter&quot;</span>, <span class="dv">2</span>, <span class="dv">1</span>)), <span class="dt">alpha =</span> <span class="dv">1</span> /<span class="st"> </span><span class="dv">3</span>) +
-<span class="st">  </span><span class="kw">coord_quickmap</span>() +
-<span class="st">  </span><span class="kw">scale_size_identity</span>() +
-<span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="kw">guide_legend</span>(<span class="dt">override.aes =</span> <span class="kw">list</span>(<span class="dt">alpha =</span> <span class="dv">1</span>))) +
+                           <span class="dt">size =</span> <span class="kw">if_else</span>(type <span class="op">==</span><span class="st"> &quot;DistributionCenter&quot;</span>, <span class="dv">2</span>, <span class="dv">1</span>)), <span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_size_identity</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="kw">guide_legend</span>(<span class="dt">override.aes =</span> <span class="kw">list</span>(<span class="dt">alpha =</span> <span class="dv">1</span>))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>()</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-80-1.png" width="70%" style="display: block; margin: auto;" /> We don’t need to worry about colors since <code>ggplot</code> handles that. I use <a href="http://docs.ggplot2.org/current/guides.html">guides</a> to so that the colors or not transparent in the legend (see <em>R for Data Science</em> chapter<a href="http://r4ds.had.co.nz/graphics-for-communication.html">Graphics for communication</a>).</p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-60-1.png" width="70%" style="display: block; margin: auto;" /> We don’t need to worry about colors since <code>ggplot</code> handles that. I use <a href="http://docs.ggplot2.org/current/guides.html">guides</a> to so that the colors or not transparent in the legend (see <em>R for Data Science</em> chapter<a href="http://r4ds.had.co.nz/graphics-for-communication.html">Graphics for communication</a>).</p>
 <p>To make a plot showing all Walmart stores opened up through that year, I write a function, that takes the year and dataset as parameters.</p>
 <p>Since I am calling the function for its side effect (printing the plot) rather than the value it returns, I use the <a href="https://www.rdocumentation.org/packages/purrr/topics/walk">walk</a> function rather than <a href="https://www.rdocumentation.org/packages/purrr/topics/map">map</a>. See <a href="http://r4ds.had.co.nz/">R for Data Science</a>, <a href="http://r4ds.had.co.nz/iteration.html#walk">Chapter 21.8: Walk</a> for more information.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">map_walmart &lt;-<span class="st"> </span>function(year, .data) {
-  .data &lt;-<span class="st"> </span><span class="kw">filter</span>(.data, opendate &lt;<span class="st"> </span><span class="kw">make_date</span>(year, <span class="dv">1</span>, <span class="dv">1</span>)) %&gt;%
-<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">size =</span> <span class="kw">if_else</span>(type ==<span class="st"> &quot;DistributionCenter&quot;</span>, <span class="dv">2</span>, <span class="dv">1</span>))
-  <span class="kw">ggplot</span>() +
-<span class="st">    </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) +
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">map_walmart &lt;-<span class="st"> </span><span class="cf">function</span>(year, .data) {
+  .data &lt;-<span class="st"> </span><span class="kw">filter</span>(.data, opendate <span class="op">&lt;</span><span class="st"> </span><span class="kw">make_date</span>(year, <span class="dv">1</span>, <span class="dv">1</span>)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">size =</span> <span class="kw">if_else</span>(type <span class="op">==</span><span class="st"> &quot;DistributionCenter&quot;</span>, <span class="dv">2</span>, <span class="dv">1</span>))
+  <span class="kw">ggplot</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) <span class="op">+</span>
 <span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat, <span class="dt">colour =</span> type, <span class="dt">size =</span> size),
-               <span class="dt">data =</span> .data, <span class="dt">alpha =</span> <span class="dv">1</span> /<span class="st"> </span><span class="dv">3</span>) +
-<span class="st">    </span><span class="kw">coord_quickmap</span>() +
-<span class="st">    </span><span class="kw">scale_size_identity</span>() +
-<span class="st">    </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="kw">guide_legend</span>(<span class="dt">override.aes =</span> <span class="kw">list</span>(<span class="dt">alpha =</span> <span class="dv">1</span>))) +
-<span class="st">    </span><span class="kw">theme_void</span>() +
+               <span class="dt">data =</span> .data, <span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">scale_size_identity</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="kw">guide_legend</span>(<span class="dt">override.aes =</span> <span class="kw">list</span>(<span class="dt">alpha =</span> <span class="dv">1</span>))) <span class="op">+</span>
+<span class="st">    </span><span class="kw">theme_void</span>() <span class="op">+</span>
 <span class="st">    </span><span class="kw">ggtitle</span>(year)
 }
 
 years &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1975</span>, <span class="dv">1985</span>, <span class="dv">1995</span>, <span class="dv">2005</span>)
-<span class="kw">walk</span>(years, ~<span class="st"> </span><span class="kw">print</span>(<span class="kw">map_walmart</span>(.x, walmart)))</code></pre></div>
-<p><img src="discovery_files/figure-html/unnamed-chunk-81-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-81-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-81-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-81-4.png" width="70%" style="display: block; margin: auto;" /></p>
+<span class="kw">walk</span>(years, <span class="op">~</span><span class="st"> </span><span class="kw">print</span>(<span class="kw">map_walmart</span>(.x, walmart)))</code></pre></div>
+<p><img src="discovery_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-61-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-61-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-61-4.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="animation-in-r" class="section level3">
 <h3><span class="header-section-number">6.4.4</span> Animation in R</h3>
 <p>For easy animation with <a href="https://cran.r-project.org/package=ggplot2">ggplot2</a>, use the <a href="https://github.com/dgrtwo/gganimate">gganimate</a> package. Note that the <strong>gganimate</strong> package is not on CRAN, so you have to install it with the <a href="https://cran.r-project.org/package=devtools">devtools</a> package:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;cowplot&quot;</span>)
-devtools::<span class="kw">install_github</span>(<span class="st">&quot;dgrtwo/animate&quot;</span>)</code></pre></div>
+devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;dgrtwo/animate&quot;</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;gganimate&quot;</span>)</code></pre></div>
 <p>An animation is a series of frames. The <a href="https://cran.r-project.org/package=gganimate">gganimate</a> package works by adding a <code>frame</code> aesthetic to ggplots, and function will animate the plot.</p>
 <p>I use <code>frame = year(opendate)</code> to have the animation use each year as a frame, and <code>cumulative = TRUE</code> so that the previous years are shown.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">walmart_animated &lt;-
-<span class="st">  </span><span class="kw">ggplot</span>() +
-<span class="st">    </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) +
+<span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) <span class="op">+</span>
 <span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat,
                    <span class="dt">colour =</span> type,
                    <span class="dt">fill =</span> type,
                    <span class="dt">frame =</span> <span class="kw">year</span>(opendate),
                    <span class="dt">cumulative =</span> <span class="ot">TRUE</span>),
-               <span class="dt">data =</span> walmart) +
-<span class="st">    </span><span class="kw">coord_quickmap</span>() +
+               <span class="dt">data =</span> walmart) <span class="op">+</span>
+<span class="st">    </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
 <span class="st">    </span><span class="kw">theme_void</span>()
 <span class="kw">gganimate</span>(walmart_animated)</code></pre></div>
 <div class="figure">
-<img src="discovery_files/figure-html/unnamed-chunk-84-.gif" alt="unnamed-chunk-84" />
-<p class="caption">unnamed-chunk-84</p>
+<img src="discovery_files/figure-html/unnamed-chunk-64-.gif" alt="unnamed-chunk-64" />
+<p class="caption">unnamed-chunk-64</p>
 </div>
 
 </div>
@@ -1263,8 +1125,9 @@ devtools::<span class="kw">install_github</span>(<span class="st">&quot;dgrtwo/a
         </div>
       </div>
 <a href="prediction.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="probability.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
-
+<a href="probability.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
@@ -1273,7 +1136,7 @@ devtools::<span class="kw">install_github</span>(<span class="st">&quot;dgrtwo/a
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
 <script>
-require(["gitbook"], function(gitbook) {
+gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": false,
 "fontsettings": {
@@ -1293,6 +1156,17 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

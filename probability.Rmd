@@ -1,3 +1,9 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
 # Probability
 
 ## Prerequisites
@@ -17,25 +23,7 @@ insert_fun("qss_data_url")
 
 ## Probability
 
-**Original code**
-```{r eval=FALSE}
-k <- 23 # number of people
-sims <- 1000 # number of simulations event <- 0 # counter
-for (i in 1:sims) {
-days <- sample(1:365, k, replace = TRUE)
-days.unique <- unique(days) # unique birthdays
-## if there are duplicates, the number of unique birthdays 
-## will be less than the number of birthdays, which is `k' 
-if (length(days.unique) < k) {
-        event <- event + 1
-    }
-}
-## fraction of trials where at least two bdays are the same
-answer <- event / sims
-answer
-```
 
-**tidyverse**
 ```{r}
 birthday <- function(k) {
   logdenom <- k * log(365) + lfactorial(365 - k)
@@ -77,7 +65,7 @@ sim_bdays <- function(k) {
 
 We can test the code for `k = 10` birthdays.
 ```{r}
-sim_bday(10)
+sim_bdays(10)
 ```
 Since the function is randomly sampling birthdays 
 
@@ -92,8 +80,8 @@ are
 - it is always `TRUE` when `k >= 365` by the [pidgeonhole principle](https://en.wikipedia.org/wiki/Pigeonhole_principle).
 
 ```{r}
-sim_bday(1)
-sim_bday(365)
+sim_bdays(1)
+sim_bdays(365)
 ```
 
 Set the parameters for 1,000 simulations, and 23 individuals.
@@ -108,7 +96,6 @@ map_lgl(seq_len(sims), ~ sim_bdays(k)) %>%
 
 ### Combinations
 
-**Original code**
 ```{r}
 choose(84, 6)
 ```
@@ -128,7 +115,7 @@ FLVoters <- FLVoters %>%
 Instead of using `r rdoc("base", "prop.base")`, we calculate the probabilities
 with a data frame.
 Marginal probabilities of race,
-```{r}
+```{r margin_race}
 margin_race <-
   FLVoters %>%
   count(race) %>%
@@ -137,7 +124,7 @@ margin_race
 ```
 
 Marginal probabilities of gender:
-```{r}
+```{r margin_gender}
 margin_gender <- FLVoters %>%
   count(gender) %>%
   mutate(prop = n / sum(n))
@@ -151,7 +138,7 @@ FLVoters %>%
   mutate(prop = n / sum(n))
 ```
 
-```{r}
+```{r joint_p}
 joint_p <-
   FLVoters %>%
   count(gender, race) %>%
@@ -162,35 +149,35 @@ joint_p
 ```
 
 We can convert the data frame to have gender as columns:
-```{r}
+```{r joint_p_gender}
 joint_p %>%
   ungroup() %>%
   select(-n) %>%
   spread(gender, prop)
 ```
 
-
-```{r}
+Sum over race:
+```{r margin_race_2}
 joint_p %>%
   group_by(race) %>%
   summarise(prop = sum(prop))
 ```
 
 Sum over gender:
-```{r}
+```{r margin_gender_2}
 joint_p %>%
   group_by(gender) %>%
   summarise(prop = sum(prop))
 ```
 
-```{r}
+```{r FLVoters}
 FLVoters <-
   FLVoters %>%
   mutate(age_group = cut(age, c(0, 20, 40, 60, Inf), right = TRUE,
                          labels = c("<= 20", "20-40", "40-60", "> 60")))
 ```
 
-```{r}
+```{r joint3}
 joint3 <-
   FLVoters %>%
   count(race, age_group, gender) %>%
@@ -200,7 +187,7 @@ joint3
 ```
 
 Marginal probabilities by age groups
-```{r}
+```{r margin_age}
 margin_age <-
   FLVoters %>%
   count(age_group) %>%
@@ -316,7 +303,7 @@ cond_gender <-
 ```
 
 Calculate the conditional distribution $\Pr(\mathtt{race} | \mathtt{gender})$:
-```
+```{r}
 prob_race_gender <- 
   left_join(select(joint_p, race, gender, prob_race_gender = prop),
             select(margin_gender, gender, prob_gender = prop),
@@ -325,8 +312,7 @@ prob_race_gender <-
 ```
 
 Calculate the conditional distribution $\Pr(\mathtt{age} | \mathtt{gender})$:
-```
-# P(age | gender)
+```{r}
 prob_age_gender <- 
   left_join(select(joint2, age_group, gender, prob_age_gender),
             select(margin_gender, gender, prob_gender = prop),
@@ -403,7 +389,7 @@ Can we make this even more general? What about a function that takes a data fram
 ### Predicting Race Using Surname and Residence Location
 
 Start with the Census names files:
-```{r message=FALSE}
+```{r cnames,message=FALSE}
 cnames <- read_csv(qss_data_url("probability", "names.csv"))
 glimpse(cnames)
 ```
@@ -412,33 +398,33 @@ For each surname, contains variables with the probability that it belongs to an 
 We want to find the most-likely race for a given surname, by finding the race with the maximum proportion.
 Instead of dealing with multiple variables, it is easier to use `max` on a single variable, so we will rearrange the data to in order to use a grouped summarize, and then merge the new variable back to the original data sets.
 
-<!-- This needs to be sped up. Possibly a  -->
-
 Note, this code takes a while.
-```{r}
-most_likely <-
+```{r most_likely_race}
+most_likely_race <-
   cnames %>%
   select(-count) %>%
   gather(race_pred, pct, -surname) %>%
-  # remove pct prefix
+  # remove pct_ prefix from variable names
   mutate(race_pred = str_replace(race_pred, "^pct", "")) %>%
-  # group by surname
+  # # group by surname
   group_by(surname) %>%
-  filter(pct == max(pct)) %>%
-  # if there are ties, keep only one obs
-  slice(1) %>%
-  # don't need pct anymore
+  # select obs with the largest percentage
+  filter(row_number(desc(pct)) == 1L) %>%
+  # Ungroup to avoid errors later
+  ungroup %>%
+  # # don't need pct anymore
   select(-pct) %>%
-  mutate(race_pred = factor(race_pred),
-         # need to convert to factor first, else errors
-         race_pred = fct_recode(race_pred, 
-                                "asian" = "api", "other" = "others"))
+  mutate(race_pred = recode(race_pred, asian = "api", other = "others"))
+  #        # need to convert to factor first, else errors
+  #        race_pred = fct_recode(race_pred, 
+  #                               "asian" = "api", "other" = "others"))
 
 ```
 
-Now merge that back to the original `cnames` data frame.
-```{r}
-cnames <- left_join(cnames, most_likely, by = "surname")
+Merge the data frame with the most likely race for each surname to the
+the original `cnames` data frame:
+```{r cnames_merge}
+cnames <- left_join(cnames, most_likely_race, by = "surname")
 ```
 
 
@@ -539,7 +525,7 @@ sim_results %>%
   summarise_all(funs(mean, var, sd))
 ```
 
-Theoretical probabilities
+Theoretical probabilities from a binomial distribution:
 ```{r}
 # we cannot use n, because mutate will look for n() first.
 n_draws <- 1000
@@ -556,18 +542,18 @@ pres08 %>%
 ### Law of Large Numbers
 
 Put the simulation number, `x` and `mean` in a tibble:
-```{r}
+```{r lln_binom}
 sims <- 1000
 p <- 0.2
 size = 10
 lln_binom <- tibble(
   n = seq_len(sims),
-  x = rbinom(sims, p = p, size = size),
+  x = rbinom(sims, prob = p, size = size),
   mean = cumsum(x) / n,
   distrib = str_c("Binomial(", size, ", ", p, ")"))
 ```
 
-```{r}
+```{r lln_unif}
 lln_unif <-
  tibble(n = seq_len(sims),
         x = runif(sims),
@@ -575,7 +561,7 @@ lln_unif <-
         distrib = str_c("Uniform(0, 1)"))
 ```
 
-```{r}
+```{r plot_lln_sim_unif}
 true_means <- 
   tribble(~distrib, ~mean,
           "Uniform(0, 1)", 0.5,
@@ -597,17 +583,25 @@ The population mean of the binomial distribution is $\mu = p n$ and the variance
 ```{r}
 sims <- 1000
 n_samp <- 1000
+```
 
-# Mean of binomial distribution
+Write functions to calculate the mean of a binomial distribution with size, `size`, and probabability, `p`,
+```{r binom_mean}
 binom_mean <- function(size, p) {
   size * p
 }
-
-# Variance of binomial distribution
+```
+variance of a binomial distribution,
+```{r binom_var}
 binom_var <- function(size, p) {
   size * p * (1 - p) 
 }
+```
 
+Write a function that takes `n_samp` samples from a binomial distribution with 
+size, `size`, and probability of succes, `p`, and returns a data frame with the 
+z-score of the sample distribution:
+```{r sim_binom_clt}
 sim_binom_clt <- function(n_samp, size, p) {
   x <- rbinom(n_samp, prob = p, size = size)
   z <- (mean(x) - binom_mean(size, p)) /
@@ -615,17 +609,21 @@ sim_binom_clt <- function(n_samp, size, p) {
   tibble(distrib = str_c("Binomial(", p, ", ", size, ")"),
          z = z)
 }
-
-# Mean of uniform distribution
+```
+For the uniform distribution, we need a function to calculate the mean of a uniform distribution,
+```{r unif_mean}
 unif_mean <- function(min, max) {
   0.5 * (min + max)
 }
-
-# Variance of uniform distribution
+```
+variance of a uniform distribution,
+```{r unif_var}
 unif_var <- function(min, max) {
   (1 / 12) * (max - min) ^ 2
 }
-
+```
+and a function to perform the CLT simulation,
+```{r sim_unif_clt}
 sim_unif_clt <- function(n_samp, min = 0, max = 1) {
   x <- runif(n_samp, min = min, max = max)
   z <- (mean(x) - unif_mean(min, max)) /
@@ -636,7 +634,7 @@ sim_unif_clt <- function(n_samp, min = 0, max = 1) {
 ```
 
 Since we will calculate this for `n_samp = 1000` and `n_samp`, we might as well write a function for it. 
-```{r}
+```{r clt_plot}
 clt_plot <- function(n_samp) {
   bind_rows(map_df(seq_len(sims), ~ sim_binom_clt(n_samp, size, p)),
             map_df(seq_len(sims), ~ sim_unif_clt(n_samp))) %>%

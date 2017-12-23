@@ -20,13 +20,6 @@ library("modelr")
 We also use the R function
 
 
-```r
-qss_data_url <-
-function(chapter, file) {
-  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
-        stringr::str_to_upper(chapter), "/", file)
-}
-```
 
 ## Loops in R
 
@@ -128,15 +121,15 @@ polls_w_results <-
 glimpse(polls_w_results)
 #> Observations: 1,332
 #> Variables: 9
-#> $ state                  <chr> "AL", "AL", "AL", "AL", "AL", "AL", "AL...
-#> $ Pollster               <chr> "SurveyUSA-2", "Capital Survey-2", "Sur...
-#> $ Obama                  <int> 36, 34, 35, 35, 39, 34, 36, 25, 35, 34,...
-#> $ McCain                 <int> 61, 54, 62, 55, 60, 64, 58, 52, 55, 47,...
-#> $ middate                <date> 2008-10-27, 2008-10-15, 2008-10-08, 20...
-#> $ margin                 <int> -25, -20, -27, -20, -21, -30, -22, -27,...
-#> $ ELECTION_DAY - middate <time> 8 days, 20 days, 27 days, 29 days, 43 ...
-#> $ elec_margin            <int> -21, -21, -21, -21, -21, -21, -21, -21,...
-#> $ error                  <int> 4, -1, 6, -1, 0, 9, 1, 6, -1, -8, -3, -...
+#> $ state                    <chr> "AL", "AL", "AL", "AL", "AL", "AL", "...
+#> $ Pollster                 <chr> "SurveyUSA-2", "Capital Survey-2", "S...
+#> $ Obama                    <int> 36, 34, 35, 35, 39, 34, 36, 25, 35, 3...
+#> $ McCain                   <int> 61, 54, 62, 55, 60, 64, 58, 52, 55, 4...
+#> $ middate                  <date> 2008-10-27, 2008-10-15, 2008-10-08, ...
+#> $ margin                   <int> -25, -20, -27, -20, -21, -30, -22, -2...
+#> $ `ELECTION_DAY - middate` <time> 8 days, 20 days, 27 days, 29 days, 4...
+#> $ elec_margin              <int> -21, -21, -21, -21, -21, -21, -21, -2...
+#> $ error                    <int> 4, -1, 6, -1, 0, 9, 1, 6, -1, -8, -3,...
 ```
 
 
@@ -149,9 +142,8 @@ last_polls <-
   group_by(state) %>%
   slice(1)
 last_polls
-#> Source: local data frame [51 x 9]
-#> Groups: state [51]
-#> 
+#> # A tibble: 51 x 9
+#> # Groups:   state [51]
 #>   state        Pollster Obama McCain    middate margin
 #>   <chr>           <chr> <int>  <int>     <date>  <int>
 #> 1    AK Research 2000-3    39     58 2008-10-29    -19
@@ -263,7 +255,8 @@ Now simply count the number of polls in each category of `classification`:
 last_polls %>%
   group_by(classification) %>%
   count()
-#> # A tibble: 4 × 2
+#> # A tibble: 4 x 2
+#> # Groups:   classification [4]
 #>   classification     n
 #>            <chr> <int>
 #> 1 false negative     2
@@ -279,7 +272,7 @@ last_polls %>%
   filter(classification %in% c("false positive", "false negative")) %>%
   select(state, margin, elec_margin, classification) %>%
   arrange(desc(elec_margin))
-#> # A tibble: 3 × 4
+#> # A tibble: 3 x 4
 #>   state margin elec_margin classification
 #>   <chr>  <int>       <int>          <chr>
 #> 1    IN     -5           1 false negative
@@ -295,7 +288,7 @@ last_polls %>%
   left_join(select(pres08, state, EV), by = "state") %>%
   summarise(EV_pred = sum((margin > 0) * EV),
             EV_actual = sum((elec_margin > 0) * EV))
-#> # A tibble: 1 × 2
+#> # A tibble: 1 x 2
 #>   EV_pred EV_actual
 #>     <int>     <int>
 #> 1     349       364
@@ -345,7 +338,7 @@ pop_vote_avg_tidy <-
   pop_vote_avg %>% 
   gather(candidate, share, -date, na.rm = TRUE)
 pop_vote_avg_tidy
-#> # A tibble: 598 × 3
+#> # A tibble: 598 x 3
 #>         date candidate share
 #> *     <date>     <chr> <dbl>
 #> 1 2008-01-09     Obama    49
@@ -496,7 +489,7 @@ grid <- face %>%
   data_grid(d.comp) %>%
   add_predictions(fit)
 head(grid)
-#> # A tibble: 6 × 2
+#> # A tibble: 6 x 2
 #>   d.comp   pred
 #>    <dbl>  <dbl>
 #> 1 0.0640 -0.270
@@ -546,7 +539,7 @@ pres12 <- read_csv(qss_data_url("prediction", "pres12.csv"))
 
 ```r
 full_join(pres08, pres12, by = "state")
-#> # A tibble: 51 × 9
+#> # A tibble: 51 x 9
 #>   state.name state Obama.x McCain  EV.x margin Obama.y Romney  EV.y
 #>        <chr> <chr>   <int>  <int> <int>  <int>   <int>  <int> <int>
 #> 1    Alabama    AL      39     60     9    -21      38     61     9
@@ -565,7 +558,7 @@ use the `suffix` argument:
 ```r
 pres <- full_join(pres08, pres12, by = "state", suffix = c("_08", "_12"))
 pres
-#> # A tibble: 51 × 9
+#> # A tibble: 51 x 9
 #>   state.name state Obama_08 McCain EV_08 margin Obama_12 Romney EV_12
 #>        <chr> <chr>    <int>  <int> <int>  <int>    <int>  <int> <int>
 #> 1    Alabama    AL       39     60     9    -21       38     61     9
@@ -609,7 +602,7 @@ To calculate the bottom and top quartiles
 pres %>%
   filter(Obama2008.z < quantile(Obama2008.z, 0.25)) %>%
   summarise(improve = mean(Obama2012.z > Obama2008.z))
-#> # A tibble: 1 × 1
+#> # A tibble: 1 x 1
 #>   improve
 #>     <dbl>
 #> 1   0.583
@@ -617,7 +610,7 @@ pres %>%
 pres %>%
   filter(Obama2008.z < quantile(Obama2008.z, 0.75)) %>%
   summarise(improve = mean(Obama2012.z > Obama2008.z))
-#> # A tibble: 1 × 1
+#> # A tibble: 1 x 1
 #>   improve
 #>     <dbl>
 #> 1     0.5
@@ -709,7 +702,7 @@ arrange(florida) %>%
   arrange(desc(abs(resid))) %>%
   select(county, resid) %>%
   head()
-#> # A tibble: 6 × 2
+#> # A tibble: 6 x 2
 #>       county resid
 #>        <chr> <dbl>
 #> 1  PalmBeach  2302
@@ -811,7 +804,7 @@ proportion of female politicians in reserved GP vs. unreserved GP
 women %>%
   group_by(reserved) %>%
   summarise(prop_female = mean(female))
-#> # A tibble: 2 × 2
+#> # A tibble: 2 x 2
 #>   reserved prop_female
 #>      <int>       <dbl>
 #> 1        0      0.0748
@@ -836,7 +829,7 @@ women %>%
   group_by(reserved) %>%
   summarise(irrigation = mean(irrigation), 
             water = mean(water))
-#> # A tibble: 2 × 3
+#> # A tibble: 2 x 3
 #>   reserved irrigation water
 #>      <int>      <dbl> <dbl>
 #> 1        0       3.39  14.7
@@ -853,7 +846,7 @@ women %>%
             water = mean(water)) %>%
   summarise(diff_irrigation = diff(irrigation),
             diff_water = diff(water))
-#> # A tibble: 1 × 2
+#> # A tibble: 1 x 2
 #>   diff_irrigation diff_water
 #>             <dbl>      <dbl>
 #> 1          -0.369       9.25
@@ -869,7 +862,7 @@ women %>%
   gather(variable, value, -reserved) %>%
   spread(reserved, value) %>%
   mutate(diff = `1` - `0`)
-#> # A tibble: 2 × 4
+#> # A tibble: 2 x 4
 #>     variable   `0`   `1`   diff
 #>        <chr> <dbl> <dbl>  <dbl>
 #> 1 irrigation  3.39  3.02 -0.369
@@ -966,7 +959,7 @@ unique_messages <-
   data_grid(social, messages) %>%
   add_predictions(fit)
 unique_messages
-#> # A tibble: 4 × 2
+#> # A tibble: 4 x 2
 #>     messages  pred
 #>        <chr> <dbl>
 #> 1 Civic Duty 0.315
@@ -981,7 +974,7 @@ Compare to the sample averages
 social %>%
   group_by(messages) %>%
   summarise(mean(primary2008))
-#> # A tibble: 4 × 2
+#> # A tibble: 4 x 2
 #>     messages `mean(primary2008)`
 #>        <chr>               <dbl>
 #> 1 Civic Duty               0.315
@@ -1033,7 +1026,7 @@ social %>%
   summarise(primary2008 = mean(primary2008)) %>%
   mutate(Control = primary2008[messages == "Control"],
          diff = primary2008 - Control)
-#> # A tibble: 4 × 4
+#> # A tibble: 4 x 4
 #>     messages primary2008 Control   diff
 #>        <chr>       <dbl>   <dbl>  <dbl>
 #> 1 Civic Duty       0.315   0.297 0.0179
@@ -1068,9 +1061,8 @@ ate <-
   mutate(ate_Neighbors = Neighbors - Control) %>%
   select(primary2004, Neighbors, Control, ate_Neighbors)
 ate
-#> Source: local data frame [2 x 4]
-#> Groups: primary2004 [2]
-#> 
+#> # A tibble: 2 x 4
+#> # Groups:   primary2004 [2]
 #>   primary2004 Neighbors Control ate_Neighbors
 #>         <int>     <dbl>   <dbl>         <dbl>
 #> 1           0     0.306   0.237        0.0693
@@ -1151,7 +1143,7 @@ ate.age <-
   spread(messages, pred) %>%
   mutate(diff = Neighbors - Control)
 ate.age
-#> # A tibble: 4 × 4
+#> # A tibble: 4 x 4
 #>     age Control Neighbors   diff
 #>   <dbl>   <dbl>     <dbl>  <dbl>
 #> 1    25   0.189     0.254 0.0643
@@ -1216,22 +1208,6 @@ y.hat %>%
 
 ## Regression Discontinuity Design
 
-**Original code**
-
-```r
-MPs <- read.csv("MPs.csv")
-MPs.labour <- subset(MPs, subset = (party == "labour"))
-MPs.tory <- subset(MPs, subset = (party == "tory"))
-## two regressions for Labour: negative and positive margin
-labour.fit1 <- lm(ln.net ~ margin, 
-                  data = MPs.labour[MPs.labour$margin < 0, ])
-labour.fit2 <- lm(ln.net ~ margin,
-data = MPs.labour[MPs.labour$margin > 0, ]) ## two regressions for Tory: negative and positive margin
-tory.fit1 <- lm(ln.net ~ margin, data = MPs.tory[MPs.tory$margin < 0, ])
-tory.fit2 <- lm(ln.net ~ margin, data = MPs.tory[MPs.tory$margin > 0, ])
-```
-
-**Tidyverse**
 
 ```r
 MPs <- read_csv(qss_data_url("prediction", "MPs.csv"))
@@ -1247,24 +1223,6 @@ tory_fit1 <- lm(ln.net ~ margin,
                 data = filter(MPs_tory, margin < 0))
 tory_fit2 <- lm(ln.net ~ margin, data = filter(MPs_tory, margin > 0))
 ```
-
-**Original code**
-
-```r
-## Labour: range of predictions
-y1l.range <- c(min(MPs.labour$margin), 0) # min to 0
-y2l.range <- c(0, max(MPs.labour$margin)) # 0 to max
-## prediction
-y1.labour <- predict(labour.fit1, newdata = data.frame(margin = y1l.range))
-y2.labour <- predict(labour.fit2, newdata = data.frame(margin = y2l.range)) ## Tory: range of predictions
-y1t.range <- c(min(MPs.tory$margin), 0) # min to 0
-y2t.range <- c(0, max(MPs.tory$margin)) # 0 to max
-## predict outcome
-y1.tory <- predict(tory.fit1, newdata = data.frame(margin = y1t.range))
-y2.tory <- predict(tory.fit2, newdata = data.frame(margin = y2t.range))
-```
-
-**Tidyverse code**
 
 Use  to generate a grid for predictions.
 
@@ -1289,47 +1247,6 @@ y2_tory <-
   add_predictions(tory_fit2)
 ```
 
-**Original code**
-
-```r
-## scatterplot with regression lines for labour
-plot(MPs.labour$margin, MPs.labour$ln.net, main = "Labour",
-     xlim = c(-0.5, 0.5), ylim = c(6, 18), xlab = "margin of victory",
-     ylab = "log net wealth at death")
-abline(v = 0, lty = "dashed")
-## add regression lines
-lines(y1l.range, y1.labour, col = "red")
-lines(y2l.range, y2.labour, col = "red")
-## scatterplot with regression lines for tory
-plot(MPs.tory$margin, MPs.tory$ln.net, main = "Tory", xlim = c(-0.5, 0.5),
-     ylim = c(6, 18), xlab = "margin of victory",
-ylab = "log net wealth at death")
-abline(v = 0, lty = "dashed")
-## add regression lines
-lines(y1t.range, y1.tory, col = "red")
-lines(y2t.range, y2.tory, col = "red")
-```
-
-**Tidyverse code**
-
-Labour politicians
-
-```r
-ggplot() +
-  geom_ref_line(v = 0) +
-  geom_point(data = MPs_labour,
-            mapping = aes(x = margin, y = ln.net)) +
-  geom_line(data = y1_labour,
-            mapping = aes(x = margin, y = pred), colour = "red",
-            size = 1.5) +
-  geom_line(data = y2_labour,
-            mapping = aes(x = margin, y = pred), colour = "red", size = 1.5) +
-  labs(x = "margin of victory", y = "log net wealth at death",
-       title = "Labour")
-```
-
-<img src="prediction_files/figure-html/unnamed-chunk-85-1.png" width="70%" style="display: block; margin: auto;" />
-
 Tory politicians
 
 ```r
@@ -1345,7 +1262,7 @@ ggplot() +
        title = "labour")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-86-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="prediction_files/figure-html/unnamed-chunk-82-1.png" width="70%" style="display: block; margin: auto;" />
 
 We can actually produce this plot easily without running the regressions, by using `geom_smooth`:
 
@@ -1360,28 +1277,8 @@ ggplot(mutate(MPs, winner = (margin > 0)),
   labs(x = "margin of victory", y = "log net wealth at death")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-87-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="prediction_files/figure-html/unnamed-chunk-83-1.png" width="70%" style="display: block; margin: auto;" />
 
-**Original code**
-
-```r
-## average net wealth for Tory MP
-tory.MP <- exp(y2.tory[1])
-tory.MP
-##        1
-## 533813.5
-## average net wealth for Tory non-MP
-tory.nonMP <- exp(y1.tory[2])
-tory.nonMP
-##        2
-## 278762.5
-## causal effect in pounds
-tory.MP - tory.nonMP
-##        1
-## 255050.9
-```
-
-**Tidyverse:**
 In the previous code, I didn't directly compute the the average net wealth at 0, so I'll need to do that here.
 I'll use [gather_predictions](https://www.rdocumentation.org/packages/modelr/topics/gather_predictions) to add predictions for multiple models:
 
@@ -1389,23 +1286,12 @@ I'll use [gather_predictions](https://www.rdocumentation.org/packages/modelr/top
 spread_predictions(data_frame(margin = 0),
                    tory_fit1, tory_fit2) %>%
   mutate(rd_est = tory_fit2 - tory_fit1)
-#> # A tibble: 1 × 4
+#> # A tibble: 1 x 4
 #>   margin tory_fit1 tory_fit2 rd_est
 #>    <dbl>     <dbl>     <dbl>  <dbl>
 #> 1      0      12.5      13.2   0.65
 ```
 
-
-**Original:**
-
-```r
-## two regressions for Tory: negative and positive margin
-tory.fit3 <- lm(margin.pre ~ margin, data = MPs.tory[MPs.tory$margin < 0, ])
-tory.fit4 <- lm(margin.pre ~ margin, data = MPs.tory[MPs.tory$margin > 0, ]) ## the difference between two intercepts is the estimated effect
-coef(tory.fit4)[1] - coef(tory.fit3)[1]
-## (Intercept)
-## -0.01725578
-```
 
 **Tidyverse:**
 

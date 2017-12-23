@@ -21,13 +21,6 @@ We also create a helper function for loading in the data.
 We will also, use the function `qss_data_url`:
 
 
-```r
-qss_data_url <-
-function(chapter, file) {
-  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
-        stringr::str_to_upper(chapter), "/", file)
-}
-```
 
 This function returns the URL to a data set.
 
@@ -39,7 +32,7 @@ Since URLs can be used for paths to files, this can be used to easily load data 
 
 ```r
 read_csv(qss_data_url("intro", "Kenya.csv"))
-#> # A tibble: 30 × 8
+#> # A tibble: 30 x 8
 #>   country    period   age births deaths py.men py.women    l_x
 #>     <chr>     <chr> <chr>  <dbl>  <dbl>  <dbl>    <dbl>  <dbl>
 #> 1     KEN 1950-1955   0-4      0  398.3   2983     2978 100000
@@ -77,7 +70,7 @@ UNpop <- read_csv(qss_data_url("INTRO", "UNpop.csv"))
 class(UNpop)
 #> [1] "tbl_df"     "tbl"        "data.frame"
 UNpop
-#> # A tibble: 7 × 2
+#> # A tibble: 7 x 2
 #>    year world.pop
 #>   <int>     <int>
 #> 1  1950   2525779
@@ -95,7 +88,7 @@ but the **dplyr** functions `slice()` to select rows by number, `filter` to sele
 
 ```r
 UNpop[c(1, 2, 3), ]
-#> # A tibble: 3 × 2
+#> # A tibble: 3 x 2
 #>    year world.pop
 #>   <int>     <int>
 #> 1  1950   2525779
@@ -106,7 +99,7 @@ is equivalent to
 
 ```r
 UNpop %>% slice(1:3)
-#> # A tibble: 3 × 2
+#> # A tibble: 3 x 2
 #>    year world.pop
 #>   <int>     <int>
 #> 1  1950   2525779
@@ -117,7 +110,7 @@ UNpop %>% slice(1:3)
 
 ```r
 UNpop[, "world.pop"]
-#> # A tibble: 7 × 1
+#> # A tibble: 7 x 1
 #>   world.pop
 #>       <int>
 #> 1   2525779
@@ -132,7 +125,7 @@ is almost equivalent to
 
 ```r
 select(UNpop, world.pop)
-#> # A tibble: 7 × 1
+#> # A tibble: 7 x 1
 #>   world.pop
 #>       <int>
 #> 1   2525779
@@ -151,30 +144,27 @@ rather than a vector if it is only one column.
 
 ```r
 UNpop[1:3, "year"]
-#> # A tibble: 3 × 1
+#> # A tibble: 3 x 1
 #>    year
 #>   <int>
 #> 1  1950
 #> 2  1960
 #> 3  1970
 ```
-is almost equivalent to 
+is equivalent to 
 
 ```r
 UNpop %>%
   slice(1:3) %>%
   select(year)
-#> # A tibble: 3 × 1
+#> # A tibble: 3 x 1
 #>    year
 #>   <int>
 #> 1  1950
 #> 2  1960
 #> 3  1970
 ```
-For this example using these functions and `%>%` to chain them together may 
-seem a little excessive, but later we will see how chaining simple functions 
-together like that becomes a very powerful way to build up complicated logic.
-
+For this example using these functions and `%>%` to chain them together may seem verbose, but later we can produce more complicated transformations of the data by chaining together simple functions.
 
 
 ```r
@@ -187,7 +177,7 @@ can be rewritten as
 UNpop %>%
   slice(seq(1, n(), by = 2)) %>%
   select(world.pop) 
-#> # A tibble: 4 × 1
+#> # A tibble: 4 x 1
 #>   world.pop
 #>       <int>
 #> 1   2525779
@@ -203,7 +193,8 @@ in the data frame (or the number of rows in the group if used with `group_by`).
 
 **Do not save** the work space using `save.image`.
 This is an extremely bad idea for reproducibility.
-See [R for Data Science](http://r4ds.had.co.nz/) chapter [Workflow Projects](http://r4ds.had.co.nz/workflow-projects.html). 
+
+See the [R for Data Science](http://r4ds.had.co.nz/) chapter [Workflow Projects](http://r4ds.had.co.nz/workflow-projects.html). 
 You should uncheck the options in RStudio to avoid saving and restoring from `.RData` files. 
 This will help ensure that your R code runs the way you think it does, instead of depending on some long forgotten code that is only saved in the workspace image. 
 
@@ -213,21 +204,19 @@ should be done explicitly.
 As with reading CSV files, use the **readr** package functions. 
 In this case, `write_csv` writes a csv file
 
-
 ```r
 write_csv(UNpop, "UNpop.csv")
 ```
 
+
 ### Packages
 
-Instead of **foreign** for reading and writing Stata and SPSS files, use **haven**. 
-One reason to do so is that it is better maintained. 
-The R function `read.dta` does not read files created by the most recent versions of Stata (13+).
+To read and write Stata and SPSS 
 
 
 ```r
 read_dta(qss_data_url("INTRO", "UNpop.dta"))
-#> # A tibble: 7 × 2
+#> # A tibble: 7 x 2
 #>    year world_pop
 #>   <dbl>     <dbl>
 #> 1  1950      2526
@@ -279,9 +268,13 @@ import(qss_data_url("INTRO", "UNpop.dta"))
 #> 7 2010      6916
 ```
 
+R also includes the **foreign** package, which contains functions for reading and writing  **haven**. 
+One reason to do so is that it is better maintained. 
+For  R function `read.dta` does not read files created by the most recent versions of Stata (13+).
+
+
 ### Style Guide
 
-Follow [Hadley Wickham's Style Guide](http://adv-r.had.co.nz/Style.html) not the Google R style guide.
 
 In addition to [lintr](https://cran.r-project.org/package=lintr) the R package [formatR](https://cran.r-project.org/package=formatR) has methods to clean up your code.
 

@@ -12,14 +12,6 @@ library("tidyr")
 ```
 
 
-```r
-qss_data_url <-
-function(chapter, file) {
-  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
-        stringr::str_to_upper(chapter), "/", file)
-}
-```
-
 
 
 ## Measuring Civilian Victimization during Wartime
@@ -50,7 +42,7 @@ To get a summary of the different levels, either convert it to a factor (R4DS Ch
 ```r
 afghan %>%
   count(income)
-#> # A tibble: 6 × 2
+#> # A tibble: 6 x 2
 #>            income     n
 #>             <chr> <int>
 #> 1   10,001-20,000   616
@@ -69,7 +61,7 @@ afghan %>%
   count() %>%
   ungroup() %>%
   mutate(prop = n / sum(n))
-#> # A tibble: 9 × 4
+#> # A tibble: 9 x 4
 #>   violent.exp.ISAF violent.exp.taliban     n    prop
 #>              <int>               <int> <int>   <dbl>
 #> 1                0                   0  1330 0.48293
@@ -95,7 +87,7 @@ afghan %>%
   count() %>%
   ungroup() %>%
   mutate(prop = n / sum(n))
-#> # A tibble: 4 × 4
+#> # A tibble: 4 x 4
 #>   violent.exp.ISAF violent.exp.taliban     n  prop
 #>              <int>               <int> <int> <dbl>
 #> 1                0                   0  1330 0.495
@@ -116,7 +108,7 @@ However, `na.omit` works with tibbles just like any other data frame.
 
 ```r
 na.omit(afghan)
-#> # A tibble: 2,554 × 11
+#> # A tibble: 2,554 x 11
 #>   province     district village.id   age educ.years employed        income
 #>      <chr>        <chr>      <int> <int>      <int>    <int>         <chr>
 #> 1    Logar Baraki Barak         80    26         10        0  2,001-10,000
@@ -235,7 +227,7 @@ afghan %>%
             violent.exp.ISAF =
               mean(violent.exp.ISAF, na.rm = TRUE)) %>%
   arrange(educ.years)
-#> # A tibble: 5 × 4
+#> # A tibble: 5 x 4
 #>   province educ.years violent.exp.taliban violent.exp.ISAF
 #>      <chr>      <dbl>               <dbl>            <dbl>
 #> 1  Uruzgan       1.04              0.4545            0.496
@@ -316,7 +308,7 @@ afghan %>%
   summarise(ISAF = mean(is.na(violent.exp.ISAF)),
             taliban = mean(is.na(violent.exp.taliban))) %>%
   arrange(-ISAF)
-#> # A tibble: 5 × 3
+#> # A tibble: 5 x 3
 #>   province    ISAF taliban
 #>      <chr>   <dbl>   <dbl>
 #> 1  Uruzgan 0.02067 0.06202
@@ -351,9 +343,8 @@ afghan %>%
 #> $ list.response <int> 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4
 #> $ list.group    <chr> "control", "ISAF", "control", "ISAF", "taliban",...
 #> $ n             <int> 188, 174, 265, 278, 433, 265, 260, 287, 200, 182...
-#> Source: local data frame [5 x 4]
-#> Groups: list.response [5]
-#> 
+#> # A tibble: 5 x 4
+#> # Groups:   list.response [5]
 #>   list.response control  ISAF taliban
 #> *         <int>   <dbl> <dbl>   <dbl>
 #> 1             0     188   174       0
@@ -485,9 +476,8 @@ party_polarization <-
   spread(party, dwnom1) %>%
   mutate(polarization = Republican - Democrat)
 party_polarization
-#> Source: local data frame [33 x 4]
-#> Groups: congress [33]
-#> 
+#> # A tibble: 33 x 4
+#> # Groups:   congress [33]
 #>   congress Democrat Republican polarization
 #>      <int>    <dbl>      <dbl>        <dbl>
 #> 1       80   -0.146      0.276        0.421
@@ -540,7 +530,7 @@ party_qtiles <- tibble(
          probs = probs)
 )
 party_qtiles
-#> # A tibble: 101 × 3
+#> # A tibble: 101 x 3
 #>   probs Democrat Republican
 #>   <dbl>    <dbl>      <dbl>
 #> 1  0.00   -0.925     -1.381
@@ -604,8 +594,8 @@ These are in the `centers` element of the cluster object.
 ```r
 k80two.out$centers
 #>    dwnom1 dwnom2
-#> 1  0.1468 -0.339
-#> 2 -0.0484  0.783
+#> 1 -0.0484  0.783
+#> 2  0.1468 -0.339
 ```
 To make it easier to use with **ggplot2**, we need to convert this to a data frame.
 The `tidy` function from the **broom** package:
@@ -614,8 +604,8 @@ The `tidy` function from the **broom** package:
 k80two.clusters <- tidy(k80two.out)
 k80two.clusters
 #>        x1     x2 size withinss cluster
-#> 1  0.1468 -0.339  311     54.9       1
-#> 2 -0.0484  0.783  135     10.9       2
+#> 1 -0.0484  0.783  135     10.9       1
+#> 2  0.1468 -0.339  311     54.9       2
 ```
 
 
@@ -636,16 +626,15 @@ We can also plot,
 congress80 %>%
   group_by(party, cluster2) %>%
   count()
-#> Source: local data frame [5 x 3]
-#> Groups: party [?]
-#> 
+#> # A tibble: 5 x 3
+#> # Groups:   party, cluster2 [5]
 #>        party cluster2     n
 #>        <chr>   <fctr> <int>
-#> 1   Democrat        1    62
-#> 2   Democrat        2   132
-#> 3      Other        1     2
-#> 4 Republican        1   247
-#> 5 Republican        2     3
+#> 1   Democrat        1   132
+#> 2   Democrat        2    62
+#> 3      Other        2     2
+#> 4 Republican        1     3
+#> 5 Republican        2   247
 ```
 
 And now we can repeat these steps for the 112th congress:
@@ -676,14 +665,13 @@ ggplot() +
 congress112 %>%
   group_by(party, cluster2) %>%
   count()
-#> Source: local data frame [3 x 3]
-#> Groups: party [?]
-#> 
+#> # A tibble: 3 x 3
+#> # Groups:   party, cluster2 [3]
 #>        party cluster2     n
 #>        <chr>   <fctr> <int>
-#> 1   Democrat        1   200
-#> 2 Republican        1     1
-#> 3 Republican        2   242
+#> 1   Democrat        2   200
+#> 2 Republican        1   242
+#> 3 Republican        2     1
 ```
 
 Now repeat the same with four clusters on the 80th congress:

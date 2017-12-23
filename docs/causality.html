@@ -6,9 +6,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>QSS Tidyverse Code</title>
-  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
 
   <meta property="og:title" content="QSS Tidyverse Code" />
   <meta property="og:type" content="book" />
@@ -26,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2017-02-03">
+<meta name="date" content="2017-12-22">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -35,7 +34,6 @@
   
 <link rel="prev" href="introduction.html">
 <link rel="next" href="measurement.html">
-
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -94,14 +92,25 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <body>
 
 
+
   <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
 
     <div class="book-summary">
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
-<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#colonphon"><i class="fa fa-check"></i><b>1.1</b> Colonphon</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i><b>2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#introduction-to-r"><i class="fa fa-check"></i><b>2.2</b> Introduction to R</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="introduction.html"><a href="introduction.html#data-files"><i class="fa fa-check"></i><b>2.2.1</b> Data Files</a></li>
+<li class="chapter" data-level="2.2.2" data-path="introduction.html"><a href="introduction.html#saving-objects"><i class="fa fa-check"></i><b>2.2.2</b> Saving Objects</a></li>
+<li class="chapter" data-level="2.2.3" data-path="introduction.html"><a href="introduction.html#packages"><i class="fa fa-check"></i><b>2.2.3</b> Packages</a></li>
+<li class="chapter" data-level="2.2.4" data-path="introduction.html"><a href="introduction.html#style-guide"><i class="fa fa-check"></i><b>2.2.4</b> Style Guide</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="causality.html"><a href="causality.html"><i class="fa fa-check"></i><b>3</b> Causality</a><ul>
 <li class="chapter" data-level="3.1" data-path="causality.html"><a href="causality.html#prerequistes"><i class="fa fa-check"></i><b>3.1</b> Prerequistes</a></li>
 <li class="chapter" data-level="3.2" data-path="causality.html"><a href="causality.html#racial-discrimination-in-the-labor-market"><i class="fa fa-check"></i><b>3.2</b> Racial Discrimination in the Labor Market</a></li>
@@ -117,11 +126,108 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="causality.html"><a href="causality.html#descriptive-statistics-for-a-single-variable"><i class="fa fa-check"></i><b>3.6</b> Descriptive Statistics for a Single Variable</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="measurement.html"><a href="measurement.html"><i class="fa fa-check"></i><b>4</b> Measurement</a></li>
-<li class="chapter" data-level="5" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>5</b> Prediction</a></li>
-<li class="chapter" data-level="6" data-path="discovery.html"><a href="discovery.html"><i class="fa fa-check"></i><b>6</b> Discovery</a></li>
-<li class="chapter" data-level="7" data-path="probability.html"><a href="probability.html"><i class="fa fa-check"></i><b>7</b> Probability</a></li>
-<li class="chapter" data-level="8" data-path="uncertainty.html"><a href="uncertainty.html"><i class="fa fa-check"></i><b>8</b> Uncertainty</a></li>
+<li class="chapter" data-level="4" data-path="measurement.html"><a href="measurement.html"><i class="fa fa-check"></i><b>4</b> Measurement</a><ul>
+<li class="chapter" data-level="4.1" data-path="measurement.html"><a href="measurement.html#prerequisites-1"><i class="fa fa-check"></i><b>4.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="4.2" data-path="measurement.html"><a href="measurement.html#measuring-civilian-victimization-during-wartime"><i class="fa fa-check"></i><b>4.2</b> Measuring Civilian Victimization during Wartime</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="measurement.html"><a href="measurement.html#handling-missing-data-in-r"><i class="fa fa-check"></i><b>4.2.1</b> Handling Missing Data in R</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="measurement.html"><a href="measurement.html#visualizing-the-univariate-distribution"><i class="fa fa-check"></i><b>4.3</b> Visualizing the Univariate Distribution</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="measurement.html"><a href="measurement.html#barplot"><i class="fa fa-check"></i><b>4.3.1</b> Barplot</a></li>
+<li class="chapter" data-level="4.3.2" data-path="measurement.html"><a href="measurement.html#boxplot"><i class="fa fa-check"></i><b>4.3.2</b> Boxplot</a></li>
+<li class="chapter" data-level="4.3.3" data-path="measurement.html"><a href="measurement.html#printing-and-saving-graphics"><i class="fa fa-check"></i><b>4.3.3</b> Printing and saving graphics</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="measurement.html"><a href="measurement.html#survey-sampling"><i class="fa fa-check"></i><b>4.4</b> Survey Sampling</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="measurement.html"><a href="measurement.html#the-role-of-randomization"><i class="fa fa-check"></i><b>4.4.1</b> The Role of Randomization</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="measurement.html"><a href="measurement.html#load-village-data"><i class="fa fa-check"></i><b>4.5</b> load village data</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="measurement.html"><a href="measurement.html#non-response-and-other-sources-of-bias"><i class="fa fa-check"></i><b>4.5.1</b> Non-response and other sources of bias</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="measurement.html"><a href="measurement.html#measuring-political-polarization"><i class="fa fa-check"></i><b>4.6</b> Measuring Political Polarization</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="measurement.html"><a href="measurement.html#correlation"><i class="fa fa-check"></i><b>4.6.1</b> Correlation</a></li>
+<li class="chapter" data-level="4.6.2" data-path="measurement.html"><a href="measurement.html#quantile-quantile-plot"><i class="fa fa-check"></i><b>4.6.2</b> Quantile-Quantile Plot</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="measurement.html"><a href="measurement.html#clustering"><i class="fa fa-check"></i><b>4.7</b> Clustering</a><ul>
+<li class="chapter" data-level="4.7.1" data-path="measurement.html"><a href="measurement.html#matrices"><i class="fa fa-check"></i><b>4.7.1</b> Matrices</a></li>
+<li class="chapter" data-level="4.7.2" data-path="measurement.html"><a href="measurement.html#lists"><i class="fa fa-check"></i><b>4.7.2</b> Lists</a></li>
+<li class="chapter" data-level="4.7.3" data-path="measurement.html"><a href="measurement.html#k-means-algorithms"><i class="fa fa-check"></i><b>4.7.3</b> k-means algorithms</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>5</b> Prediction</a><ul>
+<li class="chapter" data-level="5.1" data-path="prediction.html"><a href="prediction.html#prerequisites-2"><i class="fa fa-check"></i><b>5.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="5.2" data-path="prediction.html"><a href="prediction.html#loops-in-r"><i class="fa fa-check"></i><b>5.2</b> Loops in R</a></li>
+<li class="chapter" data-level="5.3" data-path="prediction.html"><a href="prediction.html#general-conditional-statements-in-r"><i class="fa fa-check"></i><b>5.3</b> General Conditional Statements in R</a></li>
+<li class="chapter" data-level="5.4" data-path="prediction.html"><a href="prediction.html#poll-predictions"><i class="fa fa-check"></i><b>5.4</b> Poll Predictions</a></li>
+<li class="chapter" data-level="5.5" data-path="prediction.html"><a href="prediction.html#linear-regression"><i class="fa fa-check"></i><b>5.5</b> Linear Regression</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="prediction.html"><a href="prediction.html#facial-appearance-and-election-outcomes"><i class="fa fa-check"></i><b>5.5.1</b> Facial Appearance and Election Outcomes</a></li>
+<li class="chapter" data-level="5.5.2" data-path="prediction.html"><a href="prediction.html#correlation-1"><i class="fa fa-check"></i><b>5.5.2</b> Correlation</a></li>
+<li class="chapter" data-level="5.5.3" data-path="prediction.html"><a href="prediction.html#least-squares"><i class="fa fa-check"></i><b>5.5.3</b> Least Squares</a></li>
+<li class="chapter" data-level="5.5.4" data-path="prediction.html"><a href="prediction.html#regresion-towards-the-mean"><i class="fa fa-check"></i><b>5.5.4</b> Regresion towards the mean</a></li>
+<li class="chapter" data-level="5.5.5" data-path="prediction.html"><a href="prediction.html#merging-data-sets-in-r"><i class="fa fa-check"></i><b>5.5.5</b> Merging Data Sets in R</a></li>
+<li class="chapter" data-level="5.5.6" data-path="prediction.html"><a href="prediction.html#model-fit"><i class="fa fa-check"></i><b>5.5.6</b> Model Fit</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="prediction.html"><a href="prediction.html#regression-and-causation"><i class="fa fa-check"></i><b>5.6</b> Regression and Causation</a><ul>
+<li class="chapter" data-level="5.6.1" data-path="prediction.html"><a href="prediction.html#regression-with-multiple-predictors"><i class="fa fa-check"></i><b>5.6.1</b> Regression with multiple predictors</a></li>
+<li class="chapter" data-level="5.6.2" data-path="prediction.html"><a href="prediction.html#heterogenous-treatment-effects"><i class="fa fa-check"></i><b>5.6.2</b> Heterogenous Treatment Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="prediction.html"><a href="prediction.html#regression-discontinuity-design"><i class="fa fa-check"></i><b>5.7</b> Regression Discontinuity Design</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="discovery.html"><a href="discovery.html"><i class="fa fa-check"></i><b>6</b> Discovery</a><ul>
+<li class="chapter" data-level="6.1" data-path="discovery.html"><a href="discovery.html#prerequisites-3"><i class="fa fa-check"></i><b>6.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="6.2" data-path="discovery.html"><a href="discovery.html#textual-data"><i class="fa fa-check"></i><b>6.2</b> Textual data</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="discovery.html"><a href="discovery.html#document-term-matrix"><i class="fa fa-check"></i><b>6.2.1</b> Document-Term Matrix</a></li>
+<li class="chapter" data-level="6.2.2" data-path="discovery.html"><a href="discovery.html#topic-discovery"><i class="fa fa-check"></i><b>6.2.2</b> Topic Discovery</a></li>
+<li class="chapter" data-level="6.2.3" data-path="discovery.html"><a href="discovery.html#authorship-prediction"><i class="fa fa-check"></i><b>6.2.3</b> Authorship Prediction</a></li>
+<li class="chapter" data-level="6.2.4" data-path="discovery.html"><a href="discovery.html#cross-validation"><i class="fa fa-check"></i><b>6.2.4</b> Cross-Validation</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="discovery.html"><a href="discovery.html#network-data"><i class="fa fa-check"></i><b>6.3</b> Network Data</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="discovery.html"><a href="discovery.html#twitter-following-network"><i class="fa fa-check"></i><b>6.3.1</b> Twitter Following Network</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="discovery.html"><a href="discovery.html#spatial-data-in-r"><i class="fa fa-check"></i><b>6.4</b> Spatial Data in R</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="discovery.html"><a href="discovery.html#colors-in-r"><i class="fa fa-check"></i><b>6.4.1</b> Colors in R</a></li>
+<li class="chapter" data-level="6.4.2" data-path="discovery.html"><a href="discovery.html#united-states-presidential-elections"><i class="fa fa-check"></i><b>6.4.2</b> United States Presidential Elections</a></li>
+<li class="chapter" data-level="6.4.3" data-path="discovery.html"><a href="discovery.html#expansion-of-walmart"><i class="fa fa-check"></i><b>6.4.3</b> Expansion of Walmart</a></li>
+<li class="chapter" data-level="6.4.4" data-path="discovery.html"><a href="discovery.html#animation-in-r"><i class="fa fa-check"></i><b>6.4.4</b> Animation in R</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="probability.html"><a href="probability.html"><i class="fa fa-check"></i><b>7</b> Probability</a><ul>
+<li class="chapter" data-level="7.1" data-path="probability.html"><a href="probability.html#prerequisites-4"><i class="fa fa-check"></i><b>7.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="7.2" data-path="probability.html"><a href="probability.html#probability-1"><i class="fa fa-check"></i><b>7.2</b> Probability</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="probability.html"><a href="probability.html#sampling-without-replacement"><i class="fa fa-check"></i><b>7.2.1</b> Sampling without replacement</a></li>
+<li class="chapter" data-level="7.2.2" data-path="probability.html"><a href="probability.html#combinations"><i class="fa fa-check"></i><b>7.2.2</b> Combinations</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="probability.html"><a href="probability.html#conditional-probability"><i class="fa fa-check"></i><b>7.3</b> Conditional Probability</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="probability.html"><a href="probability.html#conditional-marginal-and-joint-probabilities"><i class="fa fa-check"></i><b>7.3.1</b> Conditional, Marginal, and Joint Probabilities</a></li>
+<li class="chapter" data-level="7.3.2" data-path="probability.html"><a href="probability.html#independence"><i class="fa fa-check"></i><b>7.3.2</b> Independence</a></li>
+<li class="chapter" data-level="7.3.3" data-path="probability.html"><a href="probability.html#predicting-race-using-surname-and-residence-location"><i class="fa fa-check"></i><b>7.3.3</b> Predicting Race Using Surname and Residence Location</a></li>
+<li class="chapter" data-level="7.3.4" data-path="probability.html"><a href="probability.html#predicting-election-outcomes-with-uncertainty"><i class="fa fa-check"></i><b>7.3.4</b> Predicting Election Outcomes with Uncertainty</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="probability.html"><a href="probability.html#large-sample-theorems"><i class="fa fa-check"></i><b>7.4</b> Large Sample Theorems</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="probability.html"><a href="probability.html#law-of-large-numbers"><i class="fa fa-check"></i><b>7.4.1</b> Law of Large Numbers</a></li>
+<li class="chapter" data-level="7.4.2" data-path="probability.html"><a href="probability.html#central-limit-theorem"><i class="fa fa-check"></i><b>7.4.2</b> Central Limit Theorem</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="uncertainty.html"><a href="uncertainty.html"><i class="fa fa-check"></i><b>8</b> Uncertainty</a><ul>
+<li class="chapter" data-level="8.1" data-path="uncertainty.html"><a href="uncertainty.html#prerequisites-5"><i class="fa fa-check"></i><b>8.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="8.2" data-path="uncertainty.html"><a href="uncertainty.html#estimation"><i class="fa fa-check"></i><b>8.2</b> Estimation</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="uncertainty.html"><a href="uncertainty.html#standard-errors"><i class="fa fa-check"></i><b>8.2.1</b> Standard Errors</a></li>
+<li class="chapter" data-level="8.2.2" data-path="uncertainty.html"><a href="uncertainty.html#confidence-intervals"><i class="fa fa-check"></i><b>8.2.2</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="8.2.3" data-path="uncertainty.html"><a href="uncertainty.html#margin-of-error-and-sample-size-calculation-in-polls"><i class="fa fa-check"></i><b>8.2.3</b> Margin of Error and Sample Size Calculation in Polls</a></li>
+<li class="chapter" data-level="8.2.4" data-path="uncertainty.html"><a href="uncertainty.html#analyais-of-randomized-controlled-trials"><i class="fa fa-check"></i><b>8.2.4</b> Analyais of Randomized Controlled Trials</a></li>
+<li class="chapter" data-level="8.2.5" data-path="uncertainty.html"><a href="uncertainty.html#analysis-based-on-students-t-distribution"><i class="fa fa-check"></i><b>8.2.5</b> Analysis Based on Student’s t-Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="uncertainty.html"><a href="uncertainty.html#hypothesis-testing"><i class="fa fa-check"></i><b>8.3</b> Hypothesis Testing</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="uncertainty.html"><a href="uncertainty.html#tea-testing-experiment"><i class="fa fa-check"></i><b>8.3.1</b> Tea-Testing Experiment</a></li>
+<li class="chapter" data-level="8.3.2" data-path="uncertainty.html"><a href="uncertainty.html#the-general-framework"><i class="fa fa-check"></i><b>8.3.2</b> The General Framework</a></li>
+<li class="chapter" data-level="8.3.3" data-path="uncertainty.html"><a href="uncertainty.html#one-sample-tests"><i class="fa fa-check"></i><b>8.3.3</b> One-Sample Tests</a></li>
+<li class="chapter" data-level="8.3.4" data-path="uncertainty.html"><a href="uncertainty.html#two-sample-tests"><i class="fa fa-check"></i><b>8.3.4</b> Two-sample tests</a></li>
+<li class="chapter" data-level="8.3.5" data-path="uncertainty.html"><a href="uncertainty.html#power-analysis"><i class="fa fa-check"></i><b>8.3.5</b> Power Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="uncertainty.html"><a href="uncertainty.html#linear-regression-model-with-uncertainty"><i class="fa fa-check"></i><b>8.4</b> Linear Regression Model with Uncertainty</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="uncertainty.html"><a href="uncertainty.html#linear-regression-as-a-generative-model"><i class="fa fa-check"></i><b>8.4.1</b> Linear Regression as a Generative Model</a></li>
+<li class="chapter" data-level="8.4.2" data-path="uncertainty.html"><a href="uncertainty.html#inference-about-coefficients"><i class="fa fa-check"></i><b>8.4.2</b> Inference about coefficients</a></li>
+<li class="chapter" data-level="8.4.3" data-path="uncertainty.html"><a href="uncertainty.html#inference-about-predictions"><i class="fa fa-check"></i><b>8.4.3</b> Inference about predictions</a></li>
+</ul></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -146,11 +252,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>This chapter only uses the tidyverse package</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</code></pre></div>
 <p>and the <code>qss_data_url</code> helper function to download data from the QSS site,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qss_data_url &lt;-
-function(chapter, file) {
-  stringr::<span class="kw">str_c</span>(<span class="st">&quot;https://raw.githubusercontent.com/kosukeimai/qss/master/&quot;</span>,
-        stringr::<span class="kw">str_to_upper</span>(chapter), <span class="st">&quot;/&quot;</span>, file)
-}</code></pre></div>
 </div>
 <div id="racial-discrimination-in-the-labor-market" class="section level2">
 <h2><span class="header-section-number">3.2</span> Racial Discrimination in the Labor Market</h2>
@@ -168,7 +269,7 @@ function(chapter, file) {
 <span class="co">#&gt;                                                           3rd Qu.:0.00  </span>
 <span class="co">#&gt;                                                           Max.   :1.00</span>
 <span class="kw">head</span>(resume)
-<span class="co">#&gt; # A tibble: 6 × 4</span>
+<span class="co">#&gt; # A tibble: 6 x 4</span>
 <span class="co">#&gt;   firstname    sex  race  call</span>
 <span class="co">#&gt;       &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;int&gt;</span>
 <span class="co">#&gt; 1   Allison female white     0</span>
@@ -187,13 +288,12 @@ function(chapter, file) {
 <span class="co">#&gt; $ call      &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0...</span></code></pre></div>
 <p>For each combination of <code>race</code> and <code>call</code> let’s count the observations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">race_call_tab &lt;-
-<span class="st">  </span>resume %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(race, call) %&gt;%
+<span class="st">  </span>resume <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(race, call) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>()
 race_call_tab
-<span class="co">#&gt; Source: local data frame [4 x 3]</span>
-<span class="co">#&gt; Groups: race [?]</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt; # A tibble: 4 x 3</span>
+<span class="co">#&gt; # Groups:   race, call [4]</span>
 <span class="co">#&gt;    race  call     n</span>
 <span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt;</span>
 <span class="co">#&gt; 1 black     0  2278</span>
@@ -202,23 +302,22 @@ race_call_tab
 <span class="co">#&gt; 4 white     1   235</span></code></pre></div>
 <p>If we want to calculate callback rates by race:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">race_call_rate &lt;-
-<span class="st">  </span>race_call_tab %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(race) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">call_rate =</span>  n /<span class="st"> </span><span class="kw">sum</span>(n)) %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(call ==<span class="st"> </span><span class="dv">1</span>) %&gt;%
+<span class="st">  </span>race_call_tab <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(race) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">call_rate =</span>  n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(call <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(race, call_rate)
 race_call_rate
-<span class="co">#&gt; Source: local data frame [2 x 2]</span>
-<span class="co">#&gt; Groups: race [2]</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt; # A tibble: 2 x 2</span>
+<span class="co">#&gt; # Groups:   race [2]</span>
 <span class="co">#&gt;    race call_rate</span>
 <span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 black    0.0645</span>
 <span class="co">#&gt; 2 white    0.0965</span></code></pre></div>
 <p>If we want the overall callback rate, we can calculate it from the original data,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">call_back =</span> <span class="kw">mean</span>(call))
-<span class="co">#&gt; # A tibble: 1 × 1</span>
+<span class="co">#&gt; # A tibble: 1 x 1</span>
 <span class="co">#&gt;   call_back</span>
 <span class="co">#&gt;       &lt;dbl&gt;</span>
 <span class="co">#&gt; 1    0.0805</span></code></pre></div>
@@ -230,12 +329,12 @@ race_call_rate
 <p>The <strong>dplyr</strong> function <code>filter</code> is a much improved version of <code>subset</code>.</p>
 <p>To select black individuals in the data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resumeB &lt;-
-<span class="st">  </span>resume %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(race ==<span class="st"> &quot;black&quot;</span>)
+<span class="st">  </span>resume <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(race <span class="op">==</span><span class="st"> &quot;black&quot;</span>)
 <span class="kw">dim</span>(resumeB)
 <span class="co">#&gt; [1] 2435    4</span>
 <span class="kw">head</span>(resumeB)
-<span class="co">#&gt; # A tibble: 6 × 4</span>
+<span class="co">#&gt; # A tibble: 6 x 4</span>
 <span class="co">#&gt;   firstname    sex  race  call</span>
 <span class="co">#&gt;       &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;int&gt;</span>
 <span class="co">#&gt; 1   Lakisha female black     0</span>
@@ -245,19 +344,19 @@ race_call_rate
 <span class="co">#&gt; 5    Tyrone   male black     0</span>
 <span class="co">#&gt; 6     Aisha female black     0</span></code></pre></div>
 <p>And to calculate the callback rate</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resumeB %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resumeB <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">call_rate =</span> <span class="kw">mean</span>(call))
-<span class="co">#&gt; # A tibble: 1 × 1</span>
+<span class="co">#&gt; # A tibble: 1 x 1</span>
 <span class="co">#&gt;   call_rate</span>
 <span class="co">#&gt;       &lt;dbl&gt;</span>
 <span class="co">#&gt; 1    0.0645</span></code></pre></div>
 <p>To keep call and first name variables and those with black-sounding first names.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resumeBf &lt;-
-<span class="st">  </span>resume %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(race ==<span class="st"> &quot;black&quot;</span>, sex ==<span class="st"> &quot;female&quot;</span>) %&gt;%
+<span class="st">  </span>resume <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(race <span class="op">==</span><span class="st"> &quot;black&quot;</span>, sex <span class="op">==</span><span class="st"> &quot;female&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(call, firstname)
 <span class="kw">head</span>(resumeBf)
-<span class="co">#&gt; # A tibble: 6 × 2</span>
+<span class="co">#&gt; # A tibble: 6 x 2</span>
 <span class="co">#&gt;    call firstname</span>
 <span class="co">#&gt;   &lt;int&gt;     &lt;chr&gt;</span>
 <span class="co">#&gt; 1     0   Lakisha</span>
@@ -268,25 +367,25 @@ race_call_rate
 <span class="co">#&gt; 6     0     Aisha</span></code></pre></div>
 <p>Now we can calculate the gender gap by group.</p>
 <p>One way to do this is to calculate the call back rates for both sexes of black sounding names,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resumeB &lt;-<span class="st"> </span>resume %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(race ==<span class="st"> &quot;black&quot;</span>) %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(sex) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resumeB &lt;-<span class="st"> </span>resume <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(race <span class="op">==</span><span class="st"> &quot;black&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(sex) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">black_rate =</span> <span class="kw">mean</span>(call))</code></pre></div>
 <p>and white-sounding names</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resumeW &lt;-<span class="st"> </span>resume %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(race ==<span class="st"> &quot;white&quot;</span>) %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(sex) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resumeW &lt;-<span class="st"> </span>resume <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(race <span class="op">==</span><span class="st"> &quot;white&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(sex) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">white_rate =</span> <span class="kw">mean</span>(call))
 resumeW
-<span class="co">#&gt; # A tibble: 2 × 2</span>
+<span class="co">#&gt; # A tibble: 2 x 2</span>
 <span class="co">#&gt;      sex white_rate</span>
 <span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 female     0.0989</span>
 <span class="co">#&gt; 2   male     0.0887</span></code></pre></div>
 <p>Then, merge <code>resumeB</code> and <code>resumeW</code> on <code>sex</code> and calculate the difference for both sexes.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">inner_join</span>(resumeB, resumeW, <span class="dt">by =</span> <span class="st">&quot;sex&quot;</span>) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">race_gap =</span> white_rate -<span class="st"> </span>black_rate)
-<span class="co">#&gt; # A tibble: 2 × 4</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">inner_join</span>(resumeB, resumeW, <span class="dt">by =</span> <span class="st">&quot;sex&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">race_gap =</span> white_rate <span class="op">-</span><span class="st"> </span>black_rate)
+<span class="co">#&gt; # A tibble: 2 x 4</span>
 <span class="co">#&gt;      sex black_rate white_rate race_gap</span>
 <span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 female     0.0663     0.0989   0.0326</span>
@@ -294,13 +393,12 @@ resumeW
 <p>This seems to be a little more code, but we didn’t duplicate as much as in QSS, and this would easily scale to more than two categories.</p>
 <p>A way to do this using the <code>spread</code> and gather functions from <strong>tidy</strong> are, First, calculate the</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume_race_sex &lt;-
-<span class="st">  </span>resume %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(race, sex) %&gt;%
+<span class="st">  </span>resume <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(race, sex) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">call =</span> <span class="kw">mean</span>(call))
 <span class="kw">head</span>(resume_race_sex)
-<span class="co">#&gt; Source: local data frame [4 x 3]</span>
-<span class="co">#&gt; Groups: race [2]</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt; # A tibble: 4 x 3</span>
+<span class="co">#&gt; # Groups:   race [2]</span>
 <span class="co">#&gt;    race    sex   call</span>
 <span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 black female 0.0663</span>
@@ -310,31 +408,31 @@ resumeW
 <p>Now, use <code>spread()</code> to make each value of <code>race</code> a new column:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyr&quot;</span>)
 resume_sex &lt;-
-<span class="st">  </span>resume_race_sex %&gt;%
-<span class="st">  </span><span class="kw">ungroup</span>() %&gt;%
+<span class="st">  </span>resume_race_sex <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">spread</span>(race, call)
 resume_sex
-<span class="co">#&gt; # A tibble: 2 × 3</span>
+<span class="co">#&gt; # A tibble: 2 x 3</span>
 <span class="co">#&gt;      sex  black  white</span>
 <span class="co">#&gt; *  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 female 0.0663 0.0989</span>
 <span class="co">#&gt; 2   male 0.0583 0.0887</span></code></pre></div>
 <p>Now we can calculate the race wage differences by sex as before,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume_sex %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">call_diff =</span> white -<span class="st"> </span>black)
-<span class="co">#&gt; # A tibble: 2 × 4</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume_sex <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">call_diff =</span> white <span class="op">-</span><span class="st"> </span>black)
+<span class="co">#&gt; # A tibble: 2 x 4</span>
 <span class="co">#&gt;      sex  black  white call_diff</span>
 <span class="co">#&gt;    &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 female 0.0663 0.0989    0.0326</span>
 <span class="co">#&gt; 2   male 0.0583 0.0887    0.0304</span></code></pre></div>
 <p>This could be combined into a single chain with only six lines of code:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(race, sex) %&gt;%
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">call =</span> <span class="kw">mean</span>(call)) %&gt;%
-<span class="st">  </span><span class="kw">ungroup</span>() %&gt;%
-<span class="st">  </span><span class="kw">spread</span>(race, call) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">call_diff =</span> white -<span class="st"> </span>black)
-<span class="co">#&gt; # A tibble: 2 × 4</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(race, sex) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">call =</span> <span class="kw">mean</span>(call)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">spread</span>(race, call) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">call_diff =</span> white <span class="op">-</span><span class="st"> </span>black)
+<span class="co">#&gt; # A tibble: 2 x 4</span>
 <span class="co">#&gt;      sex  black  white call_diff</span>
 <span class="co">#&gt;    &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 female 0.0663 0.0989    0.0326</span>
@@ -343,13 +441,12 @@ resume_sex
 <div id="simple-conditional-statements" class="section level3">
 <h3><span class="header-section-number">3.3.2</span> Simple conditional statements</h3>
 <p>See the <strong>dlpyr</strong> functions <code>if_else</code>, <code>recode</code> and <code>case_when</code>. The function <code>if_else</code> is like <code>ifelse</code> but corrects for some weird behavior that <code>ifelse</code> has in certain cases.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">BlackFemale =</span> <span class="kw">if_else</span>(race ==<span class="st"> &quot;black&quot;</span> &amp;<span class="st"> </span>sex ==<span class="st"> &quot;female&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)) %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(BlackFemale, race, sex) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">BlackFemale =</span> <span class="kw">if_else</span>(race <span class="op">==</span><span class="st"> &quot;black&quot;</span> <span class="op">&amp;</span><span class="st"> </span>sex <span class="op">==</span><span class="st"> &quot;female&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(BlackFemale, race, sex) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>()
-<span class="co">#&gt; Source: local data frame [4 x 4]</span>
-<span class="co">#&gt; Groups: BlackFemale, race [?]</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt; # A tibble: 4 x 4</span>
+<span class="co">#&gt; # Groups:   BlackFemale, race, sex [4]</span>
 <span class="co">#&gt;   BlackFemale  race    sex     n</span>
 <span class="co">#&gt;         &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt; &lt;int&gt;</span>
 <span class="co">#&gt; 1           0 black   male   549</span>
@@ -361,15 +458,15 @@ resume_sex
 <h3><span class="header-section-number">3.3.3</span> Factor Variables</h3>
 <p>See R4DS Chapter 15 “Factors” and the package <strong>forcats</strong></p>
 <p>The code in this section works, but can be simplified by using the function <code>case_when</code> which works in exactly these cases.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">type =</span> <span class="kw">as.factor</span>(<span class="kw">case_when</span>(
-    .$race ==<span class="st"> &quot;black&quot;</span> &amp;<span class="st"> </span>.$sex ==<span class="st"> &quot;female&quot;</span> ~<span class="st"> &quot;BlackFemale&quot;</span>,
-    .$race ==<span class="st"> &quot;black&quot;</span> &amp;<span class="st"> </span>.$sex ==<span class="st"> &quot;male&quot;</span> ~<span class="st"> &quot;BlackMale&quot;</span>,
-    .$race ==<span class="st"> &quot;white&quot;</span> &amp;<span class="st"> </span>.$sex ==<span class="st"> &quot;female&quot;</span> ~<span class="st"> &quot;WhiteFemale&quot;</span>,
-    .$race ==<span class="st"> &quot;white&quot;</span> &amp;<span class="st"> </span>.$sex ==<span class="st"> &quot;male&quot;</span> ~<span class="st"> &quot;WhiteMale&quot;</span>,
-    <span class="ot">TRUE</span> ~<span class="st"> </span><span class="kw">as.character</span>(<span class="ot">NA</span>)
+    .<span class="op">$</span>race <span class="op">==</span><span class="st"> &quot;black&quot;</span> <span class="op">&amp;</span><span class="st"> </span>.<span class="op">$</span>sex <span class="op">==</span><span class="st"> &quot;female&quot;</span> <span class="op">~</span><span class="st"> &quot;BlackFemale&quot;</span>,
+    .<span class="op">$</span>race <span class="op">==</span><span class="st"> &quot;black&quot;</span> <span class="op">&amp;</span><span class="st"> </span>.<span class="op">$</span>sex <span class="op">==</span><span class="st"> &quot;male&quot;</span> <span class="op">~</span><span class="st"> &quot;BlackMale&quot;</span>,
+    .<span class="op">$</span>race <span class="op">==</span><span class="st"> &quot;white&quot;</span> <span class="op">&amp;</span><span class="st"> </span>.<span class="op">$</span>sex <span class="op">==</span><span class="st"> &quot;female&quot;</span> <span class="op">~</span><span class="st"> &quot;WhiteFemale&quot;</span>,
+    .<span class="op">$</span>race <span class="op">==</span><span class="st"> &quot;white&quot;</span> <span class="op">&amp;</span><span class="st"> </span>.<span class="op">$</span>sex <span class="op">==</span><span class="st"> &quot;male&quot;</span> <span class="op">~</span><span class="st"> &quot;WhiteMale&quot;</span>,
+    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="kw">as.character</span>(<span class="ot">NA</span>)
   )))
-<span class="co">#&gt; # A tibble: 4,870 × 5</span>
+<span class="co">#&gt; # A tibble: 4,870 x 5</span>
 <span class="co">#&gt;   firstname    sex  race  call        type</span>
 <span class="co">#&gt;       &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;int&gt;      &lt;fctr&gt;</span>
 <span class="co">#&gt; 1   Allison female white     0 WhiteFemale</span>
@@ -382,13 +479,13 @@ resume_sex
 <p>Since the logic of this is so simple, we can create this variable by using <code>str_c</code> to combine the vectors of <code>sex</code> and <code>race</code>, after using <code>str_to_title</code> to capitalize them first.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(stringr)
 resume &lt;-
-<span class="st">  </span>resume %&gt;%
+<span class="st">  </span>resume <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">type =</span> <span class="kw">str_c</span>(<span class="kw">str_to_title</span>(race), <span class="kw">str_to_title</span>(sex)))</code></pre></div>
 <p>Some of the reasons given for using factors in this chapter are not as important given the functionality in modern <strong>tidyverse</strong> packages. For example, there is no reason to use <code>tapply</code>, as that can use <code>group_by</code> and <code>summarise</code>,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(type) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(type) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">call =</span> <span class="kw">mean</span>(call))
-<span class="co">#&gt; # A tibble: 4 × 2</span>
+<span class="co">#&gt; # A tibble: 4 x 2</span>
 <span class="co">#&gt;          type   call</span>
 <span class="co">#&gt;         &lt;chr&gt;  &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 BlackFemale 0.0663</span>
@@ -396,12 +493,11 @@ resume &lt;-
 <span class="co">#&gt; 3 WhiteFemale 0.0989</span>
 <span class="co">#&gt; 4   WhiteMale 0.0887</span></code></pre></div>
 <p>What’s nice about this approach is that we wouldn’t have needed to create the factor variable first,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(race, sex) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(race, sex) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">call =</span> <span class="kw">mean</span>(call))
-<span class="co">#&gt; Source: local data frame [4 x 3]</span>
-<span class="co">#&gt; Groups: race [?]</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt; # A tibble: 4 x 3</span>
+<span class="co">#&gt; # Groups:   race [?]</span>
 <span class="co">#&gt;    race    sex   call</span>
 <span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 black female 0.0663</span>
@@ -409,11 +505,11 @@ resume &lt;-
 <span class="co">#&gt; 3 white female 0.0989</span>
 <span class="co">#&gt; 4 white   male 0.0887</span></code></pre></div>
 <p>We can use that same approach to calculate the mean of first names, and use <code>arrange</code> to sort in ascending order.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(firstname) %&gt;%
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">call =</span> <span class="kw">mean</span>(call)) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(firstname) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">call =</span> <span class="kw">mean</span>(call)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">arrange</span>(call)
-<span class="co">#&gt; # A tibble: 36 × 2</span>
+<span class="co">#&gt; # A tibble: 36 x 2</span>
 <span class="co">#&gt;   firstname   call</span>
 <span class="co">#&gt;       &lt;chr&gt;  &lt;dbl&gt;</span>
 <span class="co">#&gt; 1     Aisha 0.0222</span>
@@ -446,11 +542,11 @@ resume &lt;-
 <span class="co">#&gt;  Max.   :1.000   Max.   :8.00</span></code></pre></div>
 <p>Use a grouped summarize instead of <code>tapply</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gotv_by_group &lt;-
-<span class="st">  </span>social %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(messages) %&gt;%
+<span class="st">  </span>social <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(messages) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarize</span>(<span class="dt">turnout =</span> <span class="kw">mean</span>(primary2006))
 gotv_by_group
-<span class="co">#&gt; # A tibble: 4 × 2</span>
+<span class="co">#&gt; # A tibble: 4 x 2</span>
 <span class="co">#&gt;     messages turnout</span>
 <span class="co">#&gt;        &lt;chr&gt;   &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 Civic Duty   0.315</span>
@@ -459,11 +555,11 @@ gotv_by_group
 <span class="co">#&gt; 4  Neighbors   0.378</span></code></pre></div>
 <p>Get the turnout for the control group</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gotv_control &lt;-
-<span class="st">  </span>(<span class="kw">filter</span>(gotv_by_group, messages ==<span class="st"> &quot;Control&quot;</span>))[[<span class="st">&quot;turnout&quot;</span>]]</code></pre></div>
+<span class="st">  </span>(<span class="kw">filter</span>(gotv_by_group, messages <span class="op">==</span><span class="st"> &quot;Control&quot;</span>))[[<span class="st">&quot;turnout&quot;</span>]]</code></pre></div>
 <p>Subtract the control group turnout from all groups</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gotv_by_group %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diff_control =</span> turnout -<span class="st"> </span>gotv_control)
-<span class="co">#&gt; # A tibble: 4 × 3</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gotv_by_group <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diff_control =</span> turnout <span class="op">-</span><span class="st"> </span>gotv_control)
+<span class="co">#&gt; # A tibble: 4 x 3</span>
 <span class="co">#&gt;     messages turnout diff_control</span>
 <span class="co">#&gt;        &lt;chr&gt;   &lt;dbl&gt;        &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 Civic Duty   0.315       0.0179</span>
@@ -471,10 +567,10 @@ gotv_by_group
 <span class="co">#&gt; 3  Hawthorne   0.322       0.0257</span>
 <span class="co">#&gt; 4  Neighbors   0.378       0.0813</span></code></pre></div>
 <p>We could have also done this in one step like,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gotv_by_group %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">control =</span> <span class="kw">mean</span>(turnout[messages ==<span class="st"> &quot;Control&quot;</span>]),
-         <span class="dt">control_diff =</span> turnout -<span class="st"> </span>control)
-<span class="co">#&gt; # A tibble: 4 × 4</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gotv_by_group <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">control =</span> <span class="kw">mean</span>(turnout[messages <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),
+         <span class="dt">control_diff =</span> turnout <span class="op">-</span><span class="st"> </span>control)
+<span class="co">#&gt; # A tibble: 4 x 4</span>
 <span class="co">#&gt;     messages turnout control control_diff</span>
 <span class="co">#&gt;        &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt;        &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 Civic Duty   0.315   0.297       0.0179</span>
@@ -482,10 +578,10 @@ gotv_by_group
 <span class="co">#&gt; 3  Hawthorne   0.322   0.297       0.0257</span>
 <span class="co">#&gt; 4  Neighbors   0.378   0.297       0.0813</span></code></pre></div>
 <p>We can compare the differences of variables across the groups easily using a grouped summarize</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gotv_by_group %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">control =</span> <span class="kw">mean</span>(turnout[messages ==<span class="st"> &quot;Control&quot;</span>]),
-         <span class="dt">control_diff =</span> turnout -<span class="st"> </span>control)
-<span class="co">#&gt; # A tibble: 4 × 4</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gotv_by_group <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">control =</span> <span class="kw">mean</span>(turnout[messages <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),
+         <span class="dt">control_diff =</span> turnout <span class="op">-</span><span class="st"> </span>control)
+<span class="co">#&gt; # A tibble: 4 x 4</span>
 <span class="co">#&gt;     messages turnout control control_diff</span>
 <span class="co">#&gt;        &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt;        &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 Civic Duty   0.315   0.297       0.0179</span>
@@ -493,13 +589,13 @@ gotv_by_group
 <span class="co">#&gt; 3  Hawthorne   0.322   0.297       0.0257</span>
 <span class="co">#&gt; 4  Neighbors   0.378   0.297       0.0813</span></code></pre></div>
 <p><strong>Pro-tip</strong> The <code>summarise_at</code> functions allows you summarize one-or-more columns with one-or-more functions. In addition to <code>age</code>, 2004 turnout, and household size, we’ll also compare proportion female,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">social %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(messages) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age =</span> <span class="dv">2006</span> -<span class="st"> </span>yearofbirth,
-         <span class="dt">female =</span> (sex ==<span class="st"> &quot;female&quot;</span>)) %&gt;%
-<span class="st">  </span><span class="kw">select</span>(-age, -sex) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">social <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(messages) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age =</span> <span class="dv">2006</span> <span class="op">-</span><span class="st"> </span>yearofbirth,
+         <span class="dt">female =</span> (sex <span class="op">==</span><span class="st"> &quot;female&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>age, <span class="op">-</span>sex) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise_all</span>(mean)
-<span class="co">#&gt; # A tibble: 4 × 6</span>
+<span class="co">#&gt; # A tibble: 4 x 6</span>
 <span class="co">#&gt;     messages yearofbirth primary2004 primary2006 hhsize female</span>
 <span class="co">#&gt;        &lt;chr&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 Civic Duty        1956       0.399       0.315   2.19  0.500</span>
@@ -543,9 +639,9 @@ minwage &lt;-<span class="st"> </span><span class="kw">read_csv</span>(minwage_u
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">NJ_MINWAGE &lt;-<span class="st"> </span><span class="fl">5.05</span></code></pre></div>
 <p>Later, it will be easier to understand <code>wageAfter &lt; NJ_MINWAGE</code> without any comments than it would be to understand <code>wageAfter &lt; 5.05</code>. In the latter case you’d have to remember that the new NJ minimum wage was 5.05 and that’s why you were using that value. This is an example of a <a href="https://en.wikipedia.org/wiki/Magic_number_(programming)#Unnamed_numerical_constants">magic number</a>: try to avoid them.</p>
 <p>Note that location has multiple values: PA and four regions of NJ. So we’ll add a state variable to the data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>(location)
-<span class="co">#&gt; # A tibble: 5 × 2</span>
+<span class="co">#&gt; # A tibble: 5 x 2</span>
 <span class="co">#&gt;    location     n</span>
 <span class="co">#&gt;       &lt;chr&gt; &lt;int&gt;</span>
 <span class="co">#&gt; 1 centralNJ    45</span>
@@ -556,44 +652,44 @@ minwage &lt;-<span class="st"> </span><span class="kw">read_csv</span>(minwage_u
 <p>We can extract the state from the final two characters of the location variable using the <strong>stringr</strong> function <code>str_sub</code> (R4DS Ch 14: Strings):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(stringr)
 minwage &lt;-
-<span class="st">  </span><span class="kw">mutate</span>(minwage, <span class="dt">state =</span> <span class="kw">str_sub</span>(location, -2L))</code></pre></div>
+<span class="st">  </span><span class="kw">mutate</span>(minwage, <span class="dt">state =</span> <span class="kw">str_sub</span>(location, <span class="op">-</span>2L))</code></pre></div>
 <p>Alternatively, since everything is either PA or NJ</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage &lt;-
-<span class="st">  </span><span class="kw">mutate</span>(minwage, <span class="dt">state =</span> <span class="kw">if_else</span>(location ==<span class="st"> &quot;PA&quot;</span>, <span class="st">&quot;PA&quot;</span>, <span class="st">&quot;NJ&quot;</span>))</code></pre></div>
+<span class="st">  </span><span class="kw">mutate</span>(minwage, <span class="dt">state =</span> <span class="kw">if_else</span>(location <span class="op">==</span><span class="st"> &quot;PA&quot;</span>, <span class="st">&quot;PA&quot;</span>, <span class="st">&quot;NJ&quot;</span>))</code></pre></div>
 <p>Let’s confirm that the restaurants followed the law:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(state) %&gt;%
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_after =</span> <span class="kw">mean</span>(wageAfter &lt;<span class="st"> </span>NJ_MINWAGE),
-            <span class="dt">prop_Before =</span> <span class="kw">mean</span>(wageBefore &lt;<span class="st"> </span>NJ_MINWAGE))
-<span class="co">#&gt; # A tibble: 2 × 3</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_after =</span> <span class="kw">mean</span>(wageAfter <span class="op">&lt;</span><span class="st"> </span>NJ_MINWAGE),
+            <span class="dt">prop_Before =</span> <span class="kw">mean</span>(wageBefore <span class="op">&lt;</span><span class="st"> </span>NJ_MINWAGE))
+<span class="co">#&gt; # A tibble: 2 x 3</span>
 <span class="co">#&gt;   state prop_after prop_Before</span>
 <span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;       &lt;dbl&gt;</span>
 <span class="co">#&gt; 1    NJ    0.00344       0.911</span>
 <span class="co">#&gt; 2    PA    0.95522       0.940</span></code></pre></div>
 <p>Create a variable for the proportion of full-time employees in NJ and PA</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage &lt;-
-<span class="st">  </span>minwage %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">totalAfter =</span> fullAfter +<span class="st"> </span>partAfter,
-        <span class="dt">fullPropAfter =</span> fullAfter /<span class="st"> </span>totalAfter)</code></pre></div>
+<span class="st">  </span>minwage <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">totalAfter =</span> fullAfter <span class="op">+</span><span class="st"> </span>partAfter,
+        <span class="dt">fullPropAfter =</span> fullAfter <span class="op">/</span><span class="st"> </span>totalAfter)</code></pre></div>
 <p>Now calculate the average for each state:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">full_prop_by_state &lt;-
-<span class="st">  </span>minwage %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(state) %&gt;%
+<span class="st">  </span>minwage <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">fullPropAfter =</span> <span class="kw">mean</span>(fullPropAfter))
 full_prop_by_state
-<span class="co">#&gt; # A tibble: 2 × 2</span>
+<span class="co">#&gt; # A tibble: 2 x 2</span>
 <span class="co">#&gt;   state fullPropAfter</span>
 <span class="co">#&gt;   &lt;chr&gt;         &lt;dbl&gt;</span>
 <span class="co">#&gt; 1    NJ         0.320</span>
 <span class="co">#&gt; 2    PA         0.272</span></code></pre></div>
 <p>We could compute the difference by</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="kw">filter</span>(full_prop_by_state, state ==<span class="st"> &quot;NJ&quot;</span>)[[<span class="st">&quot;fullPropAfter&quot;</span>]] -<span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(full_prop_by_state, state ==<span class="st"> &quot;PA&quot;</span>)[[<span class="st">&quot;fullPropAfter&quot;</span>]])
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="kw">filter</span>(full_prop_by_state, state <span class="op">==</span><span class="st"> &quot;NJ&quot;</span>)[[<span class="st">&quot;fullPropAfter&quot;</span>]] <span class="op">-</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(full_prop_by_state, state <span class="op">==</span><span class="st"> &quot;PA&quot;</span>)[[<span class="st">&quot;fullPropAfter&quot;</span>]])
 <span class="co">#&gt; [1] 0.0481</span></code></pre></div>
 <p>or using <strong>tidyr</strong> functions <code>spread</code> (R4DS Ch 11: Tidy Data):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spread</span>(full_prop_by_state, state, fullPropAfter) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diff =</span> NJ -<span class="st"> </span>PA)
-<span class="co">#&gt; # A tibble: 1 × 3</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spread</span>(full_prop_by_state, state, fullPropAfter) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diff =</span> NJ <span class="op">-</span><span class="st"> </span>PA)
+<span class="co">#&gt; # A tibble: 1 x 3</span>
 <span class="co">#&gt;      NJ    PA   diff</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  0.32 0.272 0.0481</span></code></pre></div>
@@ -601,24 +697,23 @@ full_prop_by_state
 <h3><span class="header-section-number">3.5.1</span> Confounding Bias</h3>
 <p>We can calculate the proportion of fast-food restaurants in each chain in each state:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">chains_by_state &lt;-
-<span class="st">  </span>minwage %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(state) %&gt;%
-<span class="st">  </span><span class="kw">count</span>(chain) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n /<span class="st"> </span><span class="kw">sum</span>(n)) </code></pre></div>
+<span class="st">  </span>minwage <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">count</span>(chain) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)) </code></pre></div>
 <p>We can easily compare these using a simple dot-plot:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(chains_by_state, <span class="kw">aes</span>(<span class="dt">x =</span> chain, <span class="dt">y =</span> prop, <span class="dt">colour =</span> state)) +
-<span class="st">  </span><span class="kw">geom_point</span>() +<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(chains_by_state, <span class="kw">aes</span>(<span class="dt">x =</span> chain, <span class="dt">y =</span> prop, <span class="dt">colour =</span> state)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">coord_flip</span>()</code></pre></div>
 <p><img src="causality_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>In the QSS text, only Burger King restaurants are compared. However, <strong>dplyr</strong> makes this easy. All we have to do is change the <code>group_by</code> statement we used last time, and add chain to it:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">full_prop_by_state_chain &lt;-
-<span class="st">  </span>minwage %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(state, chain) %&gt;%
+<span class="st">  </span>minwage <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(state, chain) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">fullPropAfter =</span> <span class="kw">mean</span>(fullPropAfter))
 full_prop_by_state_chain
-<span class="co">#&gt; Source: local data frame [8 x 3]</span>
-<span class="co">#&gt; Groups: state [?]</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt; # A tibble: 8 x 3</span>
+<span class="co">#&gt; # Groups:   state [?]</span>
 <span class="co">#&gt;   state      chain fullPropAfter</span>
 <span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt;         &lt;dbl&gt;</span>
 <span class="co">#&gt; 1    NJ burgerking         0.358</span>
@@ -630,11 +725,11 @@ full_prop_by_state_chain
 <span class="co">#&gt; # ... with 2 more rows</span></code></pre></div>
 <p>We can plot and compare the proportions easily in this format. In general, ordering categorical variables alphabetically is useless, so we’ll order the chains by the average of the NJ and PA <code>fullPropAfter</code>, using <code>forcats::fct_reorder</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(full_prop_by_state_chain,
-       <span class="kw">aes</span>(<span class="dt">x =</span> forcats::<span class="kw">fct_reorder</span>(chain, fullPropAfter),
+       <span class="kw">aes</span>(<span class="dt">x =</span> forcats<span class="op">::</span><span class="kw">fct_reorder</span>(chain, fullPropAfter),
            <span class="dt">y =</span> fullPropAfter, 
-           <span class="dt">colour =</span> state)) +
-<span class="st">  </span><span class="kw">geom_point</span>() +
-<span class="st">  </span><span class="kw">coord_flip</span>() +
+           <span class="dt">colour =</span> state)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;chains&quot;</span>)</code></pre></div>
 <p><img src="causality_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>To calculate the differences, we need to get the data frame</p>
@@ -643,22 +738,22 @@ full_prop_by_state_chain
 <li>Create New Jersey and Pennsylvania data sets with <code>chain</code> and prop full employed columns.</li>
 <li><p>Merge the two data sets on <code>chain</code>.</p></li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">chains_nj &lt;-<span class="st"> </span>full_prop_by_state_chain %&gt;%
-<span class="st">  </span><span class="kw">ungroup</span>() %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(state ==<span class="st"> &quot;NJ&quot;</span>) %&gt;%
-<span class="st">  </span><span class="kw">select</span>(-state) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">chains_nj &lt;-<span class="st"> </span>full_prop_by_state_chain <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(state <span class="op">==</span><span class="st"> &quot;NJ&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>state) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">rename</span>(<span class="dt">NJ =</span> fullPropAfter)
-chains_pa &lt;-<span class="st"> </span>full_prop_by_state_chain %&gt;%
-<span class="st">  </span><span class="kw">ungroup</span>() %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(state ==<span class="st"> &quot;PA&quot;</span>) %&gt;%
-<span class="st">  </span><span class="kw">select</span>(-state) %&gt;%
+chains_pa &lt;-<span class="st"> </span>full_prop_by_state_chain <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(state <span class="op">==</span><span class="st"> &quot;PA&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>state) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">rename</span>(<span class="dt">PA =</span> fullPropAfter)
 
 full_prop_state_chain_diff &lt;-<span class="st"> </span>
-<span class="st">  </span><span class="kw">full_join</span>(chains_nj, chains_pa, <span class="dt">by =</span> <span class="st">&quot;chain&quot;</span>) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diff =</span> NJ -<span class="st"> </span>PA)
+<span class="st">  </span><span class="kw">full_join</span>(chains_nj, chains_pa, <span class="dt">by =</span> <span class="st">&quot;chain&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diff =</span> NJ <span class="op">-</span><span class="st"> </span>PA)
 full_prop_state_chain_diff
-<span class="co">#&gt; # A tibble: 4 × 4</span>
+<span class="co">#&gt; # A tibble: 4 x 4</span>
 <span class="co">#&gt;        chain    NJ    PA   diff</span>
 <span class="co">#&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 burgerking 0.358 0.321 0.0364</span>
@@ -669,10 +764,10 @@ full_prop_state_chain_diff
 <ol start="2" style="list-style-type: decimal">
 <li>The spread/gather method. We can also use the <code>spread</code> and <code>gather</code> functions from <strong>tidyr</strong>. In this example it is much more compact code.</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">full_prop_by_state_chain %&gt;%
-<span class="st">  </span><span class="kw">spread</span>(state, fullPropAfter) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diff =</span> NJ -<span class="st"> </span>PA)
-<span class="co">#&gt; # A tibble: 4 × 4</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">full_prop_by_state_chain <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">spread</span>(state, fullPropAfter) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diff =</span> NJ <span class="op">-</span><span class="st"> </span>PA)
+<span class="co">#&gt; # A tibble: 4 x 4</span>
 <span class="co">#&gt;        chain    NJ    PA   diff</span>
 <span class="co">#&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 burgerking 0.358 0.321 0.0364</span>
@@ -684,43 +779,43 @@ full_prop_state_chain_diff
 <h3><span class="header-section-number">3.5.2</span> Before and After and Difference-in-Difference Designs</h3>
 <p>To compute the estimates in the before and after design first create a variable for the difference before and after the law passed.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage &lt;-<span class="st"> </span>
-<span class="st">  </span>minwage %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">totalBefore =</span> fullBefore +<span class="st"> </span>partBefore,
-         <span class="dt">fullPropBefore =</span> fullBefore /<span class="st"> </span>totalBefore)</code></pre></div>
+<span class="st">  </span>minwage <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">totalBefore =</span> fullBefore <span class="op">+</span><span class="st"> </span>partBefore,
+         <span class="dt">fullPropBefore =</span> fullBefore <span class="op">/</span><span class="st"> </span>totalBefore)</code></pre></div>
 <p>The before-and-after analysis is the difference between the full-time employment before and after the minimum wage law passed looking only at NJ:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(minwage, state ==<span class="st"> &quot;NJ&quot;</span>) %&gt;%
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">diff =</span> <span class="kw">mean</span>(fullPropAfter) -<span class="st"> </span><span class="kw">mean</span>(fullPropBefore))
-<span class="co">#&gt; # A tibble: 1 × 1</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(minwage, state <span class="op">==</span><span class="st"> &quot;NJ&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">diff =</span> <span class="kw">mean</span>(fullPropAfter) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(fullPropBefore))
+<span class="co">#&gt; # A tibble: 1 x 1</span>
 <span class="co">#&gt;     diff</span>
 <span class="co">#&gt;    &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 0.0239</span></code></pre></div>
 <p>The difference-in-differences design uses the difference in the before-and-after differences for each state.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_by_state &lt;-
-<span class="st">  </span>minwage %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(state) %&gt;%
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">diff =</span> <span class="kw">mean</span>(fullPropAfter) -<span class="st"> </span><span class="kw">mean</span>(fullPropBefore))
+<span class="st">  </span>minwage <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">diff =</span> <span class="kw">mean</span>(fullPropAfter) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(fullPropBefore))
 
-<span class="kw">filter</span>(diff_by_state, state ==<span class="st"> &quot;NJ&quot;</span>)[[<span class="st">&quot;diff&quot;</span>]] -
-<span class="st">  </span><span class="kw">filter</span>(diff_by_state, state ==<span class="st"> &quot;PA&quot;</span>)[[<span class="st">&quot;diff&quot;</span>]]
+<span class="kw">filter</span>(diff_by_state, state <span class="op">==</span><span class="st"> &quot;NJ&quot;</span>)[[<span class="st">&quot;diff&quot;</span>]] <span class="op">-</span>
+<span class="st">  </span><span class="kw">filter</span>(diff_by_state, state <span class="op">==</span><span class="st"> &quot;PA&quot;</span>)[[<span class="st">&quot;diff&quot;</span>]]
 <span class="co">#&gt; [1] 0.0616</span></code></pre></div>
 <p>Let’s create a single dataset with the mean values of each state before and after to visually look at each of these designs:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">full_prop_by_state &lt;-
-<span class="st">  </span>minwage %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(state) %&gt;%
-<span class="st">  </span><span class="kw">summarise_at</span>(<span class="kw">vars</span>(fullPropAfter, fullPropBefore), mean) %&gt;%
-<span class="st">  </span><span class="kw">gather</span>(period, fullProp, -state) %&gt;%
+<span class="st">  </span>minwage <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise_at</span>(<span class="kw">vars</span>(fullPropAfter, fullPropBefore), mean) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>(period, fullProp, <span class="op">-</span>state) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">period =</span> <span class="kw">recode</span>(period, <span class="dt">fullPropAfter =</span> <span class="dv">1</span>, <span class="dt">fullPropBefore =</span> <span class="dv">0</span>))
 full_prop_by_state
-<span class="co">#&gt; # A tibble: 4 × 3</span>
+<span class="co">#&gt; # A tibble: 4 x 3</span>
 <span class="co">#&gt;   state period fullProp</span>
 <span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span>
 <span class="co">#&gt; 1    NJ      1    0.320</span>
 <span class="co">#&gt; 2    PA      1    0.272</span>
 <span class="co">#&gt; 3    NJ      0    0.297</span>
 <span class="co">#&gt; 4    PA      0    0.310</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(full_prop_by_state, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> fullProp, <span class="dt">colour =</span> state)) +
-<span class="st">  </span><span class="kw">geom_point</span>() +
-<span class="st">  </span><span class="kw">geom_line</span>() +
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(full_prop_by_state, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> fullProp, <span class="dt">colour =</span> state)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Before&quot;</span>, <span class="st">&quot;After&quot;</span>))</code></pre></div>
 <p><img src="causality_files/figure-html/unnamed-chunk-53-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
@@ -728,9 +823,9 @@ full_prop_by_state
 <div id="descriptive-statistics-for-a-single-variable" class="section level2">
 <h2><span class="header-section-number">3.6</span> Descriptive Statistics for a Single Variable</h2>
 <p>To calculate the summary for the variables <code>wageBefore</code> and <code>wageAfter</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(state ==<span class="st"> &quot;NJ&quot;</span>) %&gt;%
-<span class="st">  </span><span class="kw">select</span>(wageBefore, wageAfter) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(state <span class="op">==</span><span class="st"> &quot;NJ&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(wageBefore, wageAfter) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summary</span>()
 <span class="co">#&gt;    wageBefore     wageAfter   </span>
 <span class="co">#&gt;  Min.   :4.25   Min.   :5.00  </span>
@@ -740,32 +835,32 @@ full_prop_by_state
 <span class="co">#&gt;  3rd Qu.:4.87   3rd Qu.:5.05  </span>
 <span class="co">#&gt;  Max.   :5.75   Max.   :5.75</span></code></pre></div>
 <p>We calculate the IQR for each state’s wages after the passage of the law using the same grouped summarize as we used before:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(state) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">wageAfter =</span> <span class="kw">IQR</span>(wageAfter),
             <span class="dt">wageBefore =</span> <span class="kw">IQR</span>(wageBefore))
-<span class="co">#&gt; # A tibble: 2 × 3</span>
+<span class="co">#&gt; # A tibble: 2 x 3</span>
 <span class="co">#&gt;   state wageAfter wageBefore</span>
 <span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;      &lt;dbl&gt;</span>
 <span class="co">#&gt; 1    NJ     0.000       0.62</span>
 <span class="co">#&gt; 2    PA     0.575       0.75</span></code></pre></div>
 <p>Calculate the variance and standard deviation of <code>wageAfter</code> and <code>wageBefore</code> for each state:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(state) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">wageAfter_sd =</span> <span class="kw">sd</span>(wageAfter),
                <span class="dt">wageAfter_var =</span> <span class="kw">var</span>(wageAfter),
                <span class="dt">wageBefore_sd =</span> <span class="kw">sd</span>(wageBefore),
                <span class="dt">wageBefore_var =</span> <span class="kw">var</span>(wageBefore))
-<span class="co">#&gt; # A tibble: 2 × 5</span>
+<span class="co">#&gt; # A tibble: 2 x 5</span>
 <span class="co">#&gt;   state wageAfter_sd wageAfter_var wageBefore_sd wageBefore_var</span>
 <span class="co">#&gt;   &lt;chr&gt;        &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;</span>
 <span class="co">#&gt; 1    NJ        0.106        0.0112         0.343          0.118</span>
 <span class="co">#&gt; 2    PA        0.359        0.1291         0.358          0.128</span></code></pre></div>
 <p>or, more compactly, using <code>summarise_at</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(state) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise_at</span>(<span class="kw">vars</span>(wageAfter, wageBefore), <span class="kw">funs</span>(sd, var))
-<span class="co">#&gt; # A tibble: 2 × 5</span>
+<span class="co">#&gt; # A tibble: 2 x 5</span>
 <span class="co">#&gt;   state wageAfter_sd wageBefore_sd wageAfter_var wageBefore_var</span>
 <span class="co">#&gt;   &lt;chr&gt;        &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;</span>
 <span class="co">#&gt; 1    NJ        0.106         0.343        0.0112          0.118</span>
@@ -779,8 +874,9 @@ full_prop_by_state
         </div>
       </div>
 <a href="introduction.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="measurement.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
-
+<a href="measurement.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
@@ -789,7 +885,7 @@ full_prop_by_state
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
 <script>
-require(["gitbook"], function(gitbook) {
+gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": false,
 "fontsettings": {
@@ -809,6 +905,17 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

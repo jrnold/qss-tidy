@@ -67,8 +67,8 @@ race_call_tab <- resume %>%
   count()
 race_call_tab
 #> # A tibble: 4 x 3
-#> # Groups:   race, call [4]
-#>    race  call     n
+#> # Groups: race, call [4]
+#>   race   call     n
 #>   <chr> <int> <int>
 #> 1 black     0  2278
 #> 2 black     1   157
@@ -86,8 +86,8 @@ race_call_rate <- race_call_tab %>%
   select(race, call_rate)
 race_call_rate
 #> # A tibble: 2 x 2
-#> # Groups:   race [2]
-#>    race call_rate
+#> # Groups: race [2]
+#>   race  call_rate
 #>   <chr>     <dbl>
 #> 1 black    0.0645
 #> 2 white    0.0965
@@ -169,13 +169,13 @@ resume_race_sex <-
   summarise(call = mean(call))
 head(resume_race_sex)
 #> # A tibble: 4 x 3
-#> # Groups:   race [2]
-#>    race    sex   call
-#>   <chr>  <chr>  <dbl>
+#> # Groups: race [2]
+#>   race  sex      call
+#>   <chr> <chr>   <dbl>
 #> 1 black female 0.0663
-#> 2 black   male 0.0583
+#> 2 black male   0.0583
 #> 3 white female 0.0989
-#> 4 white   male 0.0887
+#> 4 white male   0.0887
 ```
 Use `spread()` to make each value of `race` a new column:
 
@@ -187,10 +187,10 @@ resume_sex <-
   spread(race, call)
 resume_sex
 #> # A tibble: 2 x 3
-#>      sex  black  white
-#> *  <chr>  <dbl>  <dbl>
+#>   sex     black  white
+#> * <chr>   <dbl>  <dbl>
 #> 1 female 0.0663 0.0989
-#> 2   male 0.0583 0.0887
+#> 2 male   0.0583 0.0887
 ```
 Now we can calculate the race wage differences by sex as before,
 
@@ -198,10 +198,10 @@ Now we can calculate the race wage differences by sex as before,
 resume_sex %>%
   mutate(call_diff = white - black)
 #> # A tibble: 2 x 4
-#>      sex  black  white call_diff
-#>    <chr>  <dbl>  <dbl>     <dbl>
+#>   sex     black  white call_diff
+#>   <chr>   <dbl>  <dbl>     <dbl>
 #> 1 female 0.0663 0.0989    0.0326
-#> 2   male 0.0583 0.0887    0.0304
+#> 2 male   0.0583 0.0887    0.0304
 ```
 This could be combined into a single chain with only six lines of code:
 
@@ -213,10 +213,10 @@ resume %>%
   spread(race, call) %>%
   mutate(call_diff = white - black)
 #> # A tibble: 2 x 4
-#>      sex  black  white call_diff
-#>    <chr>  <dbl>  <dbl>     <dbl>
+#>   sex     black  white call_diff
+#>   <chr>   <dbl>  <dbl>     <dbl>
 #> 1 female 0.0663 0.0989    0.0326
-#> 2   male 0.0583 0.0887    0.0304
+#> 2 male   0.0583 0.0887    0.0304
 ```
 
 **WARNING** The function [ungroup](https://www.rdocumentation.org/packages/dplyr/topics/ungroup) removes the groupings 
@@ -236,10 +236,10 @@ resume %>%
   arrange(race) %>%
   summarise(call_diff = diff(call))
 #> # A tibble: 2 x 2
-#>      sex call_diff
-#>    <chr>     <dbl>
+#>   sex    call_diff
+#>   <chr>      <dbl>
 #> 1 female    0.0326
-#> 2   male    0.0304
+#> 2 male      0.0304
 ```
 I find the `spread` code preferrrable since the individual race callback rates are
 retained in the data, and since there is no natural ordering of the `race` variable
@@ -259,13 +259,13 @@ resume %>%
   group_by(BlackFemale, race, sex) %>%
   count()
 #> # A tibble: 4 x 4
-#> # Groups:   BlackFemale, race, sex [4]
-#>   BlackFemale  race    sex     n
-#>         <dbl> <chr>  <chr> <int>
-#> 1           0 black   male   549
-#> 2           0 white female  1860
-#> 3           0 white   male   575
-#> 4           1 black female  1886
+#> # Groups: BlackFemale, race, sex [4]
+#>   BlackFemale race  sex        n
+#>         <dbl> <chr> <chr>  <int>
+#> 1        0    black male     549
+#> 2        0    white female  1860
+#> 3        0    white male     575
+#> 4        1.00 black female  1886
 ```
 
 **Warning** The function `if_else` is more strict about the variable types than `ifelse`.
@@ -275,21 +275,15 @@ will produce errors:
 
 ```r
 resume %>%
-  mutate(BlackFemale = if_else(race == "black" & sex == "female", TRUE, 0)) %>%
-#> Error: <text>:3:0: unexpected end of input
-#> 1: resume %>%
-#> 2:   mutate(BlackFemale = if_else(race == "black" & sex == "female", TRUE, 0)) %>%
-#>   ^
+  mutate(BlackFemale = if_else(race == "black" & sex == "female", TRUE, 0))
+#> Error in mutate_impl(.data, dots): Evaluation error: `false` must be type logical, not double.
 ```
 because `TRUE` is logical and `0` is numeric.
 
 ```r
 resume %>%
-  mutate(BlackFemale = if_else(race == "black" & sex == "female", 1L, 0)) %>%
-#> Error: <text>:3:0: unexpected end of input
-#> 1: resume %>%
-#> 2:   mutate(BlackFemale = if_else(race == "black" & sex == "female", 1L, 0)) %>%
-#>   ^
+  mutate(BlackFemale = if_else(race == "black" & sex == "female", 1L, 0))
+#> Error in mutate_impl(.data, dots): Evaluation error: `false` must be type integer, not double.
 ```
 because `1L` is an integer and `0` is numeric (a floating-point number)
 The distinction between integers and numeric variables is often invisible because most functions coerce variables between 
@@ -10115,12 +10109,12 @@ resume %>%
   group_by(type) %>%
   summarise(call = mean(call))
 #> # A tibble: 4 x 2
-#>          type   call
-#>         <chr>  <dbl>
+#>   type          call
+#>   <chr>        <dbl>
 #> 1 BlackFemale 0.0663
-#> 2   BlackMale 0.0583
+#> 2 BlackMale   0.0583
 #> 3 WhiteFemale 0.0989
-#> 4   WhiteMale 0.0887
+#> 4 WhiteMale   0.0887
 ```
 
 What's nice about this approach is that we wouldn't have needed to create the factor variable first,
@@ -10130,13 +10124,13 @@ resume %>%
   group_by(race, sex) %>%
   summarise(call = mean(call))
 #> # A tibble: 4 x 3
-#> # Groups:   race [?]
-#>    race    sex   call
-#>   <chr>  <chr>  <dbl>
+#> # Groups: race [?]
+#>   race  sex      call
+#>   <chr> <chr>   <dbl>
 #> 1 black female 0.0663
-#> 2 black   male 0.0583
+#> 2 black male   0.0583
 #> 3 white female 0.0989
-#> 4 white   male 0.0887
+#> 4 white male   0.0887
 ```
 
 We can use that same approach to calculate the mean of first names, and use
@@ -10149,13 +10143,13 @@ resume %>%
   arrange(call)
 #> # A tibble: 36 x 2
 #>   firstname   call
-#>       <chr>  <dbl>
-#> 1     Aisha 0.0222
-#> 2   Rasheed 0.0299
-#> 3    Keisha 0.0383
-#> 4  Tremayne 0.0435
-#> 5    Kareem 0.0469
-#> 6   Darnell 0.0476
+#>   <chr>      <dbl>
+#> 1 Aisha     0.0222
+#> 2 Rasheed   0.0299
+#> 3 Keisha    0.0383
+#> 4 Tremayne  0.0435
+#> 5 Kareem    0.0469
+#> 6 Darnell   0.0476
 #> # ... with 30 more rows
 ```
 
@@ -10201,12 +10195,12 @@ gotv_by_group <-
   summarize(turnout = mean(primary2006))
 gotv_by_group
 #> # A tibble: 4 x 2
-#>     messages turnout
-#>        <chr>   <dbl>
+#>   messages   turnout
+#>   <chr>        <dbl>
 #> 1 Civic Duty   0.315
-#> 2    Control   0.297
-#> 3  Hawthorne   0.322
-#> 4  Neighbors   0.378
+#> 2 Control      0.297
+#> 3 Hawthorne    0.322
+#> 4 Neighbors    0.378
 ```
 
 Since we want to calculate the difference by group, spread the data set so each 
@@ -10235,12 +10229,12 @@ social %>%
             age = mean(age),
             hhsize = mean(hhsize))
 #> # A tibble: 4 x 4
-#>     messages primary2004   age hhsize
-#>        <chr>       <dbl> <dbl>  <dbl>
+#>   messages   primary2004   age hhsize
+#>   <chr>            <dbl> <dbl>  <dbl>
 #> 1 Civic Duty       0.399  49.7   2.19
-#> 2    Control       0.400  49.8   2.18
-#> 3  Hawthorne       0.403  49.7   2.18
-#> 4  Neighbors       0.407  49.9   2.19
+#> 2 Control          0.400  49.8   2.18
+#> 3 Hawthorne        0.403  49.7   2.18
+#> 4 Neighbors        0.407  49.9   2.19
 ```
 The function [summarise_at](https://www.rdocumentation.org/packages/dplyr/topics/summarise_at) allows you to summarize multiple variables,
 using multiple functions, or both.
@@ -10251,12 +10245,12 @@ social %>%
   group_by(messages) %>%
   summarise_at(vars(primary2004, age, hhsize), funs(mean))
 #> # A tibble: 4 x 4
-#>     messages primary2004   age hhsize
-#>        <chr>       <dbl> <dbl>  <dbl>
+#>   messages   primary2004   age hhsize
+#>   <chr>            <dbl> <dbl>  <dbl>
 #> 1 Civic Duty       0.399  49.7   2.19
-#> 2    Control       0.400  49.8   2.18
-#> 3  Hawthorne       0.403  49.7   2.18
-#> 4  Neighbors       0.407  49.9   2.19
+#> 2 Control          0.400  49.8   2.18
+#> 3 Hawthorne        0.403  49.7   2.18
+#> 4 Neighbors        0.407  49.9   2.19
 ```
 
 
@@ -10459,12 +10453,12 @@ full_prop_by_state_chain %>%
   spread(state, fullPropAfter) %>%
   mutate(diff = NJ - PA)
 #> # A tibble: 4 x 4
-#>        chain    NJ    PA   diff
-#>        <chr> <dbl> <dbl>  <dbl>
+#>   chain         NJ    PA   diff
+#>   <chr>      <dbl> <dbl>  <dbl>
 #> 1 burgerking 0.358 0.321 0.0364
-#> 2        kfc 0.328 0.236 0.0918
-#> 3       roys 0.283 0.213 0.0697
-#> 4     wendys 0.260 0.248 0.0117
+#> 2 kfc        0.328 0.236 0.0918
+#> 3 roys       0.283 0.213 0.0697
+#> 4 wendys     0.260 0.248 0.0117
 ```
 
 
@@ -10516,10 +10510,10 @@ full_prop_by_state
 #> # A tibble: 4 x 3
 #>   state period fullProp
 #>   <chr>  <dbl>    <dbl>
-#> 1    NJ      1    0.320
-#> 2    PA      1    0.272
-#> 3    NJ      0    0.297
-#> 4    PA      0    0.310
+#> 1 NJ      1.00    0.320
+#> 2 PA      1.00    0.272
+#> 3 NJ      0       0.297
+#> 4 PA      0       0.310
 ```
 
 
@@ -10563,8 +10557,8 @@ minwage %>%
 #> # A tibble: 2 x 3
 #>   state wageAfter wageBefore
 #>   <chr>     <dbl>      <dbl>
-#> 1    NJ     0.000       0.62
-#> 2    PA     0.575       0.75
+#> 1 NJ        0          0.620
+#> 2 PA        0.575      0.750
 ```
 
 Calculate the variance and standard deviation of `wageAfter` and `wageBefore` for each state:
@@ -10579,8 +10573,8 @@ minwage %>%
 #> # A tibble: 2 x 5
 #>   state wageAfter_sd wageAfter_var wageBefore_sd wageBefore_var
 #>   <chr>        <dbl>         <dbl>         <dbl>          <dbl>
-#> 1    NJ        0.106        0.0112         0.343          0.118
-#> 2    PA        0.359        0.1291         0.358          0.128
+#> 1 NJ           0.106        0.0112         0.343          0.118
+#> 2 PA           0.359        0.129          0.358          0.128
 ```
 
 `summarise_at` and `summarise_if` are two functions that allow you 
@@ -10593,6 +10587,6 @@ minwage %>%
 #> # A tibble: 2 x 5
 #>   state wageAfter_sd wageBefore_sd wageAfter_var wageBefore_var
 #>   <chr>        <dbl>         <dbl>         <dbl>          <dbl>
-#> 1    NJ        0.106         0.343        0.0112          0.118
-#> 2    PA        0.359         0.358        0.1291          0.128
+#> 1 NJ           0.106         0.343        0.0112          0.118
+#> 2 PA           0.359         0.358        0.129           0.128
 ```

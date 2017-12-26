@@ -24,7 +24,7 @@ Here are few tutorials on plotting spatial data in ggplot2:
 - [Introduction to Spatial Data and ggplot2](https://rpubs.com/m_dev/Intro-to-Spatial-Data-and-ggplot2)
 
 
-### Prerequisites
+### Prerequisites {-}
 
 
 ```r

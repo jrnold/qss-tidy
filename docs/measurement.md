@@ -149,11 +149,11 @@ violent_exp_prop
 #> # A tibble: 9 x 4
 #>   violent.exp.ISAF violent.exp.taliban     n    prop
 #>              <int>               <int> <int>   <dbl>
-#> 1                0                   0  1330 0.48293
-#> 2                0                   1   354 0.12854
+#> 1                0                   0  1330 0.483  
+#> 2                0                   1   354 0.129  
 #> 3                0                  NA    22 0.00799
-#> 4                1                   0   475 0.17248
-#> 5                1                   1   526 0.19099
+#> 4                1                   0   475 0.172  
+#> 5                1                   1   526 0.191  
 #> 6                1                  NA    22 0.00799
 #> # ... with 3 more rows
 ```
@@ -164,11 +164,11 @@ violent_exp_prop %>%
   select(-n) %>%
   spread(violent.exp.taliban, prop)
 #> # A tibble: 3 x 4
-#>   violent.exp.ISAF     `0`    `1`  `<NA>`
-#> *            <int>   <dbl>  <dbl>   <dbl>
-#> 1                0 0.48293 0.1285 0.00799
-#> 2                1 0.17248 0.1910 0.00799
-#> 3               NA 0.00254 0.0029 0.00363
+#>   violent.exp.ISAF     `0`     `1`  `<NA>`
+#> *            <int>   <dbl>   <dbl>   <dbl>
+#> 1                0 0.483   0.129   0.00799
+#> 2                1 0.172   0.191   0.00799
+#> 3               NA 0.00254 0.00290 0.00363
 ```
 
 `drop_na` is an alternative to `na.omit` that allows for selecting missing values,
@@ -8036,12 +8036,12 @@ afghan %>%
   arrange(educ.years)
 #> # A tibble: 5 x 4
 #>   province educ.years violent.exp.taliban violent.exp.ISAF
-#>      <chr>      <dbl>               <dbl>            <dbl>
-#> 1  Uruzgan       1.04              0.4545            0.496
-#> 2  Helmand       1.60              0.5042            0.541
-#> 3    Khost       5.79              0.2332            0.242
-#> 4    Kunar       5.93              0.3030            0.399
-#> 5    Logar       6.70              0.0802            0.144
+#>   <chr>         <dbl>               <dbl>            <dbl>
+#> 1 Uruzgan        1.04              0.455             0.496
+#> 2 Helmand        1.60              0.504             0.541
+#> 3 Khost          5.79              0.233             0.242
+#> 4 Kunar          5.93              0.303             0.399
+#> 5 Logar          6.70              0.0802            0.144
 ```
 
 
@@ -8119,12 +8119,12 @@ afghan %>%
   arrange(-ISAF)
 #> # A tibble: 5 x 3
 #>   province    ISAF taliban
-#>      <chr>   <dbl>   <dbl>
-#> 1  Uruzgan 0.02067 0.06202
-#> 2  Helmand 0.01637 0.03041
-#> 3    Khost 0.00476 0.00635
-#> 4    Kunar 0.00000 0.00000
-#> 5    Logar 0.00000 0.00000
+#>   <chr>      <dbl>   <dbl>
+#> 1 Uruzgan  0.0207  0.0620 
+#> 2 Helmand  0.0164  0.0304 
+#> 3 Khost    0.00476 0.00635
+#> 4 Kunar    0       0      
+#> 5 Logar    0       0
 ```
 
 Calculate the proportion who support the ISAF using the difference in means
@@ -8151,14 +8151,14 @@ afghan %>%
 #> $ list.group    <chr> "control", "ISAF", "control", "ISAF", "taliban",...
 #> $ n             <int> 188, 174, 265, 278, 433, 265, 260, 287, 200, 182...
 #> # A tibble: 5 x 4
-#> # Groups:   list.response [5]
+#> # Groups: list.response [5]
 #>   list.response control  ISAF taliban
 #> *         <int>   <dbl> <dbl>   <dbl>
-#> 1             0     188   174       0
-#> 2             1     265   278     433
-#> 3             2     265   260     287
-#> 4             3     200   182     198
-#> 5             4       0    24       0
+#> 1             0     188 174         0
+#> 2             1     265 278       433
+#> 3             2     265 260       287
+#> 4             3     200 182       198
+#> 5             4       0  24.0       0
 ```
 
 
@@ -8281,7 +8281,7 @@ party_polarization <-
   mutate(polarization = Republican - Democrat)
 party_polarization
 #> # A tibble: 33 x 4
-#> # Groups:   congress [33]
+#> # Groups: congress [33]
 #>   congress Democrat Republican polarization
 #>      <int>    <dbl>      <dbl>        <dbl>
 #> 1       80   -0.146      0.276        0.421
@@ -8335,14 +8335,14 @@ party_qtiles <- tibble(
 )
 party_qtiles
 #> # A tibble: 101 x 3
-#>   probs Democrat Republican
-#>   <dbl>    <dbl>      <dbl>
-#> 1  0.00   -0.925     -1.381
-#> 2  0.01   -0.672     -0.720
-#> 3  0.02   -0.619     -0.566
-#> 4  0.03   -0.593     -0.526
-#> 5  0.04   -0.567     -0.468
-#> 6  0.05   -0.560     -0.436
+#>    probs Democrat Republican
+#>    <dbl>    <dbl>      <dbl>
+#> 1 0        -0.925     -1.38 
+#> 2 0.0100   -0.672     -0.720
+#> 3 0.0200   -0.619     -0.566
+#> 4 0.0300   -0.593     -0.526
+#> 5 0.0400   -0.567     -0.468
+#> 6 0.0500   -0.560     -0.436
 #> # ... with 95 more rows
 ```
 
@@ -8435,14 +8435,14 @@ congress80 %>%
   group_by(party, cluster2) %>%
   count()
 #> # A tibble: 5 x 3
-#> # Groups:   party, cluster2 [5]
-#>        party cluster2     n
-#>        <chr>   <fctr> <int>
-#> 1   Democrat        1   132
-#> 2   Democrat        2    62
-#> 3      Other        2     2
-#> 4 Republican        1     3
-#> 5 Republican        2   247
+#> # Groups: party, cluster2 [5]
+#>   party      cluster2     n
+#>   <chr>      <fctr>   <int>
+#> 1 Democrat   1          132
+#> 2 Democrat   2           62
+#> 3 Other      2            2
+#> 4 Republican 1            3
+#> 5 Republican 2          247
 ```
 
 And now we can repeat these steps for the 112th congress:
@@ -8472,12 +8472,12 @@ congress112 %>%
   group_by(party, cluster2) %>%
   count()
 #> # A tibble: 3 x 3
-#> # Groups:   party, cluster2 [3]
-#>        party cluster2     n
-#>        <chr>   <fctr> <int>
-#> 1   Democrat        2   200
-#> 2 Republican        1   242
-#> 3 Republican        2     1
+#> # Groups: party, cluster2 [3]
+#>   party      cluster2     n
+#>   <chr>      <fctr>   <int>
+#> 1 Democrat   2          200
+#> 2 Republican 1          242
+#> 3 Republican 2            1
 ```
 
 Now repeat the same with four clusters on the 80th congress:

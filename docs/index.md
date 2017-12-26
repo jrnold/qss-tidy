@@ -45,7 +45,7 @@ The source of the book is available [here](https://github.com/jrnold/qsstidy) an
 #>  language (EN)                        
 #>  collate  en_US.UTF-8                 
 #>  tz       America/Los_Angeles         
-#>  date     2017-12-25
+#>  date     2017-12-22
 #> Packages -----------------------------------------------------------------
 #>  package    * version date       source        
 #>  animation  * 2.5     2017-03-30 cran (@2.5)   

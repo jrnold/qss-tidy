@@ -127,7 +127,7 @@ UNpop
 #> 4  1980   4449049
 #> 5  1990   5320817
 #> 6  2000   6127700
-#> # ... with 1 more rows
+#> # ... with 1 more row
 ```
 When reading from csv files use `readr::read_csv` instead of the base R function `read.csv` used in the *QSS* text.
 It is slightly faster, and returns a `tibble` instead of a data frame.
@@ -177,7 +177,7 @@ UNpop[, "world.pop"]
 #> 4   4449049
 #> 5   5320817
 #> 6   6127700
-#> # ... with 1 more rows
+#> # ... with 1 more row
 UNpop$world.pop
 #> [1] 2525779 3026003 3691173 4449049 5320817 6127700 6916183
 UNpop[["world.pop"]]
@@ -192,7 +192,7 @@ select(UNpop, world.pop)
 #> 4   4449049
 #> 5   5320817
 #> 6   6127700
-#> # ... with 1 more rows
+#> # ... with 1 more row
 ```
 However, note that, by default, `[` will return a vector rather than a data frame if only one column is selected. 
 This may seem convenient, but it can result in many hard to find and surprising bugs in practice.
@@ -322,7 +322,7 @@ UNpop
 #> 4  1980      4449
 #> 5  1990      5321
 #> 6  2000      6128
-#> # ... with 1 more rows
+#> # ... with 1 more row
 ```
 
 There is also the equivalent `write_dta` function to create Stata datasets.

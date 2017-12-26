@@ -48,12 +48,12 @@ corpus_tidy
 #> # A tibble: 85 x 8
 #>   author       datetimestamp description heading       id language origin
 #>    <lgl>              <dttm>       <lgl>   <lgl>    <chr>    <chr>  <lgl>
-#> 1     NA 2017-12-25 20:58:48          NA      NA fp01.txt       en     NA
-#> 2     NA 2017-12-25 20:58:48          NA      NA fp02.txt       en     NA
-#> 3     NA 2017-12-25 20:58:48          NA      NA fp03.txt       en     NA
-#> 4     NA 2017-12-25 20:58:48          NA      NA fp04.txt       en     NA
-#> 5     NA 2017-12-25 20:58:48          NA      NA fp05.txt       en     NA
-#> 6     NA 2017-12-25 20:58:48          NA      NA fp06.txt       en     NA
+#> 1     NA 2017-12-22 22:41:17          NA      NA fp01.txt       en     NA
+#> 2     NA 2017-12-22 22:41:17          NA      NA fp02.txt       en     NA
+#> 3     NA 2017-12-22 22:41:17          NA      NA fp03.txt       en     NA
+#> 4     NA 2017-12-22 22:41:17          NA      NA fp04.txt       en     NA
+#> 5     NA 2017-12-22 22:41:17          NA      NA fp05.txt       en     NA
+#> 6     NA 2017-12-22 22:41:17          NA      NA fp06.txt       en     NA
 #> # ... with 79 more rows, and 1 more variables: text <chr>
 ```
 

@@ -169,12 +169,12 @@ integers to numeric or vice-versa, they are distinct. For example, these example
 will produce errors:
 ```{r error=TRUE}
 resume %>%
-  mutate(BlackFemale = if_else(race == "black" & sex == "female", TRUE, 0)) %>%
+  mutate(BlackFemale = if_else(race == "black" & sex == "female", TRUE, 0))
 ```
 because `TRUE` is logical and `0` is numeric.
 ```{r error=TRUE}
 resume %>%
-  mutate(BlackFemale = if_else(race == "black" & sex == "female", 1L, 0)) %>%
+  mutate(BlackFemale = if_else(race == "black" & sex == "female", 1L, 0))
 ```
 because `1L` is an integer and `0` is numeric (a floating-point number)
 The distinction between integers and numeric variables is often invisible because most functions coerce variables between 

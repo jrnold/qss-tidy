@@ -1,6 +1,11 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Measurement
 
-## Prerequisites
+## Prerequisites {-}
 
 ```{r message=FALSE}
 library("tidyverse")
@@ -53,17 +58,78 @@ afghan %>%
   mutate(prop = n / sum(n))
 ```
 
+```{r}
+x <- c(1, 2, 3, NA)
+mean(x)
+mean(x, na.rm = TRUE)
+```
 
-### Handling Missing Data in R
+
+
+## Handling Missing Data in R
 
 We already observed the issues with `NA` values in calculating the proportion
 answering the "experienced violence" questions.
 You can filter rows with specific variables having missing values using `filter`
 as shown above.
-However, `na.omit` works with tibbles just like any other data frame.
+
 ```{r}
-na.omit(afghan)
+head(afghan$income, n = 10)
+head(is.na(afghan$income), n = 10)
 ```
+
+Counts and proportion of missing values of `income`:
+```{r}
+summarise(afghan,
+          n_missing = sum(is.na(income)),
+          p_missing = mean(is.na(income)))
+```
+
+Table of proportions that includes `NA`
+```{r}
+violent_exp_prop <-
+  afghan %>%
+  group_by(violent.exp.ISAF, violent.exp.taliban) %>%
+  count() %>%
+  ungroup() %>%
+  mutate(prop = n / sum(n))
+violent_exp_prop
+```
+The data above is 
+```{r}
+violent_exp_prop %>%
+  select(-n) %>%
+  spread(violent.exp.taliban, prop)
+```
+
+`drop_na` is an alternative to `na.omit` that allows for selecting missing values,
+```{r}
+drop_na(afghan)
+```
+
+**Tip** There are multiple types of [missing values](http://r4ds.had.co.nz/vectors.html#important-types-of-atomic-vector).
+```{r}
+NA  # logical
+NA_integer_ # integer
+NA_real_ # double
+NA_character_ # character
+```
+In many cases, this distinction does not matter since functions will coerce these missing
+values to the correct vector type. 
+However, you will need to use these in some tidyverse functions that require the outputs
+to the same type, e.g. `r rdoc("purrr", "map")` and most `r pkg("purrr")` functions,
+and `if_else`.
+This will produce an error, since the `TRUE` case returns an integer value (`x` is an integer),
+```{r error=TRUE}
+x <- 1:5
+class(x)
+if_else(x < 3, x, NA)
+```
+So instead of `NA`, use `NA_integer_`,
+```{r}
+if_else(x < 3, x, NA_integer_)
+```
+
 
 
 ## Visualizing the Univariate Distribution
@@ -99,6 +165,25 @@ ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
   ggtitle("Civilian Victimization by the Taliban")
 ```
 
+Instead of creating two separate box-plots, create a single plot facetted by ISAF and Tabliban,
+```{r}
+select(afghan, violent.exp.ISAF, violent.exp.taliban) %>%
+  gather(variable, value) %>%
+  mutate(value = fct_explicit_na(fct_recode(factor(value),
+                                Harm = "1", "No Harm" = "0"), 
+                                "No response"),
+         variable = recode(variable,
+                           violent.exp.ISAF = "ISAF",
+                           violent.exp.taliban = "Taliban")) %>%
+  ggplot(aes(x = value, y = ..prop.., group = 1)) +
+  geom_bar() +
+  facet_wrap(~ variable, ncol = 1) +
+  xlab("Response category") +
+  ylab("Proportion of respondents") +
+  ggtitle("Civilian Victimization")
+```
+
+
 This plot could improved by plotting the two values simultaneously to be able to better compare them.
 This will require creating a data frame that has the following columns: perpetrator (`ISAF`, `Taliban`), response (`No Harm`, `Harm`, `No response`).
 ```{r}
@@ -122,22 +207,50 @@ ggplot(violent_exp, aes(x = prop, y = response, color = perpetrator)) +
 Black was chosen for the Taliban, and Green for ISAF because it is the color of their respective [flags](https://en.wikipedia.org/wiki/International_Security_Assistance_Force).
 
 
+### Histogram
+
+See the documentation for `r rdoc("ggplot2", "geom_histogram")`.
+
+```{r hist_age}
+ggplot(afghan, aes(x = age, y = ..density..)) +
+  geom_histogram(binwidth = 5, boundary = 0) +
+  scale_x_continuous(breaks = seq(20, 80, by = 10)) +
+  labs(title = "Distribution of respondent's age",
+       y = "Age", x = "Density")
+```
+
+```{r}
+ggplot(afghan, aes(x = educ.years, y = ..density..)) +
+  geom_histogram(binwidth = 1, center = 0) +
+  geom_vline(xintercept = median(afghan$educ.years),
+             color = "white", size = 2) +
+  annotate("text", x = median(afghan$educ.years),
+           y = 0.2, label = "median", hjust = 0) +
+  labs(title = "Distribution of respondent's education",
+       x = "Years of education",
+       y = "Density")
+  
+```
+
+
+
 ### Boxplot
+
+See the documentation for `r rdoc("ggplot2", "geom_boxplot")`.
 
 ```{r}
 ggplot(afghan, aes(x = 1, y = age)) +
   geom_boxplot() +
   coord_flip() +
-  labs(y = "Age", x = "") +
-  ggtitle("Distribution of Age")
+  labs(y = "Age", x = "", title = "Distribution of Age")
 ```
 
 ```{r}
 ggplot(afghan, aes(y = educ.years, x = province)) +
   geom_boxplot() +
   coord_flip() +
-  labs(x = "Province", y = "Years of education") +
-  ggtitle("Education by Province")
+  labs(x = "Province", y = "Years of education",
+       title = "Education by Province")
 ```
 Helmand and Uruzgan have much lower levels of education than the other
 provinces, and also report higher levels of violence.
@@ -156,18 +269,16 @@ afghan %>%
 
 ### Printing and saving graphics
 
-Use the function `ggsave()` to save **ggplot2** graphics.
-Also, R Markdown files have their own means of creating and saving plots
-created by code-chunks.
+Use the function `rdoc ("ggplot2", "ggsave")` to save `r pkg("ggplot2")` graphics.
+Also, R Markdown files have their own means of creating and saving plots created by code-chunks.
+
+
 
 
 ## Survey Sampling
 
 
 ### The Role of Randomization
-
-
-## load village data
 
 
 ```{r message=FALSE}
@@ -383,15 +494,16 @@ party_qtiles %>%
 While matrices are great for numerical computations, such as when you are
 implementing algorithms, generally keeping data in data frames is more convenient for data wrangling.
 
+See `r R4DS` chapter [Vectors](http://r4ds.had.co.nz/vectors.html).
+
 
 ### Lists
 
-See R4DS [Chapter 20: Vectors](http://r4ds.had.co.nz/vectors.html),  [Chapter 21: Iteration](http://r4ds.had.co.nz/iteration.html) and the **purrr** package for more powerful methods of computing on lists.
+See `r R4DS` chapters [Vectors](http://r4ds.had.co.nz/vectors.html), [Iteration](http://r4ds.had.co.nz/iteration.html) and the `r pkg("purrr")` package for more powerful methods of computing on lists.
 
 
 ### k-means algorithms
 
-**TODO** A good visualization of the k-means algorithm and a simple, naive implementation in R.
 Calculate the clusters by the 80th and 112th congresses,
 ```{r}
 k80two.out <-
@@ -414,8 +526,8 @@ These are in the `centers` element of the cluster object.
 k80two.out$centers
 ```
 
-To make it easier to use with **ggplot2**, we need to convert this to a data frame.
-The `tidy` function from the **broom** package:
+To make it easier to use with `r pkg("ggplot2")`, we need to convert this to a data frame.
+The `r rdoc("broom", "tidy")` function from the `r pkg("broom")` package:
 ```{r}
 k80two.clusters <- tidy(k80two.out)
 k80two.clusters
@@ -429,7 +541,6 @@ ggplot() +
   geom_point(data = k80two.clusters, mapping = aes(x = x1, y = x2))
 ```
 
-We can also plot,
 ```{r}
 congress80 %>%
   group_by(party, cluster2) %>%
@@ -453,6 +564,7 @@ ggplot() +
              mapping = aes(x = x1, y = x2))
 ```
 
+Number of observations from each party in each cluster:
 ```{r}
 congress112 %>%
   group_by(party, cluster2) %>%

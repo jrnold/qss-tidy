@@ -2,13 +2,13 @@
 ---
 title: "QSS Tidyverse Code"
 author: "Jeffrey B. Arnold"
-date: "2017-12-22"
+date: "2017-12-25"
 github-repo: jrnold/qss-tidy
 site: "bookdown::bookdown_site"
 documentclass: book
 ---
 
-# Preface
+# Preface {-}
 
 This is tidyverse R code to supplement the book, [Quantitative Social Science: An Introduction](http://press.princeton.edu/titles/11025.html), by Kosuke Imai, to
 be published by Princeton University Press in March 2017.
@@ -22,7 +22,7 @@ These notes do not aim to teach tidyverse, The book [R for Data Science](http://
 I wrote this code while teaching course that employed both texts in order to make the excellent examples and statistical material in *QSS* more compatible with the modern data science using R approach in *R4DS*.
 
 
-## Colophon
+## Colophon {-}
 
 To install the R packages used in this work run the following code, installs the **qsstidy** package which contains no code or data, but will install the needed dependencies.
 
@@ -45,7 +45,7 @@ The source of the book is available [here](https://github.com/jrnold/qsstidy) an
 #>  language (EN)                        
 #>  collate  en_US.UTF-8                 
 #>  tz       America/Los_Angeles         
-#>  date     2017-12-22
+#>  date     2017-12-25
 #> Packages -----------------------------------------------------------------
 #>  package    * version date       source        
 #>  animation  * 2.5     2017-03-30 cran (@2.5)   

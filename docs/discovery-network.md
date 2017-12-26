@@ -18,7 +18,7 @@ See this [presentation](http://curleylab.psych.columbia.edu/netviz/netviz1.html#
 Examples: [Network Visualization Examples with the ggplot2 Package](https://cran.r-project.org/web/packages/ggCompNet/vignettes/examples-from-paper.html)
 
 
-### Prerequisites
+### Prerequisites {-}
 
 
 ```r

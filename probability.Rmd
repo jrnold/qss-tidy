@@ -6,13 +6,15 @@ editor_options:
 
 # Probability
 
-## Prerequisites
+
+## Prerequisites {-}
 
 ```{r message=FALSE}
 library("tidyverse")
 library("forcats")
 library("stringr")
 ```
+
 
 ## Probability
 

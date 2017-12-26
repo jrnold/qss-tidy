@@ -1,7 +1,12 @@
 
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Measurement
 
-## Prerequisites
+## Prerequisites {-}
 
 
 ```r
@@ -94,16 +99,82 @@ afghan %>%
 ```
 
 
-### Handling Missing Data in R
+```r
+x <- c(1, 2, 3, NA)
+mean(x)
+#> [1] NA
+mean(x, na.rm = TRUE)
+#> [1] 2
+```
+
+
+
+## Handling Missing Data in R
 
 We already observed the issues with `NA` values in calculating the proportion
 answering the "experienced violence" questions.
 You can filter rows with specific variables having missing values using `filter`
 as shown above.
-However, `na.omit` works with tibbles just like any other data frame.
+
 
 ```r
-na.omit(afghan)
+head(afghan$income, n = 10)
+#>  [1] "2,001-10,000"  "2,001-10,000"  "2,001-10,000"  "2,001-10,000" 
+#>  [5] "2,001-10,000"  NA              "10,001-20,000" "2,001-10,000" 
+#>  [9] "2,001-10,000"  NA
+head(is.na(afghan$income), n = 10)
+#>  [1] FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE
+```
+
+Counts and proportion of missing values of `income`:
+
+```r
+summarise(afghan,
+          n_missing = sum(is.na(income)),
+          p_missing = mean(is.na(income)))
+#>   n_missing p_missing
+#> 1       154    0.0559
+```
+
+Table of proportions that includes `NA`
+
+```r
+violent_exp_prop <-
+  afghan %>%
+  group_by(violent.exp.ISAF, violent.exp.taliban) %>%
+  count() %>%
+  ungroup() %>%
+  mutate(prop = n / sum(n))
+violent_exp_prop
+#> # A tibble: 9 x 4
+#>   violent.exp.ISAF violent.exp.taliban     n    prop
+#>              <int>               <int> <int>   <dbl>
+#> 1                0                   0  1330 0.48293
+#> 2                0                   1   354 0.12854
+#> 3                0                  NA    22 0.00799
+#> 4                1                   0   475 0.17248
+#> 5                1                   1   526 0.19099
+#> 6                1                  NA    22 0.00799
+#> # ... with 3 more rows
+```
+The data above is 
+
+```r
+violent_exp_prop %>%
+  select(-n) %>%
+  spread(violent.exp.taliban, prop)
+#> # A tibble: 3 x 4
+#>   violent.exp.ISAF     `0`    `1`  `<NA>`
+#> *            <int>   <dbl>  <dbl>   <dbl>
+#> 1                0 0.48293 0.1285 0.00799
+#> 2                1 0.17248 0.1910 0.00799
+#> 3               NA 0.00254 0.0029 0.00363
+```
+
+`drop_na` is an alternative to `na.omit` that allows for selecting missing values,
+
+```r
+drop_na(afghan)
 #>      province       district village.id age educ.years employed
 #> 1       Logar   Baraki Barak         80  26         10        0
 #> 2       Logar   Baraki Barak         80  49          3        1
@@ -7771,6 +7842,40 @@ na.omit(afghan)
 #> 2754             2
 ```
 
+**Tip** There are multiple types of [missing values](http://r4ds.had.co.nz/vectors.html#important-types-of-atomic-vector).
+
+```r
+NA  # logical
+#> [1] NA
+NA_integer_ # integer
+#> [1] NA
+NA_real_ # double
+#> [1] NA
+NA_character_ # character
+#> [1] NA
+```
+In many cases, this distinction does not matter since functions will coerce these missing
+values to the correct vector type. 
+However, you will need to use these in some tidyverse functions that require the outputs
+to the same type, e.g. [map](https://www.rdocumentation.org/packages/purrr/topics/map) and most [purrr](https://cran.r-project.org/package=purrr) functions,
+and `if_else`.
+This will produce an error, since the `TRUE` case returns an integer value (`x` is an integer),
+
+```r
+x <- 1:5
+class(x)
+#> [1] "integer"
+if_else(x < 3, x, NA)
+#> Error: `false` must be type integer, not logical
+```
+So instead of `NA`, use `NA_integer_`,
+
+```r
+if_else(x < 3, x, NA_integer_)
+#> [1]  1  2 NA NA NA
+```
+
+
 
 ## Visualizing the Univariate Distribution
 
@@ -7792,7 +7897,7 @@ ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
   ggtitle("Civilian Victimization by the ISAF")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-9-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -7809,7 +7914,29 @@ ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
   ggtitle("Civilian Victimization by the Taliban")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-10-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" />
+
+Instead of creating two separate box-plots, create a single plot facetted by ISAF and Tabliban,
+
+```r
+select(afghan, violent.exp.ISAF, violent.exp.taliban) %>%
+  gather(variable, value) %>%
+  mutate(value = fct_explicit_na(fct_recode(factor(value),
+                                Harm = "1", "No Harm" = "0"), 
+                                "No response"),
+         variable = recode(variable,
+                           violent.exp.ISAF = "ISAF",
+                           violent.exp.taliban = "Taliban")) %>%
+  ggplot(aes(x = value, y = ..prop.., group = 1)) +
+  geom_bar() +
+  facet_wrap(~ variable, ncol = 1) +
+  xlab("Response category") +
+  ylab("Proportion of respondents") +
+  ggtitle("Civilian Victimization")
+```
+
+<img src="measurement_files/figure-html/unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" />
+
 
 This plot could improved by plotting the two values simultaneously to be able to better compare them.
 This will require creating a data frame that has the following columns: perpetrator (`ISAF`, `Taliban`), response (`No Harm`, `Harm`, `No response`).
@@ -7832,34 +7959,68 @@ ggplot(violent_exp, aes(x = prop, y = response, color = perpetrator)) +
   scale_color_manual(values = c(ISAF = "green", Taliban = "black"))
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" />
 
 Black was chosen for the Taliban, and Green for ISAF because it is the color of their respective [flags](https://en.wikipedia.org/wiki/International_Security_Assistance_Force).
 
 
+### Histogram
+
+See the documentation for [geom_histogram](https://www.rdocumentation.org/packages/ggplot2/topics/geom_histogram).
+
+
+```r
+ggplot(afghan, aes(x = age, y = ..density..)) +
+  geom_histogram(binwidth = 5, boundary = 0) +
+  scale_x_continuous(breaks = seq(20, 80, by = 10)) +
+  labs(title = "Distribution of respondent's age",
+       y = "Age", x = "Density")
+```
+
+<img src="measurement_files/figure-html/hist_age-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+```r
+ggplot(afghan, aes(x = educ.years, y = ..density..)) +
+  geom_histogram(binwidth = 1, center = 0) +
+  geom_vline(xintercept = median(afghan$educ.years),
+             color = "white", size = 2) +
+  annotate("text", x = median(afghan$educ.years),
+           y = 0.2, label = "median", hjust = 0) +
+  labs(title = "Distribution of respondent's education",
+       x = "Years of education",
+       y = "Density")
+  
+```
+
+<img src="measurement_files/figure-html/unnamed-chunk-21-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+
 ### Boxplot
+
+See the documentation for [geom_boxplot](https://www.rdocumentation.org/packages/ggplot2/topics/geom_boxplot).
 
 
 ```r
 ggplot(afghan, aes(x = 1, y = age)) +
   geom_boxplot() +
   coord_flip() +
-  labs(y = "Age", x = "") +
-  ggtitle("Distribution of Age")
+  labs(y = "Age", x = "", title = "Distribution of Age")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-22-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
 ggplot(afghan, aes(y = educ.years, x = province)) +
   geom_boxplot() +
   coord_flip() +
-  labs(x = "Province", y = "Years of education") +
-  ggtitle("Education by Province")
+  labs(x = "Province", y = "Years of education",
+       title = "Education by Province")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-23-1.png" width="70%" style="display: block; margin: auto;" />
 Helmand and Uruzgan have much lower levels of education than the other
 provinces, and also report higher levels of violence.
 
@@ -7886,18 +8047,16 @@ afghan %>%
 
 ### Printing and saving graphics
 
-Use the function `ggsave()` to save **ggplot2** graphics.
-Also, R Markdown files have their own means of creating and saving plots
-created by code-chunks.
+Use the function `rdoc ("ggplot2", "ggsave")` to save [ggplot2](https://cran.r-project.org/package=ggplot2) graphics.
+Also, R Markdown files have their own means of creating and saving plots created by code-chunks.
+
+
 
 
 ## Survey Sampling
 
 
 ### The Role of Randomization
-
-
-## load village data
 
 
 
@@ -7916,7 +8075,7 @@ ggplot(afghan.village, aes(x = factor(village.surveyed,
   coord_flip()
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-26-1.png" width="70%" style="display: block; margin: auto;" />
 
 Box plots log-population values of sampled and non-sampled
 
@@ -7929,7 +8088,7 @@ ggplot(afghan.village, aes(x = factor(village.surveyed,
   coord_flip()
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-27-1.png" width="70%" style="display: block; margin: auto;" />
 
 You can also compare these distributions by plotting their densities:
 
@@ -7942,7 +8101,7 @@ ggplot(afghan.village, aes(colour = factor(village.surveyed,
   labs(x = "log(population)", colour = "")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-28-1.png" width="70%" style="display: block; margin: auto;" />
 The function [geom_rug](http://docs.ggplot2.org/current/geom_rug.html), creates a rug plot, which puts small lines on the axis to represent the value of each observation.
 It can be combined with a scatter or density plot to add extra detail.
 
@@ -8041,7 +8200,7 @@ q <-
 q
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-34-1.png" width="70%" style="display: block; margin: auto;" />
 
 However, since there are colors associated with Democrats (blue) and Republicans (blue), we should use them rather than the defaults.
 There's some evidence that using semantically-resonant colors can help decoding data visualizations ([Lin, et al. 2013](http://vis.stanford.edu/files/2013-SemanticColor-EuroVis.pdf)).
@@ -8055,7 +8214,7 @@ scale_colour_parties <-
 q + scale_colour_parties
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-35-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -8072,7 +8231,7 @@ congress %>%
 #> Warning: Removed 2 rows containing missing values (geom_point).
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-26-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -8088,7 +8247,7 @@ congress %>%
        colour = "Party")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-27-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-37-1.png" width="70%" style="display: block; margin: auto;" />
 
 ### Correlation
 
@@ -8107,7 +8266,7 @@ ggplot(USGini, aes(x = year, y = gini)) +
   ggtitle("Income Inequality")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-29-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-39-1.png" width="70%" style="display: block; margin: auto;" />
 
 To calculate a measure of party polarization take the code used in the plot of Republican and Democratic party median ideal points and adapt it to calculate the difference in the party medians:
 
@@ -8143,7 +8302,7 @@ ggplot(party_polarization, aes(x = congress, y = polarization)) +
   labs(x = "Year", y = "Republican median − Democratic median")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ### Quantile-Quantile Plot
@@ -8159,7 +8318,7 @@ congress %>%
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-32-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" />
 
 *ggplot2* includes a `stat_qq` which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distribution, usually the normal one.
 However, we can calculate one by hand, which may give more insight into exactly what the qq-plot is doing.
@@ -8199,7 +8358,7 @@ party_qtiles %>%
   coord_fixed()
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-34-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ## Clustering
@@ -8210,15 +8369,16 @@ party_qtiles %>%
 While matrices are great for numerical computations, such as when you are
 implementing algorithms, generally keeping data in data frames is more convenient for data wrangling.
 
+See [R for Data Science](http://r4ds.had.co.nz/) chapter [Vectors](http://r4ds.had.co.nz/vectors.html).
+
 
 ### Lists
 
-See R4DS [Chapter 20: Vectors](http://r4ds.had.co.nz/vectors.html),  [Chapter 21: Iteration](http://r4ds.had.co.nz/iteration.html) and the **purrr** package for more powerful methods of computing on lists.
+See [R for Data Science](http://r4ds.had.co.nz/) chapters [Vectors](http://r4ds.had.co.nz/vectors.html), [Iteration](http://r4ds.had.co.nz/iteration.html) and the [purrr](https://cran.r-project.org/package=purrr) package for more powerful methods of computing on lists.
 
 
 ### k-means algorithms
 
-**TODO** A good visualization of the k-means algorithm and a simple, naive implementation in R.
 Calculate the clusters by the 80th and 112th congresses,
 
 ```r
@@ -8247,8 +8407,8 @@ k80two.out$centers
 #> 2  0.1468 -0.339
 ```
 
-To make it easier to use with **ggplot2**, we need to convert this to a data frame.
-The `tidy` function from the **broom** package:
+To make it easier to use with [ggplot2](https://cran.r-project.org/package=ggplot2), we need to convert this to a data frame.
+The [tidy](https://www.rdocumentation.org/packages/broom/topics/tidy) function from the [broom](https://cran.r-project.org/package=broom) package:
 
 ```r
 k80two.clusters <- tidy(k80two.out)
@@ -8267,9 +8427,8 @@ ggplot() +
   geom_point(data = k80two.clusters, mapping = aes(x = x1, y = x2))
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-39-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" />
 
-We can also plot,
 
 ```r
 congress80 %>%
@@ -8304,8 +8463,9 @@ ggplot() +
              mapping = aes(x = x1, y = x2))
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" />
 
+Number of observations from each party in each cluster:
 
 ```r
 congress112 %>%
@@ -8338,7 +8498,7 @@ ggplot() +
              mapping = aes(x = x1, y = x2), size = 3)
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-53-1.png" width="70%" style="display: block; margin: auto;" />
 and on the 112th congress:
 
 ```r
@@ -8357,4 +8517,4 @@ ggplot() +
              mapping = aes(x = x1, y = x2), size = 3)
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-54-1.png" width="70%" style="display: block; margin: auto;" />

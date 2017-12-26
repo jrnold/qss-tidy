@@ -24,7 +24,7 @@ Here are few tutorials on plotting spatial data in ggplot2:
 - [Introduction to Spatial Data and ggplot2](https://rpubs.com/m_dev/Intro-to-Spatial-Data-and-ggplot2)
 
 
-### Prerequisites
+### Prerequisites {-}
 
 
 ```r
@@ -56,6 +56,11 @@ glimpse(us.cities)
 
 ```r
 usa_map <- map_data("usa")
+#> 
+#> Attaching package: 'maps'
+#> The following object is masked from 'package:purrr':
+#> 
+#>     map
 capitals <- filter(us.cities,
                    capital == 2,
                    !country.etc %in% c("HI", "AK"))

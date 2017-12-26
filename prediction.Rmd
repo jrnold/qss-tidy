@@ -5,7 +5,8 @@ editor_options:
 ---
 # Prediction
 
-## Prerequisites
+
+## Prerequisites {-}
 
 ```{r message = FALSE}
 library("tidyverse")
@@ -18,6 +19,7 @@ The packages `r pkg_link("modelr")` and `r pkg_link("broom")` are used to wrangl
 library("broom")
 library("modelr")
 ```
+
 
 ## Loops in R
 

@@ -2,7 +2,7 @@
 # Uncertainty
 
 
-## Prerequisites
+## Prerequisites {-}
 
 We will use these package in this chapter:
 
@@ -14,6 +14,7 @@ library("stringr")
 library("modelr")
 library("broom")
 ```
+
 
 ## Estimation
 
@@ -287,7 +288,10 @@ poll_pred %>%
 #>               <dbl>
 #> 1             0.765
 ```
+
+
 ### Analysis of Randomized Controlled Trials
+
 Load the `STAR` data from the **qss** package,
 
 ```r
@@ -386,7 +390,10 @@ star_ate
 #>         <dbl>     <dbl>      <dbl>    <dbl>   <dbl>  <dbl>  <dbl>  <dbl>
 #> 1         720       723       1.84     1.91     3.5   2.65   -1.7    8.7
 ```
+
+
 ### Analysis Based on Student's t-Distribution
+
 Use [filter](https://www.rdocumentation.org/packages/dplyr/topics/filter) to subset.
 
 ```r
@@ -421,8 +428,13 @@ t.test(g4reading ~ classtype,
 #>   mean in group small class mean in group regular class 
 #>                         723                         720
 ```
+
+
 ## Hypothesis Testing
+
+
 ### Tea-Testing Experiment
+
 
 ```r
 # Number of cups of tea
@@ -470,7 +482,10 @@ left_join(select(approx, correct, prob_sim = prob),
 #> 4       6    0.246     0.2286  0.017429
 #> 5       8    0.013     0.0143 -0.001286
 ```
+
+
 ### The General Framework
+
 The test functions like [fisher.test](https://www.rdocumentation.org/packages/stat/topics/fisher.test) do not work particularly well with data frames, and expect vectors or matrices as input, so tidyverse functions are less directly applicable
 
 ```r
@@ -533,22 +548,25 @@ fisher.test(select(spread(y, Truth, Number), -Guess))
 #> odds ratio 
 #>       6.41
 ```
+
+
 ### One-Sample Tests
+
 
 ```r
 n <- 1018
 x.bar <- 550 / n
 se <- sqrt(0.5 * 0.5 / n) # standard deviation of sampling distribution
-## upper red area in the figure
+# upper red area in the figure
 upper <- pnorm(x.bar, mean = 0.5, sd = se, lower.tail = FALSE)
-## lower red area in the figure; identical to the upper area
+# lower red area in the figure; identical to the upper area
 lower <- pnorm(0.5 - (x.bar - 0.5), mean = 0.5, sd = se)
-## two-side p-value
+# two side p value
 upper + lower
 #> [1] 0.0102
 2 * upper
 #> [1] 0.0102
-## one-sided p-value
+# one sided p value
 upper
 #> [1] 0.00508
 z.score <- (x.bar - 0.5) / se
@@ -604,6 +622,7 @@ prop.test(550, n = n, p = 0.5, conf.level = 0.99)
 #> 0.54
 ```
 
+
 ```r
 # two-sided one-sample t-test
 t.test(STAR$g4reading, mu = 710)
@@ -619,7 +638,10 @@ t.test(STAR$g4reading, mu = 710)
 #> mean of x 
 #>       721
 ```
+
+
 ### Two-sample tests
+
 The ATE estimates are stored in a data frame, `star_ate`. Note that the [dplyr](https://cran.r-project.org/package=dplyr) function [transmute](https://www.rdocumentation.org/packages/dplyr/topics/transmute) is like `mutate`, but only returns the variables specified in the function.
 
 ```r
@@ -633,6 +655,7 @@ star_ate %>%
 #>            <dbl>          <dbl>
 #> 1         0.0935          0.187
 ```
+
 
 ```r
 t.test(g4reading ~ classtype,
@@ -667,6 +690,7 @@ t.test(filter(STAR, classtype == "small class")$g4reading,
 #>       723       720
 ```
 
+
 ```r
 data("resume", package = "qss")
 x <- resume %>%
@@ -693,21 +717,21 @@ prop.test(as.matrix(select(x, -race)), alternative = "greater")
 #> prop 1 prop 2 
 #>  0.936  0.903
 ```
-**tidyverse:**
+
 
 ```r
-## sample size
+# sample size
 n0 <- sum(resume$race == "black")
 n1 <- sum(resume$race == "white")
-## sample proportions
+# sample proportions
 p <- mean(resume$call) # overall
 p0 <- mean(filter(resume, race == "black")$call)
 p1 <- mean(filter(resume, race == "white")$call)
-## point estimate
+# point estimate
 est <- p1 - p0
 est
 #> [1] 0.032
-## standard error
+# standard error
 se <- sqrt(p * (1 - p) * (1 / n0 + 1 / n1))
 se
 #> [1] 0.0078
@@ -723,6 +747,7 @@ The only thing that changed is using [filter](https://www.rdocumentation.org/pac
 
 
 ### Power Analysis
+
 
 ```r
 # set the parameters
@@ -748,7 +773,7 @@ p0.star <- 0.1
 p <- (n1 * p1.star + n0 * p0.star) / (n1 + n0)
 # standard error under the null
 se <- sqrt(p * (1 - p) * (1 / n1 + 1 / n0))
-## standard error under the hypothetical data generating process
+# standard error under the hypothetical data generating process
 se.star <- sqrt(p1.star * (1 - p1.star) / n1 + p0.star * (1 - p0.star) / n0)
 pnorm(-cr.value * se, mean = p1.star - p0.star, sd = se.star) +
     pnorm(cr.value * se, mean = p1.star - p0.star, sd = se.star,
@@ -760,8 +785,13 @@ power.t.test(power = 0.9, delta = 0.25, sd = 1, type = "one.sample")
 power.t.test(delta = 0.25, sd = 1, type = "two.sample",
              alternative = "one.sided", power = 0.9)
 ```
+
+
 ## Linear Regression Model with Uncertainty
+
+
 ### Linear Regression as a Generative Model
+
 Load the minimum wage date included with the **qss** package:
 
 ```r
@@ -810,7 +840,10 @@ gather_predictions(slice(minwage, 1), fit_minwage, fit_minwage1) %>%
 #> 1  fit_minwage 0.271
 #> 2 fit_minwage1 0.271
 ```
+
+
 ### Inference about coefficients
+
 Use the [tidy](https://www.rdocumentation.org/packages/broom/topics/tidy) function to return the coefficients, including confidence intervals, as a data frame:
 
 ```r
@@ -840,6 +873,7 @@ tidy(fit_women)
 #> 1 (Intercept)    14.74      2.29      6.45 4.22e-10
 #> 2    reserved     9.25      3.95      2.34 1.97e-02
 ```
+
 You need to set `conf.int = TRUE` for [tidy](https://www.rdocumentation.org/packages/broom/topics/tidy.lm) to include the confidence interval:
 
 ```r
@@ -878,7 +912,10 @@ tidy(fit_minwage, conf.int = TRUE)
 #> 6       chainroys  -0.1522    0.1832    -0.831 0.40664 -0.51238    0.2080
 #> 7     chainwendys  -0.1659    0.1853    -0.895 0.37115 -0.53031    0.1985
 ```
+
+
 ### Inference about predictions
+
 
 ```r
 data("MPs", package = "qss")
@@ -930,12 +967,14 @@ tory_y1
 #> 1      0    13.2   0.192 12.8 13.6
 ```
 
+
 ```r
 y1_range <- data_grid(filter(MPs_tory, margin <= 0), margin)
 tory_y0 <- augment(tory_fit1, newdata = y1_range)
 y2_range <- data_grid(filter(MPs_tory, margin >= 0), margin)
 tory_y1 <- augment(tory_fit2, newdata = y2_range)
 ```
+
 
 ```r
 ggplot() +
@@ -1016,18 +1055,19 @@ I just adjust the names to be consistent with earlier code.
 se_diff <- sqrt(tory_y0$.se.fit ^ 2 + tory_y1$.se.fit ^ 2)
 se_diff
 #> [1] 0.288
-## point estimate
+# point estimate
 diff_est <- tory_y1$.fitted - tory_y0$.fitted
 diff_est
 #> [1] -0.65
-## confidence interval
+# confidence interval
 CI <- c(diff_est - se_diff * qnorm(0.975),
         diff_est + se_diff * qnorm(0.975))
 CI
 #> [1] -1.2134 -0.0859
-## hypothesis test
+# hypothesis test
 z.score <- diff_est / se_diff
-p.value <- 2 * pnorm(abs(z.score), lower.tail = FALSE) # two-sided p-value
+# two sided p value
+p.value <- 2 * pnorm(abs(z.score), lower.tail = FALSE)
 p.value
 #> [1] 0.0239
 ```

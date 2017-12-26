@@ -1,7 +1,7 @@
 # Uncertainty
 
 
-## Prerequisites
+## Prerequisites {-}
 
 We will use these package in this chapter:
 ```{r message=FALSE}
@@ -12,6 +12,7 @@ library("stringr")
 library("modelr")
 library("broom")
 ```
+
 
 ## Estimation
 

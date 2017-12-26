@@ -6,7 +6,8 @@ editor_options:
 ---
 # Prediction
 
-## Prerequisites
+
+## Prerequisites {-}
 
 
 ```r
@@ -21,6 +22,7 @@ The packages [modelr](https://cran.r-project.org/package=modelr) and [broom](htt
 library("broom")
 library("modelr")
 ```
+
 
 ## Loops in R
 

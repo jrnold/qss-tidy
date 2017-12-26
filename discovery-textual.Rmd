@@ -1,6 +1,6 @@
 ## Textual data
 
-### Pre-requisites
+### Prerequisites {-}
 
 ```{r message=FALSE}
 library("tidyverse")

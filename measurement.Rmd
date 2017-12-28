@@ -165,12 +165,12 @@ ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
   ggtitle("Civilian Victimization by the Taliban")
 ```
 
-Instead of creating two separate box-plots, create a single plot facetted by ISAF and Tabliban,
+Instead of creating two separate box-plots, create a single plot facetted by ISAF and Taliban,
 ```{r}
 select(afghan, violent.exp.ISAF, violent.exp.taliban) %>%
   gather(variable, value) %>%
   mutate(value = fct_explicit_na(fct_recode(factor(value),
-                                Harm = "1", "No Harm" = "0"), 
+                                Harm = "1", "No Harm" = "0"),
                                 "No response"),
          variable = recode(variable,
                            violent.exp.ISAF = "ISAF",

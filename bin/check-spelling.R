@@ -1,8 +1,9 @@
+#!/bin/env Rscript
 # Spell check
 library("spelling")
 wordlist_file <- "WORDLIST"
 
-wordlist <- str_trim(readLines(wordlist_file))
+wordlist <- stringr::str_trim(readLines(wordlist_file))
 
 files <- list.files(".", pattern = "\\.(Rnw|Rmd)$", full.names = TRUE)
 misspelled_words <- spell_check_files(files, ignore = wordlist)

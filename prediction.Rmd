@@ -20,29 +20,203 @@ library("broom")
 library("modelr")
 ```
 
+## Predicting Election Outcomes
 
-## Loops in R
+### Loops in R
 
-For more on looping and iteration in R see the *R for Data Science* chapter [Iteration](http://r4ds.had.co.nz/data-visualisation.html).
 
 RStudio provides many features to help debugging, which will be useful in
 for loops and function: see  [this](https://support.rstudio.com/hc/en-us/articles/205612627-Debugging-with-RStudio) article for an example.
 
-## General Conditional Statements in R
+
+```{r}
+values <- c(2, 3, 6)
+n <- length(values)
+results <- rep(NA, n)
+for (i in 1:n) {
+  results[i] <- values[i] * 2
+  cat(values[i], "times 2 is equal to", results[i], "\n")
+}
+```
+
+Note that the above code uses the for loop for pedagogical purposes only, this could have simply been written
+```{r}
+results <- values * 2
+```
+In general, avoid using for loops when there is a *vectorized* function.
+
+But sticking with the for loop, there are several things that could be improved.
+
+Avoid using the idiom `1:n` in for loops. 
+To see why, look what happens when values is empty:
+```{r}
+values <- c()
+n <- length(values)
+results <- rep(NA, n)
+for (i in 1:n) {
+  cat("i = ", i, "\n")
+  results[i] <- values[i] * 2
+  cat(values[i], "times 2 is equal to", results[i], "\n")
+}
+```
+Instead of not running a loop, as you would expect, it runs two loops, where `i = 1`, then `i = 0`.
+This edge case occurs more than you may think, especially if you are writing functions
+where you don't know the length of the vector is *ex ante*.
+
+The way to avoid this is to use either `rdoc("base", "seq_len")` or `rdoc("base", "seq_along")`, which will handle 0-length vectors correctly.
+```{r}
+values <- c()
+n <- length(values)
+results <- rep(NA, n)
+for (i in seq_along(values)) {
+  results[i] <- values[i] * 2
+}
+print(results)
+```
+or 
+```{r}
+values <- c()
+n <- length(values)
+results <- rep(NA, n)
+for (i in seq_len(n)) {
+  results[i] <- values[i] * 2
+}
+print(results)
+```
+
+Also, note that the the result is `logical(0)`.
+That's because the `NA` missing value has class [logical](http://r4ds.had.co.nz/vectors.html#missing-values-4), and thus `rep(NA, ...)` returns a logical vector.
+It is better style to initialize the vector with the same data type that you will be using,
+```{r}
+results <- rep(NA_real_, length(values))
+results
+class(results)
+```
+
+
+Often loops can be rewritten to use a map function. 
+Read the `r R4DS` chapter [Iteration](http://r4ds.had.co.nz/data-visualisation.html) before proceeding.
+
+For a functional, we first write a function that will be applied to each element of the vector.
+When converting from a `for` loop to a function, this is usually simply the body of the `for` loop, though you 
+may need to add arguments for any variables defined outside the body of the for loop.
+In this case,
+```{r}
+mult_by_two <- function(x) {
+  x * 2
+}
+```
+We can now test that this function works on different values:
+```{r}
+mult_by_two(0)
+mult_by_two(2.5)
+mult_by_two(-3)
+```
+
+At this point, we could replace the body of the `for` loop with this function
+```{r}
+values <- c(2, 4, 6)
+n <- length(values)
+results <- rep(NA, n)
+for (i in seq_len(n)) {
+  results[i] <- mult_by_two(values[i])
+}
+print(results)
+```
+This can be useful if the body of a for loop is many lines long.
+
+However, this loop is still unwieldy code. We have to remember to define an empty vector `results` that is the same size as `values` to hold the results, and then correctly loop over all the values. 
+We already saw how these steps have possibilities for errors. 
+Functionals like `map`, apply a function to each element of a vector. 
+```{r}
+results <- map(values, mult_by_two)
+results
+```
+
+The values of each element are correct, but `map` returns a list vector, not a numeric vector like we may have been expecting.
+If we want a numeric vector, use `map_dbl`,
+```{r}
+results <- map_dbl(values, mult_by_two)
+results
+```
+
+Also, instead of explicitly defining a function, like `mult_by_two`, we could have instead used an *anonymous function* with the functional.
+An anonymous function is a function that is not assigned to a name.
+```{r}
+results <- map_dbl(values, function(x) x * 2)
+results
+```
+The various `r pkg("purrr")` functions also will interpret formulas as functions where `.x` and `.y` are interpreted as (up to) two arguments.
+```{r}
+results <- map_dbl(values, ~ .x * 2)
+results
+```
+This is for parsimony and convenience; in the background, these functions are creating anonymous functions from the given formula.
+
+*QSS* discusses several debugging strategies. The functional approach lends itself to easier debugging because the function can be tested with input values independently of the loop.
+
+
+### General Conditional Statements in R
 
 See the *R for Data Science* section [Conditional Execution](http://r4ds.had.co.nz/functions.html#conditional-execution) for a more complete discussion of conditional execution.
 
 If you are using conditional statements to assign values for data frame,
 see the **dplyr** functions `r rdoc("dplyr", "if_else")`, `r rdoc("dplyr", "recode")`, and `r rdoc("dplyr", "case_when")`
 
+The following code which uses a for loop, 
+```{r}
+values <- 1:5
+n <- length(values)
+results <- rep(NA_real_, n)
+for (i in seq_len(n)) {
+  x <- values[i]
+  r <- x %% 2
+  if (r == 0) {
+    cat(x, "is even and I will perform addition", x, " + ", x, "\n")
+    results[i] <- x + x
+  } else {
+    cat(x, "is even and I will perform multiplication", x, " * ", x, "\n")
+    results[i] <- x * x
+  }
+}
+results
+```
+could be rewritten to use `if_else`,
+```{r}
+if_else(values %% 2 == 0, values + values, values * values)
+```
+or using the `map_dbl` functional with a named function,
+```{r}
+myfunc <- function(x) {
+  if (x %% 2 == 0) {
+    x + x
+  } else {
+    x * x
+  }
+}
+map_dbl(values, myfunc)
+```
+or `map_dbl` with an anonymous function,
+```{r}
+map_dbl(values, function(x) {
+  if (x %% 2 == 0) {
+    x + x
+  } else {
+    x * x
+  }
+})
+```
 
-## Poll Predictions
 
-Load the election polls and election results for 2008,
+
+### Poll Predictions
+
+Load the election polls by state for the 2008 US Presidential election,
 ```{r polls08,message=FALSE}
 data("polls08", package = "qss")
 glimpse(polls08)
 ```
+and the election results,
 ```{r pres08,message=FALSE}
 data("pres08", package = "qss")
 glimpse(pres08)
@@ -81,22 +255,19 @@ ELECTION_DAY <- ymd("2008-11-04")
 ```
 and add a new column to `poll08` with the days to the election
 ```{r}
-polls08 <-
-  mutate(polls08, ELECTION_DAY - middate)
+polls08 <- mutate(polls08, ELECTION_DAY - middate)
 ```
 
 Although the code in the chapter uses a `for` loop, there is no reason to do so.
 We can accomplish the same task by merging the election results data to the polling data by `state`.
 
 ```{r}
-polls_w_results <-
-  left_join(polls08,
-            select(pres08, state, elec_margin = margin),
-            by = "state") %>%
+polls_w_results <- left_join(polls08,
+                            select(pres08, state, elec_margin = margin),
+                            by = "state") %>%
   mutate(error = elec_margin - margin)
 glimpse(polls_w_results)
 ```
-
 
 To get the last poll in each state, arrange and filter on `middate`
 ```{r}
@@ -191,7 +362,7 @@ last_polls %>%
   count()
 ```
 
-Which states were incorrectly predicted by the polls?
+Which states were incorrectly predicted by the polls, and what was their margins?
 ```{r}
 last_polls %>%
   filter(classification %in% c("false positive", "false negative")) %>%
@@ -218,9 +389,9 @@ pollsUS08 <- mutate(pollsUS08, DaysToElection = ELECTION_DAY - middate)
 
 We'll produce the seven-day averages slightly differently than the method used in the text.
 For all dates in the data, we'll calculate the moving average.
+The code presented in *QSS* uses a for loop similar to the following:
 ```{r}
-all_dates <- seq(min(polls08$middate), ELECTION_DAY,
-                 by = "days")
+all_dates <- seq(min(polls08$middate), ELECTION_DAY, by = "days")
 
 # Number of poll days to use
 POLL_DAYS <- 7
@@ -230,9 +401,9 @@ for (i in seq_along(all_dates)) {
   date <- all_dates[i]
   # summarise the seven day
   week_data <-
-     pollsUS08 %>%
-     filter(as.integer(middate - date) <= 0,
-            as.integer(middate - date) > -POLL_DAYS) %>%
+     filter(polls08,
+            as.integer(middate - date) <= 0,
+            as.integer(middate - date) > - POLL_DAYS) %>%
      summarise(Obama = mean(Obama, na.rm = TRUE),
                McCain = mean(McCain, na.rm = TRUE))
   # add date for the observation
@@ -242,6 +413,45 @@ for (i in seq_along(all_dates)) {
 
 pop_vote_avg <- bind_rows(pop_vote_avg)
 ```
+
+Write a function which takes a `date`, and calculates the `days` (the default is 7 days)
+moving average using the dataset `.data`:
+```{r}
+poll_ma <- function(date, .data, days = 7) {
+  filter(.data,
+        as.integer(middate - date) <= 0,
+        as.integer(middate - date) > - !!days) %>%
+  summarise(Obama = mean(Obama, na.rm = TRUE),
+           McCain = mean(McCain, na.rm = TRUE)) %>%
+  mutate(date = !!date)
+}
+```
+The code above uses `!!`. 
+This tells `filter` that `days` refers to a variable `days` in the calling environment,
+and not a column named `days` in the data frame. 
+In this case, there wouldn't be any ambiguities since there is not a column named `days`, but in general
+there can be ambiguities in the dplyr functions as to whether the names refer to columns in the data frame
+or variables in the environment calling the function.
+Read [Programming with dplyr](http://dplyr.tidyverse.org/articles/programming.html) for an in-depth 
+discussion of this.
+
+This returns a one row data frame with the moving average for McCain and Obama on  Nov 1, 2008.
+```{r}
+poll_ma(as.Date("2008-11-01"), polls08)
+```
+Since we made `days` an argument to the function we could easily change the code to calculate
+other moving averages,
+```{r}
+poll_ma(as.Date("2008-11-01"), polls08, days = 3)
+```
+Now use a functional to execute that function with all dates for which we want moving averages.
+The function `poll_ma` returns a data frame, and our ideal output is a data frame that 
+stacks those data frames row-wise. 
+So we will use the `map_df` function,
+```{r}
+map_df(all_dates, poll_ma, polls08)
+```
+Note that the other arguments for `poll_ma` are placed after the name of the function as additional arguments to `map_df`.
 
 It is easier to plot this if the data are tidy, with `Obama` and `McCain` as categories of a column `candidate`.
 ```{r}
@@ -299,8 +509,12 @@ ggplot(face, aes(x = d.comp, y = diff.share, colour = w.party)) +
        y = "Democratic margin in vote share")
 ```
 
+### Correlation and Scatter Plots
 
-### Correlation
+```{r}
+cor(face$d.comp, face$diff.share)
+```
+
 
 ### Least Squares
 
@@ -312,7 +526,7 @@ fit
 
 There are many functions to get data out of the `lm` model.
 
-In addition to these, the **broom** package provides three functions: `glance`, `tidy`, and `augment` that always return data frames.
+In addition to these, the `r pkg("broom")` package provides three functions: `glance`, `tidy`, and `augment` that always return data frames.
 
 The function `r rdoc("broom", "glance.lm", text="glance")` returns a one-row data-frame summary of the model,
 ```{r}
@@ -332,9 +546,20 @@ We can plot the results of the bivariate linear regression as follows:
 ```{r}
 ggplot() +
   geom_point(data = face, mapping = aes(x = d.comp, y = diff.share)) +
+  geom_ref_line(v = mean(face$d.comp)) +
+  geom_ref_line(h = mean(face$diff.share)) +
   geom_abline(slope = coef(fit)["d.comp"],
               intercept = coef(fit)["(Intercept)"],
-              colour = "red")
+              colour = "red") +
+  annotate("text", x = 0.9, y = mean(face$diff.share) + 0.05,
+           label = "Mean of Y", color = "blue", vjust = 0) +
+  annotate("text", y = -0.9, x = mean(face$d.comp), label = "Mean of X",
+           color = "blue", hjust = 0) +
+  scale_y_continuous("Democratic margin in vote shares",
+                     breaks = seq(-1, 1, by = 0.5), limits = c(-1, 1)) +
+  scale_x_continuous("Democratic margin in vote shares",
+                     breaks = seq(0, 1, by = 0.2), limits = c(0, 1)) +
+  ggtitle("Facial compotence and vote share")
 ```
 
 A more general way to plot the predictions of the model against the data
@@ -377,26 +602,37 @@ See the `r R4DS` chapter [Relational data](http://r4ds.had.co.nz/relational-data
 data("pres12", package = "qss")
 ```
 
+To join both data frames
 ```{r}
 full_join(pres08, pres12, by = "state")
 ```
+However, since there are duplicate names, `.x` and `.y` are appended.
 
-*Note: this could be a question. How would you change the .x, .y suffixes to something more informative*
-To avoid the duplicate names, or change them, you can rename before merging, or
-use the `suffix` argument:
+**Challenge** What would happen if `by = "state"` was dropped? 
+
+To avoid the duplicate names, or change them, you can rename before merging, 
+```{r}
+full_join(select(pres08, state, Obama_08 = Obama, McCain_08 = McCain,
+                 EV_08 = EV),
+          select(pres12, state, Obama_12 = Obama, Romney_12 = Romney,
+                 EV_12 = EV),
+          by = "state")
+```
+or use the `suffix` argument to `full_join`
 ```{r}
 pres <- full_join(pres08, pres12, by = "state", suffix = c("_08", "_12"))
 pres
 ```
 
+**Challenge** Would you consider this data tidy? How would you make it tidy?
 
 The **dplyr** equivalent functions for `r rdoc("base", "cbind")` is `r rdoc("dplyr", "bind_cols")`.
-
 ```{r}
 pres <- pres %>%
-  mutate(Obama2008.z = as.numeric(scale(Obama_08)),
-         Obama2012.z = as.numeric(scale(Obama_12)))
+  mutate(Obama2008_z = as.numeric(scale(Obama_08)),
+         Obama2012_z = as.numeric(scale(Obama_12)))
 ```
+Likewise, `r rdoc("dplyr", "bind_cols")` concatenates data frames by row.
 
 We need to use the `as.numeric` function because `scale()` always returns a matrix.
 This will not produce an error in the code chunk above, since the columns of a data frame
@@ -404,7 +640,7 @@ can be matrices, but will produce errors in some of the following code if it wer
 
 Scatter plot of states with vote shares in 2008 and 2012
 ```{r}
-ggplot(pres, aes(x = Obama2008.z, y = Obama2012.z, label = state)) +
+ggplot(pres, aes(x = Obama2008_z, y = Obama2012_z, label = state)) +
   geom_abline(colour = "white", size = 2) +
   geom_text() +
   coord_fixed() +
@@ -415,15 +651,14 @@ ggplot(pres, aes(x = Obama2008.z, y = Obama2012.z, label = state)) +
 ```
 
 To calculate the bottom and top quartiles
-
 ```{r}
 pres %>%
-  filter(Obama2008.z < quantile(Obama2008.z, 0.25)) %>%
-  summarise(improve = mean(Obama2012.z > Obama2008.z))
+  filter(Obama2008_z < quantile(Obama2008_z, 0.25)) %>%
+  summarise(improve = mean(Obama2012_z > Obama2008_z))
 
 pres %>%
-  filter(Obama2008.z < quantile(Obama2008.z, 0.75)) %>%
-  summarise(improve = mean(Obama2012.z > Obama2008.z))
+  filter(Obama2008_z < quantile(Obama2008_z, 0.75)) %>%
+  summarise(improve = mean(Obama2012_z > Obama2008_z))
 ```
 
 **Challenge:** Why is it important to standardize the vote shares?
@@ -436,11 +671,11 @@ fit2 <- lm(Buchanan00 ~ Perot96, data = florida)
 fit2
 ```
 
-In addition to
+Calculate $R ^ 2$ from the results of `summary`,
 ```{r}
 summary(fit2)$r.squared
 ```
-we can get the R squared value from the data frame `r rdoc("broom", "glance.lm", "glance")` returns:
+Alternatively, can get the R squared value from the data frame `r rdoc("broom", "glance.lm", "glance")` returns:
 ```{r}
 glance(fit2)
 ```
@@ -539,6 +774,9 @@ See [Graphics for communication](http://r4ds.had.co.nz/graphics-for-communicatio
 
 ## Regression and Causation
 
+
+### Randomized Experiments
+
 Load data
 ```{r message=FALSE}
 data("women", package = "qss")
@@ -608,7 +846,7 @@ fit <- lm(primary2006 ~ messages, data = social)
 fit
 ```
 
-Create indicator variables
+Create indicator variables for each message:
 ```{r}
 social <-
   social %>%
@@ -617,7 +855,7 @@ social <-
          Neighbors = as.integer(messages == "Neighbors"))
 ```
 alternatively, create these using a for loop.
-This is easier to understand and less prone to typo.
+This is easier to understand and less prone to typos:
 ```{r}
 for (i in unique(social$messages)) {
   social[[i]] <- as.integer(social[["messages"]] == i)
@@ -670,7 +908,7 @@ social %>%
 Adjusted R-squared is included in the output of `broom::glance()`
 ```{r}
 glance(fit)
-glance(fit)$adj.r.squared
+glance(fit)[["adj.r.squared"]]
 ```
 
 
@@ -748,7 +986,7 @@ y.hat <-
 ggplot(y.hat, aes(x = age, y = pred,
                   colour = str_c(messages, " condition"))) +
   geom_line() +
-  labs(colour = "", y = "predicted turnout rates") +
+  labs(colour = "", y = "Predicted turnout rates") +
   theme(legend.position = "bottom")
 ```
 
@@ -759,11 +997,13 @@ y.hat %>%
   filter(age > 20, age < 90) %>%
   ggplot(aes(x = age, y = ate)) +
   geom_line() +
-  labs(y = "estimated average treatment effect") +
+  labs(y = "Estimated average treatment effect",
+       x = "Age") +
   ylim(0, 0.1)
 ```
 
-## Regression Discontinuity Design
+
+### Regression Discontinuity Design
 
 ```{r message=FALSE}
 data("MPs", package = "qss")
@@ -837,7 +1077,6 @@ spread_predictions(data_frame(margin = 0),
 ```
 
 
-**Tidyverse:**
 ```{r}
 tory_fit3 <- lm(margin.pre ~ margin, data = filter(MPs_tory, margin < 0))
 tory_fit4 <- lm(margin.pre ~ margin, data = filter(MPs_tory, margin > 0))

@@ -1,3 +1,4 @@
+#!/bin/env RScript
 suppressPackageStartupMessages({
   library("lintr")
   library("glue")
@@ -10,6 +11,9 @@ linters <- with_defaults(
 
 files <- list.files(".", pattern = "\\.(Rnw|Rmd)$", full.names = TRUE)
 for (f in files) {
-  cat(glue(""))
-  print(lint(f, linters = linters))
+  cat(f, "\n")
+  ret <- try(lint(f, linters = linters))
+  if (inherits(ret, "Lint")) {
+    print(ret)
+  }
 }

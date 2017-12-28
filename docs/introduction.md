@@ -9,8 +9,8 @@ editor_options:
 
 ## Prerequisites {-}
 
-In the prerequsites section of each chapter, we'll load any packages
-needed for the chaper, and possibly define some funcitons or load data.
+In the prerequisites section of each chapter, we'll load any packages
+needed for the chapter, and possibly define some functions or load data.
 
 
 ```r
@@ -51,7 +51,7 @@ However, there are many other resources for that.
 using the Tidyverse.
 
 [Data Camp](https://www.datacamp.com/home) has interactive courses. In particular,
-I recommende starting with the following two courses.
+I recommend starting with the following two courses.
 
 - [Introduction to R](https://www.datacamp.com/courses/free-introduction-to-r)
 - [Introduction to the Tidyverse](https://www.datacamp.com/courses/introduction-to-the-tidyverse)
@@ -85,7 +85,7 @@ Rather than using `setwd()` in scripts, data analysis should be organized in
 projects. Read the introduction on RStudio projects in  [R4DS](http://r4ds.had.co.nz/workflow-projects.html).[^setwd]
 
 
-[^setwd]: For more on using projects read [Project-oriented worfklow](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/).
+[^setwd]: For more on using projects read [Project-oriented workflow](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/).
 
 
 Datasets used in R are accessed in two ways.
@@ -293,7 +293,7 @@ Your motto should be that the **source is real**, not the objects created by it.
 
 > The source code is real. The objects are realizations of the source code. Source for EVERY user modified object is placed in a particular directory or directories, for later editing and retrieval. – from the [ESS manual](https://ess.r-project.org/Manual/ess.html#Philosophies-for-using-ESS_0028S_0029)
 
-This means that while you should not save the entire workplace it is peferctly find practice to run a script and save or load R objects to files, using  or .
+This means that while you should not save the entire workplace it is perfectly fine practice to run a script and save or load R objects to files, using  or .
 
 As with reading CSV files, use the [readr](http://readr.tidyverse.org/) package functions.
 In this case,  writes a csv file
@@ -383,5 +383,5 @@ differs slightly from [Google's R style guide](http://style.tidyverse.org/).
     R code according to style guides.
 - In RStudio, go to the `Tools > Global Options > Code > Diagnostics` pane and check the
     box to activate style warnings. On this pane, there are other options that can be 
-    set in order to provide more or less warnings while writing R code in Rstudio.
+    set in order to provide more or less warnings while writing R code in RStudio.
 

@@ -1,3 +1,142 @@
+```{r include=FALSE, cache=FALSE}
+# same options as r4ds
+# https://github.com/hadley/r4ds/blob/master/_common.R
+set.seed(12531235)
+options(digits = 3)
+
+suppressPackageStartupMessages({
+  library("tidyverse")
+  library("stringr")
+})
+
+
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  cache = TRUE,
+  autodep = TRUE,
+  out.width = "70%",
+  fig.align = 'center',
+  fig.width = 6,
+  fig.asp = 0.618,  # 1 / phi
+  fig.show = "hold"
+)
+
+# set ref.chunk pattern to be proceeded by a comment and thus valid code
+.md_pat <- knitr::all_patterns$md
+.md_pat$ref.chunk <- "^\\s*#\\+ (.+)\\s*$"
+knitr::knit_patterns$set(.md_pat)
+
+# I want the README to have visible GIFs on GitHub, as
+# GitHub cannot show .mp4s or other animation formats.
+# I therefore hacked together a GIF animation hook for knitr.
+
+library("animation")
+ani.options(autobrowse = FALSE, interval = 1)
+
+knitr::opts_knit$set(animation.fun = function(x, options, format = "gif") {
+  x = c(knitr:::sans_ext(x), knitr:::file_ext(x))
+  fig.num = options$fig.num
+  format = sub("^[.]", "", format)
+  fig.fname = paste0(sub(paste0(fig.num, "$"), "*", x[1]),
+                     ".", x[2])
+  mov.fname = paste0(sub(paste0(fig.num, "$"), "", x[1]), ".",
+                     format)
+
+  # order correctly
+  figs <- Sys.glob(fig.fname)
+  figs <- figs[order(as.numeric(stringr::str_match(figs, paste0("(\\d+)\\.", x[2]))[, 2]))]
+
+  animation::im.convert(figs, output = mov.fname)
+
+  sprintf("![%s](%s)", options$label,
+          paste0(knitr::opts_knit$get("base.url"), mov.fname))
+})
+
+
+options(dplyr.print_min = 6, dplyr.print_max = 6)
+
+#' Create an Rmarkdown link to an Rdocumentation.org help page
+#'
+#' This is commonly used inline to generate links to functions.
+#'
+#' @param name function or topic name
+#' @param package Package name
+#' @param text Text to use for the link, defaults to \code{name}.
+#' @return character string
+rdoc <- function(package, name, text = NULL) {
+  text <- text %||% name
+  stringr::str_c("[", text, "](https://www.rdocumentation.org/packages/",
+                 package, "/topics/", name, ")")
+}
+
+RDoc <- function(name, package = NULL, text = NULL, full = FALSE) {
+  if (is.null(package)) {
+    pkg_name <- str_split(name, "::", n = 2)[[1]]
+    name = pkg_name[1]
+    package = pkg_name[2]
+  }
+  if (is.null(text)) {
+    if (full) {
+      text <- str_c(package, name, sep = "::")
+    } else {
+      text <- name
+    }
+  }
+  url <- str_c("https://www.rdocumentation.org/packages/",
+               package, "/topics/", name)
+  str_c()
+}
+
+#' Get link to a QSS Data File
+#'
+#' @param chapter Chapter name
+#' @param file File name
+#' @return string with the URL to download the file
+qss_data_url <- function(chapter, file) {
+  stringr::str_c("https://raw.githubusercontent.com/kosukeimai/qss/master/",
+        stringr::str_to_upper(chapter), "/", file)
+}
+
+#' CRAN URL for a package
+cran_pkg_url <- function(pkgname) {
+  stringr::str_c("https://cran.r-project.org/package=", pkgname)
+}
+
+#' Markdown link for a package
+pkg_link <- function(pkgname) {
+  stringr::str_c("[", pkgname, "](", cran_pkg_url(pkgname), ")")
+}
+pkg <- pkg_link
+
+#' Constant to insert title and link to R for data science
+R4DS <- "[R for Data Science](http://r4ds.had.co.nz/)"
+
+ggdoc <- function(name) {
+  stringr::str_c("[", name, "](http://docs.ggplot2.org/current/",
+                 name, ".html)")
+}
+
+r4ds_ch <- function(name, path, book = TRUE) {
+  stringr::str_c(if (book) "*R for Data Science* chapter" else "",
+                 "[", name, "](http://r4ds.had.co.nz/", path, ".html)")
+}
+
+
+#' Insert code of function
+#'
+#' @param name Function name
+#' @source https://yihui.name/knitr/demo/pretty/
+insert_fun <- function(name) {
+  knitr::read_chunk(lines = capture.output(dump(name, "")),
+                    labels = paste(name, "source", sep = "-"))
+}
+```
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Uncertainty
 
 
@@ -11,11 +150,16 @@ library("lubridate")
 library("stringr")
 library("modelr")
 library("broom")
+library("purrr")
 ```
 
 
 ## Estimation
 
+
+### Unbiasedness and Consistency
+
+In these simulations, we draw a sample of size `n` from normal distributions with means `mu0` and `mu1` and standard deviations `sd0` and `sd1` respectively,
 ```{r}
 n <- 100
 mu0 <- 0
@@ -23,15 +167,22 @@ sd0 <- 1
 mu1 <- 1
 sd1 <- 1
 smpl <- tibble(id = seq_len(n),
+               # Y if not treated
                Y0 = rnorm(n, mean = mu0, sd = sd0),
+               # Y if treated
                Y1 = rnorm(n, mean = mu1, sd = sd1),
+               # individual treatment effects
                tau = Y1 - Y0)
+```
+The SATE is:
+```{r}
 SATE <- mean(smpl[["tau"]])
 SATE
 ```
 
+
+Simulations of RCTs. Write a function that takes the sample as an input `smpl`, randomly assigns the treatment to each individual:
 ```{r}
-sims <- 5000
 sim_treat <- function(smpl) {
   n <- nrow(smpl)
   SATE <- mean(smpl[["tau"]])
@@ -44,17 +195,27 @@ sim_treat <- function(smpl) {
     group_by(treat) %>%
     summarise(Y_obs = mean(Y_obs)) %>%
     spread(treat, Y_obs) %>%
-    mutate(diff = `1` - `0`,
-           est_error = diff - SATE)
+    rename(Y1_mean = `1`, Y0_mean = `0`) %>%
+    mutate(diff_mean = Y1_mean - Y0_mean,
+           est_error = diff_mean - SATE)
 }
-diff_means <- map_df(seq_len(sims), ~ sim_treat(smpl))
-summary(diff_means[["est_error"]])
+```
+This returns a data frame with columns: `Y0_mean` (mean $Y$ for observations not receiving the treatment), `Y1_mean` (mean $Y$ for observations receiving the treatment), `diff` (difference in mean values between the two groups), and `est_error` (difference between the estimated difference and the known SATE):
+```{r}
+sim_treat(smpl)
+```
+Rerun this function `sims` times:
+```{r}
+sims <- 5000
+sate_sims <- map_df(seq_len(sims), ~ sim_treat(smpl))
+summary(sate_sims[["est_error"]])
 ```
 
+Simulate the PATE:
 ```{r}
 PATE <- mu1 - mu0
+
 sim_pate <- function(n, mu0, mu1, sd0, sd1) {
-  PATE <- mu1 - mu0
   smpl <- tibble(Y0 = rnorm(n, mean = mu0, sd = sd0),
                  Y1 = rnorm(n, mean = mu1, sd = sd1),
                  tau = Y1 - Y0)
@@ -67,26 +228,44 @@ sim_pate <- function(n, mu0, mu1, sd0, sd1) {
     group_by(treat) %>%
     summarise(Y_obs = mean(Y_obs)) %>%
     spread(treat, Y_obs) %>%
-    mutate(diff = `1` - `0`,
-           est_error = diff - PATE)
+    rename(Y1_mean = `1`, Y0_mean = `0`) %>%
+    mutate(diff_mean = Y1_mean - Y0_mean,
+           est_error = diff_mean - PATE)
 }
-diff_means <-
-  map_df(seq_len(sims), ~ sim_pate(n, mu0, mu1, sd0, sd1))
-summary(diff_means[["est_error"]])
 ```
-
-
-### Standard Errors
+Example of one simulation
+```{r}
+sim_pate(n, mu0, mu1, sd0, sd1)
+```
 
 ```{r}
-ggplot(diff_means, aes(x = diff)) +
-  geom_histogram() +
-  geom_vline(xintercept = PATE, colour = "white", size = 2) +
-  ggtitle("sampling distribution")
+pate_sims <-
+  map_df(seq_len(sims), ~ sim_pate(n, mu0, mu1, sd0, sd1))
+summary(pate_sims[["est_error"]])
 ```
+
+
+### Standard Error
+
+Plot of the sampling distribution of the difference-in-means estimator:
+```{r}
+ggplot(pate_sims, aes(x = diff_mean, y = ..density..)) +
+  geom_histogram(binwidth = 0.01, boundary = 1) +
+  geom_vline(xintercept = PATE, colour = "white", size = 2) +
+  ggtitle("Sampling distribution") +
+  labs(x = "Difference-in-means estimator")
+```
+
+```{r}
+sd(pate_sims[["diff_mean"]])
+```
+
+Simulate PATE with a standard error:
 ```{r}
 sim_pate_se <- function(n, mu0, mu1, sd0, sd1) {
+  # PATE - difference in means
   PATE <- mu1 - mu0
+  # sample
   smpl <- tibble(Y0 = rnorm(n, mean = mu0, sd = sd0),
                  Y1 = rnorm(n, mean = mu1, sd = sd1),
                  tau = Y1 - Y0)
@@ -94,29 +273,126 @@ sim_pate_se <- function(n, mu0, mu1, sd0, sd1) {
   idx <- sample(seq_len(n), floor(nrow(smpl) / 2), replace = FALSE)
   # treat variable are those receiving treatment, else 0
   smpl[["treat"]] <- as.integer(seq_len(nrow(smpl)) %in% idx)
+  # sample
   smpl %>%
     mutate(Y_obs = if_else(treat == 1L, Y1, Y0)) %>%
     group_by(treat) %>%
-    summarise(mean = mean(Y_obs), var = var(Y_obs),
+    summarise(mean = mean(Y_obs),
+              var = var(Y_obs),
               nobs = n()) %>%
     summarise(diff_mean = diff(mean),
               se = sqrt(sum(var / nobs)),
               est_error = diff_mean - PATE)
 }
-diff_means <-
+```
+Run a single simulation:
+```{r}
+sim_pate_se(n, mu0, mu1, sd0, sd1)
+```
+Run `sims` simulations:
+```{r}
+sims <- 5000
+pate_sims_se <-
   map_df(seq_len(sims), ~ sim_pate_se(n, mu0, mu1, sd0, sd1))
 ```
+Standard deviation of difference-in-means
 ```{r}
-summary(diff_means[["se"]])
+sd(pate_sims_se[["diff_mean"]])
+```
+Mean of standard errors,
+```{r}
+mean(pate_sims_se[["se"]])
 ```
 
 
 ### Confidence Intervals
 
+Calculate a $p\%$ confidence interval for the binomial distribution:
 ```{r}
-sim_binom_ci <- function(size, prob =  p) {
+# Sample size
+n <- 1000
+# point estimate
+x_bar <- 0.6
+# standard error
+se <- sqrt(x_bar * (1 - x_bar) / n)
+# Desired Confidence levels
+levels <- c(0.99, 0.95, 0.90)
+```
+
+```{r}
+tibble(level = levels) %>%
+  mutate(
+    ci_lower = x_bar - qnorm(1 - (1 - level) / 2) * se,
+    ci_upper = x_bar + qnorm(1 - (1 - level) / 2) * se
+  )
+```
+
+Calculate the coverage ratio of the 95% confidence interval in the PATE simulations.
+```{r}
+level <- 0.95
+pate_sims_se %>%
+  mutate(ci_lower = diff_mean - qnorm(1 - (1 - level) / 2) * se,
+         ci_upper = diff_mean + qnorm(1 - (1 - level) / 2) * se,
+         includes_pate = PATE > ci_lower & PATE < ci_upper) %>%
+  summarise(coverage = mean(includes_pate))
+```
+To do this for multiple levels encapsulate the above code in a function with arguments `.data` (the data frame) and the confidence level, `level`:
+```{r}
+pate_sims_coverage <- function(.data, level = 0.95) {
+  mutate(.data,
+         ci_lower = diff_mean - qnorm(1 - (1 - level) / 2) * se,
+         ci_upper = diff_mean + qnorm(1 - (1 - level) / 2) * se,
+         includes_pate = PATE > ci_lower & PATE < ci_upper) %>%
+    summarise(coverage = mean(includes_pate))
 }
 ```
+```{r}
+pate_sims_coverage(pate_sims_se, 0.95)
+pate_sims_coverage(pate_sims_se, 0.99)
+pate_sims_coverage(pate_sims_se, 0.90)
+```
+
+```{r}
+p <- 0.6
+n <- 10
+alpha <- 0.05
+sims <- 5000
+```
+
+Define a function that samples from a Bernoulli distribution, calculates its standard error, and returns a logical value as to whether it contains the true value: 
+```{r}
+binom_ci_contains <- function(n, p, alpha = 0.05) {
+  x <- rbinom(n, size = 1, prob = p)
+  x_bar <- mean(x)
+  se <- sqrt(x_bar * (1 - x_bar) / n)
+  ci_lower <- x_bar - qnorm(1 - alpha / 2) * se
+  ci_upper <- x_bar + qnorm(1 - alpha / 2) * se
+  (ci_lower <= p) & (p <= ci_upper)
+}
+```
+
+We can run this once for given sample size:
+```{r}
+n <- 10
+binom_ci_contains(n, p)
+```
+Using `map_df` we can rerun it `sims` times and calculate the coverage proportion:
+```{r}
+mean(map_lgl(seq_len(sims), ~ binom_ci_contains(n, p)))
+```
+
+Encapsulate the above code in a function that calculates the coverage of a confidence interval with size, `n`, and success probability, `p`:
+```{r}
+binom_ci_coverage <- function(n, p, sims) {
+  mean(map_lgl(seq_len(sims), ~ binom_ci_contains(n, p)))
+}
+```
+Use `binom_ci_coverage` to calculate CI coverage for multiple values of the sample size:
+```{r}
+tibble(n = c(10L, 100L, 1000L)) %>%
+  mutate(coverage = map_dbl(n, binom_ci_coverage, p = !!p, sims = !!sims))
+```
+
 
 
 ### Margin of Error and Sample Size Calculation in Polls
@@ -626,8 +902,8 @@ tory_y0
 summary(tory_fit1)
 summary(tory_fit2)
 ```
+
 Since we aren't doing anything more with these values, there isn't much benefit in keeping them in data frames.
-I just adjust the names to be consistent with earlier code.
 ```{r}
 # standard error
 se_diff <- sqrt(tory_y0$.se.fit ^ 2 + tory_y1$.se.fit ^ 2)

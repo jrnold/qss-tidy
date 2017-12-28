@@ -65,7 +65,7 @@ resume %>%
 
 Select black individuals in the `resume` data:
 ```{r resumeB}
-resumeB <- 
+resumeB <-
   resume %>%
   filter(race == "black")
 
@@ -95,7 +95,7 @@ Now we can calculate the gender gap by group.
 This seems to be a little more code, but we didn't duplicate as much as in QSS, and this would easily scale to more than two categories.
 
 A way to do this using the `r rdoc("tidyr", "spread")` and `r rdoc("tidyr", "gather")` functions from `r pkg("tidyr")` package.
-See the `r R4DS` chapgter ["Tidy Data"](http://r4ds.had.co.nz/tidy-data.html).
+See the `r R4DS` chapter ["Tidy Data"](http://r4ds.had.co.nz/tidy-data.html).
 
 First, group by race and sex and calculate the callback rate for each group:
 ```{r}
@@ -145,10 +145,9 @@ resume %>%
   arrange(race) %>%
   summarise(call_diff = diff(call))
 ```
-I find the `spread` code preferrrable since the individual race callback rates are
+I find the `spread` code preferable since the individual race callback rates are
 retained in the data, and since there is no natural ordering of the `race` variable
 (unlike if it were a time-series), it is not obvious from reading the code  whether `call_diff` is `black - white` or `white - black`.
-difference between "balck"
 
 
 ### Simple conditional statements
@@ -240,7 +239,7 @@ resume <-
   mutate(type = str_c(str_to_title(race), str_to_title(sex)))
 ```
 
-Some of the reasons given in *QSS* for using factors in this chapter are less important due to the functionality od modern **tidyverse** packages.
+Some of the reasons given in *QSS* for using factors in this chapter are less important due to the functionality of modern **tidyverse** packages.
 For example, there is no reason to use `tapply`, as that can use `group_by` and `summarise`,
 ```{r}
 resume %>%

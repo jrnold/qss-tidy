@@ -15,11 +15,17 @@ editor_options:
 library("tidyverse")
 library("forcats")
 library("stringr")
+library("broom")
 ```
 
 
 ## Probability
 
+### Frequentist vs. Bayesian
+
+### Definition and Axioms
+
+### Permutations
 
 
 ```r
@@ -30,15 +36,15 @@ birthday <- function(k) {
   pr
 }
 
-bday <- tibble(k = 1:50,
-               pr = birthday(k))
+bday <- tibble(k = 1:50, pr = birthday(k))
+               
 ggplot(bday, aes(x = k, y = pr)) +
   geom_hline(yintercept = 0.5, colour = "white", size = 2) +
   geom_line() +
   geom_point() +
   scale_y_continuous(str_c("Probability that at least two",
                            "people have the same birthday", sep = "\n"),
-                     limits = c(0, 1)) +
+                     limits = c(0, 1), breaks = seq(0, 1, by = 0.1)) +
   labs(x = "Number of people")
 ```
 
@@ -52,9 +58,8 @@ Also see: http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/.
 
 ### Sampling without replacement
 
-
 Instead of using a for loop, we could do the simulations using a functional
-as described in [R for Data Science](http://r4ds.had.co.nz/).
+as described in [R for Data Science](http://r4ds.had.co.nz/) chapter "Iterations".
 
 Define the function `sim_bdays` which randomly samples `k` birthdays, and returns
 `TRUE` if there are any duplicate birthdays, and `FALSE` if there are none.
@@ -72,17 +77,17 @@ We can test the code for `k = 10` birthdays.
 sim_bdays(10)
 #> [1] FALSE
 ```
-Since the function is randomly sampling birthdays
+Since the function is randomly sampling birthdays, running it multiple times will produce different answers.
 
 One helpful feature of a functional style of writing code vs. a `for` loop is that
 the function encapsulates the code and allows you to test that it works for different
 inputs before repeating it for many inputs.
 It is more difficult to debug functions that produce random outputs, but some sanity checks
-are
+are that the function
 
-- function always returns a logical vector of length one (`TRUE` or `FALSE`)
-- it is always `FALSE` when `k = 1` since there can never be a duplicates with one person
-- it is always `TRUE` when `k >= 365` by the [pidgeonhole principle](https://en.wikipedia.org/wiki/Pigeonhole_principle).
+- returns a logical vector of length one (`TRUE` or `FALSE`)
+- always returns `FALSE` when `k = 1` since there can never be a duplicates with one person
+- always returns `TRUE` when `k >= 365` by the [pidgeonhole principle](https://en.wikipedia.org/wiki/Pigeonhole_principle).
 
 
 ```r
@@ -103,20 +108,41 @@ map_lgl(seq_len(sims), ~ sim_bdays(k)) %>%
 #> [1] 0.475
 ```
 
+An alternative way of running this is using the [rerun](https://www.rdocumentation.org/packages/purrr/topics/rerun):
+
+```r
+# rerun expression sim times
+rerun(sims, sim_bdays(k)) %>%
+  # flatten to a numeric vector
+  flatten_dbl() %>%
+  # take mean
+  mean()
+#> [1] 0.477
+```
+
+
 
 ### Combinations
 
+The function for $\choose{84}{4}$ is:
 
 ```r
 choose(84, 6)
 #> [1] 4.06e+08
 ```
+However, due to the the larges values that the binomial coefficient, it is almost always better to use the log of the binomial coefficient, $\log \choose{84}{4}$,
+
+```r
+lchoose(84, 4)
+#> [1] 14.5
+```
+
 
 ## Conditional Probability
 
 ### Conditional, Marginal, and Joint Probabilities
 
-
+Load Florida voting data from the **qss** package:
 
 ```r
 data(FLVoters, package = "qss")
@@ -128,7 +154,7 @@ FLVoters <- FLVoters %>%
 
 Instead of using [prop.base](https://www.rdocumentation.org/packages/base/topics/prop.base), we calculate the probabilities
 with a data frame.
-Marginal probabilities of race,
+Calculate the marginal probabilities of each race:
 
 ```r
 margin_race <-
@@ -137,17 +163,17 @@ margin_race <-
   mutate(prop = n / sum(n))
 margin_race
 #> # A tibble: 6 x 3
-#>       race     n    prop
-#>      <chr> <int>   <dbl>
-#> 1    asian   175 0.01920
-#> 2    black  1194 0.13102
-#> 3 hispanic  1192 0.13080
-#> 4   native    29 0.00318
-#> 5    other   310 0.03402
-#> 6    white  6213 0.68177
+#>   race         n    prop
+#>   <chr>    <int>   <dbl>
+#> 1 asian      175 0.0192 
+#> 2 black     1194 0.131  
+#> 3 hispanic  1192 0.131  
+#> 4 native      29 0.00318
+#> 5 other      310 0.0340 
+#> 6 white     6213 0.682
 ```
 
-Marginal probabilities of gender:
+Calculate the marginal probabilities of each gender:
 
 ```r
 margin_gender <- FLVoters %>%
@@ -156,9 +182,9 @@ margin_gender <- FLVoters %>%
 margin_gender
 #> # A tibble: 2 x 3
 #>   gender     n  prop
-#>    <chr> <int> <dbl>
-#> 1      f  4883 0.536
-#> 2      m  4230 0.464
+#>   <chr>  <int> <dbl>
+#> 1 f       4883 0.536
+#> 2 m       4230 0.464
 ```
 
 
@@ -168,14 +194,14 @@ FLVoters %>%
   count(race) %>%
   mutate(prop = n / sum(n))
 #> # A tibble: 6 x 3
-#>       race     n    prop
-#>      <chr> <int>   <dbl>
-#> 1    asian    83 0.01700
-#> 2    black   678 0.13885
-#> 3 hispanic   666 0.13639
-#> 4   native    17 0.00348
-#> 5    other   158 0.03236
-#> 6    white  3281 0.67192
+#>   race         n    prop
+#>   <chr>    <int>   <dbl>
+#> 1 asian       83 0.0170 
+#> 2 black      678 0.139  
+#> 3 hispanic   666 0.136  
+#> 4 native      17 0.00348
+#> 5 other      158 0.0324 
+#> 6 white     3281 0.672
 ```
 
 
@@ -183,19 +209,19 @@ FLVoters %>%
 joint_p <-
   FLVoters %>%
   count(gender, race) %>%
-  # needed because it is still grouped by gender
+  # needed because the data frame is still grouped by gender
   ungroup() %>%
   mutate(prop = n / sum(n))
 joint_p
 #> # A tibble: 12 x 4
-#>   gender     race     n    prop
-#>    <chr>    <chr> <int>   <dbl>
-#> 1      f    asian    83 0.00911
-#> 2      f    black   678 0.07440
-#> 3      f hispanic   666 0.07308
-#> 4      f   native    17 0.00187
-#> 5      f    other   158 0.01734
-#> 6      f    white  3281 0.36004
+#>   gender race         n    prop
+#>   <chr>  <chr>    <int>   <dbl>
+#> 1 f      asian       83 0.00911
+#> 2 f      black      678 0.0744 
+#> 3 f      hispanic   666 0.0731 
+#> 4 f      native      17 0.00187
+#> 5 f      other      158 0.0173 
+#> 6 f      white     3281 0.360  
 #> # ... with 6 more rows
 ```
 
@@ -207,14 +233,14 @@ joint_p %>%
   select(-n) %>%
   spread(gender, prop)
 #> # A tibble: 6 x 3
-#>       race       f       m
-#> *    <chr>   <dbl>   <dbl>
-#> 1    asian 0.00911 0.01010
-#> 2    black 0.07440 0.05662
-#> 3 hispanic 0.07308 0.05772
-#> 4   native 0.00187 0.00132
-#> 5    other 0.01734 0.01668
-#> 6    white 0.36004 0.32174
+#>   race           f       m
+#> * <chr>      <dbl>   <dbl>
+#> 1 asian    0.00911 0.0101 
+#> 2 black    0.0744  0.0566 
+#> 3 hispanic 0.0731  0.0577 
+#> 4 native   0.00187 0.00132
+#> 5 other    0.0173  0.0167 
+#> 6 white    0.360   0.322
 ```
 
 Sum over race:
@@ -224,14 +250,14 @@ joint_p %>%
   group_by(race) %>%
   summarise(prop = sum(prop))
 #> # A tibble: 6 x 2
-#>       race    prop
-#>      <chr>   <dbl>
-#> 1    asian 0.01920
-#> 2    black 0.13102
-#> 3 hispanic 0.13080
-#> 4   native 0.00318
-#> 5    other 0.03402
-#> 6    white 0.68177
+#>   race        prop
+#>   <chr>      <dbl>
+#> 1 asian    0.0192 
+#> 2 black    0.131  
+#> 3 hispanic 0.131  
+#> 4 native   0.00318
+#> 5 other    0.0340 
+#> 6 white    0.682
 ```
 
 Sum over gender:
@@ -242,9 +268,9 @@ joint_p %>%
   summarise(prop = sum(prop))
 #> # A tibble: 2 x 2
 #>   gender  prop
-#>    <chr> <dbl>
-#> 1      f 0.536
-#> 2      m 0.464
+#>   <chr>  <dbl>
+#> 1 f      0.536
+#> 2 m      0.464
 ```
 
 
@@ -264,14 +290,14 @@ joint3 <-
   mutate(prop = n / sum(n))
 joint3
 #> # A tibble: 47 x 5
-#>    race age_group gender     n     prop
-#>   <chr>    <fctr>  <chr> <int>    <dbl>
-#> 1 asian     <= 20      f     1 0.000110
-#> 2 asian     <= 20      m     2 0.000219
-#> 3 asian     20-40      f    24 0.002634
-#> 4 asian     20-40      m    26 0.002853
-#> 5 asian     40-60      f    38 0.004170
-#> 6 asian     40-60      m    47 0.005157
+#>   race  age_group gender     n     prop
+#>   <chr> <fctr>    <chr>  <int>    <dbl>
+#> 1 asian <= 20     f          1 0.000110
+#> 2 asian <= 20     m          2 0.000219
+#> 3 asian 20-40     f         24 0.00263 
+#> 4 asian 20-40     m         26 0.00285 
+#> 5 asian 40-60     f         38 0.00417 
+#> 6 asian 40-60     m         47 0.00516 
 #> # ... with 41 more rows
 ```
 
@@ -285,11 +311,11 @@ margin_age <-
 margin_age
 #> # A tibble: 4 x 3
 #>   age_group     n   prop
-#>      <fctr> <int>  <dbl>
-#> 1     <= 20   161 0.0177
-#> 2     20-40  2469 0.2709
-#> 3     40-60  3285 0.3605
-#> 4      > 60  3198 0.3509
+#>   <fctr>    <int>  <dbl>
+#> 1 <= 20       161 0.0177
+#> 2 20-40      2469 0.271 
+#> 3 40-60      3285 0.360 
+#> 4 > 60       3198 0.351
 ```
 
 
@@ -304,9 +330,9 @@ left_join(joint3,
   filter(race == "black", gender == "f", age_group == "> 60") %>%
   select(race, age_group, gender, prob_age_group)
 #> # A tibble: 1 x 4
-#>    race age_group gender prob_age_group
-#>   <chr>    <fctr>  <chr>          <dbl>
-#> 1 black      > 60      f         0.0538
+#>   race  age_group gender prob_age_group
+#>   <chr> <fctr>    <chr>           <dbl>
+#> 1 black > 60      f              0.0538
 ```
 
 Two-way joint probability table for age group and gender
@@ -319,13 +345,13 @@ joint2 <- FLVoters %>%
 joint2
 #> # A tibble: 8 x 4
 #>   age_group gender     n prob_age_gender
-#>      <fctr>  <chr> <int>           <dbl>
-#> 1     <= 20      f    88         0.00966
-#> 2     <= 20      m    73         0.00801
-#> 3     20-40      f  1304         0.14309
-#> 4     20-40      m  1165         0.12784
-#> 5     40-60      f  1730         0.18984
-#> 6     40-60      m  1555         0.17064
+#>   <fctr>    <chr>  <int>           <dbl>
+#> 1 <= 20     f         88         0.00966
+#> 2 <= 20     m         73         0.00801
+#> 3 20-40     f       1304         0.143  
+#> 4 20-40     m       1165         0.128  
+#> 5 40-60     f       1730         0.190  
+#> 6 40-60     m       1555         0.171  
 #> # ... with 2 more rows
 ```
 
@@ -335,8 +361,8 @@ The joint probability $P(\text{age} > 60 \land \text{female})$,
 filter(joint2, age_group == "> 60", gender == "f")
 #> # A tibble: 1 x 4
 #>   age_group gender     n prob_age_gender
-#>      <fctr>  <chr> <int>           <dbl>
-#> 1      > 60      f  1761           0.193
+#>   <fctr>    <chr>  <int>           <dbl>
+#> 1 > 60      f       1761           0.193
 ```
 
 The conditional probabilities $P(race | gender, age)$,
@@ -353,9 +379,9 @@ Each row is the $P(race | age_group, gender)$, so $P(\text{black} | \text{female
 ```r
 filter(condprob_race, gender == "f", age_group == "> 60", race == "black")
 #> # A tibble: 1 x 4
-#>   age_group gender  race prob_race
-#>      <fctr>  <chr> <chr>     <dbl>
-#> 1      > 60      f black    0.0977
+#>   age_group gender race  prob_race
+#>   <fctr>    <chr>  <chr>     <dbl>
+#> 1 > 60      f      black    0.0977
 ```
 
 
@@ -375,14 +401,14 @@ race_gender_indep <-
   select(race, gender, everything())
 race_gender_indep
 #> # A tibble: 12 x 6
-#>       race gender prob_race prob_gender prob_indep    prob
-#>      <chr>  <chr>     <dbl>       <dbl>      <dbl>   <dbl>
-#> 1    asian      f    0.0192       0.536    0.01029 0.00911
-#> 2    asian      m    0.0192       0.464    0.00891 0.01010
-#> 3    black      f    0.1310       0.536    0.07021 0.07440
-#> 4    black      m    0.1310       0.464    0.06082 0.05662
-#> 5 hispanic      f    0.1308       0.536    0.07009 0.07308
-#> 6 hispanic      m    0.1308       0.464    0.06071 0.05772
+#>   race     gender prob_race prob_gender prob_indep    prob
+#>   <chr>    <chr>      <dbl>       <dbl>      <dbl>   <dbl>
+#> 1 asian    f         0.0192       0.536    0.0103  0.00911
+#> 2 asian    m         0.0192       0.464    0.00891 0.0101 
+#> 3 black    f         0.131        0.536    0.0702  0.0744 
+#> 4 black    m         0.131        0.464    0.0608  0.0566 
+#> 5 hispanic f         0.131        0.536    0.0701  0.0731 
+#> 6 hispanic m         0.131        0.464    0.0607  0.0577 
 #> # ... with 6 more rows
 ```
 
@@ -399,7 +425,7 @@ ggplot(race_gender_indep,
        y = expression(P("race and gender")))
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 While the original code only calculates joint-independence value for values of
@@ -428,7 +454,7 @@ ggplot(joint_indep, aes(x = prob, y = indep_prob, colour = race)) +
        title = "Joint Independence")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 While code in *QSS* only calculates the conditional independence given female,
@@ -481,7 +507,7 @@ inner_join(select(indep_cond_gender, race, age_group, gender, indep_prob),
        title = "Marginal independence")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-21-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-23-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 **Monty-hall problem**
@@ -491,29 +517,24 @@ functional approach to solving the problem.
 We will define a function to choose a door, repeat the function multiple times while storing
 the results in a data frame, and then summarize that data frame.
 
-This code doesn't rely on any non-tidyverse code, but the following is another way to write it.
-
 First, create a function for a single iteration.
-This will save the results as data frame.
+This returns a single logical value:
 
 ```r
-choose_door <- function(.id) {
+choose_door <- function(.iter) {
   # what's behind each door door:
   # Why is it okay that this is fixed?
   doors <- c("goat", "goat", "car")
 
-  # User randomly samples a door
+  # User randomly chooses a door
   first <- sample(1:3, 1)
 
   # randomly choose the door that Monty Hall reveals
   remain <- doors[-first]
   monty <- sample( (1:2)[remain == "goat"], size = 1)
-  #
-  ret <- tribble(~strategy, ~result,
-                 "no switch", doors[first],
-                  "switch", remain[-monty])
-  ret[[".id"]] <- .id
-  ret
+  # did the contestant win?
+  tibble(.iter = .iter,
+         result = remain[-monty] == "car")
 }
 ```
 Now use [map_df](https://www.rdocumentation.org/packages/purrr/topics/map_df) to run `choose_door` multiple times,
@@ -521,18 +542,16 @@ and then summarize the results:
 
 ```r
 sims <- 1000
-results <- map_df(seq_len(sims), choose_door)
-results %>%
-  group_by(strategy) %>%
-  summarise(pct_win = mean(result == "car"))
-#> # A tibble: 2 x 2
-#>    strategy pct_win
-#>       <chr>   <dbl>
-#> 1 no switch   0.351
-#> 2    switch   0.649
+map_df(seq_len(sims), choose_door) %>%
+  summarise(win_pct = mean(result))
+#> # A tibble: 1 x 1
+#>   win_pct
+#>     <dbl>
+#> 1   0.670
 ```
 
-Can we make this even more general? What about a function that takes a data frame as its input with the choices? ...
+
+### Bayes' Rule
 
 
 
@@ -554,11 +573,13 @@ glimpse(cnames)
 #> $ pctothers   <dbl> 2.48, 2.73, 2.79, 2.69, 2.79, 1.94, 2.52, 1.09, 0....
 ```
 
+
+
 For each surname, contains variables with the probability that it belongs to an individual of a given race (`pctwhite`, `pctblack`, ...).
 We want to find the most-likely race for a given surname, by finding the race with the maximum proportion.
 Instead of dealing with multiple variables, it is easier to use `max` on a single variable, so we will rearrange the data to in order to use a grouped summarize, and then merge the new variable back to the original data sets.
 
-Note, this code takes a while.
+Calculate the most likely race for each name:
 
 ```r
 most_likely_race <-
@@ -576,9 +597,6 @@ most_likely_race <-
   # # don't need pct anymore
   select(-pct) %>%
   mutate(race_pred = recode(race_pred, asian = "api", other = "others"))
-  #        # need to convert to factor first, else errors
-  #        race_pred = fct_recode(race_pred,
-  #                               "asian" = "api", "other" = "others"))
 ```
 
 Merge the data frame with the most likely race for each surname to the
@@ -587,7 +605,6 @@ the original `cnames` data frame:
 ```r
 cnames <- left_join(cnames, most_likely_race, by = "surname")
 ```
-
 
 Instead of using `match`, use `inner_join` to merge the surnames to `FLVoters`:
 
@@ -609,13 +626,13 @@ Check that the levels of `race` and `race_pred` are the same:
 FLVoters %>%
   count(race2)
 #> # A tibble: 5 x 2
-#>      race2     n
-#>     <fctr> <int>
-#> 1    asian   140
-#> 2    black  1078
+#>   race2        n
+#>   <fctr>   <int>
+#> 1 asian      140
+#> 2 black     1078
 #> 3 hispanic  1023
-#> 4    other   277
-#> 5    white  5504
+#> 4 other      277
+#> 5 white     5504
 ```
 
 ```r
@@ -623,14 +640,13 @@ FLVoters %>%
   count(race_pred)
 #> # A tibble: 5 x 2
 #>   race_pred     n
-#>       <chr> <int>
-#> 1       api   120
-#> 2     black   258
-#> 3  hispanic  1121
-#> 4    others     7
-#> 5     white  6516
+#>   <chr>     <int>
+#> 1 api         120
+#> 2 black       258
+#> 3 hispanic   1121
+#> 4 others        7
+#> 5 white      6516
 ```
-
 
 Now we can calculate *True positive rate* for *all* races
 
@@ -640,13 +656,13 @@ FLVoters %>%
   summarise(tp = mean(race2 == race_pred)) %>%
   arrange(desc(tp))
 #> # A tibble: 5 x 2
-#>      race2    tp
-#>     <fctr> <dbl>
-#> 1    white 0.950
+#>   race2       tp
+#>   <fctr>   <dbl>
+#> 1 white    0.950
 #> 2 hispanic 0.847
-#> 3    black 0.160
-#> 4    asian 0.000
-#> 5    other 0.000
+#> 3 black    0.160
+#> 4 asian    0    
+#> 5 other    0
 ```
 and the *False discovery rate* for *all* races,
 
@@ -657,12 +673,12 @@ FLVoters %>%
   arrange(desc(fp))
 #> # A tibble: 5 x 2
 #>   race_pred    fp
-#>       <chr> <dbl>
-#> 1       api 1.000
-#> 2    others 1.000
-#> 3     black 0.329
-#> 4  hispanic 0.227
-#> 5     white 0.197
+#>   <chr>     <dbl>
+#> 1 api       1.00 
+#> 2 others    1.00 
+#> 3 black     0.329
+#> 4 hispanic  0.227
+#> 5 white     0.197
 ```
 
 Now add residence data using the `FLCensus` data included in the
@@ -683,13 +699,13 @@ race.prop <-
   arrange(desc(mean))
 race.prop
 #> # A tibble: 5 x 2
-#>       race   mean
-#>      <chr>  <dbl>
-#> 1    white 0.6045
-#> 2 hispanic 0.2128
-#> 3    black 0.1394
-#> 4      api 0.0219
-#> 5   others 0.0214
+#>   race       mean
+#>   <chr>     <dbl>
+#> 1 white    0.605 
+#> 2 hispanic 0.213 
+#> 3 black    0.139 
+#> 4 api      0.0219
+#> 5 others   0.0214
 ```
 
 ### Predicting Election Outcomes with Uncertainty
@@ -740,7 +756,7 @@ ggplot(sim_results, aes(x = EV, y = ..density..)) +
   labs(x = "Electoral Votes", y = "density")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-35-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-37-1.png" width="70%" style="display: block; margin: auto;" />
 Simulation mean, variance, and standard deviations:
 
 ```r
@@ -766,7 +782,341 @@ pres08 %>%
 #> 1  352 269 16.4
 ```
 
+
+## Random Variables and Probability Distributions
+
+
+### Bernoulli and Uniform Distributions
+
+Uniform distribution functions:
+
+```r
+dunif(0.5, min = 0, max = 1)
+#> [1] 1
+punif(1, min = -2, max = 2)
+#> [1] 0.75
+```
+
+Sample from a uniform distribution, and convert to a 
+
+```r
+sims <- 1000
+p <- 0.5
+
+# Sample of size sims from Bernoulli distribution with probability p
+y <- as.integer(runif(sims, min = 0, max = 1) <= p)
+# mean probability
+mean(y)
+#> [1] 0.461
+```
+
+### Binomial distribution
+
+
+```r
+dbinom(2, size = 3, prob = 0.5)
+#> [1] 0.375
+pbinom(1, 3, 0.5)
+#> [1] 0.5
+```
+
+
+```r
+voters <- c(1000, 10000, 100000)
+dbinom(voters / 2, size = voters, prob = 0.5)
+#> [1] 0.02523 0.00798 0.00252
+```
+
+### Normal distribution
+
+
+```r
+pnorm(1) - pnorm(-1)
+#> [1] 0.683
+pnorm(2) - pnorm(-2)
+#> [1] 0.954
+```
+
+Write a function to calculate the area of a normal distribution $\pm \sigma$
+
+```r
+normal_pm_sigma <- function(x, mu = 0, sd = 1) {
+  (pnorm(mu + sd * x, mean = mu, sd = sd) -
+     pnorm(mu - sd * x, mean = mu, sd = sd))
+}
+normal_pm_sigma(1)
+#> [1] 0.683
+normal_pm_sigma(2)
+#> [1] 0.954
+normal_pm_sigma(1, mu = 5, sd = 2)
+#> [1] 0.683
+normal_pm_sigma(2, mu = 5, sd = 2)
+#> [1] 0.954
+```
+
+
+
+```r
+data("pres08", package = "qss")
+data("pres12", package = "qss")
+```
+
+To join both data frames
+
+```r
+pres <-
+  full_join(select(pres08, state, Obama_2008 = Obama, McCain_2008 = McCain, 
+                 EV_2008 = EV),
+          select(pres12, state, Obama_2012 = Obama, Romney_2012 = Romney,
+                 EV_2012 = EV),
+          by = "state") %>%
+  mutate(Obama_2008_z = as.numeric(scale(Obama_2008)),
+         Obama_2012_z = as.numeric(scale(Obama_2012)))
+```
+
+
+```r
+fit1 <- lm(Obama_2012_z ~ -1 + Obama_2008_z, data = pres)
+```
+
+Plot the residuals and compare them to a normal distribution:
+
+```r
+err <- tibble(err = resid(fit1)) %>%
+  # z-score of residuals
+  mutate(err_std = err / sd(err))
+
+ggplot(err, aes(x = err_std)) +
+  geom_histogram(mapping = aes(y = ..density..),
+                 binwidth = 1, boundary = 0) +
+  stat_function(geom = "line", fun = dnorm) +
+  scale_x_continuous("Standardized residuals",
+                     breaks = -3:3, limits = c(-3, 3))
+```
+
+<img src="probability_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+```r
+ggplot(err, aes(sample = err_std)) +
+  geom_abline(intercept = 0, slope = 1, color = "white", size = 2) +
+  geom_qq() +
+  coord_fixed(ratio = 1) +
+  scale_y_continuous("Sample quantiles", limits = c(-3, 3)) +
+  scale_x_continuous("Theoretical quantiles", limits = c(-3, 3))
+```
+
+<img src="probability_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" />
+
+Alternatively, you can use the `augment` function from **broom** which returns the residuals for each observation in the `.resid` column.
+
+```r
+augment(fit1) %>%
+  mutate(.resid_z = .resid / sd(.resid)) %>%
+  ggplot(aes(x = .resid_z)) +
+  geom_histogram(mapping = aes(y = ..density..),
+                 binwidth = 1, boundary = 0) +
+  stat_function(geom = "line", fun = dnorm) +
+  scale_x_continuous("Standardized residuals", 
+                     breaks = -3:3, limits = c(-3, 3))
+```
+
+<img src="probability_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+Obama's vote shares in 2008 and 2012.
+
+Standard deviation of errors:
+
+```r
+err_sd <- sd(resid(fit1))
+```
+
+Probability of having a larger vote in California in 2012 than in 2008?
+
+```r
+CA_2008 <- filter(pres, state == "CA")$Obama_2008_z
+```
+The predicted value of 2012 vote share can be calculated manually with $\hat{beta} \times x$,
+
+```r
+CA_mean_2012 <- CA_2008 * coef(fit1)["Obama_2008_z"]
+CA_mean_2012
+#> Obama_2008_z 
+#>        0.858
+```
+or calculated using the predict function with the `newdata` argument providing any specific values to calculate?
+
+```r
+predict(fit1, newdata = tibble(Obama_2008_z = CA_2008))
+#>     1 
+#> 0.858
+```
+Now calculate 
+
+```r
+pnorm(CA_2008, mean = CA_mean_2012, sd = err_sd,
+      lower.tail = FALSE)
+#> [1] 0.468
+```
+
+We can generalize the previous code to calculate the probability that Obama would exceed his 2008 vote to all states:
+
+```r
+pres_gt_2008 <- augment(fit1) %>%
+  mutate(p_greater = pnorm(Obama_2008_z, mean = .fitted, sd = err_sd,
+                           lower.tail = FALSE))
+```
+
+Plotting these results, we can observe regression to the mean. 
+States with larger (smaller) 2008 vote shares had a lower (higher) probability that the 2012 vote share will exceed them.
+
+```r
+ggplot(pres_gt_2008, aes(x = Obama_2008_z, y = p_greater)) +
+  modelr::geom_ref_line(h = 0.5) +
+  modelr::geom_ref_line(v = 0) +
+  geom_point() +
+  labs(x = "Standardized vote share of Obama (2008)",
+       y = "Pr. 2012 vote share greater than 2008")
+```
+
+<img src="probability_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+
+### Expectation and Variance
+
+Theoretical and actual sample variable of a set of Bernoulli draws:
+
+```r
+p <- 0.5
+# theretical variance
+p * (1 - p)
+#> [1] 0.25
+# a sample
+y <- sample(c(0, 1), size = 1000, replace = TRUE, prob = c(p, 1 - p))
+# the sample variance of that sample
+var(y)
+#> [1] 0.25
+```
+
+
+### Predicting Election Outcomes with Uncertainty
+
+Load 2008 Presidential Election data:
+
+```r
+data("pres08", package = "qss")
+pres08 <- mutate(pres08, p = Obama / (Obama + McCain))
+```
+
+
+```r
+sim_election <- function(x, n = 1000) {
+  n_states <- nrow(x)
+  # samples the number of votes for Obama
+  mutate(x,
+         draws = rbinom(n_states, size = !!n, prob = p),
+         obama_EV = EV * (draws > (!!n / 2))) %>%
+    pluck("obama_EV") %>%
+    sum()
+}
+```
+
+This function returns the electoral votes for Obama for a single simulation:
+
+```r
+sim_election(pres08)
+#> [1] 326
+```
+
+Run this simulation `sims` times, saving the electoral votes of Obama in each simulation:
+
+```r
+sims <- 10000
+Obama_EV_sims <- map_dbl(seq_len(sims), ~ sim_election(pres08))
+```
+Obama's actual electoral value
+
+```r
+OBAMA_EV <- 364
+```
+
+
+```r
+library("glue")
+#> 
+#> Attaching package: 'glue'
+#> The following object is masked from 'package:dplyr':
+#> 
+#>     collapse
+ggplot(tibble(Obama_EV = Obama_EV_sims),
+       aes(x = Obama_EV, y = ..density..)) +
+  geom_histogram(binwidth = 10, boundary = 0, fill = "gray60") +
+  geom_vline(xintercept = OBAMA_EV, colour = "black", size = 2) +
+  annotate("text", x = OBAMA_EV + 2, y = 0.02,
+           label = glue("Obama's 2008 EV = {OBAMA_EV}"), hjust = 0) +
+  scale_x_continuous("Obama's Electoral College Votes",
+                     breaks = seq(300, 400, by = 20)) +
+  scale_y_continuous("Density") +
+  labs(title = "Prediction of election outcomes")
+```
+
+<img src="probability_files/figure-html/unnamed-chunk-64-1.png" width="70%" style="display: block; margin: auto;" />
+
+Summarize the simulations:
+
+```r
+summary(Obama_EV_sims)
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>     278     340     353     352     364     401
+```
+
+Compare theoretical and simulation means:
+
+```r
+# simulation EV
+mean(Obama_EV_sims)
+#> [1] 352
+# theoretical
+n <- 1000
+pres08 %>%
+  mutate(Obama_EV = EV * pbinom(n / 2, size = n, prob = p, 
+                                lower.tail = FALSE)) %>%
+  summarise(Obama_EV = sum(Obama_EV))
+#>   Obama_EV
+#> 1      352
+```
+
+Compare simulation and simulation variances:
+
+```r
+# simulation variance
+var(Obama_EV_sims)
+#> [1] 272
+# theoretical variance
+Obama_EV_var <- pres08 %>%
+  mutate(pb = pbinom(n / 2, size = n, prob = p, lower.tail = FALSE),
+         EV_var = pb * (1 - pb) * EV ^ 2) %>%
+  summarise(EV_var = sum(EV_var)) %>%
+  pluck("EV_var")
+Obama_EV_var                       
+#> [1] 269
+```
+and standard deviations
+
+```r
+# sim
+sd(Obama_EV_sims)
+#> [1] 16.5
+# theoretical
+sqrt(Obama_EV_var)
+#> [1] 16.4
+```
+
+
 ## Large Sample Theorems
+
 
 ### Law of Large Numbers
 
@@ -892,4 +1242,3 @@ clt_plot(100)
 ```
 
 <img src="probability_files/figure-html/clt_plot-1.png" width="70%" style="display: block; margin: auto;" /><img src="probability_files/figure-html/clt_plot-2.png" width="70%" style="display: block; margin: auto;" />
-

@@ -1,4 +1,9 @@
 
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Uncertainty
 
 
@@ -19,6 +24,10 @@ library("broom")
 ## Estimation
 
 
+### Unbiasedness and Consistency
+
+In these simulations, we draw a sample of size `n` from normal distributions with means `mu0` and `mu1` and standard deviations `sd0` and `sd1` respectively,
+
 ```r
 n <- 100
 mu0 <- 0
@@ -26,17 +35,25 @@ sd0 <- 1
 mu1 <- 1
 sd1 <- 1
 smpl <- tibble(id = seq_len(n),
+               # Y if not treated
                Y0 = rnorm(n, mean = mu0, sd = sd0),
+               # Y if treated
                Y1 = rnorm(n, mean = mu1, sd = sd1),
+               # individual treatment effects
                tau = Y1 - Y0)
+```
+The SATE is:
+
+```r
 SATE <- mean(smpl[["tau"]])
 SATE
 #> [1] 0.952
 ```
 
 
+Simulations of RCTs. Write a function that takes the sample as an input `smpl`, randomly assigns the treatment to each individual:
+
 ```r
-sims <- 5000
 sim_treat <- function(smpl) {
   n <- nrow(smpl)
   SATE <- mean(smpl[["tau"]])
@@ -49,20 +66,36 @@ sim_treat <- function(smpl) {
     group_by(treat) %>%
     summarise(Y_obs = mean(Y_obs)) %>%
     spread(treat, Y_obs) %>%
-    mutate(diff = `1` - `0`,
-           est_error = diff - SATE)
+    rename(Y1_mean = `1`, Y0_mean = `0`) %>%
+    mutate(diff_mean = Y1_mean - Y0_mean,
+           est_error = diff_mean - SATE)
 }
-diff_means <- map_df(seq_len(sims), ~ sim_treat(smpl))
-summary(diff_means[["est_error"]])
+```
+This returns a data frame with columns: `Y0_mean` (mean $Y$ for observations not receiving the treatment), `Y1_mean` (mean $Y$ for observations receiving the treatment), `diff` (difference in mean values between the two groups), and `est_error` (difference between the estimated difference and the known SATE):
+
+```r
+sim_treat(smpl)
+#> # A tibble: 1 x 4
+#>   Y0_mean Y1_mean diff_mean est_error
+#>     <dbl>   <dbl>     <dbl>     <dbl>
+#> 1 -0.0570   0.875     0.932   -0.0207
+```
+Rerun this function `sims` times:
+
+```r
+sims <- 5000
+sate_sims <- map_df(seq_len(sims), ~ sim_treat(smpl))
+summary(sate_sims[["est_error"]])
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.484  -0.087  -0.002  -0.002   0.085   0.414
+#>  -0.484  -0.087  -0.002  -0.001   0.085   0.414
 ```
 
+Simulate the PATE:
 
 ```r
 PATE <- mu1 - mu0
+
 sim_pate <- function(n, mu0, mu1, sd0, sd1) {
-  PATE <- mu1 - mu0
   smpl <- tibble(Y0 = rnorm(n, mean = mu0, sd = sd0),
                  Y1 = rnorm(n, mean = mu1, sd = sd1),
                  tau = Y1 - Y0)
@@ -75,33 +108,58 @@ sim_pate <- function(n, mu0, mu1, sd0, sd1) {
     group_by(treat) %>%
     summarise(Y_obs = mean(Y_obs)) %>%
     spread(treat, Y_obs) %>%
-    mutate(diff = `1` - `0`,
-           est_error = diff - PATE)
+    rename(Y1_mean = `1`, Y0_mean = `0`) %>%
+    mutate(diff_mean = Y1_mean - Y0_mean,
+           est_error = diff_mean - PATE)
 }
-diff_means <-
-  map_df(seq_len(sims), ~ sim_pate(n, mu0, mu1, sd0, sd1))
-summary(diff_means[["est_error"]])
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.746  -0.137  -0.002  -0.005   0.127   0.644
 ```
+Example of one simulation
 
-
-### Standard Errors
+```r
+sim_pate(n, mu0, mu1, sd0, sd1)
+#> # A tibble: 1 x 4
+#>   Y0_mean Y1_mean diff_mean est_error
+#>     <dbl>   <dbl>     <dbl>     <dbl>
+#> 1  -0.109   0.925      1.03    0.0338
+```
 
 
 ```r
-ggplot(diff_means, aes(x = diff)) +
-  geom_histogram() +
-  geom_vline(xintercept = PATE, colour = "white", size = 2) +
-  ggtitle("sampling distribution")
-#> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+pate_sims <-
+  map_df(seq_len(sims), ~ sim_pate(n, mu0, mu1, sd0, sd1))
+summary(pate_sims[["est_error"]])
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>  -0.677  -0.135  -0.004  -0.003   0.129   0.853
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-6-1.png" width="70%" style="display: block; margin: auto;" />
+
+### Standard Error
+
+Plot of the sampling distribution of the difference-in-means estimator:
+
+```r
+ggplot(pate_sims, aes(x = diff_mean, y = ..density..)) +
+  geom_histogram(binwidth = 0.01, boundary = 1) +
+  geom_vline(xintercept = PATE, colour = "white", size = 2) +
+  ggtitle("Sampling distribution") +
+  labs(x = "Difference-in-means estimator")
+```
+
+<img src="uncertainty_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+```r
+sd(pate_sims[["diff_mean"]])
+#> [1] 0.196
+```
+
+Simulate PATE with a standard error:
 
 ```r
 sim_pate_se <- function(n, mu0, mu1, sd0, sd1) {
+  # PATE - difference in means
   PATE <- mu1 - mu0
+  # sample
   smpl <- tibble(Y0 = rnorm(n, mean = mu0, sd = sd0),
                  Y1 = rnorm(n, mean = mu1, sd = sd1),
                  tau = Y1 - Y0)
@@ -109,33 +167,177 @@ sim_pate_se <- function(n, mu0, mu1, sd0, sd1) {
   idx <- sample(seq_len(n), floor(nrow(smpl) / 2), replace = FALSE)
   # treat variable are those receiving treatment, else 0
   smpl[["treat"]] <- as.integer(seq_len(nrow(smpl)) %in% idx)
+  # sample
   smpl %>%
     mutate(Y_obs = if_else(treat == 1L, Y1, Y0)) %>%
     group_by(treat) %>%
-    summarise(mean = mean(Y_obs), var = var(Y_obs),
+    summarise(mean = mean(Y_obs), 
+              var = var(Y_obs),
               nobs = n()) %>%
     summarise(diff_mean = diff(mean),
               se = sqrt(sum(var / nobs)),
               est_error = diff_mean - PATE)
 }
-diff_means <-
-  map_df(seq_len(sims), ~ sim_pate_se(n, mu0, mu1, sd0, sd1))
 ```
+Run a single simulation:
 
 ```r
-summary(diff_means[["se"]])
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>   0.149   0.190   0.200   0.200   0.209   0.252
+sim_pate_se(n, mu0, mu1, sd0, sd1)
+#> # A tibble: 1 x 3
+#>   diff_mean    se est_error
+#>       <dbl> <dbl>     <dbl>
+#> 1      1.05 0.190    0.0539
+```
+Run `sims` simulations:
+
+```r
+sims <- 5000
+pate_sims_se <-
+  map_df(seq_len(sims), ~ sim_pate_se(n, mu0, mu1, sd0, sd1))
+```
+Standard deviation of difference-in-means
+
+```r
+sd(pate_sims_se[["diff_mean"]])
+#> [1] 0.199
+```
+Mean of standard errors,
+
+```r
+mean(pate_sims_se[["se"]])
+#> [1] 0.2
 ```
 
 
 ### Confidence Intervals
 
+Calculate a $p\%$ confidence interval for the binomial distribution:
 
 ```r
-sim_binom_ci <- function(size, prob =  p) {
+# Sample size
+n <- 1000
+# point estimate
+x_bar <- 0.6
+# standard error
+se <- sqrt(x_bar * (1 - x_bar) / n)
+# Desired Confidence levels
+levels <- c(0.99, 0.95, 0.90)
+```
+
+
+```r
+tibble(level = levels) %>%
+  mutate(
+    ci_lower = x_bar - qnorm(1 - (1 - level) / 2) * se,
+    ci_upper = x_bar + qnorm(1 - (1 - level) / 2) * se
+  )
+#> # A tibble: 3 x 3
+#>   level ci_lower ci_upper
+#>   <dbl>    <dbl>    <dbl>
+#> 1 0.990    0.560    0.640
+#> 2 0.950    0.570    0.630
+#> 3 0.900    0.575    0.625
+```
+
+Calculate the coverage ratio of the 95% confidence interval in the PATE simulations.
+
+```r
+level <- 0.95
+pate_sims_se %>%
+  mutate(ci_lower = diff_mean - qnorm(1 - (1 - level) / 2) * se,
+         ci_upper = diff_mean + qnorm(1 - (1 - level) / 2) * se,
+         includes_pate = PATE > ci_lower & PATE < ci_upper) %>%
+  summarise(coverage = mean(includes_pate))
+#> # A tibble: 1 x 1
+#>   coverage
+#>      <dbl>
+#> 1    0.948
+```
+To do this for multiple levels encapsulate the above code in a function with arguments `.data` (the data frame) and the confidence level, `level`:
+
+```r
+pate_sims_coverage <- function(.data, level = 0.95) {
+  mutate(.data,
+         ci_lower = diff_mean - qnorm(1 - (1 - level) / 2) * se,
+         ci_upper = diff_mean + qnorm(1 - (1 - level) / 2) * se,
+         includes_pate = PATE > ci_lower & PATE < ci_upper) %>%
+    summarise(coverage = mean(includes_pate))
 }
 ```
+
+```r
+pate_sims_coverage(pate_sims_se, 0.95)
+#> # A tibble: 1 x 1
+#>   coverage
+#>      <dbl>
+#> 1    0.948
+pate_sims_coverage(pate_sims_se, 0.99)
+#> # A tibble: 1 x 1
+#>   coverage
+#>      <dbl>
+#> 1    0.989
+pate_sims_coverage(pate_sims_se, 0.90)
+#> # A tibble: 1 x 1
+#>   coverage
+#>      <dbl>
+#> 1    0.898
+```
+
+
+```r
+p <- 0.6
+n <- 10
+alpha <- 0.05
+sims <- 5000
+```
+
+Define a function that samples from a Bernoulli distribution, calculates its standard error, and returns a logical value as to whether it contains the true value: 
+
+```r
+binom_ci_contains <- function(n, p) {
+  x <- rbinom(n, size = 1, prob = p)
+  x_bar <- mean(x)
+  se <- sqrt(x_bar * (1 - x_bar) / n)
+  ci_lower <- x_bar - qnorm(1 - alpha / 2) * se
+  ci_upper <- x_bar + qnorm(1 - alpha / 2) * se
+  (ci_lower <= p) & (p <= ci_upper)
+}
+```
+
+We can run this once for given sample size:
+
+```r
+n <- 10
+binom_ci_contains(n, p)
+#> [1] FALSE
+```
+Using `map_df` we can rerun it `sims` times and calculate the coverage proportion:
+
+```r
+mean(map_lgl(seq_len(sims), ~ binom_ci_contains(n, p)))
+#> [1] 0.905
+```
+
+Encapsulate the above code in a function that calculates the coverage of a confidence interval with size, `n`, and success probability, `p`:
+
+```r
+binom_ci_coverage <- function(n, p) {
+  mean(map_lgl(seq_len(sims), ~ binom_ci_contains(n, p)))
+}
+```
+Use `binom_ci_coverage` to calculate CI coverage for multiple values of the sample size:
+
+```r
+tibble(n = c(10L, 100L, 1000L)) %>%
+  mutate(coverage = map_dbl(n, binom_ci_coverage, p = !!p))
+#> # A tibble: 3 x 2
+#>       n coverage
+#>   <int>    <dbl>
+#> 1    10    0.900
+#> 2   100    0.943
+#> 3  1000    0.948
+```
+
 
 
 ### Margin of Error and Sample Size Calculation in Polls
@@ -150,14 +352,14 @@ moe_pop_prop <- function(MoE) {
 }
 moe_pop_prop(0.01)
 #> # A tibble: 99 x 3
-#>       p     n   MoE
-#>   <dbl> <dbl> <dbl>
-#> 1  0.01   380  0.01
-#> 2  0.02   753  0.01
-#> 3  0.03  1118  0.01
-#> 4  0.04  1475  0.01
-#> 5  0.05  1825  0.01
-#> 6  0.06  2167  0.01
+#>        p     n    MoE
+#>    <dbl> <dbl>  <dbl>
+#> 1 0.0100   380 0.0100
+#> 2 0.0200   753 0.0100
+#> 3 0.0300  1118 0.0100
+#> 4 0.0400  1475 0.0100
+#> 5 0.0500  1825 0.0100
+#> 6 0.0600  2167 0.0100
 #> # ... with 93 more rows
 ```
 Then use [map_df](https://www.rdocumentation.org/packages/purrr/topics/map_df) to call this function for different margins of error, and return the entire thing as a data frame with columns: `n`, `p`, and `MoE`.
@@ -177,7 +379,7 @@ ggplot(props, aes(x = p, y = n, colour = factor(MoE))) +
   theme(legend.position = "bottom")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" />
 [read_csv](https://www.rdocumentation.org/packages/readr/topics/read_csv) already recognizes the date columns, so we don't need to convert them.
 The 2008 election was on Nov 11, 2008, so we'll store that in a variable.
 
@@ -231,13 +433,13 @@ poll_pred <-
 poll_pred
 #> # A tibble: 51 x 7
 #>   state Obama     se ci_lwr ci_upr actual covers
-#>   <chr> <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <lgl>
-#> 1    AK 0.390 0.0154  0.360  0.420   0.38   TRUE
-#> 2    AL 0.360 0.0152  0.330  0.390   0.39  FALSE
-#> 3    AR 0.440 0.0157  0.409  0.471   0.39  FALSE
-#> 4    AZ 0.465 0.0158  0.434  0.496   0.45   TRUE
-#> 5    CA 0.600 0.0155  0.570  0.630   0.61   TRUE
-#> 6    CO 0.520 0.0158  0.489  0.551   0.54   TRUE
+#>   <chr> <dbl>  <dbl>  <dbl>  <dbl>  <dbl> <lgl> 
+#> 1 AK    0.390 0.0154  0.360  0.420  0.380 T     
+#> 2 AL    0.360 0.0152  0.330  0.390  0.390 F     
+#> 3 AR    0.440 0.0157  0.409  0.471  0.390 F     
+#> 4 AZ    0.465 0.0158  0.434  0.496  0.450 T     
+#> 5 CA    0.600 0.0155  0.570  0.630  0.610 T     
+#> 6 CO    0.520 0.0158  0.489  0.551  0.540 T     
 #> # ... with 45 more rows
 ```
 
@@ -256,7 +458,7 @@ ggplot(poll_pred, aes(x = actual, y = Obama,
   theme(legend.position = "bottom")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" />
 
 Proportion of polls with confidence intervals that include the election outcome?
 
@@ -329,7 +531,7 @@ ggplot(filter(STAR,
   labs(x = "Fourth grade reading score", y = "Density")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-23-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" />
 
 ```r
 alpha <- 0.05
@@ -344,10 +546,10 @@ star_estimates <-
          upr = est + qnorm(1 - alpha / 2) * se)
 star_estimates
 #> # A tibble: 3 x 6
-#>                classtype     n   est    se   lwr   upr
-#>                   <fctr> <int> <dbl> <dbl> <dbl> <dbl>
-#> 1            small class   726   723  1.91   720   727
-#> 2          regular class   836   720  1.84   716   723
+#>   classtype                  n   est    se   lwr   upr
+#>   <fctr>                 <int> <dbl> <dbl> <dbl> <dbl>
+#> 1 small class              726   723  1.91   720   727
+#> 2 regular class            836   720  1.84   716   723
 #> 3 regular class with aid   791   721  1.86   717   724
 ```
 
@@ -365,7 +567,7 @@ star_estimates %>%
 #> # A tibble: 1 x 4
 #>      se   est ci_lwr ci_up
 #>   <dbl> <dbl>  <dbl> <dbl>
-#> 1  2.65   3.5   -1.7   8.7
+#> 1  2.65  3.50  -1.70  8.70
 ```
 Use we could use [spread](https://www.rdocumentation.org/packages/tidyr/topics/spread) and [gather](https://www.rdocumentation.org/packages/tidyr/topics/gather):
 
@@ -388,7 +590,7 @@ star_ate
 #> # A tibble: 1 x 8
 #>   est_regular est_small se_regular se_small ate_est ate_se ci_lwr ci_upr
 #>         <dbl>     <dbl>      <dbl>    <dbl>   <dbl>  <dbl>  <dbl>  <dbl>
-#> 1         720       723       1.84     1.91     3.5   2.65   -1.7    8.7
+#> 1         720       723       1.84     1.91    3.50   2.65  -1.70   8.70
 ```
 
 
@@ -448,11 +650,11 @@ true
 #> # A tibble: 5 x 3
 #>   correct     n   prob
 #>     <dbl> <dbl>  <dbl>
-#> 1       0     1 0.0143
-#> 2       2    16 0.2286
-#> 3       4    36 0.5143
-#> 4       6    16 0.2286
-#> 5       8     1 0.0143
+#> 1    0     1.00 0.0143
+#> 2    2.00 16.0  0.229 
+#> 3    4.00 36.0  0.514 
+#> 4    6.00 16.0  0.229 
+#> 5    8.00  1.00 0.0143
 ```
 
 ```r
@@ -476,11 +678,11 @@ left_join(select(approx, correct, prob_sim = prob),
 #> # A tibble: 5 x 4
 #>   correct prob_sim prob_exact      diff
 #>     <dbl>    <dbl>      <dbl>     <dbl>
-#> 1       0    0.020     0.0143  0.005714
-#> 2       2    0.229     0.2286  0.000429
-#> 3       4    0.492     0.5143 -0.022286
-#> 4       6    0.246     0.2286  0.017429
-#> 5       8    0.013     0.0143 -0.001286
+#> 1    0      0.0200     0.0143  0.00571 
+#> 2    2.00   0.229      0.229   0.000429
+#> 3    4.00   0.492      0.514  -0.0223  
+#> 4    6.00   0.246      0.229   0.0174  
+#> 5    8.00   0.0130     0.0143 -0.00129
 ```
 
 
@@ -499,10 +701,10 @@ x
 #> # A tibble: 4 x 3
 #>   Guess Truth Number
 #>   <chr> <chr>  <int>
-#> 1  Milk  Milk      4
-#> 2  Milk   Tea      0
-#> 3   Tea  Milk      0
-#> 4   Tea   Tea      4
+#> 1 Milk  Milk       4
+#> 2 Milk  Tea        0
+#> 3 Tea   Milk       0
+#> 4 Tea   Tea        4
 # 6 correct guesses
 y <- x %>%
   mutate(Number = c(3L, 1L, 1L, 3L))
@@ -510,10 +712,10 @@ y
 #> # A tibble: 4 x 3
 #>   Guess Truth Number
 #>   <chr> <chr>  <int>
-#> 1  Milk  Milk      3
-#> 2  Milk   Tea      1
-#> 3   Tea  Milk      1
-#> 4   Tea   Tea      3
+#> 1 Milk  Milk       3
+#> 2 Milk  Tea        1
+#> 3 Tea   Milk       1
+#> 4 Tea   Tea        3
 # Turn into a 2x2 table for fisher.test
 select(spread(x, Truth, Number), -Guess)
 #> # A tibble: 2 x 2
@@ -699,7 +901,7 @@ x <- resume %>%
   ungroup()
 x
 #> # A tibble: 2 x 3
-#>    race   `0`   `1`
+#>   race    `0`   `1`
 #> * <chr> <int> <int>
 #> 1 black  2278   157
 #> 2 white  2200   235
@@ -835,9 +1037,9 @@ fit_minwage1
 gather_predictions(slice(minwage, 1), fit_minwage, fit_minwage1) %>%
   select(model, pred)
 #> # A tibble: 2 x 2
-#>          model  pred
-#>          <chr> <dbl>
-#> 1  fit_minwage 0.271
+#>   model         pred
+#>   <chr>        <dbl>
+#> 1 fit_minwage  0.271
 #> 2 fit_minwage1 0.271
 ```
 
@@ -938,7 +1140,7 @@ tory_y0
 #> # A tibble: 1 x 3
 #>     fit   lwr   upr
 #>   <dbl> <dbl> <dbl>
-#> 1  12.5  12.1    13
+#> 1  12.5  12.1  13.0
 tory_y1 <-
   predict(tory_fit2, interval = "confidence",
           newdata = tibble(margin = 0)) %>% as_tibble()
@@ -995,7 +1197,7 @@ ggplot() +
   labs(x = "Margin of vitory", y = "log net wealth")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-68-1.png" width="70%" style="display: block; margin: auto;" />
 
 ```r
 tory_y1 <- augment(tory_fit1, newdata = tibble(margin = 0))
@@ -1047,8 +1249,8 @@ summary(tory_fit2)
 #> Multiple R-squared:  0.00135,	Adjusted R-squared:  -0.00864 
 #> F-statistic: 0.135 on 1 and 100 DF,  p-value: 0.714
 ```
+
 Since we aren't doing anything more with these values, there isn't much benefit in keeping them in data frames.
-I just adjust the names to be consistent with earlier code.
 
 ```r
 # standard error

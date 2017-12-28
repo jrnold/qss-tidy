@@ -108,7 +108,8 @@ data("UNpop", package = "qss")
 To read a [csv](https://en.wikipedia.org/wiki/Comma-separated_values) file into R use the 
 
 ```r
-UNpop_URL <- "https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.csv"
+UNpop_URL <- stringr::str_c("https://raw.githubusercontent.com/",
+                            "kosukeimai/qss/master/INTRO/UNpop.csv")
 UNpop <- read_csv(UNpop_URL)
 #> Parsed with column specification:
 #> cols(

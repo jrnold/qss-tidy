@@ -8099,7 +8099,7 @@ violent_exp_prop
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">select</span>(afghan, violent.exp.ISAF, violent.exp.taliban) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">gather</span>(variable, value) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">value =</span> <span class="kw">fct_explicit_na</span>(<span class="kw">fct_recode</span>(<span class="kw">factor</span>(value),
-                                <span class="dt">Harm =</span> <span class="st">&quot;1&quot;</span>, <span class="st">&quot;No Harm&quot;</span> =<span class="st"> &quot;0&quot;</span>), 
+                                <span class="dt">Harm =</span> <span class="st">&quot;1&quot;</span>, <span class="st">&quot;No Harm&quot;</span> =<span class="st"> &quot;0&quot;</span>),
                                 <span class="st">&quot;No response&quot;</span>),
          <span class="dt">variable =</span> <span class="kw">recode</span>(variable,
                            <span class="dt">violent.exp.ISAF =</span> <span class="st">&quot;ISAF&quot;</span>,

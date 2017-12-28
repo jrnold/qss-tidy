@@ -865,7 +865,7 @@ To join both data frames
 
 ```r
 pres <-
-  full_join(select(pres08, state, Obama_2008 = Obama, McCain_2008 = McCain, 
+  full_join(select(pres08, state, Obama_2008 = Obama, McCain_2008 = McCain,
                  EV_2008 = EV),
           select(pres12, state, Obama_2012 = Obama, Romney_2012 = Romney,
                  EV_2012 = EV),
@@ -917,7 +917,7 @@ augment(fit1) %>%
   geom_histogram(mapping = aes(y = ..density..),
                  binwidth = 1, boundary = 0) +
   stat_function(geom = "line", fun = dnorm) +
-  scale_x_continuous("Standardized residuals", 
+  scale_x_continuous("Standardized residuals",
                      breaks = -3:3, limits = c(-3, 3))
 ```
 
@@ -1081,7 +1081,7 @@ mean(Obama_EV_sims)
 # theoretical
 n <- 1000
 pres08 %>%
-  mutate(Obama_EV = EV * pbinom(n / 2, size = n, prob = p, 
+  mutate(Obama_EV = EV * pbinom(n / 2, size = n, prob = p,
                                 lower.tail = FALSE)) %>%
   summarise(Obama_EV = sum(Obama_EV))
 #>   Obama_EV
@@ -1100,7 +1100,7 @@ Obama_EV_var <- pres08 %>%
          EV_var = pb * (1 - pb) * EV ^ 2) %>%
   summarise(EV_var = sum(EV_var)) %>%
   pluck("EV_var")
-Obama_EV_var                       
+Obama_EV_var
 #> [1] 269
 ```
 and standard deviations

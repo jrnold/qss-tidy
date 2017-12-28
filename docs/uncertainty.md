@@ -18,6 +18,7 @@ library("lubridate")
 library("stringr")
 library("modelr")
 library("broom")
+library("purrr")
 ```
 
 
@@ -171,7 +172,7 @@ sim_pate_se <- function(n, mu0, mu1, sd0, sd1) {
   smpl %>%
     mutate(Y_obs = if_else(treat == 1L, Y1, Y0)) %>%
     group_by(treat) %>%
-    summarise(mean = mean(Y_obs), 
+    summarise(mean = mean(Y_obs),
               var = var(Y_obs),
               nobs = n()) %>%
     summarise(diff_mean = diff(mean),
@@ -294,7 +295,7 @@ sims <- 5000
 Define a function that samples from a Bernoulli distribution, calculates its standard error, and returns a logical value as to whether it contains the true value: 
 
 ```r
-binom_ci_contains <- function(n, p) {
+binom_ci_contains <- function(n, p, alpha = 0.05) {
   x <- rbinom(n, size = 1, prob = p)
   x_bar <- mean(x)
   se <- sqrt(x_bar * (1 - x_bar) / n)
@@ -321,7 +322,7 @@ mean(map_lgl(seq_len(sims), ~ binom_ci_contains(n, p)))
 Encapsulate the above code in a function that calculates the coverage of a confidence interval with size, `n`, and success probability, `p`:
 
 ```r
-binom_ci_coverage <- function(n, p) {
+binom_ci_coverage <- function(n, p, sims) {
   mean(map_lgl(seq_len(sims), ~ binom_ci_contains(n, p)))
 }
 ```
@@ -329,7 +330,7 @@ Use `binom_ci_coverage` to calculate CI coverage for multiple values of the samp
 
 ```r
 tibble(n = c(10L, 100L, 1000L)) %>%
-  mutate(coverage = map_dbl(n, binom_ci_coverage, p = !!p))
+  mutate(coverage = map_dbl(n, binom_ci_coverage, p = !!p, sims = !!sims))
 #> # A tibble: 3 x 2
 #>       n coverage
 #>   <int>    <dbl>

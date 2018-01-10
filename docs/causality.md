@@ -22,7 +22,7 @@ Load the data from the **qss** package.
 data("resume", package = "qss")
 ```
 
-In addition to the functions shown in the text,
+In addition to the `dim()`, `summary()`, and `head()`functions shown in the text,
 
 ```r
 dim(resume)
@@ -44,7 +44,7 @@ head(resume)
 #> 5    Carrie female white    0
 #> 6       Jay   male white    0
 ```
-we can also use `glimpse` to get a quick understanding of the variables in the data frame,
+we can also use `glimpse()` to get a quick understanding of the variables in the data frame:
 
 ```r
 glimpse(resume)
@@ -56,10 +56,10 @@ glimpse(resume)
 #> $ call      <int> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0...
 ```
 
-The code in *QSS* uses `table` and `addmargins` to construct the table.
-However, this can be done easily with `dplyr` using grouping and summarizing.
+The code in *QSS* uses `table()` and `addmargins()` to construct the table.
+However, this can be done easily with the `dplyr` package using grouping and summarizing.
 
-For each combination of `race` and `call` let's count the observations:
+Use `group_by()` to identify each combination of `race` and `call` then `count()` the observations:
 
 ```r
 race_call_tab <- resume %>%
@@ -76,7 +76,7 @@ race_call_tab
 #> 4 white     1   235
 ```
 
-If we want to calculate callback rates by race:
+If we want to calculate callback rates by race, we can use the `mutate()` function from `dplyr`.
 
 ```r
 race_call_rate <- race_call_tab %>%
@@ -94,7 +94,7 @@ race_call_rate
 ```
 
 If we want the overall callback rate, we can calculate it from the original
-data,
+data. Use the `summarise()` function from `dplyr`.
 
 ```r
 resume %>%
@@ -108,7 +108,7 @@ resume %>%
 
 ### Subsetting
 
-Select black individuals in the `resume` data:
+Create a new object of all individuals whose `race` variable equals `black` in the `resume` data:
 
 ```r
 resumeB <-
@@ -135,7 +135,7 @@ resumeB %>%
 #> 1    0.0645
 ```
 
-To keep call and first name variables and those with black-sounding first names:
+You can combine the `filter()` and `select()` functions with multiple conditions. For example, keep call and first name variables for female individuals with stereotypically black names:
 
 ```r
 resumeBf <-
@@ -152,13 +152,7 @@ head(resumeBf)
 #> 6    0     Aisha
 ```
 
-Now we can calculate the gender gap by group.
-
-
-This seems to be a little more code, but we didn't duplicate as much as in QSS, and this would easily scale to more than two categories.
-
-A way to do this using the [spread](https://www.rdocumentation.org/packages/tidyr/topics/spread) and [gather](https://www.rdocumentation.org/packages/tidyr/topics/gather) functions from [tidyr](https://cran.r-project.org/package=tidyr) package.
-See the [R for Data Science](http://r4ds.had.co.nz/) chapter ["Tidy Data"](http://r4ds.had.co.nz/tidy-data.html).
+Now we can calculate the gender gap by group. Doing so may seem to require a little more code, but we will not duplicate as much as in *QSS*, and this would easily scale to more than two categories.
 
 First, group by race and sex and calculate the callback rate for each group:
 
@@ -177,10 +171,9 @@ head(resume_race_sex)
 #> 3 white female 0.0989
 #> 4 white male   0.0887
 ```
-Use `spread()` to make each value of `race` a new column:
+Use `spread()` from the `tidyr` package to make each value of `race` a new column:
 
 ```r
-
 resume_sex <-
   resume_race_sex %>%
   ungroup() %>%
@@ -219,12 +212,15 @@ resume %>%
 #> 2 male   0.0583 0.0887    0.0304
 ```
 
+For more information on a way to do this using the [spread](https://www.rdocumentation.org/packages/tidyr/topics/spread) and [gather](https://www.rdocumentation.org/packages/tidyr/topics/gather) functions from [tidyr](https://cran.r-project.org/package=tidyr) package, see the [R for Data Science](http://r4ds.had.co.nz/) chapter ["Tidy Data"](http://r4ds.had.co.nz/tidy-data.html).
+
+
 **WARNING** The function [ungroup](https://www.rdocumentation.org/packages/dplyr/topics/ungroup) removes the groupings 
 in [group_by](https://www.rdocumentation.org/packages/dplyr/topics/group_by). The function `spread` will not allow a grouping
 variable to be reshaped.  Since many dplyr functions work differently depending on 
 whether the data frame is grouped or not, I find that I can encounter many errors due
-to forgetting that data frame is grouped. As such, I tend to `ungroup` data frames
-as soon as I no longer are using the groupings.
+to forgetting that a data frame is grouped. As such, I tend to `ungroup` data frames
+as soon as I am no longer are using the groupings.
 
 Alternatively, we could have used `summarise` and the `diff` function:
 
@@ -304,27 +300,26 @@ class(as.integer(c(1, 2, 3)))
 #> [1] "integer"
 ```
 
-
-
 ### Factor Variables
 
 For more on factors see the [R for Data Science](http://r4ds.had.co.nz/) chapter ["Factors"](http://r4ds.had.co.nz/factors.html) and the package [forcats](https://cran.r-project.org/package=forcats).
 Also see the [R for Data Science](http://r4ds.had.co.nz/) chapter ["Strings"](http://r4ds.had.co.nz/strings.html) for working
 with strings.
 
-The function `case_when` is a generalization of the `if_then` to multiple conditions.
+The function `case_when` is a generalization of the `if_else` to multiple conditions.
 For example, to create categories for all combinations of race and sex,
 
 ```r
 resume %>%
   mutate(
     race_sex = case_when(
-      race == "black" & sex == "female" ~ "black, female",
+      race == "black" & sex == "female" ~ "black female",
       race == "white" & sex == "female" ~ "white female",
       race == "black" & sex == "male" ~ "black male",
       race == "white" & sex == "male" ~ "white male"
     )
-  )
+  ) %>%
+  head()
 #>      firstname    sex  race call      race_sex
 #> 1      Allison female white    0  white female
 #> 2      Kristen female white    0  white female
@@ -5204,10 +5199,9 @@ to observations meeting that condition is on the right-hand side.
 Observations are given the value of the first matching condition, so the order
 of these can matter.
 
-
 The `case_when` function also supports a default value by using a condition `TRUE`
-as the last condition. This will match anything not already matched. E.g.
-if you wanted three categories ("black male", "black female", "white"),
+as the last condition. This will match anything not already matched. For example,
+if you wanted three categories ("black male", "black female", "white"):
 
 ```r
 resume %>%
@@ -5217,7 +5211,8 @@ resume %>%
       race == "black" & sex == "male" ~ "black male",
       TRUE ~ "white"
     )
-  )
+  ) %>%
+  head()
 #>      firstname    sex  race call      race_sex
 #> 1      Allison female white    0         white
 #> 2      Kristen female white    0         white
@@ -10092,7 +10087,7 @@ resume %>%
 ```
 
 Alternatively, we could have created this variable using string manipulation functions.
-Use  [str_to_title](https://www.rdocumentation.org/packages/stringr/topics/str_to_title) to capitalize `sex` and `race`,and [str_c](https://www.rdocumentation.org/packages/stringr/topics/str_c) to concatenate these vectors.
+Use `mutate()` to create a new variable, `type`, [str_to_title](https://www.rdocumentation.org/packages/stringr/topics/str_to_title) to capitalize `sex` and `race`, and [str_c](https://www.rdocumentation.org/packages/stringr/topics/str_c) to concatenate these vectors.
 
 ```r
 resume <-
@@ -10101,7 +10096,7 @@ resume <-
 ```
 
 Some of the reasons given in *QSS* for using factors in this chapter are less important due to the functionality of modern **tidyverse** packages.
-For example, there is no reason to use `tapply`, as that can use `group_by` and `summarise`,
+For example, there is no reason to use `tapply`, as you can use `group_by` and `summarise`,
 
 ```r
 resume %>%
@@ -10115,9 +10110,7 @@ resume %>%
 #> 3 WhiteFemale 0.0989
 #> 4 WhiteMale   0.0887
 ```
-
-What's nice about this approach is that we wouldn't have needed to create the factor variable first,
-
+or
 ```r
 resume %>%
   group_by(race, sex) %>%
@@ -10132,8 +10125,10 @@ resume %>%
 #> 4 white male   0.0887
 ```
 
+What's nice about this approach is that we wouldn't have needed to create the factor variable first as in *QSS*.
+
 We can use that same approach to calculate the mean of first names, and use
-`arrange` to sort in ascending order.
+`arrange()` to sort in ascending order.
 
 ```r
 resume %>%
@@ -10188,11 +10183,11 @@ summary(social)
 Calculate the mean turnout by `message`:
 
 ```r
-gotv_by_group <-
+turnout_by_message <-
   social %>%
   group_by(messages) %>%
   summarize(turnout = mean(primary2006))
-gotv_by_group
+turnout_by_message
 #> # A tibble: 4 x 2
 #>   messages   turnout
 #>   <chr>        <dbl>
@@ -10202,11 +10197,11 @@ gotv_by_group
 #> 4 Neighbors    0.378
 ```
 
-Since we want to calculate the difference by group, spread the data set so each 
-group is a column:
+Since we want to calculate the difference by group, `spread()` the data set so each 
+group is a column, then use `mutate()` to calculate the difference of each from the control group. Finally, use `select()` and `matches()` to return a dataframe with only those new variables that you have created:
 
 ```r
-gotv_by_group %>%
+turnout_by_message %>%
   spread(messages, turnout) %>%
   mutate(diff_civic_duty = `Civic Duty` - Control,
          diff_Hawthorne = Hawthorne - Control,
@@ -10256,6 +10251,7 @@ social %>%
 
 ## Observational Studies
 
+Load and inspect the minimum wage data from the `qss` package.
 
 ```r
 data("minwage", package = "qss")
@@ -10291,16 +10287,16 @@ First, calculate the proportion of restaurants by state whose hourly wages were 
 
 Since the NJ minimum wage was \$5.05, we'll define a variable with that value.
 Even if you use them only once or twice, it is a good idea to put values like this in variables.
-It makes your code closer to self-documenting.n
+It makes your code closer to self-documenting, i.e. easier for others (including you, in the future) to understand what the code does.
 
 ```r
 NJ_MINWAGE <- 5.05
 ```
 Later, it will be easier to understand `wageAfter < NJ_MINWAGE` without any comments than it would be to understand `wageAfter < 5.05`.
 In the latter case you'd have to remember that the new NJ minimum wage was 5.05 and that's why you were using that value.
-This is an example of a [magic number](https://en.wikipedia.org/wiki/Magic_number_(programming)#Unnamed_numerical_constants): try to avoid them.
+Using `5.05` in your code, instead of assigning it to an object called `NJ_MINWAGE`, is an example of a [magic number](https://en.wikipedia.org/wiki/Magic_number_(programming)#Unnamed_numerical_constants); try to avoid them.
 
-Note that location has multiple values: PA and four regions of NJ.
+Note that the variable `location` has multiple values: PA and four regions of NJ.
 So we'll add a state variable to the data.
 
 ```r
@@ -10322,7 +10318,7 @@ We can extract the state from the final two characters of the location variable 
 minwage <-
   mutate(minwage, state = str_sub(location, -2L))
 ```
-Alternatively, since `"NJ"` and `"PA"` are the only two values that `location` takes,
+Alternatively, since `"PA"` is the only value that an observation in Pennsylvania takes in `location`, and since all other observations are in New Jersey:
 
 ```r
 minwage <-
@@ -10343,7 +10339,7 @@ minwage %>%
 #> 2    PA    0.95522       0.940
 ```
 
-Create a variable for the proportion of full-time employees in NJ and PA
+Create a variable for the proportion of full-time employees in NJ and PA after the increase:
 
 ```r
 minwage <- minwage %>%
@@ -10351,7 +10347,7 @@ minwage <- minwage %>%
         fullPropAfter = fullAfter / totalAfter)
 ```
 
-Now calculate the average for each state:
+Now calculate the average proportion of full-time employees for each state:
 
 ```r
 full_prop_by_state <- minwage %>%
@@ -10387,7 +10383,7 @@ spread(full_prop_by_state, state, fullPropAfter) %>%
 
 ### Confounding Bias
 
-We can calculate the proportion of fast-food restaurants in each chain in each state:
+We can calculate the proportion of each chain out of all fast-food restaurants in each state:
 
 ```r
 chains_by_state <-
@@ -10408,8 +10404,8 @@ ggplot(chains_by_state, aes(x = chain, y = prop, colour = state)) +
 <img src="causality_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" />
 
 In the QSS text, only Burger King restaurants are compared.
-However, **dplyr** makes this easy.
-All we have to do is change the `group_by` statement we used last time,
+However, **dplyr** makes it easy to compare all restaurants.
+All we have to do is change the `group_by` statement we used previously so that we group by chain restaurants and states:
 
 ```r
 full_prop_by_state_chain <-
@@ -10431,11 +10427,11 @@ full_prop_by_state_chain
 ```
 
 We can plot and compare the proportions easily in this format.
-In general, ordering categorical variables alphabetically is useless, so we'll order the chains by the average of the NJ and PA `fullPropAfter`, using `forcats::fct_reorder`:
+In general, ordering categorical variables alphabetically is useless, so we'll order the chains by the average of the NJ and PA `fullPropAfter`, using `fct_reorder` from the `forcats` package:
 
 ```r
 ggplot(full_prop_by_state_chain,
-       aes(x = forcats::fct_reorder(chain, fullPropAfter),
+       aes(x = fct_reorder(chain, fullPropAfter),
            y = fullPropAfter,
            colour = state)) +
   geom_point() +
@@ -10445,7 +10441,7 @@ ggplot(full_prop_by_state_chain,
 
 <img src="causality_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
 
-To calculate the before and after difference,
+To calculate the difference between states in the proportion of full-time employees after the change:
 
 ```r
 full_prop_by_state_chain %>%
@@ -10464,7 +10460,7 @@ full_prop_by_state_chain %>%
 
 ### Before and After and Difference-in-Difference Designs
 
-To compute the estimates in the before and after design first create a variable for the difference before and after the law passed.
+To compute the estimates in the before and after design first create an additional variable for the proportion of full-time employees before the minimum wage increase.
 
 ```r
 minwage <-
@@ -10476,7 +10472,8 @@ minwage <-
 The before-and-after analysis is the difference between the full-time employment before and after the minimum wage law passed looking only at NJ:
 
 ```r
-filter(minwage, state == "NJ") %>%
+minwage %>%
+  filter(state == "NJ") %>%
   summarise(diff = mean(fullPropAfter) - mean(fullPropBefore))
 #>     diff
 #> 1 0.0239
@@ -10514,7 +10511,7 @@ full_prop_by_state
 #> 3 NJ      0       0.297
 #> 4 PA      0       0.310
 ```
-
+Now plot this new dataset:
 
 ```r
 ggplot(full_prop_by_state, aes(x = period, y = fullProp, colour = state)) +
@@ -10526,11 +10523,9 @@ ggplot(full_prop_by_state, aes(x = period, y = fullProp, colour = state)) +
 <img src="causality_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" />
 
 
-
-
 ## Descriptive Statistics for a Single Variable
 
-To calculate the summary for the variables `wageBefore` and `wageAfter`:
+To calculate the summary for the variables `wageBefore` and `wageAfter` for just New Jersey:
 
 ```r
 minwage %>%
@@ -10576,8 +10571,7 @@ minwage %>%
 #> 2 PA           0.359        0.129          0.358          0.128
 ```
 
-`summarise_at` and `summarise_if` are two functions that allow you 
-r, more compactly, using `summarise_at`:
+Here we can see again how using `summarise_at` allows for more compact code to specify variables and summary statistics that would be the case using just `summarise`:
 
 ```r
 minwage %>%

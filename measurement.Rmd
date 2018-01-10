@@ -232,6 +232,31 @@ ggplot(afghan, aes(x = educ.years, y = ..density..)) +
   
 ```
 
+There are several alternatives to the histogram.
+
+Density plots (`r rdoc("ggplot2", "geom_density")`):
+```{r}
+dens_plot <- ggplot(afghan, aes(x = age)) +
+  geom_density() +
+  scale_x_continuous(breaks = seq(20, 80, by = 10)) +
+  labs(title = "Distribution of respondent's age",
+       y = "Age", x = "Density")
+dens_plot
+```
+which can be combined with a `r rdoc("ggplot2", "geom_rug")` to show individual values:
+```{r}
+dens_plot + geom_rug()
+```
+
+Frequency polygons (`r rdoc("ggplot2", "geom_freqpoly")`): See `r R4DS` [EDA](http://r4ds.had.co.nz/exploratory-data-analysis.html).
+```{r}
+ggplot(afghan, aes(x = age)) +
+  geom_freqpoly() +
+  scale_x_continuous(breaks = seq(20, 80, by = 10)) +
+  labs(title = "Distribution of respondent's age",
+       y = "Age", x = "Density")
+```
+
 
 
 ### Boxplot
@@ -264,6 +289,35 @@ afghan %>%
             violent.exp.ISAF =
               mean(violent.exp.ISAF, na.rm = TRUE)) %>%
   arrange(educ.years)
+```
+
+An alternatives to the traditional boxplot:
+
+
+The Tufte boxplot:
+```{r}
+library("ggthemes")
+ggplot(afghan, aes(y = educ.years, x = province)) +
+  geom_tufteboxplot() +
+  coord_flip() +
+  labs(x = "Province", y = "Years of education",
+       title = "Education by Province")
+```
+Dot plot with jitter to avoid overplotting:
+```{r}
+ggplot(afghan, aes(y = educ.years, x = province)) +
+  geom_point(position = position_jitter(width = 0.25, height = 0)) +
+  coord_flip() +
+  labs(x = "Province", y = "Years of education",
+       title = "Education by Province")
+```
+A violin plot:
+```{r}
+ggplot(afghan, aes(y = educ.years, x = province)) +
+  geom_violin() +
+  coord_flip() +
+  labs(x = "Province", y = "Years of education",
+       title = "Education by Province")
 ```
 
 

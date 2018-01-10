@@ -20,7 +20,7 @@ Use **ggplot2**, not **base** or **lattice**. The only exception is to use the
 `plot()` method of an object when convenient. But do not create new graphics
 using non-ggplot2 formats.
 
-Some rules
+Some rules:
 
 - do not use `setwd()` in scripts EVER.
 - do not use `install.packages` in scripts.
@@ -40,6 +40,6 @@ Some rules
 It is okay to create new columns usine `$<-` or `[[<-`.
 But do not filter for  using logicals within `[`. Use `filter()`.
 
-In writing code, follow the Hadley Wickham Style Guide.
+In writing code, follow the tidyverse Style Guide.
 
 

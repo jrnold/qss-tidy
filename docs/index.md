@@ -10,16 +10,15 @@ documentclass: book
 
 # Preface {-}
 
-This is tidyverse R code to supplement the book, [Quantitative Social Science: An Introduction](http://press.princeton.edu/titles/11025.html), by Kosuke Imai, to
-be published by Princeton University Press in March 2017.
+This is tidyverse R code to supplement the book, [Quantitative Social Science: An Introduction](http://press.princeton.edu/titles/11025.html), by Kosuke Imai, published by Princeton University Press in March 2017.
 
-The R code included with the text of *QSS* and the supplementary materials relies mostly on base R functions. 
-This translates the code examples provided with *QSS* to tidyverse R code. 
+The R code included with the text of *QSS* and the supplementary materials rely mostly on base R functions. 
+This code translates the code examples provided with *QSS* to tidyverse R code. 
 [Tidyverse](https://github.com/tidyverse/tidyverse) refers to a set of packages (**ggplot2**, **dplyr**, **tidyr**, **readr**, **purrr**, **tibble**,  and a few others) that share common data representations, especially the use of data frames for return values. 
 
-These notes do not aim to teach tidyverse, The book [R for Data Science](http://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemond is an introduction. 
+These notes do not aim to teach tidyverse. The book [R for Data Science](http://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemond is an introduction. 
 
-I wrote this code while teaching course that employed both texts in order to make the excellent examples and statistical material in *QSS* more compatible with the modern data science using R approach in *R4DS*.
+I wrote this code while teaching courses that employed both texts in order to make the excellent examples and statistical material in *QSS* more compatible with the modern data science approach in *R4DS*.
 
 
 ## Colophon {-}
@@ -28,7 +27,7 @@ To install the R packages used in this work run the following code, installs the
 
 ```r
 install.packages("devtools")
-install_github("jrnold/qss-tidy")
+devtools::install_github("jrnold/qss-tidy")
 ```
 
 Additionally, the [gganimate](https://cran.r-project.org/package=gganimate) package requires installing [ffmpeg](https://ffmpeg.org/) with libvpx support.

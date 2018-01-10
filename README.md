@@ -26,3 +26,8 @@ Serve the book and render on change to files by running:
 ```r
 bookdown::serve_book()
 ```
+
+Rendering the book requires an initialization of the qss folder, which depends on an external repository. To do so, run the following in the shell:
+```r
+git submodule update --init
+```

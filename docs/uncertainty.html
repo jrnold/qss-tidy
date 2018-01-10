@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2017-12-28">
+<meta name="date" content="2018-01-10">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -277,7 +277,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">library</span>(<span class="st">&quot;lubridate&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;stringr&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;modelr&quot;</span>)
-<span class="kw">library</span>(<span class="st">&quot;broom&quot;</span>)</code></pre></div>
+<span class="kw">library</span>(<span class="st">&quot;broom&quot;</span>)
+<span class="kw">library</span>(<span class="st">&quot;purrr&quot;</span>)</code></pre></div>
 </div>
 <div id="estimation" class="section level2">
 <h2><span class="header-section-number">7.1</span> Estimation</h2>
@@ -388,7 +389,7 @@ sim_pate &lt;-<span class="st"> </span><span class="cf">function</span>(n, mu0, 
   smpl <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Y_obs =</span> <span class="kw">if_else</span>(treat <span class="op">==</span><span class="st"> </span>1L, Y1, Y0)) <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw">group_by</span>(treat) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(Y_obs), 
+<span class="st">    </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(Y_obs),
               <span class="dt">var =</span> <span class="kw">var</span>(Y_obs),
               <span class="dt">nobs =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw">summarise</span>(<span class="dt">diff_mean =</span> <span class="kw">diff</span>(mean),
@@ -469,17 +470,17 @@ pate_sims_se <span class="op">%&gt;%</span>
 <span class="co">#&gt;      &lt;dbl&gt;</span>
 <span class="co">#&gt; 1    0.898</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="fl">0.6</span>
-n &lt;-<span class="st"> </span><span class="dv">10</span> <span class="co"># c(10, 100, 1000)</span>
+n &lt;-<span class="st"> </span><span class="dv">10</span>
 alpha &lt;-<span class="st"> </span><span class="fl">0.05</span>
 sims &lt;-<span class="st"> </span><span class="dv">5000</span></code></pre></div>
 <p>Define a function that samples from a Bernoulli distribution, calculates its standard error, and returns a logical value as to whether it contains the true value:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">binom_ci_contains &lt;-<span class="st"> </span><span class="cf">function</span>(n, p) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">binom_ci_contains &lt;-<span class="st"> </span><span class="cf">function</span>(n, p, <span class="dt">alpha =</span> <span class="fl">0.05</span>) {
   x &lt;-<span class="st"> </span><span class="kw">rbinom</span>(n, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> p)
   x_bar &lt;-<span class="st"> </span><span class="kw">mean</span>(x)
   se &lt;-<span class="st"> </span><span class="kw">sqrt</span>(x_bar <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>x_bar) <span class="op">/</span><span class="st"> </span>n)
   ci_lower &lt;-<span class="st"> </span>x_bar <span class="op">-</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span>se
   ci_upper &lt;-<span class="st"> </span>x_bar <span class="op">+</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span>se
-  (ci_lower <span class="op">&lt;=</span><span class="st"> </span>p) <span class="op">&amp;</span><span class="st"> </span>(p <span class="op">&lt;=</span><span class="st"> </span>ci_upper)  
+  (ci_lower <span class="op">&lt;=</span><span class="st"> </span>p) <span class="op">&amp;</span><span class="st"> </span>(p <span class="op">&lt;=</span><span class="st"> </span>ci_upper)
 }</code></pre></div>
 <p>We can run this once for given sample size:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n &lt;-<span class="st"> </span><span class="dv">10</span>
@@ -489,12 +490,12 @@ sims &lt;-<span class="st"> </span><span class="dv">5000</span></code></pre></di
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(<span class="kw">map_lgl</span>(<span class="kw">seq_len</span>(sims), <span class="op">~</span><span class="st"> </span><span class="kw">binom_ci_contains</span>(n, p)))
 <span class="co">#&gt; [1] 0.905</span></code></pre></div>
 <p>Encapsulate the above code in a function that calculates the coverage of a confidence interval with size, <code>n</code>, and success probability, <code>p</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">binom_ci_coverage &lt;-<span class="st"> </span><span class="cf">function</span>(n, p) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">binom_ci_coverage &lt;-<span class="st"> </span><span class="cf">function</span>(n, p, sims) {
   <span class="kw">mean</span>(<span class="kw">map_lgl</span>(<span class="kw">seq_len</span>(sims), <span class="op">~</span><span class="st"> </span><span class="kw">binom_ci_contains</span>(n, p)))
 }</code></pre></div>
 <p>Use <code>binom_ci_coverage</code> to calculate CI coverage for multiple values of the sample size:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tibble</span>(<span class="dt">n =</span> <span class="kw">c</span>(10L, 100L, 1000L)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">coverage =</span> <span class="kw">map_dbl</span>(n, binom_ci_coverage, <span class="dt">p =</span> <span class="op">!!</span>p))
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">coverage =</span> <span class="kw">map_dbl</span>(n, binom_ci_coverage, <span class="dt">p =</span> <span class="op">!!</span>p, <span class="dt">sims =</span> <span class="op">!!</span>sims))
 <span class="co">#&gt; # A tibble: 3 x 2</span>
 <span class="co">#&gt;       n coverage</span>
 <span class="co">#&gt;   &lt;int&gt;    &lt;dbl&gt;</span>

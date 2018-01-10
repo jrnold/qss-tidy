@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2017-12-28">
+<meta name="date" content="2018-01-10">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -325,7 +325,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>The <strong>qss</strong> library distributes the data sets used in the <em>QSS</em> textbook.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;UNpop&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
 <p>To read a <a href="https://en.wikipedia.org/wiki/Comma-separated_values">csv</a> file into R use the</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop_URL &lt;-<span class="st"> &quot;https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.csv&quot;</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop_URL &lt;-<span class="st"> </span>stringr<span class="op">::</span><span class="kw">str_c</span>(<span class="st">&quot;https://raw.githubusercontent.com/&quot;</span>,
+                            <span class="st">&quot;kosukeimai/qss/master/INTRO/UNpop.csv&quot;</span>)
 UNpop &lt;-<span class="st"> </span><span class="kw">read_csv</span>(UNpop_URL)
 <span class="co">#&gt; Parsed with column specification:</span>
 <span class="co">#&gt; cols(</span>

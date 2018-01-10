@@ -213,7 +213,7 @@ n <- length(values)
 results <- rep(NA_real_, n)
 for (i in seq_len(n)) {
   x <- values[i]
-  r <- x %% 2 
+  r <- x %% 2
   if (r == 0) {
     cat(x, "is even and I will perform addition", x, " + ", x, "\n")
     results[i] <- x + x

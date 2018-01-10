@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2017-12-28">
+<meta name="date" content="2018-01-10">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -394,12 +394,12 @@ n &lt;-<span class="st"> </span><span class="kw">length</span>(values)
 results &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA_real_</span>, n)
 <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n)) {
   x &lt;-<span class="st"> </span>values[i]
-  r &lt;-<span class="st"> </span>x <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> 
+  r &lt;-<span class="st"> </span>x <span class="op">%%</span><span class="st"> </span><span class="dv">2</span>
   <span class="cf">if</span> (r <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) {
-    <span class="kw">cat</span>(x, <span class="st">&quot;is even and I will perform addition&quot;</span>, x, <span class="st">&quot; + &quot;</span>, x , <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
+    <span class="kw">cat</span>(x, <span class="st">&quot;is even and I will perform addition&quot;</span>, x, <span class="st">&quot; + &quot;</span>, x, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
     results[i] &lt;-<span class="st"> </span>x <span class="op">+</span><span class="st"> </span>x
   } <span class="cf">else</span> {
-    <span class="kw">cat</span>(x, <span class="st">&quot;is even and I will perform multiplication&quot;</span>, x, <span class="st">&quot; * &quot;</span>, x , <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
+    <span class="kw">cat</span>(x, <span class="st">&quot;is even and I will perform multiplication&quot;</span>, x, <span class="st">&quot; * &quot;</span>, x, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
     results[i] &lt;-<span class="st"> </span>x <span class="op">*</span><span class="st"> </span>x
   }
 }
@@ -613,7 +613,7 @@ pop_vote_avg &lt;-<span class="st"> </span><span class="kw">vector</span>(<span 
 pop_vote_avg &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(pop_vote_avg)</code></pre></div>
 <p>Write a function which takes a <code>date</code>, and calculates the <code>days</code> (the default is 7 days) moving average using the dataset <code>.data</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">poll_ma &lt;-<span class="st"> </span><span class="cf">function</span>(date, .data, <span class="dt">days =</span> <span class="dv">7</span>) {
-  <span class="kw">filter</span>(.data, 
+  <span class="kw">filter</span>(.data,
         <span class="kw">as.integer</span>(middate <span class="op">-</span><span class="st"> </span>date) <span class="op">&lt;=</span><span class="st"> </span><span class="dv">0</span>,
         <span class="kw">as.integer</span>(middate <span class="op">-</span><span class="st"> </span>date) <span class="op">&gt;</span><span class="st"> </span><span class="op">-</span><span class="st"> </span><span class="op">!!</span>days) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Obama =</span> <span class="kw">mean</span>(Obama, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
@@ -1642,7 +1642,7 @@ fit
 <span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">0.9</span>, <span class="dt">y =</span> <span class="kw">mean</span>(face<span class="op">$</span>diff.share) <span class="op">+</span><span class="st"> </span><span class="fl">0.05</span>,
            <span class="dt">label =</span> <span class="st">&quot;Mean of Y&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">vjust =</span> <span class="dv">0</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">y =</span> <span class="op">-</span><span class="fl">0.9</span>, <span class="dt">x =</span> <span class="kw">mean</span>(face<span class="op">$</span>d.comp), <span class="dt">label =</span> <span class="st">&quot;Mean of X&quot;</span>,
-           <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">hjust =</span> <span class="dv">0</span>) <span class="op">+</span><span class="st">  </span>
+           <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">hjust =</span> <span class="dv">0</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Democratic margin in vote shares&quot;</span>,
                      <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.5</span>), <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Democratic margin in vote shares&quot;</span>,
@@ -1739,10 +1739,10 @@ fit
 <p>However, since there are duplicate names, <code>.x</code> and <code>.y</code> are appended.</p>
 <p><strong>Challenge</strong> What would happen if <code>by = &quot;state&quot;</code> was dropped?</p>
 <p>To avoid the duplicate names, or change them, you can rename before merging,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">full_join</span>(<span class="kw">select</span>(pres08, state, <span class="dt">Obama_08 =</span> Obama, <span class="dt">McCain_08 =</span> McCain, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">full_join</span>(<span class="kw">select</span>(pres08, state, <span class="dt">Obama_08 =</span> Obama, <span class="dt">McCain_08 =</span> McCain,
                  <span class="dt">EV_08 =</span> EV),
           <span class="kw">select</span>(pres12, state, <span class="dt">Obama_12 =</span> Obama, <span class="dt">Romney_12 =</span> Romney,
-                 <span class="dt">EV_12 =</span> EV),          
+                 <span class="dt">EV_12 =</span> EV),
           <span class="dt">by =</span> <span class="st">&quot;state&quot;</span>)
 <span class="co">#&gt;    state Obama_08 McCain_08 EV_08 Obama_12 Romney_12 EV_12</span>
 <span class="co">#&gt; 1     AL       39        60     9       38        61     9</span>
@@ -2185,7 +2185,7 @@ fit.control
 <span class="co">#&gt; 1   0.00328       0.00327 0.463       336 1.06e-217  4 -198247 396504</span>
 <span class="co">#&gt;      BIC deviance df.residual</span>
 <span class="co">#&gt; 1 396557    65468      305862</span>
-<span class="kw">glance</span>(fit)<span class="op">$</span>adj.r.squared
+<span class="kw">glance</span>(fit)[[<span class="st">&quot;adj.r.squared&quot;</span>]]
 <span class="co">#&gt; [1] 0.00327</span></code></pre></div>
 </div>
 <div id="heterogeneous-treatment-effects" class="section level3">

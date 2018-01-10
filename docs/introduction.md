@@ -98,7 +98,8 @@ data("UNpop", package = "qss")
 - Datasets can be loaded from external files including both stored R objects (`.RData`, `.rda`) and other formats (`.csv`, `.dta`, `.sav`). To read a [csv](https://en.wikipedia.org/wiki/Comma-separated_values) file into R use the `read_csv` function from the **readr** library, part of the tidyverse.
 
 ```r
-UNpop_URL <- "https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.csv"
+UNpop_URL <- stringr::str_c("https://raw.githubusercontent.com/",
+                            "kosukeimai/qss/master/INTRO/UNpop.csv")
 UNpop <- read_csv(UNpop_URL)
 #> Parsed with column specification:
 #> cols(

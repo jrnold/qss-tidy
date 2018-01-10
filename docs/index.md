@@ -28,7 +28,7 @@ To install the R packages used in this work run the following code, installs the
 
 ```r
 install.packages("devtools")
-install_github("jrnold/qss-tidy")
+devtools::install_github("jrnold/qss-tidy")
 ```
 
 Additionally, the [gganimate](https://cran.r-project.org/package=gganimate) package requires installing [ffmpeg](https://ffmpeg.org/) with libvpx support.

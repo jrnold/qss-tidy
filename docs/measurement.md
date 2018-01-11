@@ -46,14 +46,14 @@ To get a summary of the different levels, either convert it to a factor (R4DS Ch
 afghan %>%
   count(income)
 #> # A tibble: 6 x 2
-#>   income              n
-#>   <chr>           <int>
-#> 1 10,001-20,000     616
-#> 2 2,001-10,000     1420
-#> 3 20,001-30,000      93
+#>            income     n
+#>             <chr> <int>
+#> 1   10,001-20,000   616
+#> 2    2,001-10,000  1420
+#> 3   20,001-30,000    93
 #> 4 less than 2,000   457
-#> 5 over 30,000        14
-#> 6 <NA>              154
+#> 5     over 30,000    14
+#> 6            <NA>   154
 ```
 
 Count the number a proportion of respondents who answer that they were harmed by the ISF (`violent.exp.ISAF`) and (`violent.exp.taliban`) respectively,
@@ -67,11 +67,11 @@ afghan %>%
 #> # A tibble: 9 x 4
 #>   violent.exp.ISAF violent.exp.taliban     n    prop
 #>              <int>               <int> <int>   <dbl>
-#> 1                0                   0  1330 0.483  
-#> 2                0                   1   354 0.129  
+#> 1                0                   0  1330 0.48293
+#> 2                0                   1   354 0.12854
 #> 3                0                  NA    22 0.00799
-#> 4                1                   0   475 0.172  
-#> 5                1                   1   526 0.191  
+#> 4                1                   0   475 0.17248
+#> 5                1                   1   526 0.19099
 #> 6                1                  NA    22 0.00799
 #> # ... with 3 more rows
 ```

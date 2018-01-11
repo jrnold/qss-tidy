@@ -293,7 +293,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>See <a href="http://tidytextmining.com/">Tidy Text Mining with R</a> for a full introduction to using <strong>tidytext</strong>.</p>
 <p>In tidy data, each row is an observation and each column is a variable. In the <strong>tidytext</strong> package, documents are stored as data frames with <strong>one-term-per-row</strong>.</p>
 <p>We can cast data into the <strong>tidytext</strong> format either from the <code>Corpus</code> object, or, after processing, from the document-term matrix object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DIR_SOURCE &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&quot;qss&quot;</span>, <span class="st">&quot;DISCOVERY&quot;</span>, <span class="st">&quot;federalist&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DIR_SOURCE &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/federalist&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)
 corpus_raw &lt;-<span class="st"> </span><span class="kw">VCorpus</span>(<span class="kw">DirSource</span>(<span class="dt">directory =</span> DIR_SOURCE, <span class="dt">pattern =</span> <span class="st">&quot;fp&quot;</span>))
 corpus_raw
 <span class="co">#&gt; &lt;&lt;VCorpus&gt;&gt;</span>
@@ -303,15 +303,15 @@ corpus_raw
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corpus_tidy &lt;-<span class="st"> </span><span class="kw">tidy</span>(corpus_raw, <span class="st">&quot;corpus&quot;</span>)
 corpus_tidy
 <span class="co">#&gt; # A tibble: 85 x 8</span>
-<span class="co">#&gt;   author       datetimestamp description heading       id language origin</span>
-<span class="co">#&gt;    &lt;lgl&gt;              &lt;dttm&gt;       &lt;lgl&gt;   &lt;lgl&gt;    &lt;chr&gt;    &lt;chr&gt;  &lt;lgl&gt;</span>
-<span class="co">#&gt; 1     NA 2017-12-22 22:41:17          NA      NA fp01.txt       en     NA</span>
-<span class="co">#&gt; 2     NA 2017-12-22 22:41:17          NA      NA fp02.txt       en     NA</span>
-<span class="co">#&gt; 3     NA 2017-12-22 22:41:17          NA      NA fp03.txt       en     NA</span>
-<span class="co">#&gt; 4     NA 2017-12-22 22:41:17          NA      NA fp04.txt       en     NA</span>
-<span class="co">#&gt; 5     NA 2017-12-22 22:41:17          NA      NA fp05.txt       en     NA</span>
-<span class="co">#&gt; 6     NA 2017-12-22 22:41:17          NA      NA fp06.txt       en     NA</span>
-<span class="co">#&gt; # ... with 79 more rows, and 1 more variables: text &lt;chr&gt;</span></code></pre></div>
+<span class="co">#&gt;   author datetimestamp       description heading id     lang… orig… text  </span>
+<span class="co">#&gt;   &lt;lgl&gt;  &lt;dttm&gt;              &lt;lgl&gt;       &lt;lgl&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;lgl&gt; &lt;chr&gt; </span>
+<span class="co">#&gt; 1 NA     2018-01-10 16:44:39 NA          NA      fp01.… en    NA    AFTER…</span>
+<span class="co">#&gt; 2 NA     2018-01-10 16:44:39 NA          NA      fp02.… en    NA    &quot;WHEN…</span>
+<span class="co">#&gt; 3 NA     2018-01-10 16:44:39 NA          NA      fp03.… en    NA    IT IS…</span>
+<span class="co">#&gt; 4 NA     2018-01-10 16:44:39 NA          NA      fp04.… en    NA    &quot;MY L…</span>
+<span class="co">#&gt; 5 NA     2018-01-10 16:44:39 NA          NA      fp05.… en    NA    &quot;QUEE…</span>
+<span class="co">#&gt; 6 NA     2018-01-10 16:44:39 NA          NA      fp06.… en    NA    &quot;THE …</span>
+<span class="co">#&gt; # ... with 79 more rows</span></code></pre></div>
 <p>The <code>text</code> column contains the text of the documents themselves. Since most of the metadata columns are either missings or irrelevant for our purposes, we’ll delete those columns, keeping only the document (<code>id</code>) and <code>text</code> columns.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corpus_tidy &lt;-<span class="st"> </span><span class="kw">select</span>(corpus_tidy, id, text)</code></pre></div>
 <p>Also, we want to extract the essay number and use that as the document id rather than its file name.</p>
@@ -328,14 +328,14 @@ corpus_tidy
 <span class="st">  </span><span class="kw">filter</span>(word <span class="op">!=</span><span class="st"> &quot;&quot;</span>)
 tokens
 <span class="co">#&gt; # A tibble: 202,089 x 2</span>
-<span class="co">#&gt;   document      word</span>
-<span class="co">#&gt;      &lt;int&gt;     &lt;chr&gt;</span>
-<span class="co">#&gt; 1        1     after</span>
-<span class="co">#&gt; 2        1        an</span>
+<span class="co">#&gt;   document word     </span>
+<span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;    </span>
+<span class="co">#&gt; 1        1 after    </span>
+<span class="co">#&gt; 2        1 an       </span>
 <span class="co">#&gt; 3        1 unequivoc</span>
-<span class="co">#&gt; 4        1    experi</span>
-<span class="co">#&gt; 5        1        of</span>
-<span class="co">#&gt; 6        1       the</span>
+<span class="co">#&gt; 4        1 experi   </span>
+<span class="co">#&gt; 5        1 of       </span>
+<span class="co">#&gt; 6        1 the      </span>
 <span class="co">#&gt; # ... with 2.021e+05 more rows</span></code></pre></div>
 <p>The <code>unnest_tokens</code> function uses the <a href="https://cran.r-project.org/package=tokenizers">tokenizers</a> package to tokenize the text. By default, it uses the function which removes punctuation, and lowercases the words. I set the tokenizer to to stem the word, using the <a href="https://cran.r-project.org/package=SnowballC">SnowballC</a> package.</p>
 <p>We can remove stop-words with an <a href="https://www.rdocumentation.org/packages/dplyr/topics/anti_join">anti_join</a> on the dataset <a href="https://www.rdocumentation.org/packages/tidytext/topics/stop_words">stop_words</a></p>
@@ -348,14 +348,14 @@ tokens &lt;-<span class="st"> </span><span class="kw">anti_join</span>(tokens, s
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm &lt;-<span class="st"> </span><span class="kw">count</span>(tokens, document, word)
 <span class="kw">head</span>(dtm)
 <span class="co">#&gt; # A tibble: 6 x 3</span>
-<span class="co">#&gt;   document       word     n</span>
-<span class="co">#&gt;      &lt;int&gt;      &lt;chr&gt; &lt;int&gt;</span>
-<span class="co">#&gt; 1        1        abl     1</span>
-<span class="co">#&gt; 2        1     absurd     1</span>
-<span class="co">#&gt; 3        1      accid     1</span>
-<span class="co">#&gt; 4        1     accord     1</span>
+<span class="co">#&gt;   document word           n</span>
+<span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;      &lt;int&gt;</span>
+<span class="co">#&gt; 1        1 abl            1</span>
+<span class="co">#&gt; 2        1 absurd         1</span>
+<span class="co">#&gt; 3        1 accid          1</span>
+<span class="co">#&gt; 4        1 accord         1</span>
 <span class="co">#&gt; 5        1 acknowledg     1</span>
-<span class="co">#&gt; 6        1        act     1</span></code></pre></div>
+<span class="co">#&gt; 6        1 act            1</span></code></pre></div>
 </div>
 <div id="topic-discovery" class="section level3">
 <h3><span class="header-section-number">5.1.2</span> Topic Discovery</h3>
@@ -373,42 +373,42 @@ tokens &lt;-<span class="st"> </span><span class="kw">anti_join</span>(tokens, s
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm &lt;-<span class="st"> </span><span class="kw">bind_tf_idf</span>(dtm, word, document, n)
 dtm
 <span class="co">#&gt; # A tibble: 38,847 x 6</span>
-<span class="co">#&gt;   document       word     n      tf   idf   tf_idf</span>
-<span class="co">#&gt;      &lt;int&gt;      &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1        1        abl     1 0.00145 0.705 0.001022</span>
-<span class="co">#&gt; 2        1     absurd     1 0.00145 1.735 0.002514</span>
-<span class="co">#&gt; 3        1      accid     1 0.00145 3.750 0.005434</span>
-<span class="co">#&gt; 4        1     accord     1 0.00145 0.754 0.001092</span>
-<span class="co">#&gt; 5        1 acknowledg     1 0.00145 1.552 0.002250</span>
-<span class="co">#&gt; 6        1        act     1 0.00145 0.400 0.000579</span>
+<span class="co">#&gt;   document word           n      tf   idf   tf_idf</span>
+<span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;      &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1        1 abl            1 0.00145 0.705 0.00102 </span>
+<span class="co">#&gt; 2        1 absurd         1 0.00145 1.73  0.00251 </span>
+<span class="co">#&gt; 3        1 accid          1 0.00145 3.75  0.00543 </span>
+<span class="co">#&gt; 4        1 accord         1 0.00145 0.754 0.00109 </span>
+<span class="co">#&gt; 5        1 acknowledg     1 0.00145 1.55  0.00225 </span>
+<span class="co">#&gt; 6        1 act            1 0.00145 0.400 0.000579</span>
 <span class="co">#&gt; # ... with 3.884e+04 more rows</span></code></pre></div>
 <p>The 10 most important words for Paper No. 12 are</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(document <span class="op">==</span><span class="st"> </span><span class="dv">12</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">top_n</span>(<span class="dv">10</span>, tf_idf)
 <span class="co">#&gt; # A tibble: 10 x 6</span>
-<span class="co">#&gt;   document       word     n      tf   idf  tf_idf</span>
-<span class="co">#&gt;      &lt;int&gt;      &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       12       cent     2 0.00199  4.44 0.00884</span>
-<span class="co">#&gt; 2       12      coast     3 0.00299  3.75 0.01119</span>
-<span class="co">#&gt; 3       12    commerc     8 0.00796  1.11 0.00884</span>
-<span class="co">#&gt; 4       12 contraband     3 0.00299  4.44 0.01326</span>
-<span class="co">#&gt; 5       12      excis     5 0.00498  2.65 0.01319</span>
-<span class="co">#&gt; 6       12     gallon     2 0.00199  4.44 0.00884</span>
+<span class="co">#&gt;   document word           n      tf   idf  tf_idf</span>
+<span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;      &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1       12 cent           2 0.00199  4.44 0.00884</span>
+<span class="co">#&gt; 2       12 coast          3 0.00299  3.75 0.0112 </span>
+<span class="co">#&gt; 3       12 commerc        8 0.00796  1.11 0.00884</span>
+<span class="co">#&gt; 4       12 contraband     3 0.00299  4.44 0.0133 </span>
+<span class="co">#&gt; 5       12 excis          5 0.00498  2.65 0.0132 </span>
+<span class="co">#&gt; 6       12 gallon         2 0.00199  4.44 0.00884</span>
 <span class="co">#&gt; # ... with 4 more rows</span></code></pre></div>
 <p>and for Paper No. 24,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(document <span class="op">==</span><span class="st"> </span><span class="dv">24</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">top_n</span>(<span class="dv">10</span>, tf_idf)
 <span class="co">#&gt; # A tibble: 10 x 6</span>
-<span class="co">#&gt;   document     word     n      tf   idf  tf_idf</span>
-<span class="co">#&gt;      &lt;int&gt;    &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       24     armi     7 0.00858  1.26 0.01085</span>
-<span class="co">#&gt; 2       24  arsenal     2 0.00245  3.75 0.00919</span>
-<span class="co">#&gt; 3       24     dock     3 0.00368  4.44 0.01633</span>
-<span class="co">#&gt; 4       24 frontier     3 0.00368  2.83 0.01042</span>
-<span class="co">#&gt; 5       24 garrison     6 0.00735  2.83 0.02083</span>
-<span class="co">#&gt; 6       24   nearer     2 0.00245  3.34 0.00820</span>
+<span class="co">#&gt;   document word         n      tf   idf  tf_idf</span>
+<span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;    &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1       24 armi         7 0.00858  1.26 0.0108 </span>
+<span class="co">#&gt; 2       24 arsenal      2 0.00245  3.75 0.00919</span>
+<span class="co">#&gt; 3       24 dock         3 0.00368  4.44 0.0163 </span>
+<span class="co">#&gt; 4       24 frontier     3 0.00368  2.83 0.0104 </span>
+<span class="co">#&gt; 5       24 garrison     6 0.00735  2.83 0.0208 </span>
+<span class="co">#&gt; 6       24 nearer       2 0.00245  3.34 0.00820</span>
 <span class="co">#&gt; # ... with 4 more rows</span></code></pre></div>
 <p>The slightly different results from the book are due to tokenization differences.</p>
 <p>Subset those documents known to have been written by Hamilton.</p>
@@ -430,14 +430,14 @@ km_out<span class="op">$</span>iter
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hamilton_words &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(hamilton_words, <span class="kw">as_tibble</span>(<span class="kw">t</span>(km_out<span class="op">$</span>centers)))
 hamilton_words
 <span class="co">#&gt; # A tibble: 3,850 x 5</span>
-<span class="co">#&gt;         word      `1`      `2`     `3`      `4`</span>
-<span class="co">#&gt;        &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1        abl 0.000939 0.000743 0.00000 0.000000</span>
-<span class="co">#&gt; 2     absurd 0.000000 0.000517 0.00000 0.000882</span>
-<span class="co">#&gt; 3      accid 0.000000 0.000202 0.00000 0.000000</span>
-<span class="co">#&gt; 4     accord 0.000000 0.000399 0.00000 0.000852</span>
-<span class="co">#&gt; 5 acknowledg 0.000000 0.000388 0.00000 0.000473</span>
-<span class="co">#&gt; 6        act 0.000000 0.000560 0.00176 0.000631</span>
+<span class="co">#&gt;   word            `1`      `2`     `3`      `4`</span>
+<span class="co">#&gt;   &lt;chr&gt;         &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 abl        0.000939 0.000743 0       0       </span>
+<span class="co">#&gt; 2 absurd     0        0.000517 0       0.000882</span>
+<span class="co">#&gt; 3 accid      0        0.000202 0       0       </span>
+<span class="co">#&gt; 4 accord     0        0.000399 0       0.000852</span>
+<span class="co">#&gt; 5 acknowledg 0        0.000388 0       0.000473</span>
+<span class="co">#&gt; 6 act        0        0.000560 0.00176 0.000631</span>
 <span class="co">#&gt; # ... with 3,844 more rows</span></code></pre></div>
 <p>To find the top 10 words in each centroid, we use <code>top_n</code> with <code>group_by</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">top_words_cluster &lt;-
@@ -669,10 +669,10 @@ author_data &lt;-<span class="st"> </span>author_data <span class="op">%&gt;%</s
 <span class="st">  </span><span class="kw">group_by</span>(author) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="st">`</span><span class="dt">Proportion Correct</span><span class="st">`</span> =<span class="st"> </span><span class="kw">mean</span>(author <span class="op">==</span><span class="st"> </span>pred_author))
 <span class="co">#&gt; # A tibble: 2 x 2</span>
-<span class="co">#&gt;     author `Proportion Correct`</span>
-<span class="co">#&gt;      &lt;chr&gt;                &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Hamilton                    1</span>
-<span class="co">#&gt; 2  Madison                    1</span></code></pre></div>
+<span class="co">#&gt;   author   `Proportion Correct`</span>
+<span class="co">#&gt;   &lt;chr&gt;                   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Hamilton                 1.00</span>
+<span class="co">#&gt; 2 Madison                  1.00</span></code></pre></div>
 <p>Create the cross-validation data-sets using . As in the chapter, I will use a leave-one-out cross-validation, which is a k-fold cross-validation where k is the number of observations. To simplify this, I define the <code>crossv_loo</code> function that runs <code>crossv_kfold</code> with <code>k = nrow(data)</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">crossv_loo &lt;-<span class="st"> </span><span class="cf">function</span>(data, <span class="dt">id =</span> <span class="st">&quot;.id&quot;</span>) {
   modelr<span class="op">::</span><span class="kw">crossv_kfold</span>(data, <span class="dt">k =</span> <span class="kw">nrow</span>(data), <span class="dt">id =</span> id)
@@ -698,10 +698,10 @@ test <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(author) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="kw">mean</span>(correct))
 <span class="co">#&gt; # A tibble: 2 x 2</span>
-<span class="co">#&gt;     author `mean(correct)`</span>
-<span class="co">#&gt;      &lt;chr&gt;           &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Hamilton           1.000</span>
-<span class="co">#&gt; 2  Madison           0.786</span></code></pre></div>
+<span class="co">#&gt;   author   `mean(correct)`</span>
+<span class="co">#&gt;   &lt;chr&gt;              &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Hamilton           1.00 </span>
+<span class="co">#&gt; 2 Madison            0.786</span></code></pre></div>
 <p>When adding prediction with <code>add_predictions</code> it added predictions for missing values as well.</p>
 <p>Table of authorship of disputed papers</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">author_data <span class="op">%&gt;%</span>

@@ -677,13 +677,13 @@ left_join(select(approx, correct, prob_sim = prob),
           by = "correct") %>%
   mutate(diff = prob_sim - prob_exact)
 #> # A tibble: 5 x 4
-#>   correct prob_sim prob_exact     diff
-#>     <dbl>    <dbl>      <dbl>    <dbl>
-#> 1    0      0.0110     0.0143 -0.00329
-#> 2    2.00   0.234      0.229   0.00543
-#> 3    4.00   0.486      0.514  -0.0283 
-#> 4    6.00   0.253      0.229   0.0244 
-#> 5    8.00   0.0160     0.0143  0.00171
+#>   correct prob_sim prob_exact      diff
+#>     <dbl>    <dbl>      <dbl>     <dbl>
+#> 1    0      0.0200     0.0143  0.00571 
+#> 2    2.00   0.229      0.229   0.000429
+#> 3    4.00   0.492      0.514  -0.0223  
+#> 4    6.00   0.246      0.229   0.0174  
+#> 5    8.00   0.0130     0.0143 -0.00129
 ```
 
 

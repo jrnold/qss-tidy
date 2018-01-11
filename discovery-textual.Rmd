@@ -29,7 +29,7 @@ We can cast data into the **tidytext** format either from the `Corpus` object,
 or, after processing, from the document-term matrix object.
 
 ```{r}
-DIR_SOURCE <- file.path("qss", "DISCOVERY", "federalist")
+DIR_SOURCE <- system.file("extdata/federalist", package = "qss")
 corpus_raw <- VCorpus(DirSource(directory = DIR_SOURCE, pattern = "fp"))
 corpus_raw
 ```

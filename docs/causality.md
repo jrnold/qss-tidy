@@ -248,7 +248,9 @@ retained in the data, and since there is no natural ordering of the `race` varia
 
 **dlpyr** has three conditional statement functions `if_else`, `recode` and `case_when`.
 
-The function `if_else` is like `ifelse` but corrects for some weird behavior that `ifelse` has in certain cases.
+The function `if_else` is like `ifelse` but corrects inconsistent behavior that `ifelse` exhibits in certain cases.
+
+Create a variable `BlackFemale` using `if_else()` and confirm it is only equal to `1` for black and female observations:
 
 ```r
 resume %>%
@@ -282,8 +284,8 @@ resume %>%
   mutate(BlackFemale = if_else(race == "black" & sex == "female", 1L, 0))
 #> Error in mutate_impl(.data, dots): Evaluation error: `false` must be type integer, not double.
 ```
-because `1L` is an integer and `0` is numeric (a floating-point number)
-The distinction between integers and numeric variables is often invisible because most functions coerce variables between 
+because `1L` is an integer and `0` is numeric vector (floating-point number).
+The distinction between integers and numeric variables is often invisible because most functions coerce variables between integer and numeric vectors.
 
 ```r
 class(1)

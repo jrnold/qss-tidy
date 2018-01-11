@@ -438,7 +438,8 @@ resume_sex
 <div id="simple-conditional-statements" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Simple conditional statements</h3>
 <p><strong>dlpyr</strong> has three conditional statement functions <code>if_else</code>, <code>recode</code> and <code>case_when</code>.</p>
-<p>The function <code>if_else</code> is like <code>ifelse</code> but corrects for some weird behavior that <code>ifelse</code> has in certain cases.</p>
+<p>The function <code>if_else</code> is like <code>ifelse</code> but corrects inconsistent behavior that <code>ifelse</code> exhibits in certain cases.</p>
+<p>Create a variable <code>BlackFemale</code> using <code>if_else()</code> and confirm it is only equal to <code>1</code> for black and female observations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">BlackFemale =</span> <span class="kw">if_else</span>(race <span class="op">==</span><span class="st"> &quot;black&quot;</span> <span class="op">&amp;</span><span class="st"> </span>sex <span class="op">==</span><span class="st"> &quot;female&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(BlackFemale, race, sex) <span class="op">%&gt;%</span>
@@ -459,7 +460,7 @@ resume_sex
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resume <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">BlackFemale =</span> <span class="kw">if_else</span>(race <span class="op">==</span><span class="st"> &quot;black&quot;</span> <span class="op">&amp;</span><span class="st"> </span>sex <span class="op">==</span><span class="st"> &quot;female&quot;</span>, 1L, <span class="dv">0</span>))
 <span class="co">#&gt; Error in mutate_impl(.data, dots): Evaluation error: `false` must be type integer, not double.</span></code></pre></div>
-<p>because <code>1L</code> is an integer and <code>0</code> is numeric (a floating-point number) The distinction between integers and numeric variables is often invisible because most functions coerce variables between</p>
+<p>because <code>1L</code> is an integer and <code>0</code> is numeric vector (floating-point number). The distinction between integers and numeric variables is often invisible because most functions coerce variables between integer and numeric vectors.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(<span class="dv">1</span>)
 <span class="co">#&gt; [1] &quot;numeric&quot;</span>
 <span class="kw">class</span>(1L)

@@ -10,12 +10,6 @@ To view the rendered pages visit <https://jrnold.github.io/qss-tidy>.
 
 ## Build and Install
 
-Clone the repository:
-```console
-$ git clone --recurse-submodules https://github.com/jrnold/qss-tidy.git
-```
-The `--recurse-submodules` option is necessary since the `qss` directory is a git submodule of [kosukeimai/qss](https://github.com/kosukeimai/qss).
-
 The site is built with the R package [bookdown](https://bookdown.org/yihui/bookdown/).
 
 Install the necessary R dependencies with

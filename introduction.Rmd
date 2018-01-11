@@ -12,22 +12,22 @@ In the prerequisites section of each chapter, we'll load any packages
 needed for the chapter, and possibly define some functions or load data.
 
 
-```r
+```{r}
 library("tidyverse")
 ```
 We also load the **readr** package to load `csv` files,
 
-```r
+```{r}
 library("readr")
 ```
 the **haven** package to load Stata `dta` files,
 
-```r
+```{r}
 library("haven")
 ```
 and the **rio** package to load multiple types of files.
 
-```r
+```{r}
 library("rio")
 ```
 
@@ -91,44 +91,28 @@ Datasets used in R are accessed in two ways.
 
 - Datasets can be distributed with R packages. These are often smaller datasets used in examples and tutorials in packages. These are loaded with the `data()` function. For example you can load UN data on demographic statistics from the **qss** library, which distributes the data sets used in the *QSS* textbook. (The function `data()` called without any arguments will list all the datasets distributed with installed packages.)
 
-```r
+```{r}
 data("UNpop", package = "qss")
 ```
 - Datasets can be loaded from external files including both stored R objects (`.RData`, `.rda`) and other formats (`.csv`, `.dta`, `.sav`). To read a [csv](https://en.wikipedia.org/wiki/Comma-separated_values) file into R use the `read_csv` function from the **readr** library, part of the tidyverse.
 
-```r
+```{r}
 UNpop_URL <- "https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.csv"
 UNpop <- read_csv(UNpop_URL)
-#> Parsed with column specification:
-#> cols(
-#>   year = col_integer(),
-#>   world.pop = col_integer()
-#> )
 ```
 
 We use the readr function`read_csv()` instead of the base R function `read.csv()` used in the *QSS* text. It is slightly faster, and returns a `tibble` instead of a data frame. Check this by calling `class()` on the new object.
 
-```r
+```{R}
 class(UNpop)
-#> [1] "tbl_df"     "tbl"        "data.frame"
 UNpop
-#> # A tibble: 7 x 2
-#>    year world.pop
-#>   <int>     <int>
-#> 1  1950   2525779
-#> 2  1960   3026003
-#> 3  1970   3691173
-#> 4  1980   4449049
-#> 5  1990   5320817
-#> 6  2000   6127700
-#> # ... with 1 more row
 ```
 See [R for Data Science](http://r4ds.had.co.nz/) [Ch 11: Data Import](http://r4ds.had.co.nz/tibbles.html#introduction-4)
 for more discussion.
 
 Note that in the previous code we loaded the file directly from a URL, but we could also work with local files on your computer, e.g.
 
-```r
+```{r}
 UNpop <- read_csv("INTRO/UNpop.csv")
 ```
 
@@ -136,140 +120,66 @@ See [R for Data Science](http://r4ds.had.co.nz/) [Ch 10: Tibbles](http://r4ds.ha
 
 The single bracket, `[`, is useful to select rows and columns in simple cases.
 
-```r
+```{r}
 UNpop[c(1, 2, 3), ]
-#> # A tibble: 3 x 2
-#>    year world.pop
-#>   <int>     <int>
-#> 1  1950   2525779
-#> 2  1960   3026003
-#> 3  1970   3691173
 ```
 
 There are **dplyr** functions to select rows by number, to select rows by certain criteria, or to select columns.
 
 To select rows 1--3, use `slice()`.
 
-```r
+```{r}
 slice(UNpop, 1:3)
-#> # A tibble: 3 x 2
-#>    year world.pop
-#>   <int>     <int>
-#> 1  1950   2525779
-#> 2  1960   3026003
-#> 3  1970   3691173
 ```
 
 Base R allows you to choose the column `world.pop` column from the `UNpop` data frame:
 
-```r
+```{r}
 UNpop[, "world.pop"]
-#> # A tibble: 7 x 1
-#>   world.pop
-#>       <int>
-#> 1   2525779
-#> 2   3026003
-#> 3   3691173
-#> 4   4449049
-#> 5   5320817
-#> 6   6127700
-#> # ... with 1 more row
-
 UNpop$world.pop
-#> [1] 2525779 3026003 3691173 4449049 5320817 6127700 6916183
-
 UNpop[["world.pop"]]
-#> [1] 2525779 3026003 3691173 4449049 5320817 6127700 6916183
-
 select(UNpop, world.pop)
-#> # A tibble: 7 x 1
-#>   world.pop
-#>       <int>
-#> 1   2525779
-#> 2   3026003
-#> 3   3691173
-#> 4   4449049
-#> 5   5320817
-#> 6   6127700
-#> # ... with 1 more row
 ```
-However, note that, by default, `[` will return a vector rather than a data frame if only one column is selected. This may seem convenient, but it can result in many hard to find and surprising bugs in practice. In the case above, `[` returns a tibble because the objecct `world.pop` is already a tibble.
-
-The `[[` and `$` operators can only select a single column and return a vector.
+Unlike `[`, the `[[` and `$` operators can only select a single column and return a vector.[^extract1]
 The `dplyr` function `select()` **always** returns a tibble (data frame), and never a vector, even if only one column is selected.
 
-
+[^extract1]: See the discussion in [R for Data Science](http://r4ds.had.co.nz/tibbles.html#tibbles-vs.data.frame) on how `tibble` objects differ from base `data.frame` objects in how `[` is handled.
+  
 
 Select rows 1--3 of the `year` column:
-
-```r
+```{r}
 UNpop[1:3, "year"]
-#> # A tibble: 3 x 1
-#>    year
-#>   <int>
-#> 1  1950
-#> 2  1960
-#> 3  1970
 ```
 or,
-
-```r
+```{r}
 select(slice(UNpop, 1:3), year)
-#> # A tibble: 3 x 1
-#>    year
-#>   <int>
-#> 1  1950
-#> 2  1960
-#> 3  1970
 ```
 
 The same series of functions can be performed using the pipe operator, `%>%`.
 
-```r
+```{r}
 UNpop %>%
   slice(1:3) %>%
   select(year)
-#> # A tibble: 3 x 1
-#>    year
-#>   <int>
-#> 1  1950
-#> 2  1960
-#> 3  1970
 ```
 This example may seem verbose, but later we can produce more complicated transformations of the data by chaining together simple functions.
 
 Select every other row from `UNpop`:
 
-```r
+```{r}
 UNpop$world.pop[seq(from = 1, to = nrow(UNpop), by = 2)]
-#> [1] 2525779 3691173 5320817 6916183
 ```
 or
 
-```r
+```{r}
 UNpop %>%
   slice(seq(1, n(), by = 2)) %>%
   select(world.pop)
-#> # A tibble: 4 x 1
-#>   world.pop
-#>       <int>
-#> 1   2525779
-#> 2   3691173
-#> 3   5320817
-#> 4   6916183
 ```
 or
-
-```r
+```{r}
 UNpop %>%
   filter(row_number() %% 2 == 1)
-#> # A tibble: 4 x 2
-#>    year world.pop
-#>   <int>     <int>
-#> 1  1950   2525779
-#> 2  1970   3691173
-#> 3  1990   5320817
-#> 4  2010   6916183
 ```
 
 The function `n()` when used in a **dplyr** function returns the number of rows in the data frame (or the number of rows in the group if used with `group_by()`).
@@ -295,7 +205,7 @@ This means that while you should not save the entire workplace it is perfectly f
 As with reading CSV files, use the [readr](http://readr.tidyverse.org/) package functions.
 In this case, `write_csv()` writes a csv file and takes at least two objects: the data that you want to write to a csv and the name that you want to give the file.
 
-```r
+```{r}
 write_csv(UNpop, "UNpop.csv")
 ```
 
@@ -306,62 +216,31 @@ Use the [haven](http://haven.tidyverse.org/) package to read and write Stata (`.
 Stata and SPSS are two other statistical programs commonly used in social science.
 Even if you don't ever use them, you'll almost certainly encounter data stored in their native formats.
 
-```r
+```{r}
 UNpop_dta_url <- "https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.dta"
 UNpop <- read_dta(UNpop_dta_url)
 UNpop
-#> # A tibble: 7 x 2
-#>    year world_pop
-#>   <dbl>     <dbl>
-#> 1  1950      2526
-#> 2  1960      3026
-#> 3  1970      3691
-#> 4  1980      4449
-#> 5  1990      5321
-#> 6  2000      6128
-#> # ... with 1 more row
 ```
 
 There is also the equivalent `write_dta` function to create Stata datasets.
 
-```r
+```{r}
 write_dta(UNpop, "UNpop.dta")
 ```
 
-One thing to note is that Stata and SPSS have different concept
+While Stata and SPSS data sets are quite similar to data frames, they differ slightly in definitions of acceptable data types of columns and what metadata they store with the data.
+ +Be careful when reading and writing from these formats to ensure that information is not lost.
 
 Also see the [rio](https://cran.r-project.org/package=rio) package which makes loading data even easier with smart defaults.
 
 You can use the `import` function to load many types of files:
 
-```r
+```{r}
 import("https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.csv")
-#>   year world.pop
-#> 1 1950   2525779
-#> 2 1960   3026003
-#> 3 1970   3691173
-#> 4 1980   4449049
-#> 5 1990   5320817
-#> 6 2000   6127700
-#> 7 2010   6916183
+
 import("https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.RData")
-#>   year world.pop
-#> 1 1950   2525779
-#> 2 1960   3026003
-#> 3 1970   3691173
-#> 4 1980   4449049
-#> 5 1990   5320817
-#> 6 2000   6127700
-#> 7 2010   6916183
+
 import("https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.dta")
-#>   year world_pop
-#> 1 1950      2526
-#> 2 1960      3026
-#> 3 1970      3691
-#> 4 1980      4449
-#> 5 1990      5321
-#> 6 2000      6128
-#> 7 2010      6916
 ```
 
 R also includes the **foreign** package, which contains functions for reading and writing files using **haven**.

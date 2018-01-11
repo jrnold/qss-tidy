@@ -175,7 +175,7 @@ head(resume_race_sex)
 #> 3 white female 0.0989
 #> 4 white male   0.0887
 ```
-Use `spread()` frm the **tidyr** pacakge to make each value of `race` a new column:
+Use `spread()` from the **tidyr** package to make each value of `race` a new column:
 
 ```r
 
@@ -5714,7 +5714,7 @@ minwage %>%
 #> 2 PA           0.359        0.129          0.358          0.128
 ```
 
-Here we can see again how using [summarise_at](https://www.rdocumentation.org/packages/dplyr/topics/summarise_at) allows for more compact code to specify variables and summary statistics that would be the case using just `summarise
+Here we can see again how using [summarise_at](https://www.rdocumentation.org/packages/dplyr/topics/summarise_at) allows for more compact code to specify variables and summary statistics that would be the case using just `summarise`:
 
 ```r
 minwage %>%

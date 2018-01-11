@@ -103,7 +103,7 @@ resume_race_sex <-
   summarise(call = mean(call))
 head(resume_race_sex)
 ```
-Use `spread()` frm the **tidyr** pacakge to make each value of `race` a new column:
+Use `spread()` from the **tidyr** package to make each value of `race` a new column:
 ```{r}
 
 resume_sex <-
@@ -231,7 +231,7 @@ resume %>%
 ```
 
 Alternatively, we could have created this variable using string manipulation functions.
-Use `mutate()` to create a new variable, `type`, [str_to_title](https://www.rdocumentation.org/packages/stringr/topics/str_to_title) to capitalize `sex` and `race`, and [str_c](https://www.rdocumentation.org/packages/stringr/topics/str_c) to concatenate these vectors.
+Use `mutate()` to create a new variable, `type`, `r rdoc("stringr", "str_to_title")` to capitalize `sex` and `race`, and `r rdoc("stringr", "str_c")` to concatenate these vectors.
 ```{r}
 resume <-
   resume %>%
@@ -523,7 +523,7 @@ minwage %>%
 
 ```
 
-Here we can see again how using `r rdoc("dplyr", "summarise_at")` allows for more compact code to specify variables and summary statistics that would be the case using just `summarise
+Here we can see again how using `r rdoc("dplyr", "summarise_at")` allows for more compact code to specify variables and summary statistics that would be the case using just `summarise`:
 ```{r}
 minwage %>%
   group_by(state) %>%

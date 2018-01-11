@@ -387,7 +387,7 @@ race_call_rate
 <span class="co">#&gt; 2 black male   0.0583</span>
 <span class="co">#&gt; 3 white female 0.0989</span>
 <span class="co">#&gt; 4 white male   0.0887</span></code></pre></div>
-<p>Use <code>spread()</code> frm the <strong>tidyr</strong> pacakge to make each value of <code>race</code> a new column:</p>
+<p>Use <code>spread()</code> from the <strong>tidyr</strong> package to make each value of <code>race</code> a new column:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 resume_sex &lt;-
 <span class="st">  </span>resume_race_sex <span class="op">%&gt;%</span>
@@ -5713,7 +5713,7 @@ full_prop_by_state
 <span class="co">#&gt;   &lt;chr&gt;        &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 NJ           0.106        0.0112         0.343          0.118</span>
 <span class="co">#&gt; 2 PA           0.359        0.129          0.358          0.128</span></code></pre></div>
-<p>Here we can see again how using <a href="https://www.rdocumentation.org/packages/dplyr/topics/summarise_at">summarise_at</a> allows for more compact code to specify variables and summary statistics that would be the case using just `summarise</p>
+<p>Here we can see again how using <a href="https://www.rdocumentation.org/packages/dplyr/topics/summarise_at">summarise_at</a> allows for more compact code to specify variables and summary statistics that would be the case using just <code>summarise</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise_at</span>(<span class="kw">vars</span>(wageAfter, wageBefore), <span class="kw">funs</span>(sd, var))

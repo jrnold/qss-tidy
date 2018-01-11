@@ -194,7 +194,7 @@ Your motto should be that the **source is real**, not the objects created by it.
 
 > The source code is real. The objects are realizations of the source code. Source for EVERY user modified object is placed in a particular directory or directories, for later editing and retrieval. – from the [ESS manual](https://ess.r-project.org/Manual/ess.html#Philosophies-for-using-ESS_0028S_0029)
 
-This means that while you should not save the entire workplace it is perfectly fine practice to run a script and save or load R objects to files, using `r RDoc("base::save")` or `r RDoc("base::saveRDS")`.
+This means that while you should not save the entire workplace it is perfectly fine practice to run a script and save or load R objects to files using `r RDoc("base::save")` or `r RDoc("base::saveRDS")`.
 
 As with reading CSV files, use the [readr](http://readr.tidyverse.org/) package functions.
 In this case, `r RDoc("readr::write_csv")` writes a csv file
@@ -219,7 +219,8 @@ There is also the equivalent `write_dta` function to create Stata datasets.
 write_dta(UNpop, "UNpop.dta")
 ```
 
-One thing to note is that Stata and SPSS have different concept
+While Stata and SPSS data sets are quite similar to data frames, they differ slightly in definitions of acceptable data types of columns and what metadata they store with the data.
+Be careful when reading and writing from these formats to ensure that information is not lost.
 
 Also see the [rio](https://cran.r-project.org/package=rio) package which makes loading data even easier with smart defaults.
 

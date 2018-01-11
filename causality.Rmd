@@ -207,7 +207,8 @@ resume %>%
       race == "black" & sex == "male" ~ "black male",
       race == "white" & sex == "male" ~ "white male"
     )
-  )
+  ) %>%
+  head()
 ```
 Each condition is a formula (an R object created with the "tilde" `~`).
 You will see formulas used extensively in the modeling section.

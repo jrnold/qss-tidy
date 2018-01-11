@@ -273,7 +273,7 @@ An animation is a series of frames.
 The `r pkg("gganimate")` package works by adding a `frame` aesthetic to ggplots, and function `r RDoc("gganimate::gg_animate")` will animate the plot.
 
 I use `frame = year(opendate)` to have the animation use each year as a frame, and `cumulative = TRUE` so that the previous years are shown.
-```{r warning = FALSE, message = FALSE, fig.show = "animate",fig.cap="The Expansion of Walmart"}
+```{r eval=FALSE}
 walmart_animated <-
   ggplot() +
     borders(database = "state") +

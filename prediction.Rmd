@@ -448,7 +448,7 @@ Now use a functional to execute that function with all dates for which we want m
 The function `poll_ma` returns a data frame, and our ideal output is a data frame that 
 stacks those data frames row-wise. 
 So we will use the `map_df` function,
-```{r}
+```{r echo=TRUE,results='hide'}
 map_df(all_dates, poll_ma, polls08)
 ```
 Note that the other arguments for `poll_ma` are placed after the name of the function as additional arguments to `map_df`.
@@ -458,7 +458,7 @@ It is easier to plot this if the data are tidy, with `Obama` and `McCain` as cat
 pop_vote_avg_tidy <-
   pop_vote_avg %>%
   gather(candidate, share, -date, na.rm = TRUE)
-pop_vote_avg_tidy
+head(pop_vote_avg_tidy)
 ```
 
 ```{r}
@@ -603,7 +603,7 @@ data("pres12", package = "qss")
 ```
 
 To join both data frames
-```{r}
+```{r results='hide'}
 full_join(pres08, pres12, by = "state")
 ```
 However, since there are duplicate names, `.x` and `.y` are appended.
@@ -611,7 +611,7 @@ However, since there are duplicate names, `.x` and `.y` are appended.
 **Challenge** What would happen if `by = "state"` was dropped? 
 
 To avoid the duplicate names, or change them, you can rename before merging, 
-```{r}
+```{r results='hide'}
 full_join(select(pres08, state, Obama_08 = Obama, McCain_08 = McCain,
                  EV_08 = EV),
           select(pres12, state, Obama_12 = Obama, Romney_12 = Romney,
@@ -621,7 +621,7 @@ full_join(select(pres08, state, Obama_08 = Obama, McCain_08 = McCain,
 or use the `suffix` argument to `full_join`
 ```{r}
 pres <- full_join(pres08, pres12, by = "state", suffix = c("_08", "_12"))
-pres
+head(pres)
 ```
 
 **Challenge** Would you consider this data tidy? How would you make it tidy?

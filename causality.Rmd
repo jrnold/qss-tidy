@@ -523,7 +523,7 @@ minwage %>%
 
 ```
 
-Here we can see again how using `r rdoc("dplyr", "summarise_at")z` allows for more compact code to specify variables and summary statistics that would be the case using just `summarise
+Here we can see again how using `r rdoc("dplyr", "summarise_at")` allows for more compact code to specify variables and summary statistics that would be the case using just `summarise
 ```{r}
 minwage %>%
   group_by(state) %>%

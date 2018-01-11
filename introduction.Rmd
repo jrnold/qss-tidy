@@ -111,8 +111,7 @@ See [R for Data Science](http://r4ds.had.co.nz/) [Ch 11: Data Import](http://r4d
 for more discussion.
 
 Note that in the previous code we loaded the file directly from a URL, but we could also work with local files on your computer, e.g.
-
-```{r}
+```{r eval=FALSE}
 UNpop <- read_csv("INTRO/UNpop.csv")
 ```
 

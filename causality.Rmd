@@ -173,8 +173,8 @@ because `TRUE` is logical and `0` is numeric.
 resume %>%
   mutate(BlackFemale = if_else(race == "black" & sex == "female", 1L, 0))
 ```
-because `1L` is an integer and `0` is numeric (a floating-point number)
-The distinction between integers and numeric variables is often invisible because most functions coerce variables between 
+because `1L` is an integer and `0` is numeric vector (floating-point number).
+The distinction between integers and numeric variables is often invisible because most functions coerce variables between integer and numeric vectors.
 ```{r}
 class(1)
 class(1L)

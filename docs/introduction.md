@@ -195,13 +195,10 @@ select(UNpop, world.pop)
 #> 6   6127700
 #> # ... with 1 more row
 ```
-However, note that, by default, `[` will return a vector rather than a data frame if only one column is selected. 
-This may seem convenient, but it can result in many hard to find and surprising bugs in practice.
-The `[[` and `$` operators can only select a single column and return a vector.
+Unlike `[`, the `[[` and `$` operators can only select a single column and return a vector.[^extract1]
 The function `select()` **always** returns a tibble (data frame), and never a vector, even if only one column is selected.
-Also, note that since `world.pop` is a tibble, using `[` also returns tibbles
-rather than a vector if it is only one column.
 
+[^extract1]: See the discussion in [R for Data Science](http://r4ds.had.co.nz/tibbles.html#tibbles-vs.data.frame) on how `tibble` objects differ from base `data.frame` objects in how `[` is handled.
 
 Select rows 1--3 and the `year` column:
 
@@ -294,7 +291,7 @@ Your motto should be that the **source is real**, not the objects created by it.
 
 > The source code is real. The objects are realizations of the source code. Source for EVERY user modified object is placed in a particular directory or directories, for later editing and retrieval. – from the [ESS manual](https://ess.r-project.org/Manual/ess.html#Philosophies-for-using-ESS_0028S_0029)
 
-This means that while you should not save the entire workplace it is perfectly fine practice to run a script and save or load R objects to files, using  or .
+This means that while you should not save the entire workplace it is perfectly fine practice to run a script and save or load R objects to files using  or .
 
 As with reading CSV files, use the [readr](http://readr.tidyverse.org/) package functions.
 In this case,  writes a csv file
@@ -332,7 +329,8 @@ There is also the equivalent `write_dta` function to create Stata datasets.
 write_dta(UNpop, "UNpop.dta")
 ```
 
-One thing to note is that Stata and SPSS have different concept
+While Stata and SPSS data sets are quite similar to data frames, they differ slightly in definitions of acceptable data types of columns and what metadata they store with the data.
+Be careful when reading and writing from these formats to ensure that information is not lost.
 
 Also see the [rio](https://cran.r-project.org/package=rio) package which makes loading data even easier with smart defaults.
 

@@ -16,6 +16,7 @@ tmp-pdfcrop-*
 *.utf8.md*.knit.md
 /*.md
 !README.md
+!style.md
 
 # Remove downloaded files
 UNpop.dta

@@ -692,7 +692,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb27-16" data-line-number="16"><span class="co">#&gt; 4   Latonya female black    0</span></a>
 <a class="sourceLine" id="cb27-17" data-line-number="17"><span class="co">#&gt; 5    Carrie female white    0</span></a>
 <a class="sourceLine" id="cb27-18" data-line-number="18"><span class="co">#&gt; 6       Jay   male white    0</span></a></code></pre></div>
-<p>we can also use <code>glimpse()</code> to get a quick understanding of the variables in the data frame,</p>
+<p>we can also use <code>glimpse()</code> to get a quick understanding of the variables in the data frame:</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">glimpse</span>(resume)</a>
 <a class="sourceLine" id="cb28-2" data-line-number="2"><span class="co">#&gt; Observations: 4,870</span></a>
 <a class="sourceLine" id="cb28-3" data-line-number="3"><span class="co">#&gt; Variables: 4</span></a>
@@ -702,31 +702,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb28-7" data-line-number="7"><span class="co">#&gt; $ call      &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0...</span></a></code></pre></div>
 <p>The code in <em>QSS</em> uses <code>table()</code> and <code>addmargins()</code> to construct the table. However, this can be done easily with the <strong>dplyr</strong> package using grouping and summarizing.</p>
 <p>Use <code>group_by()</code> to identify each combination of <code>race</code> and <code>call</code>, and then <code>count()</code> the observations:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1">race_call_tab &lt;-<span class="st"> </span>resume <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(race, call) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb29-3" data-line-number="3"><span class="st">  </span><span class="kw">count</span>()</a>
-<a class="sourceLine" id="cb29-4" data-line-number="4">race_call_tab</a>
-<a class="sourceLine" id="cb29-5" data-line-number="5"><span class="co">#&gt; # A tibble: 4 x 3</span></a>
-<a class="sourceLine" id="cb29-6" data-line-number="6"><span class="co">#&gt; # Groups: race, call [4]</span></a>
-<a class="sourceLine" id="cb29-7" data-line-number="7"><span class="co">#&gt;   race   call     n</span></a>
-<a class="sourceLine" id="cb29-8" data-line-number="8"><span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt;</span></a>
-<a class="sourceLine" id="cb29-9" data-line-number="9"><span class="co">#&gt; 1 black     0  2278</span></a>
-<a class="sourceLine" id="cb29-10" data-line-number="10"><span class="co">#&gt; 2 black     1   157</span></a>
-<a class="sourceLine" id="cb29-11" data-line-number="11"><span class="co">#&gt; 3 white     0  2200</span></a>
-<a class="sourceLine" id="cb29-12" data-line-number="12"><span class="co">#&gt; 4 white     1   235</span></a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1">race_call_tab &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="st">  </span>resume <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb29-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(race, call) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb29-4" data-line-number="4"><span class="st">  </span><span class="kw">count</span>()</a>
+<a class="sourceLine" id="cb29-5" data-line-number="5">race_call_tab</a>
+<a class="sourceLine" id="cb29-6" data-line-number="6"><span class="co">#&gt; # A tibble: 4 x 3</span></a>
+<a class="sourceLine" id="cb29-7" data-line-number="7"><span class="co">#&gt; # Groups: race, call [4]</span></a>
+<a class="sourceLine" id="cb29-8" data-line-number="8"><span class="co">#&gt;   race   call     n</span></a>
+<a class="sourceLine" id="cb29-9" data-line-number="9"><span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb29-10" data-line-number="10"><span class="co">#&gt; 1 black     0  2278</span></a>
+<a class="sourceLine" id="cb29-11" data-line-number="11"><span class="co">#&gt; 2 black     1   157</span></a>
+<a class="sourceLine" id="cb29-12" data-line-number="12"><span class="co">#&gt; 3 white     0  2200</span></a>
+<a class="sourceLine" id="cb29-13" data-line-number="13"><span class="co">#&gt; 4 white     1   235</span></a></code></pre></div>
 <p>If we want to calculate callback rates by race, we can use the <code>mutate()</code> function from <strong>dplyr</strong>.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">race_call_rate &lt;-<span class="st"> </span>race_call_tab <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb30-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(race) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb30-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">call_rate =</span>  n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb30-4" data-line-number="4"><span class="st">  </span><span class="kw">filter</span>(call <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb30-5" data-line-number="5"><span class="st">  </span><span class="kw">select</span>(race, call_rate)</a>
-<a class="sourceLine" id="cb30-6" data-line-number="6">race_call_rate</a>
-<a class="sourceLine" id="cb30-7" data-line-number="7"><span class="co">#&gt; # A tibble: 2 x 2</span></a>
-<a class="sourceLine" id="cb30-8" data-line-number="8"><span class="co">#&gt; # Groups: race [2]</span></a>
-<a class="sourceLine" id="cb30-9" data-line-number="9"><span class="co">#&gt;   race  call_rate</span></a>
-<a class="sourceLine" id="cb30-10" data-line-number="10"><span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb30-11" data-line-number="11"><span class="co">#&gt; 1 black    0.0645</span></a>
-<a class="sourceLine" id="cb30-12" data-line-number="12"><span class="co">#&gt; 2 white    0.0965</span></a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">race_call_rate &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb30-2" data-line-number="2"><span class="st">  </span>race_call_tab <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(race) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">call_rate =</span>  n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-5" data-line-number="5"><span class="st">  </span><span class="kw">filter</span>(call <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(race, call_rate)</a>
+<a class="sourceLine" id="cb30-7" data-line-number="7">race_call_rate</a>
+<a class="sourceLine" id="cb30-8" data-line-number="8"><span class="co">#&gt; # A tibble: 2 x 2</span></a>
+<a class="sourceLine" id="cb30-9" data-line-number="9"><span class="co">#&gt; # Groups: race [2]</span></a>
+<a class="sourceLine" id="cb30-10" data-line-number="10"><span class="co">#&gt;   race  call_rate</span></a>
+<a class="sourceLine" id="cb30-11" data-line-number="11"><span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb30-12" data-line-number="12"><span class="co">#&gt; 1 black    0.0645</span></a>
+<a class="sourceLine" id="cb30-13" data-line-number="13"><span class="co">#&gt; 2 white    0.0965</span></a></code></pre></div>
 <p>If we want the overall callback rate, we can calculate it from the original data. Use the <code>summarise()</code> function from <strong>dplyr</strong>.</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">resume <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb31-2" data-line-number="2"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">call_back =</span> <span class="kw">mean</span>(call))</a>
@@ -1089,19 +1091,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb62-8" data-line-number="8"><span class="co">#&gt; 1 NJ       0.00344       0.911</span></a>
 <a class="sourceLine" id="cb62-9" data-line-number="9"><span class="co">#&gt; 2 PA       0.955         0.940</span></a></code></pre></div>
 <p>Create a variable for the proportion of full-time employees in NJ and PA after the increase:</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1">minwage &lt;-<span class="st"> </span>minwage <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb63-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">totalAfter =</span> fullAfter <span class="op">+</span><span class="st"> </span>partAfter,</a>
-<a class="sourceLine" id="cb63-3" data-line-number="3">        <span class="dt">fullPropAfter =</span> fullAfter <span class="op">/</span><span class="st"> </span>totalAfter)</a></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1">minwage &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb63-2" data-line-number="2"><span class="st">  </span>minwage <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb63-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">totalAfter =</span> fullAfter <span class="op">+</span><span class="st"> </span>partAfter,</a>
+<a class="sourceLine" id="cb63-4" data-line-number="4">        <span class="dt">fullPropAfter =</span> fullAfter <span class="op">/</span><span class="st"> </span>totalAfter)</a></code></pre></div>
 <p>Now calculate the average proportion of full-time employees for each state:</p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" data-line-number="1">full_prop_by_state &lt;-<span class="st"> </span>minwage <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb64-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb64-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">fullPropAfter =</span> <span class="kw">mean</span>(fullPropAfter))</a>
-<a class="sourceLine" id="cb64-4" data-line-number="4">full_prop_by_state</a>
-<a class="sourceLine" id="cb64-5" data-line-number="5"><span class="co">#&gt; # A tibble: 2 x 2</span></a>
-<a class="sourceLine" id="cb64-6" data-line-number="6"><span class="co">#&gt;   state fullPropAfter</span></a>
-<a class="sourceLine" id="cb64-7" data-line-number="7"><span class="co">#&gt;   &lt;chr&gt;         &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb64-8" data-line-number="8"><span class="co">#&gt; 1 NJ            0.320</span></a>
-<a class="sourceLine" id="cb64-9" data-line-number="9"><span class="co">#&gt; 2 PA            0.272</span></a></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" data-line-number="1">full_prop_by_state &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb64-2" data-line-number="2"><span class="st">  </span>minwage <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb64-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb64-4" data-line-number="4"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">fullPropAfter =</span> <span class="kw">mean</span>(fullPropAfter))</a>
+<a class="sourceLine" id="cb64-5" data-line-number="5">full_prop_by_state</a>
+<a class="sourceLine" id="cb64-6" data-line-number="6"><span class="co">#&gt; # A tibble: 2 x 2</span></a>
+<a class="sourceLine" id="cb64-7" data-line-number="7"><span class="co">#&gt;   state fullPropAfter</span></a>
+<a class="sourceLine" id="cb64-8" data-line-number="8"><span class="co">#&gt;   &lt;chr&gt;         &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb64-9" data-line-number="9"><span class="co">#&gt; 1 NJ            0.320</span></a>
+<a class="sourceLine" id="cb64-10" data-line-number="10"><span class="co">#&gt; 2 PA            0.272</span></a></code></pre></div>
 <p>We could compute the difference in means between NJ and PA by</p>
 <div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1">(<span class="kw">filter</span>(full_prop_by_state, state <span class="op">==</span><span class="st"> &quot;NJ&quot;</span>)[[<span class="st">&quot;fullPropAfter&quot;</span>]] <span class="op">-</span></a>
 <a class="sourceLine" id="cb65-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(full_prop_by_state, state <span class="op">==</span><span class="st"> &quot;PA&quot;</span>)[[<span class="st">&quot;fullPropAfter&quot;</span>]])</a>

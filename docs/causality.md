@@ -44,7 +44,7 @@ head(resume)
 #> 5    Carrie female white    0
 #> 6       Jay   male white    0
 ```
-we can also use `glimpse()` to get a quick understanding of the variables in the data frame,
+we can also use `glimpse()` to get a quick understanding of the variables in the data frame:
 
 ```r
 glimpse(resume)
@@ -62,7 +62,8 @@ However, this can be done easily with the **dplyr** package using grouping and s
 Use `group_by()` to identify each combination of `race` and `call`, and then `count()` the observations:
 
 ```r
-race_call_tab <- resume %>%
+race_call_tab <- 
+  resume %>%
   group_by(race, call) %>%
   count()
 race_call_tab
@@ -79,7 +80,8 @@ race_call_tab
 If we want to calculate callback rates by race, we can use the `mutate()` function from **dplyr**.
 
 ```r
-race_call_rate <- race_call_tab %>%
+race_call_rate <- 
+  race_call_tab %>%
   group_by(race) %>%
   mutate(call_rate =  n / sum(n)) %>%
   filter(call == 1) %>%
@@ -303,7 +305,6 @@ class(c(1, 2, 3))
 class(as.integer(c(1, 2, 3)))
 #> [1] "integer"
 ```
-
 
 
 ### Factor Variables
@@ -621,7 +622,8 @@ minwage %>%
 Create a variable for the proportion of full-time employees in NJ and PA after the increase:
 
 ```r
-minwage <- minwage %>%
+minwage <- 
+  minwage %>%
   mutate(totalAfter = fullAfter + partAfter,
         fullPropAfter = fullAfter / totalAfter)
 ```
@@ -629,7 +631,8 @@ minwage <- minwage %>%
 Now calculate the average proportion of full-time employees for each state:
 
 ```r
-full_prop_by_state <- minwage %>%
+full_prop_by_state <- 
+  minwage %>%
   group_by(state) %>%
   summarise(fullPropAfter = mean(fullPropAfter))
 full_prop_by_state

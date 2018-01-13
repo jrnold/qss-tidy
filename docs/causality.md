@@ -582,13 +582,13 @@ So we'll add a state variable to the data.
 minwage %>%
   count(location)
 #> # A tibble: 5 x 2
-#>    location     n
-#>       <chr> <int>
+#>   location      n
+#>   <chr>     <int>
 #> 1 centralNJ    45
-#> 2   northNJ   146
-#> 3        PA    67
-#> 4   shoreNJ    33
-#> 5   southNJ    67
+#> 2 northNJ     146
+#> 3 PA           67
+#> 4 shoreNJ      33
+#> 5 southNJ      67
 ```
 
 We can extract the state from the final two characters of the location variable using the[stringr](https://cran.r-project.org/package=stringr) function [str_sub](https://www.rdocumentation.org/packages/stringr/topics/str_sub):
@@ -614,8 +614,8 @@ minwage %>%
 #> # A tibble: 2 x 3
 #>   state prop_after prop_Before
 #>   <chr>      <dbl>       <dbl>
-#> 1    NJ    0.00344       0.911
-#> 2    PA    0.95522       0.940
+#> 1 NJ       0.00344       0.911
+#> 2 PA       0.955         0.940
 ```
 
 Create a variable for the proportion of full-time employees in NJ and PA after the increase:
@@ -636,8 +636,8 @@ full_prop_by_state
 #> # A tibble: 2 x 2
 #>   state fullPropAfter
 #>   <chr>         <dbl>
-#> 1    NJ         0.320
-#> 2    PA         0.272
+#> 1 NJ            0.320
+#> 2 PA            0.272
 ```
 
 We could compute the difference in means between NJ and PA by
@@ -655,7 +655,7 @@ spread(full_prop_by_state, state, fullPropAfter) %>%
 #> # A tibble: 1 x 3
 #>      NJ    PA   diff
 #>   <dbl> <dbl>  <dbl>
-#> 1  0.32 0.272 0.0481
+#> 1 0.320 0.272 0.0481
 ```
 
 
@@ -693,15 +693,15 @@ full_prop_by_state_chain <-
   summarise(fullPropAfter = mean(fullPropAfter))
 full_prop_by_state_chain
 #> # A tibble: 8 x 3
-#> # Groups:   state [?]
-#>   state      chain fullPropAfter
-#>   <chr>      <chr>         <dbl>
-#> 1    NJ burgerking         0.358
-#> 2    NJ        kfc         0.328
-#> 3    NJ       roys         0.283
-#> 4    NJ     wendys         0.260
-#> 5    PA burgerking         0.321
-#> 6    PA        kfc         0.236
+#> # Groups: state [?]
+#>   state chain      fullPropAfter
+#>   <chr> <chr>              <dbl>
+#> 1 NJ    burgerking         0.358
+#> 2 NJ    kfc                0.328
+#> 3 NJ    roys               0.283
+#> 4 NJ    wendys             0.260
+#> 5 PA    burgerking         0.321
+#> 6 PA    kfc                0.236
 #> # ... with 2 more rows
 ```
 

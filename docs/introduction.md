@@ -9,6 +9,17 @@ editor_options:
 
 ## Prerequisites {-}
 
+In this and other chapters we will make use of data from the `qss` package, which is available on github. Install it using the `install_github()` function from the library `devtools`. 
+
+
+```r
+devtools::install_github("kosukeimai/qss-package")
+#> Skipping install of 'qss' from a github remote, the SHA1 (1dc4b858) has not changed since last install.
+#>   Use `force = TRUE` to force installation
+library("qss")
+```
+
+
 In the prerequisites section of each chapter, we'll load any packages
 needed for the chapter, and possibly define some functions or load data.
 
@@ -41,10 +52,10 @@ library("rio")
 ## Overview of the Book
 
 <!-- define all sections so that numbering matches that of the book -->
-
+*This sections contains no code to translate -- see*QSS* text.*
 
 ## How to use the Book
-
+*This sections contains no code to translate -- see*QSS* text.*
 
 ## Introduction to R
 
@@ -63,23 +74,29 @@ I recommend starting with the following two courses.
 
 ### Arithmetic Operations
 
-See *QSS* text
+*This sections contains no code to translate -- see*QSS* text.*
 
 
 ### Objects
 
-See *QSS* text. Also see [R4DS: Workflow basics](http://r4ds.had.co.nz/workflow-basics.html).
+*This sections contains no code to translate -- see*QSS* text.*
+
+Also see [R4DS: Workflow basics](http://r4ds.had.co.nz/workflow-basics.html).
 
 
 ### Vectors
 
-See *QSS* text. Also see [R4DS: Vectors](http://r4ds.had.co.nz/vectors.html). In 
+*This sections contains no code to translate -- see*QSS* text.*
+
+Also see [R4DS: Vectors](http://r4ds.had.co.nz/vectors.html). In 
 *R for Data Science* vectors are introduced much later, after data frames.
 
 
 ### Functions
 
-See *QSS* text. Also see [R4DS: Functions](http://r4ds.had.co.nz/functions.html).
+*This sections contains no code to translate -- see*QSS* text.*
+
+Also see [R4DS: Functions](http://r4ds.had.co.nz/functions.html).
 
 
 ### Data Files
@@ -334,7 +351,7 @@ UNpop
 #> # ... with 1 more row
 ```
 
-There is also the equivalent `write_dta` function to create Stata datasets.
+There is also the equivalent `write_dta()` function to create Stata datasets.
 
 
 ```r
@@ -346,7 +363,7 @@ While Stata and SPSS data sets are quite similar to data frames, they differ sli
 
 Also see the [rio](https://cran.r-project.org/package=rio) package which makes loading data even easier with smart defaults.
 
-You can use the `import` function to load many types of files:
+You can use the `import()` function to load many types of files:
 
 
 ```r
@@ -383,7 +400,7 @@ import("https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.dta")
 
 R also includes the **foreign** package, which contains functions for reading and writing files using **haven**.
 One reason to use these packages is that they are better maintained.
-For example, the R function `read.dta` does not read files created by the most recent versions of Stata (13+), whereas **haven** does.
+For example, the R function `read.dta()` does not read files created by the most recent versions of Stata (13+), whereas **haven** does.
 
 
 ### Style Guide

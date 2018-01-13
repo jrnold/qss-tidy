@@ -49,7 +49,6 @@ library("rio")
 ## How to use the Book
 *This sections contains no code to translate -- see*QSS* text.*
 
-
 ## Introduction to R
 
 These notes do not aim to completely teach R and the tidyverse. 
@@ -236,7 +235,7 @@ UNpop <- read_dta(UNpop_dta_url)
 UNpop
 ```
 
-There is also the equivalent `write_dta` function to create Stata datasets.
+There is also the equivalent `write_dta()` function to create Stata datasets.
 
 ```{r}
 write_dta(UNpop, "UNpop.dta")
@@ -247,7 +246,7 @@ While Stata and SPSS data sets are quite similar to data frames, they differ sli
 
 Also see the [rio](https://cran.r-project.org/package=rio) package which makes loading data even easier with smart defaults.
 
-You can use the `import` function to load many types of files:
+You can use the `import()` function to load many types of files:
 
 ```{r}
 import("https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.csv")
@@ -259,7 +258,7 @@ import("https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.dta")
 
 R also includes the **foreign** package, which contains functions for reading and writing files using **haven**.
 One reason to use these packages is that they are better maintained.
-For example, the R function `read.dta` does not read files created by the most recent versions of Stata (13+), whereas **haven** does.
+For example, the R function `read.dta()` does not read files created by the most recent versions of Stata (13+), whereas **haven** does.
 
 
 ### Style Guide

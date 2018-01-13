@@ -8,6 +8,14 @@ editor_options:
 
 ## Prerequisites {-}
 
+In this and other chapters we will make use of data from the `qss` package, which is available on github. Install it using the `install_github()` function from the library `devtools`. 
+
+```{r}
+devtools::install_github("kosukeimai/qss-package")
+library("qss")
+```
+
+
 In the prerequisites section of each chapter, we'll load any packages
 needed for the chapter, and possibly define some functions or load data.
 
@@ -32,9 +40,10 @@ library("rio")
 ## Overview of the Book
 
 <!-- define all sections so that numbering matches that of the book -->
-
+*This sections contains no code to translate -- see*QSS* text.*
 
 ## How to use the Book
+*This sections contains no code to translate -- see*QSS* text.*
 
 
 ## Introduction to R
@@ -54,23 +63,29 @@ I recommend starting with the following two courses.
 
 ### Arithmetic Operations
 
-See *QSS* text
+*This sections contains no code to translate -- see*QSS* text.*
 
 
 ### Objects
 
-See *QSS* text. Also see [R4DS: Workflow basics](http://r4ds.had.co.nz/workflow-basics.html).
+*This sections contains no code to translate -- see*QSS* text.*
+
+Also see [R4DS: Workflow basics](http://r4ds.had.co.nz/workflow-basics.html).
 
 
 ### Vectors
 
-See *QSS* text. Also see [R4DS: Vectors](http://r4ds.had.co.nz/vectors.html). In 
+*This sections contains no code to translate -- see*QSS* text.*
+
+Also see [R4DS: Vectors](http://r4ds.had.co.nz/vectors.html). In 
 *R for Data Science* vectors are introduced much later, after data frames.
 
 
 ### Functions
 
-See *QSS* text. Also see [R4DS: Functions](http://r4ds.had.co.nz/functions.html).
+*This sections contains no code to translate -- see*QSS* text.*
+
+Also see [R4DS: Functions](http://r4ds.had.co.nz/functions.html).
 
 
 ### Data Files

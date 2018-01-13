@@ -103,7 +103,7 @@ violent_exp_prop %>%
 ```
 
 `drop_na` is an alternative to `na.omit` that allows for selecting missing values,
-```{r}
+```{r results='hide',echo=TRUE}
 drop_na(afghan)
 ```
 

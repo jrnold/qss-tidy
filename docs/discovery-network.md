@@ -80,11 +80,11 @@ arrange(senator, desc(indegree)) %>%
   slice(1:3) %>%
   select(name, party, state, indegree, outdegree)
 #> # A tibble: 3 x 5
-#>   name              party state indegree outdegree
-#>   <chr>             <chr> <chr>    <dbl>     <dbl>
-#> 1 Tom Cotton        R     AR        64.0      15.0
-#> 2 Richard J. Durbin D     IL        60.0      87.0
-#> 3 John Barrasso     R     WY        58.0      79.0
+#>                name party state indegree outdegree
+#>               <chr> <chr> <chr>    <dbl>     <dbl>
+#> 1        Tom Cotton     R    AR       64        15
+#> 2 Richard J. Durbin     D    IL       60        87
+#> 3     John Barrasso     R    WY       58        79
 ```
 or using the  function:
 

@@ -764,7 +764,7 @@ sim_results %>%
   select(EV) %>%
   summarise_all(funs(mean, var, sd))
 #>   mean var   sd
-#> 1  352 271 16.5
+#> 1  352 270 16.4
 ```
 
 Theoretical probabilities from a binomial distribution:
@@ -807,7 +807,7 @@ p <- 0.5
 y <- as.integer(runif(sims, min = 0, max = 1) <= p)
 # mean probability
 mean(y)
-#> [1] 0.501
+#> [1] 0.461
 ```
 
 ### Binomial distribution
@@ -1027,7 +1027,7 @@ This function returns the electoral votes for Obama for a single simulation:
 
 ```r
 sim_election(pres08)
-#> [1] 349
+#> [1] 326
 ```
 
 Run this simulation `sims` times, saving the electoral votes of Obama in each simulation:
@@ -1093,7 +1093,7 @@ Compare simulation and simulation variances:
 ```r
 # simulation variance
 var(Obama_EV_sims)
-#> [1] 273
+#> [1] 272
 # theoretical variance
 Obama_EV_var <- pres08 %>%
   mutate(pb = pbinom(n / 2, size = n, prob = p, lower.tail = FALSE),

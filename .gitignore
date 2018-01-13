@@ -1,14 +1,23 @@
 .Rproj.user
 .Rhistory
+.RData
+.Rapp.history
+*.rds
+
 /*_cache
 /*_files
-_main.rds
-*.rds
-/_main.*
 tmp-pdfcrop-*
 /figures
-*.utf8.md
-*.knit.md
-_book
+
+# compiled data
 /bookdown*
-.Rapp.history
+
+# intermediate Markdown files
+*.utf8.md*.knit.md
+/*.md
+!README.md
+!style.md
+
+# Remove downloaded files
+UNpop.dta
+UNpop.csv

@@ -2,7 +2,7 @@
 ---
 title: "QSS Tidyverse Code"
 author: "Jeffrey B. Arnold"
-date: "2018-01-13"
+date: "2018-01-18"
 github-repo: jrnold/qss-tidy
 site: "bookdown::bookdown_site"
 documentclass: book
@@ -45,7 +45,7 @@ The source of the book is available [here](https://github.com/jrnold/qsstidy) an
 #>  language (EN)                        
 #>  collate  en_US.UTF-8                 
 #>  tz       America/Los_Angeles         
-#>  date     2018-01-10
+#>  date     2017-12-22
 #> Packages -----------------------------------------------------------------
 #>  package    * version date       source        
 #>  animation  * 2.5     2017-03-30 cran (@2.5)   
@@ -57,7 +57,7 @@ The source of the book is available [here](https://github.com/jrnold/qsstidy) an
 #>  bookdown     0.5     2017-08-20 CRAN (R 3.4.1)
 #>  broom        0.4.3   2017-11-20 CRAN (R 3.4.3)
 #>  cellranger   1.1.0   2016-07-27 CRAN (R 3.4.0)
-#>  cli          1.0.0   2017-11-05 CRAN (R 3.4.2)
+#>  cli          1.0.0   2017-11-05 cran (@1.0.0) 
 #>  colorspace   1.3-2   2016-12-14 CRAN (R 3.4.0)
 #>  compiler     3.4.3   2017-12-07 local         
 #>  crayon       1.3.4   2017-09-16 CRAN (R 3.4.1)
@@ -79,10 +79,10 @@ The source of the book is available [here](https://github.com/jrnold/qsstidy) an
 #>  htmltools    0.3.6   2017-04-28 CRAN (R 3.4.0)
 #>  httr         1.3.1   2017-08-20 CRAN (R 3.4.1)
 #>  jsonlite     1.5     2017-06-01 CRAN (R 3.4.0)
-#>  knitr        1.18    2017-12-27 CRAN (R 3.4.3)
+#>  knitr        1.17    2017-08-10 CRAN (R 3.4.1)
 #>  lattice      0.20-35 2017-03-25 CRAN (R 3.4.3)
 #>  lazyeval     0.2.1   2017-10-29 CRAN (R 3.4.2)
-#>  lubridate    1.7.1   2017-11-03 CRAN (R 3.4.2)
+#>  lubridate    1.7.1   2017-11-03 cran (@1.7.1) 
 #>  magrittr     1.5     2014-11-22 CRAN (R 3.4.0)
 #>  memoise      1.1.0   2017-04-21 CRAN (R 3.4.0)
 #>  methods      3.4.3   2017-12-07 local         
@@ -91,31 +91,30 @@ The source of the book is available [here](https://github.com/jrnold/qsstidy) an
 #>  munsell      0.4.3   2016-02-13 CRAN (R 3.4.0)
 #>  nlme         3.1-131 2017-02-06 CRAN (R 3.4.3)
 #>  parallel     3.4.3   2017-12-07 local         
-#>  pillar       1.0.1   2017-11-27 CRAN (R 3.4.3)
 #>  pkgconfig    2.0.1   2017-03-21 CRAN (R 3.4.0)
 #>  plyr         1.8.4   2016-06-08 CRAN (R 3.4.0)
-#>  psych        1.7.8   2017-09-09 CRAN (R 3.4.3)
-#>  purrr      * 0.2.4   2017-10-18 CRAN (R 3.4.2)
+#>  psych        1.7.8   2017-09-09 CRAN (R 3.4.1)
+#>  purrr      * 0.2.4   2017-10-18 cran (@0.2.4) 
 #>  R6           2.2.2   2017-06-17 CRAN (R 3.4.0)
 #>  Rcpp         0.12.14 2017-11-23 CRAN (R 3.4.3)
 #>  readr      * 1.1.1   2017-05-16 CRAN (R 3.4.0)
 #>  readxl       1.0.0   2017-04-18 CRAN (R 3.4.0)
 #>  reshape2     1.4.3   2017-12-11 CRAN (R 3.4.3)
-#>  rlang        0.1.6   2017-12-21 CRAN (R 3.4.3)
+#>  rlang        0.1.4   2017-11-05 CRAN (R 3.4.2)
 #>  rmarkdown    1.8     2017-11-17 CRAN (R 3.4.2)
-#>  rprojroot    1.3-2   2018-01-03 CRAN (R 3.4.3)
+#>  rprojroot    1.3-1   2017-12-18 CRAN (R 3.4.3)
 #>  rstudioapi   0.7     2017-09-07 CRAN (R 3.4.1)
 #>  rvest        0.3.2   2016-06-17 CRAN (R 3.4.0)
 #>  scales       0.5.0   2017-08-24 CRAN (R 3.4.1)
 #>  stats      * 3.4.3   2017-12-07 local         
 #>  stringi      1.1.6   2017-11-17 CRAN (R 3.4.2)
 #>  stringr    * 1.2.0   2017-02-18 CRAN (R 3.4.0)
-#>  tibble     * 1.4.1   2017-12-25 CRAN (R 3.4.3)
-#>  tidyr      * 0.7.2   2017-10-16 CRAN (R 3.4.2)
+#>  tibble     * 1.3.4   2017-08-22 CRAN (R 3.4.1)
+#>  tidyr      * 0.7.2   2017-10-16 cran (@0.7.2) 
 #>  tidyverse  * 1.2.1   2017-11-14 CRAN (R 3.4.2)
 #>  tools        3.4.3   2017-12-07 local         
 #>  utils      * 3.4.3   2017-12-07 local         
-#>  withr        2.1.1   2017-12-19 CRAN (R 3.4.3)
+#>  withr        2.1.1   2017-12-19 cran (@2.1.1) 
 #>  xml2         1.1.1   2017-01-24 CRAN (R 3.4.0)
 #>  yaml         2.1.16  2017-12-12 CRAN (R 3.4.3)
 ```

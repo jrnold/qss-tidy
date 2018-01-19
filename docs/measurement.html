@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-01-10">
+<meta name="date" content="2018-01-18">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -290,19 +290,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co">#&gt;  Mean   :32.4   Mean   : 4   Mean   :0.583                     </span>
 <span class="co">#&gt;  3rd Qu.:40.0   3rd Qu.: 8   3rd Qu.:1.000                     </span>
 <span class="co">#&gt;  Max.   :80.0   Max.   :18   Max.   :1.000</span></code></pre></div>
-<p>With <code>income</code>, never converts strings to factors by default. To get a summary of the different levels, either convert it to a factor (R4DS Ch 15), or use <code>count()</code></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">afghan <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">count</span>(income)
+<p>To summarize the diffferent levels of <code>income</code>, use the <a href="https://www.rdocumentation.org/packages/dplyr/topics/count">count</a> function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">count</span>(afghan, income)
 <span class="co">#&gt; # A tibble: 6 x 2</span>
-<span class="co">#&gt;            income     n</span>
-<span class="co">#&gt;             &lt;chr&gt; &lt;int&gt;</span>
-<span class="co">#&gt; 1   10,001-20,000   616</span>
-<span class="co">#&gt; 2    2,001-10,000  1420</span>
-<span class="co">#&gt; 3   20,001-30,000    93</span>
+<span class="co">#&gt;   income              n</span>
+<span class="co">#&gt;   &lt;chr&gt;           &lt;int&gt;</span>
+<span class="co">#&gt; 1 10,001-20,000     616</span>
+<span class="co">#&gt; 2 2,001-10,000     1420</span>
+<span class="co">#&gt; 3 20,001-30,000      93</span>
 <span class="co">#&gt; 4 less than 2,000   457</span>
-<span class="co">#&gt; 5     over 30,000    14</span>
-<span class="co">#&gt; 6            &lt;NA&gt;   154</span></code></pre></div>
-<p>Count the number a proportion of respondents who answer that they were harmed by the ISF (<code>violent.exp.ISAF</code>) and (<code>violent.exp.taliban</code>) respectively,</p>
+<span class="co">#&gt; 5 over 30,000        14</span>
+<span class="co">#&gt; 6 &lt;NA&gt;              154</span></code></pre></div>
+<p>Use count to calculate the proportion of respondents who answer that they were harmed by the ISAF or the Taliban (<code>violent.exp.ISAF</code> and <code>violent.exp.taliban</code>, respectively):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">afghan <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(violent.exp.ISAF, violent.exp.taliban) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>() <span class="op">%&gt;%</span>
@@ -318,7 +317,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co">#&gt; 5                1                   1   526 0.19099</span>
 <span class="co">#&gt; 6                1                  NA    22 0.00799</span>
 <span class="co">#&gt; # ... with 3 more rows</span></code></pre></div>
-<p>We need to use <code>ungroup()</code> in order to ensure that <code>sum(n)</code> sums over the entire dataset as opposed to only within categories of <code>violent.exp.ISAF</code>. Unlike <code>prop.table</code>, the code above does not drop missing values. We can drop those values by adding a <code>filter</code> verb and using <code>!is.na()</code> to test for missing values in those variables:</p>
+<p>We need to use <code>ungroup()</code> in order to ensure that <code>sum(n)</code> sums over the entire dataset as opposed to only within categories of <code>violent.exp.ISAF</code>. Unlike <code>prop.table()</code>, the code above does not drop missing values. We can drop those values by adding <code>filter()</code> and <code>!is.na()</code> to test for missing values in those variables:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">afghan <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(violent.exp.ISAF), <span class="op">!</span><span class="kw">is.na</span>(violent.exp.taliban)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(violent.exp.ISAF, violent.exp.taliban) <span class="op">%&gt;%</span>
@@ -332,15 +331,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co">#&gt; 2                0                   1   354 0.132</span>
 <span class="co">#&gt; 3                1                   0   475 0.177</span>
 <span class="co">#&gt; 4                1                   1   526 0.196</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="ot">NA</span>)
-<span class="kw">mean</span>(x)
-<span class="co">#&gt; [1] NA</span>
-<span class="kw">mean</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
-<span class="co">#&gt; [1] 2</span></code></pre></div>
 </div>
 <div id="handling-missing-data-in-r" class="section level2">
 <h2><span class="header-section-number">3.2</span> Handling Missing Data in R</h2>
-<p>We already observed the issues with <code>NA</code> values in calculating the proportion answering the “experienced violence” questions. You can filter rows with specific variables having missing values using <code>filter</code> as shown above.</p>
+<p>We already observed the issues with <code>NA</code> values in calculating the proportion answering the “experienced violence” questions. You can filter rows with specific variables having missing values using <code>filter()</code> as shown above.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(afghan<span class="op">$</span>income, <span class="dt">n =</span> <span class="dv">10</span>)
 <span class="co">#&gt;  [1] &quot;2,001-10,000&quot;  &quot;2,001-10,000&quot;  &quot;2,001-10,000&quot;  &quot;2,001-10,000&quot; </span>
 <span class="co">#&gt;  [5] &quot;2,001-10,000&quot;  NA              &quot;10,001-20,000&quot; &quot;2,001-10,000&quot; </span>
@@ -353,27 +347,33 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <span class="dt">p_missing =</span> <span class="kw">mean</span>(<span class="kw">is.na</span>(income)))
 <span class="co">#&gt;   n_missing p_missing</span>
 <span class="co">#&gt; 1       154    0.0559</span></code></pre></div>
-<p>Table of proportions that includes <code>NA</code></p>
+<p>Mean, and other functions, do not by default exclude missing values. Use <code>na.rm = TRUE</code> in these cases.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="ot">NA</span>)
+<span class="kw">mean</span>(x)
+<span class="co">#&gt; [1] NA</span>
+<span class="kw">mean</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+<span class="co">#&gt; [1] 2</span></code></pre></div>
+<p>Table of proportions of individuals harmed by the ISAF and Taliban that includes missing (<code>NA</code>) values:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">violent_exp_prop &lt;-
 <span class="st">  </span>afghan <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(violent.exp.ISAF, violent.exp.taliban) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>n)
 violent_exp_prop
-<span class="co">#&gt; # A tibble: 9 x 4</span>
-<span class="co">#&gt;   violent.exp.ISAF violent.exp.taliban     n    prop</span>
-<span class="co">#&gt;              &lt;int&gt;               &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;</span>
-<span class="co">#&gt; 1                0                   0  1330 0.483  </span>
-<span class="co">#&gt; 2                0                   1   354 0.129  </span>
-<span class="co">#&gt; 3                0                  NA    22 0.00799</span>
-<span class="co">#&gt; 4                1                   0   475 0.172  </span>
-<span class="co">#&gt; 5                1                   1   526 0.191  </span>
-<span class="co">#&gt; 6                1                  NA    22 0.00799</span>
+<span class="co">#&gt; # A tibble: 9 x 3</span>
+<span class="co">#&gt;   violent.exp.ISAF violent.exp.taliban    prop</span>
+<span class="co">#&gt;              &lt;int&gt;               &lt;int&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1                0                   0 0.483  </span>
+<span class="co">#&gt; 2                0                   1 0.129  </span>
+<span class="co">#&gt; 3                0                  NA 0.00799</span>
+<span class="co">#&gt; 4                1                   0 0.172  </span>
+<span class="co">#&gt; 5                1                   1 0.191  </span>
+<span class="co">#&gt; 6                1                  NA 0.00799</span>
 <span class="co">#&gt; # ... with 3 more rows</span></code></pre></div>
-<p>The data above is</p>
+<p>The data frame above can be reorganized so that rows are ISAF and the columns are Taliban as follows:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">violent_exp_prop <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>n) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">spread</span>(violent.exp.taliban, prop)
 <span class="co">#&gt; # A tibble: 3 x 4</span>
 <span class="co">#&gt;   violent.exp.ISAF     `0`     `1`  `&lt;NA&gt;`</span>
@@ -381,7 +381,7 @@ violent_exp_prop
 <span class="co">#&gt; 1                0 0.483   0.129   0.00799</span>
 <span class="co">#&gt; 2                1 0.172   0.191   0.00799</span>
 <span class="co">#&gt; 3               NA 0.00254 0.00290 0.00363</span></code></pre></div>
-<p><code>drop_na</code> is an alternative to <code>na.omit</code> that allows for selecting missing values,</p>
+<p><code>drop_na</code> is an alternative to <code>na.omit</code> that allows for removing missing values,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">drop_na</span>(afghan)</code></pre></div>
 <p><strong>Tip</strong> There are multiple types of <a href="http://r4ds.had.co.nz/vectors.html#important-types-of-atomic-vector">missing values</a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="ot">NA</span>  <span class="co"># logical</span>
@@ -392,13 +392,13 @@ violent_exp_prop
 <span class="co">#&gt; [1] NA</span>
 <span class="ot">NA_character_</span> <span class="co"># character</span>
 <span class="co">#&gt; [1] NA</span></code></pre></div>
-<p>In many cases, this distinction does not matter since functions will coerce these missing values to the correct vector type. However, you will need to use these in some tidyverse functions that require the outputs to the same type, e.g. <a href="https://www.rdocumentation.org/packages/purrr/topics/map">map</a> and most <a href="https://cran.r-project.org/package=purrr">purrr</a> functions, and <code>if_else</code>. This will produce an error, since the <code>TRUE</code> case returns an integer value (<code>x</code> is an integer),</p>
+<p>In many cases, this distinction does not matter since many functions will coerce these missing values to the correct vector type. However, you will need to use these in some tidyverse functions that require the outputs to be the same type, e.g. <code>map()</code> and most of the other <a href="https://cran.r-project.org/package=purrr">purrr</a> functions, and <code>if_else()</code>. The code below produces an error, since the <code>TRUE</code> case returns an integer value (<code>x</code> is an integer), but the <code>FALSE</code> case does not specify the type of <code>NA</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span>
 <span class="kw">class</span>(x)
 <span class="co">#&gt; [1] &quot;integer&quot;</span>
 <span class="kw">if_else</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">3</span>, x, <span class="ot">NA</span>)
 <span class="co">#&gt; Error: `false` must be type integer, not logical</span></code></pre></div>
-<p>So instead of <code>NA</code>, use <code>NA_integer_</code>,</p>
+<p>So instead of <code>NA</code>, use <code>NA_integer_</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">if_else</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">3</span>, x, <span class="ot">NA_integer_</span>)
 <span class="co">#&gt; [1]  1  2 NA NA NA</span></code></pre></div>
 </div>
@@ -430,7 +430,7 @@ violent_exp_prop
 <span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Proportion of respondents&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Civilian Victimization by the Taliban&quot;</span>)</code></pre></div>
 <p><img src="measurement_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p>Instead of creating two separate box-plots, create a single plot facetted by ISAF and Taliban,</p>
+<p>Instead of creating two separate box-plots, create a single plot facetted by ISAF and Taliban:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">select</span>(afghan, violent.exp.ISAF, violent.exp.taliban) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">gather</span>(variable, value) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">value =</span> <span class="kw">fct_explicit_na</span>(<span class="kw">fct_recode</span>(<span class="kw">factor</span>(value),
@@ -446,7 +446,7 @@ violent_exp_prop
 <span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Proportion of respondents&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Civilian Victimization&quot;</span>)</code></pre></div>
 <p><img src="measurement_files/figure-html/unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p>This plot could improved by plotting the two values simultaneously to be able to better compare them. This will require creating a data frame that has the following columns: perpetrator (<code>ISAF</code>, <code>Taliban</code>), response (<code>No Harm</code>, <code>Harm</code>, <code>No response</code>).</p>
+<p>This plot could improved by plotting the two values simultaneously to be able to better compare them. This will require creating a data frame that has the following columns: perpetrator (<code>ISAF</code>, <code>Taliban</code>) and response (<code>No Harm</code>, <code>Harm</code>, <code>No response</code>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">violent_exp &lt;-
 <span class="st">  </span>afghan <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(violent.exp.ISAF, violent.exp.taliban) <span class="op">%&gt;%</span>
@@ -463,7 +463,7 @@ violent_exp_prop
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="dt">ISAF =</span> <span class="st">&quot;green&quot;</span>, <span class="dt">Taliban =</span> <span class="st">&quot;black&quot;</span>))</code></pre></div>
 <p><img src="measurement_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p>Black was chosen for the Taliban, and Green for ISAF because it is the color of their respective <a href="https://en.wikipedia.org/wiki/International_Security_Assistance_Force">flags</a>.</p>
+<p>Black was chosen for the Taliban, and Green for ISAF because they are the colors of their respective <a href="https://en.wikipedia.org/wiki/International_Security_Assistance_Force">flags</a>.</p>
 </div>
 <div id="histogram" class="section level3">
 <h3><span class="header-section-number">3.3.2</span> Histogram</h3>
@@ -493,8 +493,8 @@ violent_exp_prop
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Distribution of respondent&#39;s age&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Age&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Density&quot;</span>)
 dens_plot</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-22-1.png" width="70%" style="display: block; margin: auto;" /> which can be combined with a <a href="https://www.rdocumentation.org/packages/ggplot2/topics/geom_rug">geom_rug</a> to show individual values:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dens_plot <span class="op">+</span><span class="st"> </span><span class="kw">geom_rug</span>()</code></pre></div>
+<p><img src="measurement_files/figure-html/unnamed-chunk-22-1.png" width="70%" style="display: block; margin: auto;" /> which can be combined with a <a href="https://www.rdocumentation.org/packages/ggplot2/topics/geom_rug">geom_rug</a> to create a rug plot, which puts small lines on the axis to represent the value of each observation. It can be combined with a scatter or density plot to add extra detail. Adjust the <code>alpha</code> to modify the color transparency of the rug and address overplotting.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dens_plot <span class="op">+</span><span class="st"> </span><span class="kw">geom_rug</span>(<span class="dt">alpha =</span> .<span class="dv">2</span>)</code></pre></div>
 <p><img src="measurement_files/figure-html/unnamed-chunk-23-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Frequency polygons (<a href="https://www.rdocumentation.org/packages/ggplot2/topics/geom_freqpoly">geom_freqpoly</a>): See <a href="http://r4ds.had.co.nz/">R for Data Science</a> <a href="http://r4ds.had.co.nz/exploratory-data-analysis.html">EDA</a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(afghan, <span class="kw">aes</span>(<span class="dt">x =</span> age)) <span class="op">+</span>
@@ -543,9 +543,10 @@ dens_plot</code></pre></div>
 <span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Province&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Years of education&quot;</span>,
        <span class="dt">title =</span> <span class="st">&quot;Education by Province&quot;</span>)</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-28-1.png" width="70%" style="display: block; margin: auto;" /> Dot plot with jitter to avoid overplotting:</p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-28-1.png" width="70%" style="display: block; margin: auto;" /> Dot plot with jitter and adjusted alpha to avoid overplotting:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(afghan, <span class="kw">aes</span>(<span class="dt">y =</span> educ.years, <span class="dt">x =</span> province)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">position =</span> <span class="kw">position_jitter</span>(<span class="dt">width =</span> <span class="fl">0.25</span>, <span class="dt">height =</span> <span class="dv">0</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">position =</span> <span class="kw">position_jitter</span>(<span class="dt">width =</span> <span class="fl">0.25</span>, <span class="dt">height =</span> <span class="dv">0</span>),
+             <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Province&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Years of education&quot;</span>,
        <span class="dt">title =</span> <span class="st">&quot;Education by Province&quot;</span>)</code></pre></div>
@@ -590,11 +591,11 @@ dens_plot</code></pre></div>
 <span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_rug</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;log(population)&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-34-1.png" width="70%" style="display: block; margin: auto;" /> The function <a href="http://docs.ggplot2.org/current/geom_rug.html">geom_rug</a>, creates a rug plot, which puts small lines on the axis to represent the value of each observation. It can be combined with a scatter or density plot to add extra detail.</p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-34-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="non-response-and-other-sources-of-bias" class="section level3">
 <h3><span class="header-section-number">3.4.2</span> Non-response and other sources of bias</h3>
-<p>Calculate the rates of non-response by province to <code>violent.exp.ISAF</code> and <code>violent.exp.taliban</code>:</p>
+<p>Calculate the rates of item non-response by province to the question about civilian victimization by ISAF and Taliban forces (<code>violent.exp.ISAF</code> and <code>violent.exp.taliban</code>):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">afghan <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(province) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">ISAF =</span> <span class="kw">mean</span>(<span class="kw">is.na</span>(violent.exp.ISAF)),
@@ -612,10 +613,10 @@ dens_plot</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="kw">mean</span>(<span class="kw">filter</span>(afghan, list.group <span class="op">==</span><span class="st"> &quot;ISAF&quot;</span>)<span class="op">$</span>list.response) <span class="op">-</span>
 <span class="st">  </span><span class="kw">mean</span>(<span class="kw">filter</span>(afghan, list.group <span class="op">==</span><span class="st"> &quot;control&quot;</span>)<span class="op">$</span>list.response))
 <span class="co">#&gt; [1] 0.049</span></code></pre></div>
-<p>To calculate the table responses to the list experiment in the control, ISAF, and Taliban groups&gt;</p>
+<p>To calculate the table responses to the list experiment in the control, ISAF, and Taliban groups:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">afghan <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(list.response, list.group) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">count</span>() <span class="op">%T&gt;%</span>
+<span class="st">  </span><span class="kw">count</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">glimpse</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">spread</span>(list.group, n, <span class="dt">fill =</span> <span class="dv">0</span>)
 <span class="co">#&gt; Observations: 12</span>
@@ -661,7 +662,7 @@ dens_plot</code></pre></div>
                      <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>))
 q</code></pre></div>
 <p><img src="measurement_files/figure-html/unnamed-chunk-40-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p>However, since there are colors associated with Democrats (blue) and Republicans (blue), we should use them rather than the defaults. There’s some evidence that using semantically-resonant colors can help decoding data visualizations (<a href="http://vis.stanford.edu/files/2013-SemanticColor-EuroVis.pdf">Lin, et al. 2013</a>). Since I’ll reuse the scale several times, I’ll save it in a variable.</p>
+<p>However, since there are colors associated with Democrats (blue) and Republicans (blue), we should use them rather than the defaults. There’s some evidence that using semantically-resonant colors can help decoding data visualizations (See <a href="http://vis.stanford.edu/files/2013-SemanticColor-EuroVis.pdf">Lin, et al. 2013</a>). Since I’ll reuse the scale several times, I’ll save it in a variable.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scale_colour_parties &lt;-
 <span class="st">  </span><span class="kw">scale_colour_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="dt">Democrat =</span> <span class="st">&quot;blue&quot;</span>,
                                  <span class="dt">Republican =</span> <span class="st">&quot;red&quot;</span>,
@@ -674,12 +675,11 @@ q <span class="op">+</span><span class="st"> </span>scale_colour_parties</code><
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>congress) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_fixed</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;racial liberalism/conservatism&quot;</span>,
-                     <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>)) <span class="op">+</span>
+                     <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;economic liberalism/conservatism&quot;</span>,
-                     <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>)) <span class="op">+</span>
-<span class="st">  </span>scale_colour_parties
-<span class="co">#&gt; Warning: Removed 2 rows containing missing values (geom_point).</span></code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" /></p>
+                     <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>)) 
+  <span class="co">#scale_colour_parties</span></code></pre></div>
+<p><img src="measurement_files/figure-html/unnamed-chunk-42-1.png" width="100%" height="100%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">congress <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(congress, party) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">dwnom1 =</span> <span class="kw">mean</span>(dwnom1)) <span class="op">%&gt;%</span>
@@ -691,6 +691,44 @@ q <span class="op">+</span><span class="st"> </span>scale_colour_parties</code><
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;DW-NOMINATE score (1st Dimension)&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Congress&quot;</span>,
        <span class="dt">colour =</span> <span class="st">&quot;Party&quot;</span>)</code></pre></div>
 <p><img src="measurement_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>Alternatively, you can plot the mean DW-Nominate scores for each party and congress over times. The lines linking the points implicitly convey progress through time. Color is also used to show progress through time. Labels are added to show the first and last congress in the data set to identify the parties.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">party_means &lt;-
+<span class="st">  </span>congress <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(party <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Democrat&quot;</span>, <span class="st">&quot;Republican&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(party, congress) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">dwnom1 =</span> <span class="kw">mean</span>(dwnom1),
+            <span class="dt">dwnom2 =</span> <span class="kw">mean</span>(dwnom2))
+
+party_endpoints &lt;-
+<span class="st">  </span>party_means <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(congress <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="kw">min</span>(congress), <span class="kw">max</span>(congress))) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">label =</span> <span class="kw">str_c</span>(party, congress, <span class="dt">sep =</span> <span class="st">&quot; - &quot;</span>))
+
+<span class="kw">ggplot</span>(party_means, 
+         <span class="kw">aes</span>(<span class="dt">x =</span> dwnom1, <span class="dt">y =</span> dwnom2, <span class="dt">color =</span> congress,
+             <span class="dt">group =</span> party)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_path</span>() <span class="op">+</span>
+<span class="st">  </span>ggrepel<span class="op">::</span><span class="kw">geom_text_repel</span>(<span class="dt">data =</span> party_endpoints,
+                           <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">label =</span> label)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;racial liberalism/conservatism&quot;</span>,
+                     <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;economic liberalism/conservatism&quot;</span>,
+                     <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))</code></pre></div>
+<p><img src="measurement_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>An alternative version uses color for parties and lets the points and labels for the first and last congresses (80 and 112) to convey progress through time.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(party_means, 
+         <span class="kw">aes</span>(<span class="dt">x =</span> dwnom1, <span class="dt">y =</span> dwnom2, <span class="dt">color =</span> party,
+             <span class="dt">group =</span> party)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_path</span>() <span class="op">+</span>
+<span class="st">  </span>ggrepel<span class="op">::</span><span class="kw">geom_text_repel</span>(<span class="dt">data =</span> party_endpoints,
+                           <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">label =</span> congress),
+                           <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;racial liberalism/conservatism&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;economic liberalism/conservatism&quot;</span>) <span class="op">+</span>
+<span class="st">  </span>scale_colour_parties</code></pre></div>
+<p><img src="measurement_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div id="correlation" class="section level3">
 <h3><span class="header-section-number">3.5.1</span> Correlation</h3>
 <p>Let’s plot the Gini coefficient</p>
@@ -700,7 +738,7 @@ q <span class="op">+</span><span class="st"> </span>scale_colour_parties</code><
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Gini coefficient&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Income Inequality&quot;</span>)</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>To calculate a measure of party polarization take the code used in the plot of Republican and Democratic party median ideal points and adapt it to calculate the difference in the party medians:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">party_polarization &lt;-
 <span class="st">  </span>congress <span class="op">%&gt;%</span>
@@ -726,7 +764,7 @@ party_polarization
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Political Polarization&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Republican median − Democratic median&quot;</span>)</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="quantile-quantile-plot" class="section level3">
 <h3><span class="header-section-number">3.5.2</span> Quantile-Quantile Plot</h3>
@@ -737,8 +775,8 @@ party_polarization
 <span class="st">  </span><span class="kw">facet_grid</span>(party <span class="op">~</span><span class="st"> </span>.) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;racial liberalism/conservatism dimension&quot;</span>)
 <span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p><em>ggplot2</em> includes a <code>stat_qq</code> which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distribution, usually the normal one. However, we can calculate one by hand, which may give more insight into exactly what the qq-plot is doing.</p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>The package <em>ggplot2</em> includes a function <code>stat_qq</code> which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distribution, usually the normal one. However, we can calculate one by hand, which may give more insight into exactly what the qq-plot is doing.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">party_qtiles &lt;-<span class="st"> </span><span class="kw">tibble</span>(
   <span class="dt">probs =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.01</span>),
   <span class="dt">Democrat =</span> <span class="kw">quantile</span>(<span class="kw">filter</span>(congress, congress <span class="op">==</span><span class="st"> </span><span class="dv">112</span>,
@@ -765,7 +803,7 @@ party_qtiles
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_fixed</span>()</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-52-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="clustering" class="section level2">
@@ -777,16 +815,16 @@ party_qtiles
 </div>
 <div id="lists" class="section level3">
 <h3><span class="header-section-number">3.6.2</span> Lists</h3>
-<p>See <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapters <a href="http://r4ds.had.co.nz/vectors.html">Vectors</a>, <a href="http://r4ds.had.co.nz/iteration.html">Iteration</a> and the <a href="https://cran.r-project.org/package=purrr">purrr</a> package for more powerful methods of computing on lists.</p>
+<p>See <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapters <a href="http://r4ds.had.co.nz/vectors.html">Vectors</a> and <a href="http://r4ds.had.co.nz/iteration.html">Iteration</a>, as well as the <a href="https://cran.r-project.org/package=purrr">purrr</a> package for more powerful methods of computing on lists.</p>
 </div>
 <div id="k-means-algorithms" class="section level3">
 <h3><span class="header-section-number">3.6.3</span> k-means algorithms</h3>
-<p>Calculate the clusters by the 80th and 112th congresses,</p>
+<p>Calculate the clusters by the 80th and 112th congresses:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">k80two.out &lt;-
 <span class="st">  </span><span class="kw">kmeans</span>(<span class="kw">select</span>(<span class="kw">filter</span>(congress, congress <span class="op">==</span><span class="st"> </span><span class="dv">80</span>),
                        dwnom1, dwnom2),
               <span class="dt">centers =</span> <span class="dv">2</span>, <span class="dt">nstart =</span> <span class="dv">5</span>)</code></pre></div>
-<p>Add the cluster ids to data sets</p>
+<p>Add the cluster ids to data sets:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">congress80 &lt;-
 <span class="st">  </span>congress <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(congress <span class="op">==</span><span class="st"> </span><span class="dv">80</span>) <span class="op">%&gt;%</span>
@@ -794,20 +832,20 @@ party_qtiles
 <p>We will also create a data sets with the cluster centroids. These are in the <code>centers</code> element of the cluster object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">k80two.out<span class="op">$</span>centers
 <span class="co">#&gt;    dwnom1 dwnom2</span>
-<span class="co">#&gt; 1 -0.0561  0.769</span>
-<span class="co">#&gt; 2  0.1521 -0.344</span></code></pre></div>
+<span class="co">#&gt; 1 -0.0484  0.783</span>
+<span class="co">#&gt; 2  0.1468 -0.339</span></code></pre></div>
 <p>To make it easier to use with <a href="https://cran.r-project.org/package=ggplot2">ggplot2</a>, we need to convert this to a data frame. The <a href="https://www.rdocumentation.org/packages/broom/topics/tidy">tidy</a> function from the <a href="https://cran.r-project.org/package=broom">broom</a> package:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">k80two.clusters &lt;-<span class="st"> </span><span class="kw">tidy</span>(k80two.out)
 k80two.clusters
 <span class="co">#&gt;        x1     x2 size withinss cluster</span>
-<span class="co">#&gt; 1 -0.0561  0.769  138     12.5       1</span>
-<span class="co">#&gt; 2  0.1521 -0.344  308     53.3       2</span></code></pre></div>
-<p>Plot the ideal points and clusters</p>
+<span class="co">#&gt; 1 -0.0484  0.783  135     10.9       1</span>
+<span class="co">#&gt; 2  0.1468 -0.339  311     54.9       2</span></code></pre></div>
+<p>Plot the ideal points and clusters:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> congress80,
              <span class="kw">aes</span>(<span class="dt">x =</span> dwnom1, <span class="dt">y =</span> dwnom2, <span class="dt">colour =</span> cluster2)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> k80two.clusters, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> x1, <span class="dt">y =</span> x2))</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">congress80 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(party, cluster2) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>()
@@ -815,8 +853,8 @@ k80two.clusters
 <span class="co">#&gt; # Groups: party, cluster2 [5]</span>
 <span class="co">#&gt;   party      cluster2     n</span>
 <span class="co">#&gt;   &lt;chr&gt;      &lt;fctr&gt;   &lt;int&gt;</span>
-<span class="co">#&gt; 1 Democrat   1          135</span>
-<span class="co">#&gt; 2 Democrat   2           59</span>
+<span class="co">#&gt; 1 Democrat   1          132</span>
+<span class="co">#&gt; 2 Democrat   2           62</span>
 <span class="co">#&gt; 3 Other      2            2</span>
 <span class="co">#&gt; 4 Republican 1            3</span>
 <span class="co">#&gt; 5 Republican 2          247</span></code></pre></div>
@@ -834,7 +872,7 @@ k112two.clusters &lt;-<span class="st"> </span><span class="kw">tidy</span>(k112
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> dwnom1, <span class="dt">y =</span> dwnom2, <span class="dt">colour =</span> cluster2)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> k112two.clusters,
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> x1, <span class="dt">y =</span> x2))</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Number of observations from each party in each cluster:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">congress112 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(party, cluster2) <span class="op">%&gt;%</span>
@@ -860,7 +898,7 @@ k80four.clusters &lt;-<span class="st"> </span><span class="kw">tidy</span>(k80f
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> dwnom1, <span class="dt">y =</span> dwnom2, <span class="dt">colour =</span> cluster2)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> k80four.clusters,
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> x1, <span class="dt">y =</span> x2), <span class="dt">size =</span> <span class="dv">3</span>)</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" /> and on the 112th congress:</p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" /> and on the 112th congress:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">k112four.out &lt;-
 <span class="st">  </span><span class="kw">kmeans</span>(<span class="kw">select</span>(<span class="kw">filter</span>(congress, congress <span class="op">==</span><span class="st"> </span><span class="dv">112</span>),
                 dwnom1, dwnom2),
@@ -874,7 +912,7 @@ k112four.clusters &lt;-<span class="st"> </span><span class="kw">tidy</span>(k11
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> dwnom1, <span class="dt">y =</span> dwnom2, <span class="dt">colour =</span> cluster2)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> k112four.clusters,
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> x1, <span class="dt">y =</span> x2), <span class="dt">size =</span> <span class="dv">3</span>)</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-60-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-62-1.png" width="70%" style="display: block; margin: auto;" /></p>
 
 </div>
 </div>

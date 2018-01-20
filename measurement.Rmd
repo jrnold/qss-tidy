@@ -28,7 +28,7 @@ afghan %>%
   summary()
 ```
 
-With `income`, `read_csv()` never converts strings to factors by default.
+Loading data with either `data()` or`read_csv()` does not convert strings to factors by default; see below with `income`.
 To get a summary of the different levels, either convert it to a factor (see [R4DS Ch 15](http://r4ds.had.co.nz/factors.html)), or use `count()`:
 ```{r}
 afghan %>%
@@ -98,7 +98,7 @@ violent_exp_prop <-
   mutate(prop = n / sum(n))
 violent_exp_prop
 ```
-The data above is 
+
 ```{r}
 violent_exp_prop %>%
   select(-n) %>%
@@ -440,7 +440,7 @@ scale_colour_parties <-
 q + scale_colour_parties
 ```
 
-```{r fig.width = 7, fig.height = 7}
+```{r fig.width = 7, fig.height = 7, warning=FALSE}
 congress %>%
   ggplot(aes(x = dwnom1, y = dwnom2, colour = party)) +
   geom_point() +

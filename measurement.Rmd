@@ -28,7 +28,9 @@ afghan %>%
   summary()
 ```
 
-To summarize the diffferent levels of `income`, use the `r rdoc("dplyr", "count")` function:
+Loading data with either `data()` or`read_csv()` does not convert strings to factors by default; see below with `income`.
+To get a summary of the different levels, either convert it to a factor (see [R4DS Ch 15](http://r4ds.had.co.nz/factors.html)), or use `count()`:
+
 ```{r}
 count(afghan, income)
 ```
@@ -97,7 +99,9 @@ violent_exp_prop <-
   select(-n)
 violent_exp_prop
 ```
+
 The data frame above can be reorganized so that rows are ISAF and the columns are Taliban as follows:
+
 ```{r}
 violent_exp_prop %>%
   spread(violent.exp.taliban, prop)
@@ -438,6 +442,8 @@ scale_colour_parties <-
 q + scale_colour_parties
 ```
 
+
+
 ```{r fig.width = 10, fig.height = 6, out.width = "100%", out.height = "100%"}
 congress %>%
   ggplot(aes(x = dwnom1, y = dwnom2, colour = party)) +
@@ -464,7 +470,8 @@ congress %>%
        colour = "Party")
 ```
 
-Alternatively, you can plot the mean DW-Nominate scores for each party and congress over times. The lines linking the points implicitly convey progress through time. Color is also used to show progress through time. Labels are added to show the first and last congress in the data set to identify the parties.
+Alternatively, you can plot the mean DW-Nominate scores for each party and congress over time. This plot uses color for parties and lets the points and labels for the first and last congresses (80 and 112) to convey progress through time.
+
 ```{r}
 party_means <-
   congress %>%
@@ -478,22 +485,6 @@ party_endpoints <-
   filter(congress %in% c(min(congress), max(congress))) %>%
   mutate(label = str_c(party, congress, sep = " - "))
 
-ggplot(party_means, 
-         aes(x = dwnom1, y = dwnom2, color = congress,
-             group = party)) +
-  geom_point() +
-  geom_path() +
-  ggrepel::geom_text_repel(data = party_endpoints,
-                           mapping = aes(label = label)) +
-  scale_y_continuous("racial liberalism/conservatism",
-                     limits = c(-1, 1)) +
-  scale_x_continuous("economic liberalism/conservatism",
-                     limits = c(-1, 1))
-
-```
-
-An alternative version uses color for parties and lets the points and labels for the first and last congresses (80 and 112) to convey progress through time.
-```{r}
 ggplot(party_means, 
          aes(x = dwnom1, y = dwnom2, color = party,
              group = party)) +

@@ -39,7 +39,9 @@ afghan %>%
 #>  Max.   :80.0   Max.   :18   Max.   :1.000
 ```
 
-To summarize the diffferent levels of `income`, use the [count](https://www.rdocumentation.org/packages/dplyr/topics/count) function:
+Loading data with either `data()` or`read_csv()` does not convert strings to factors by default; see below with `income`.
+To get a summary of the different levels, either convert it to a factor (see [R4DS Ch 15](http://r4ds.had.co.nz/factors.html)), or use `count()`:
+
 
 ```r
 count(afghan, income)
@@ -65,11 +67,11 @@ afghan %>%
 #> # A tibble: 9 x 4
 #>   violent.exp.ISAF violent.exp.taliban     n    prop
 #>              <int>               <int> <int>   <dbl>
-#> 1                0                   0  1330 0.48293
-#> 2                0                   1   354 0.12854
+#> 1                0                   0  1330 0.483  
+#> 2                0                   1   354 0.129  
 #> 3                0                  NA    22 0.00799
-#> 4                1                   0   475 0.17248
-#> 5                1                   1   526 0.19099
+#> 4                1                   0   475 0.172  
+#> 5                1                   1   526 0.191  
 #> 6                1                  NA    22 0.00799
 #> # ... with 3 more rows
 ```
@@ -159,7 +161,9 @@ violent_exp_prop
 #> 6                1                  NA 0.00799
 #> # ... with 3 more rows
 ```
+
 The data frame above can be reorganized so that rows are ISAF and the columns are Taliban as follows:
+
 
 ```r
 violent_exp_prop %>%
@@ -624,6 +628,8 @@ q + scale_colour_parties
 <img src="measurement_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" />
 
 
+
+
 ```r
 congress %>%
   ggplot(aes(x = dwnom1, y = dwnom2, colour = party)) +
@@ -655,7 +661,8 @@ congress %>%
 
 <img src="measurement_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" />
 
-Alternatively, you can plot the mean DW-Nominate scores for each party and congress over times. The lines linking the points implicitly convey progress through time. Color is also used to show progress through time. Labels are added to show the first and last congress in the data set to identify the parties.
+Alternatively, you can plot the mean DW-Nominate scores for each party and congress over time. This plot uses color for parties and lets the points and labels for the first and last congresses (80 and 112) to convey progress through time.
+
 
 ```r
 party_means <-
@@ -671,24 +678,6 @@ party_endpoints <-
   mutate(label = str_c(party, congress, sep = " - "))
 
 ggplot(party_means, 
-         aes(x = dwnom1, y = dwnom2, color = congress,
-             group = party)) +
-  geom_point() +
-  geom_path() +
-  ggrepel::geom_text_repel(data = party_endpoints,
-                           mapping = aes(label = label)) +
-  scale_y_continuous("racial liberalism/conservatism",
-                     limits = c(-1, 1)) +
-  scale_x_continuous("economic liberalism/conservatism",
-                     limits = c(-1, 1))
-```
-
-<img src="measurement_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
-
-An alternative version uses color for parties and lets the points and labels for the first and last congresses (80 and 112) to convey progress through time.
-
-```r
-ggplot(party_means, 
          aes(x = dwnom1, y = dwnom2, color = party,
              group = party)) +
   geom_point() +
@@ -701,7 +690,7 @@ ggplot(party_means,
   scale_colour_parties
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -722,7 +711,7 @@ ggplot(USGini, aes(x = year, y = gini)) +
   ggtitle("Income Inequality")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" />
 
 To calculate a measure of party polarization take the code used in the plot of Republican and Democratic party median ideal points and adapt it to calculate the difference in the party medians:
 
@@ -758,7 +747,7 @@ ggplot(party_polarization, aes(x = congress, y = polarization)) +
   labs(x = "Year", y = "Republican median − Democratic median")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ### Quantile-Quantile Plot
@@ -774,7 +763,7 @@ congress %>%
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" />
 
 The package *ggplot2* includes a function `stat_qq` which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distribution, usually the normal one.
 However, we can calculate one by hand, which may give more insight into exactly what the qq-plot is doing.
@@ -814,7 +803,7 @@ party_qtiles %>%
   coord_fixed()
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-52-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ## Clustering
@@ -883,7 +872,7 @@ ggplot() +
   geom_point(data = k80two.clusters, mapping = aes(x = x1, y = x2))
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -919,7 +908,7 @@ ggplot() +
              mapping = aes(x = x1, y = x2))
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" />
 
 Number of observations from each party in each cluster:
 
@@ -931,9 +920,9 @@ congress112 %>%
 #> # Groups: party, cluster2 [3]
 #>   party      cluster2     n
 #>   <chr>      <fctr>   <int>
-#> 1 Democrat   2          200
-#> 2 Republican 1          242
-#> 3 Republican 2            1
+#> 1 Democrat   1          200
+#> 2 Republican 1            1
+#> 3 Republican 2          242
 ```
 
 Now repeat the same with four clusters on the 80th congress:
@@ -954,7 +943,7 @@ ggplot() +
              mapping = aes(x = x1, y = x2), size = 3)
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-60-1.png" width="70%" style="display: block; margin: auto;" />
 and on the 112th congress:
 
 ```r
@@ -973,4 +962,4 @@ ggplot() +
              mapping = aes(x = x1, y = x2), size = 3)
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-62-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" />

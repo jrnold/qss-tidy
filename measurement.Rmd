@@ -30,9 +30,9 @@ afghan %>%
 
 Loading data with either `data()` or`read_csv()` does not convert strings to factors by default; see below with `income`.
 To get a summary of the different levels, either convert it to a factor (see [R4DS Ch 15](http://r4ds.had.co.nz/factors.html)), or use `count()`:
+
 ```{r}
-afghan %>%
-  count(income)
+count(afghan, income)
 ```
 
 Use count to calculate the proportion of respondents who answer that they were harmed by the ISAF or the Taliban (`violent.exp.ISAF` and `violent.exp.taliban`, respectively):
@@ -88,20 +88,22 @@ mean(x)
 mean(x, na.rm = TRUE)
 ```
 
-Table of proportions that includes `NA`
+Table of proportions of individuals harmed by the ISAF and Taliban that includes missing (`NA`) values:
 ```{r}
 violent_exp_prop <-
   afghan %>%
   group_by(violent.exp.ISAF, violent.exp.taliban) %>%
   count() %>%
   ungroup() %>%
-  mutate(prop = n / sum(n))
+  mutate(prop = n / sum(n)) %>%
+  select(-n)
 violent_exp_prop
 ```
 
+The data frame above can be reorganized so that rows are ISAF and the columns are Taliban as follows:
+
 ```{r}
 violent_exp_prop %>%
-  select(-n) %>%
   spread(violent.exp.taliban, prop)
 ```
 
@@ -440,17 +442,19 @@ scale_colour_parties <-
 q + scale_colour_parties
 ```
 
-```{r fig.width = 7, fig.height = 7, warning=FALSE}
+
+
+```{r fig.width = 10, fig.height = 6, out.width = "100%", out.height = "100%"}
 congress %>%
   ggplot(aes(x = dwnom1, y = dwnom2, colour = party)) +
   geom_point() +
   facet_wrap(~ congress) +
   coord_fixed() +
   scale_y_continuous("racial liberalism/conservatism",
-                     limits = c(-1.5, 1.5)) +
+                     limits = c(-2, 2)) +
   scale_x_continuous("economic liberalism/conservatism",
-                     limits = c(-1.5, 1.5)) +
-  scale_colour_parties
+                     limits = c(-2, 2)) 
+  #scale_colour_parties
 ```
 
 ```{r}
@@ -466,28 +470,36 @@ congress %>%
        colour = "Party")
 ```
 
-Alternatively, you can plot all values of DW-Nominate scores and use the color to show progress through time. Here, it is essential that you control the `alpha`. Labels can be added to show the mean party position at the first and last congress in the data set. 
+Alternatively, you can plot the mean DW-Nominate scores for each party and congress over time. This plot uses color for parties and lets the points and labels for the first and last congresses (80 and 112) to convey progress through time.
 
 ```{r}
-party_movement <-
-  congress %>% 
-  filter(congress %in% c(80, 112) & party %in% c("Democrat", "Republican")) %>%
+party_means <-
+  congress %>%
+  filter(party %in% c("Democrat", "Republican")) %>%
   group_by(party, congress) %>%
-  summarise(mean_dwn1 = mean(dwnom1),
-            mean_dwn2 = mean(dwnom2)) %>%
+  summarise(dwnom1 = mean(dwnom1),
+            dwnom2 = mean(dwnom2))
+
+party_endpoints <-
+  party_means %>%
+  filter(congress %in% c(min(congress), max(congress))) %>%
   mutate(label = str_c(party, congress, sep = " - "))
 
-all_congresses <-
-  ggplot(congress, aes(x = dwnom1, y = dwnom2, color = congress)) +
-  geom_point(alpha = 0.15) +
-  geom_label(data = party_movement, aes(x = mean_dwn1, y = mean_dwn2,
-                                       label = label)) +
-  scale_y_continuous("racial liberalism/conservatism",
-                     limits = c(-1.5, 1.5)) +
-  scale_x_continuous("economic liberalism/conservatism",
-                     limits = c(-1.5, 1.5))
-all_congresses
+ggplot(party_means, 
+         aes(x = dwnom1, y = dwnom2, color = party,
+             group = party)) +
+  geom_point() +
+  geom_path() +
+  ggrepel::geom_text_repel(data = party_endpoints,
+                           mapping = aes(label = congress),
+                           color = "black") +
+  scale_y_continuous("racial liberalism/conservatism") +
+  scale_x_continuous("economic liberalism/conservatism") +
+  scale_colour_parties
+
 ```
+
+
 
 ### Correlation
 

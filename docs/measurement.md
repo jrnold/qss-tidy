@@ -39,12 +39,12 @@ afghan %>%
 #>  Max.   :80.0   Max.   :18   Max.   :1.000
 ```
 
-With `income`,  never converts strings to factors by default.
-To get a summary of the different levels, either convert it to a factor (R4DS Ch 15), or use `count()`
+Loading data with either `data()` or`read_csv()` does not convert strings to factors by default; see below with `income`.
+To get a summary of the different levels, either convert it to a factor (see [R4DS Ch 15](http://r4ds.had.co.nz/factors.html)), or use `count()`:
+
 
 ```r
-afghan %>%
-  count(income)
+count(afghan, income)
 #> # A tibble: 6 x 2
 #>   income              n
 #>   <chr>           <int>
@@ -56,7 +56,7 @@ afghan %>%
 #> 6 <NA>              154
 ```
 
-Count the number a proportion of respondents who answer that they were harmed by the ISF (`violent.exp.ISAF`) and (`violent.exp.taliban`) respectively,
+Use count to calculate the proportion of respondents who answer that they were harmed by the ISAF or the Taliban (`violent.exp.ISAF` and `violent.exp.taliban`, respectively):
 
 ```r
 afghan %>%
@@ -78,8 +78,8 @@ afghan %>%
 
 We need to use `ungroup()` in order to ensure that `sum(n)` sums over the entire
 dataset as opposed to only within categories of `violent.exp.ISAF`.
-Unlike `prop.table`, the code above does not drop missing values.
-We can drop those values by adding a `filter` verb and using `!is.na()` to test
+Unlike `prop.table()`, the code above does not drop missing values.
+We can drop those values by adding `filter()` and `!is.na()` to test
 for missing values in those variables:
 
 ```r
@@ -99,13 +99,6 @@ afghan %>%
 ```
 
 
-```r
-x <- c(1, 2, 3, NA)
-mean(x)
-#> [1] NA
-mean(x, na.rm = TRUE)
-#> [1] 2
-```
 
 
 
@@ -113,7 +106,7 @@ mean(x, na.rm = TRUE)
 
 We already observed the issues with `NA` values in calculating the proportion
 answering the "experienced violence" questions.
-You can filter rows with specific variables having missing values using `filter`
+You can filter rows with specific variables having missing values using `filter()`
 as shown above.
 
 
@@ -136,7 +129,17 @@ summarise(afghan,
 #> 1       154    0.0559
 ```
 
-Table of proportions that includes `NA`
+Mean, and other functions, do not by default exclude missing values. Use `na.rm = TRUE` in these cases.
+
+```r
+x <- c(1, 2, 3, NA)
+mean(x)
+#> [1] NA
+mean(x, na.rm = TRUE)
+#> [1] 2
+```
+
+Table of proportions of individuals harmed by the ISAF and Taliban that includes missing (`NA`) values:
 
 ```r
 violent_exp_prop <-
@@ -144,24 +147,26 @@ violent_exp_prop <-
   group_by(violent.exp.ISAF, violent.exp.taliban) %>%
   count() %>%
   ungroup() %>%
-  mutate(prop = n / sum(n))
+  mutate(prop = n / sum(n)) %>%
+  select(-n)
 violent_exp_prop
-#> # A tibble: 9 x 4
-#>   violent.exp.ISAF violent.exp.taliban     n    prop
-#>              <int>               <int> <int>   <dbl>
-#> 1                0                   0  1330 0.483  
-#> 2                0                   1   354 0.129  
-#> 3                0                  NA    22 0.00799
-#> 4                1                   0   475 0.172  
-#> 5                1                   1   526 0.191  
-#> 6                1                  NA    22 0.00799
+#> # A tibble: 9 x 3
+#>   violent.exp.ISAF violent.exp.taliban    prop
+#>              <int>               <int>   <dbl>
+#> 1                0                   0 0.483  
+#> 2                0                   1 0.129  
+#> 3                0                  NA 0.00799
+#> 4                1                   0 0.172  
+#> 5                1                   1 0.191  
+#> 6                1                  NA 0.00799
 #> # ... with 3 more rows
 ```
-The data above is 
+
+The data frame above can be reorganized so that rows are ISAF and the columns are Taliban as follows:
+
 
 ```r
 violent_exp_prop %>%
-  select(-n) %>%
   spread(violent.exp.taliban, prop)
 #> # A tibble: 3 x 4
 #>   violent.exp.ISAF     `0`     `1`  `<NA>`
@@ -171,7 +176,7 @@ violent_exp_prop %>%
 #> 3               NA 0.00254 0.00290 0.00363
 ```
 
-`drop_na` is an alternative to `na.omit` that allows for selecting missing values,
+`drop_na` is an alternative to `na.omit` that allows for removing missing values,
 
 ```r
 drop_na(afghan)
@@ -189,12 +194,12 @@ NA_real_ # double
 NA_character_ # character
 #> [1] NA
 ```
-In many cases, this distinction does not matter since functions will coerce these missing
+In many cases, this distinction does not matter since many functions will coerce these missing
 values to the correct vector type. 
 However, you will need to use these in some tidyverse functions that require the outputs
-to the same type, e.g. [map](https://www.rdocumentation.org/packages/purrr/topics/map) and most [purrr](https://cran.r-project.org/package=purrr) functions,
-and `if_else`.
-This will produce an error, since the `TRUE` case returns an integer value (`x` is an integer),
+to be the same type, e.g. `map()` and most of the other [purrr](https://cran.r-project.org/package=purrr) functions,
+and `if_else()`.
+The code below produces an error, since the `TRUE` case returns an integer value (`x` is an integer), but the `FALSE` case does not specify the type of `NA`.
 
 ```r
 x <- 1:5
@@ -203,13 +208,12 @@ class(x)
 if_else(x < 3, x, NA)
 #> Error: `false` must be type integer, not logical
 ```
-So instead of `NA`, use `NA_integer_`,
+So instead of `NA`, use `NA_integer_`:
 
 ```r
 if_else(x < 3, x, NA_integer_)
 #> [1]  1  2 NA NA NA
 ```
-
 
 
 ## Visualizing the Univariate Distribution
@@ -251,7 +255,7 @@ ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
 
 <img src="measurement_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" />
 
-Instead of creating two separate box-plots, create a single plot facetted by ISAF and Taliban,
+Instead of creating two separate box-plots, create a single plot facetted by ISAF and Taliban:
 
 ```r
 select(afghan, violent.exp.ISAF, violent.exp.taliban) %>%
@@ -272,9 +276,8 @@ select(afghan, violent.exp.ISAF, violent.exp.taliban) %>%
 
 <img src="measurement_files/figure-html/unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" />
 
-
 This plot could improved by plotting the two values simultaneously to be able to better compare them.
-This will require creating a data frame that has the following columns: perpetrator (`ISAF`, `Taliban`), response (`No Harm`, `Harm`, `No response`).
+This will require creating a data frame that has the following columns: perpetrator (`ISAF`, `Taliban`) and response (`No Harm`, `Harm`, `No response`).
 
 ```r
 violent_exp <-
@@ -296,7 +299,7 @@ ggplot(violent_exp, aes(x = prop, y = response, color = perpetrator)) +
 
 <img src="measurement_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" />
 
-Black was chosen for the Taliban, and Green for ISAF because it is the color of their respective [flags](https://en.wikipedia.org/wiki/International_Security_Assistance_Force).
+Black was chosen for the Taliban, and Green for ISAF because they are the colors of their respective [flags](https://en.wikipedia.org/wiki/International_Security_Assistance_Force).
 
 
 ### Histogram
@@ -344,10 +347,10 @@ dens_plot
 ```
 
 <img src="measurement_files/figure-html/unnamed-chunk-22-1.png" width="70%" style="display: block; margin: auto;" />
-which can be combined with a [geom_rug](https://www.rdocumentation.org/packages/ggplot2/topics/geom_rug) to show individual values:
+which can be combined with a [geom_rug](https://www.rdocumentation.org/packages/ggplot2/topics/geom_rug) to create a rug plot, which puts small lines on the axis to represent the value of each observation. It can be combined with a scatter or density plot to add extra detail. Adjust the `alpha` to modify the color transparency of the rug and address overplotting.
 
 ```r
-dens_plot + geom_rug()
+dens_plot + geom_rug(alpha = .2)
 ```
 
 <img src="measurement_files/figure-html/unnamed-chunk-23-1.png" width="70%" style="display: block; margin: auto;" />
@@ -429,11 +432,12 @@ ggplot(afghan, aes(y = educ.years, x = province)) +
 ```
 
 <img src="measurement_files/figure-html/unnamed-chunk-28-1.png" width="70%" style="display: block; margin: auto;" />
-Dot plot with jitter to avoid overplotting:
+Dot plot with jitter and adjusted alpha to avoid overplotting:
 
 ```r
 ggplot(afghan, aes(y = educ.years, x = province)) +
-  geom_point(position = position_jitter(width = 0.25, height = 0)) +
+  geom_point(position = position_jitter(width = 0.25, height = 0),
+             alpha = .2) +
   coord_flip() +
   labs(x = "Province", y = "Years of education",
        title = "Education by Province")
@@ -510,14 +514,13 @@ ggplot(afghan.village, aes(colour = factor(village.surveyed,
 ```
 
 <img src="measurement_files/figure-html/unnamed-chunk-34-1.png" width="70%" style="display: block; margin: auto;" />
-The function [geom_rug](http://docs.ggplot2.org/current/geom_rug.html), creates a rug plot, which puts small lines on the axis to represent the value of each observation.
-It can be combined with a scatter or density plot to add extra detail.
+
 
 
 ### Non-response and other sources of bias
 
-Calculate the rates of non-response by province to `violent.exp.ISAF` and
-`violent.exp.taliban`:
+Calculate the rates of item non-response by province to the question about civilian victimization by ISAF and Taliban forces (`violent.exp.ISAF` and
+`violent.exp.taliban`):
 
 ```r
 afghan %>%
@@ -545,12 +548,12 @@ between the ISAF and control groups:
 ```
 
 To calculate the table responses to the list experiment in the control, ISAF,
-and Taliban groups>
+and Taliban groups:
 
 ```r
 afghan %>%
   group_by(list.response, list.group) %>%
-  count() %T>%
+  count() %>%
   glimpse() %>%
   spread(list.group, n, fill = 0)
 #> Observations: 12
@@ -611,7 +614,7 @@ q
 <img src="measurement_files/figure-html/unnamed-chunk-40-1.png" width="70%" style="display: block; margin: auto;" />
 
 However, since there are colors associated with Democrats (blue) and Republicans (blue), we should use them rather than the defaults.
-There's some evidence that using semantically-resonant colors can help decoding data visualizations ([Lin, et al. 2013](http://vis.stanford.edu/files/2013-SemanticColor-EuroVis.pdf)).
+There's some evidence that using semantically-resonant colors can help decoding data visualizations (See [Lin, et al. 2013](http://vis.stanford.edu/files/2013-SemanticColor-EuroVis.pdf)).
 Since I'll reuse the scale several times, I'll save it in a variable.
 
 ```r
@@ -625,6 +628,8 @@ q + scale_colour_parties
 <img src="measurement_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" />
 
 
+
+
 ```r
 congress %>%
   ggplot(aes(x = dwnom1, y = dwnom2, colour = party)) +
@@ -632,14 +637,13 @@ congress %>%
   facet_wrap(~ congress) +
   coord_fixed() +
   scale_y_continuous("racial liberalism/conservatism",
-                     limits = c(-1.5, 1.5)) +
+                     limits = c(-2, 2)) +
   scale_x_continuous("economic liberalism/conservatism",
-                     limits = c(-1.5, 1.5)) +
-  scale_colour_parties
-#> Warning: Removed 2 rows containing missing values (geom_point).
+                     limits = c(-2, 2)) 
+  #scale_colour_parties
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-42-1.png" width="100%" height="100%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -656,6 +660,39 @@ congress %>%
 ```
 
 <img src="measurement_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" />
+
+Alternatively, you can plot the mean DW-Nominate scores for each party and congress over time. This plot uses color for parties and lets the points and labels for the first and last congresses (80 and 112) to convey progress through time.
+
+
+```r
+party_means <-
+  congress %>%
+  filter(party %in% c("Democrat", "Republican")) %>%
+  group_by(party, congress) %>%
+  summarise(dwnom1 = mean(dwnom1),
+            dwnom2 = mean(dwnom2))
+
+party_endpoints <-
+  party_means %>%
+  filter(congress %in% c(min(congress), max(congress))) %>%
+  mutate(label = str_c(party, congress, sep = " - "))
+
+ggplot(party_means, 
+         aes(x = dwnom1, y = dwnom2, color = party,
+             group = party)) +
+  geom_point() +
+  geom_path() +
+  ggrepel::geom_text_repel(data = party_endpoints,
+                           mapping = aes(label = congress),
+                           color = "black") +
+  scale_y_continuous("racial liberalism/conservatism") +
+  scale_x_continuous("economic liberalism/conservatism") +
+  scale_colour_parties
+```
+
+<img src="measurement_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
+
+
 
 ### Correlation
 
@@ -674,7 +711,7 @@ ggplot(USGini, aes(x = year, y = gini)) +
   ggtitle("Income Inequality")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" />
 
 To calculate a measure of party polarization take the code used in the plot of Republican and Democratic party median ideal points and adapt it to calculate the difference in the party medians:
 
@@ -710,7 +747,7 @@ ggplot(party_polarization, aes(x = congress, y = polarization)) +
   labs(x = "Year", y = "Republican median − Democratic median")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ### Quantile-Quantile Plot
@@ -726,9 +763,9 @@ congress %>%
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" />
 
-*ggplot2* includes a `stat_qq` which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distribution, usually the normal one.
+The package *ggplot2* includes a function `stat_qq` which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distribution, usually the normal one.
 However, we can calculate one by hand, which may give more insight into exactly what the qq-plot is doing.
 
 ```r
@@ -766,7 +803,7 @@ party_qtiles %>%
   coord_fixed()
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ## Clustering
@@ -782,12 +819,12 @@ See [R for Data Science](http://r4ds.had.co.nz/) chapter [Vectors](http://r4ds.h
 
 ### Lists
 
-See [R for Data Science](http://r4ds.had.co.nz/) chapters [Vectors](http://r4ds.had.co.nz/vectors.html), [Iteration](http://r4ds.had.co.nz/iteration.html) and the [purrr](https://cran.r-project.org/package=purrr) package for more powerful methods of computing on lists.
+See [R for Data Science](http://r4ds.had.co.nz/) chapters [Vectors](http://r4ds.had.co.nz/vectors.html) and [Iteration](http://r4ds.had.co.nz/iteration.html), as well as the [purrr](https://cran.r-project.org/package=purrr) package for more powerful methods of computing on lists.
 
 
 ### k-means algorithms
 
-Calculate the clusters by the 80th and 112th congresses,
+Calculate the clusters by the 80th and 112th congresses:
 
 ```r
 k80two.out <-
@@ -796,7 +833,7 @@ k80two.out <-
               centers = 2, nstart = 5)
 ```
 
-Add the cluster ids to data sets
+Add the cluster ids to data sets:
 
 ```r
 congress80 <-
@@ -811,8 +848,8 @@ These are in the `centers` element of the cluster object.
 ```r
 k80two.out$centers
 #>    dwnom1 dwnom2
-#> 1 -0.0561  0.769
-#> 2  0.1521 -0.344
+#> 1 -0.0484  0.783
+#> 2  0.1468 -0.339
 ```
 
 To make it easier to use with [ggplot2](https://cran.r-project.org/package=ggplot2), we need to convert this to a data frame.
@@ -822,11 +859,11 @@ The [tidy](https://www.rdocumentation.org/packages/broom/topics/tidy) function f
 k80two.clusters <- tidy(k80two.out)
 k80two.clusters
 #>        x1     x2 size withinss cluster
-#> 1 -0.0561  0.769  138     12.5       1
-#> 2  0.1521 -0.344  308     53.3       2
+#> 1 -0.0484  0.783  135     10.9       1
+#> 2  0.1468 -0.339  311     54.9       2
 ```
 
-Plot the ideal points and clusters
+Plot the ideal points and clusters:
 
 ```r
 ggplot() +
@@ -835,7 +872,7 @@ ggplot() +
   geom_point(data = k80two.clusters, mapping = aes(x = x1, y = x2))
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -846,8 +883,8 @@ congress80 %>%
 #> # Groups: party, cluster2 [5]
 #>   party      cluster2     n
 #>   <chr>      <fctr>   <int>
-#> 1 Democrat   1          135
-#> 2 Democrat   2           59
+#> 1 Democrat   1          132
+#> 2 Democrat   2           62
 #> 3 Other      2            2
 #> 4 Republican 1            3
 #> 5 Republican 2          247
@@ -871,7 +908,7 @@ ggplot() +
              mapping = aes(x = x1, y = x2))
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" />
 
 Number of observations from each party in each cluster:
 
@@ -883,9 +920,9 @@ congress112 %>%
 #> # Groups: party, cluster2 [3]
 #>   party      cluster2     n
 #>   <chr>      <fctr>   <int>
-#> 1 Democrat   2          200
-#> 2 Republican 1          242
-#> 3 Republican 2            1
+#> 1 Democrat   1          200
+#> 2 Republican 1            1
+#> 3 Republican 2          242
 ```
 
 Now repeat the same with four clusters on the 80th congress:
@@ -906,7 +943,7 @@ ggplot() +
              mapping = aes(x = x1, y = x2), size = 3)
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-60-1.png" width="70%" style="display: block; margin: auto;" />
 and on the 112th congress:
 
 ```r
@@ -925,4 +962,4 @@ ggplot() +
              mapping = aes(x = x1, y = x2), size = 3)
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-60-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="measurement_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" />

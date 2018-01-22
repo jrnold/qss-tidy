@@ -290,7 +290,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co">#&gt;  Mean   :32.4   Mean   : 4   Mean   :0.583                     </span>
 <span class="co">#&gt;  3rd Qu.:40.0   3rd Qu.: 8   3rd Qu.:1.000                     </span>
 <span class="co">#&gt;  Max.   :80.0   Max.   :18   Max.   :1.000</span></code></pre></div>
-<p>To summarize the diffferent levels of <code>income</code>, use the <a href="https://www.rdocumentation.org/packages/dplyr/topics/count">count</a> function:</p>
+<p>Loading data with either <code>data()</code> or<code>read_csv()</code> does not convert strings to factors by default; see below with <code>income</code>. To get a summary of the different levels, either convert it to a factor (see <a href="http://r4ds.had.co.nz/factors.html">R4DS Ch 15</a>), or use <code>count()</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">count</span>(afghan, income)
 <span class="co">#&gt; # A tibble: 6 x 2</span>
 <span class="co">#&gt;   income              n</span>
@@ -691,7 +691,7 @@ q <span class="op">+</span><span class="st"> </span>scale_colour_parties</code><
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;DW-NOMINATE score (1st Dimension)&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Congress&quot;</span>,
        <span class="dt">colour =</span> <span class="st">&quot;Party&quot;</span>)</code></pre></div>
 <p><img src="measurement_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p>Alternatively, you can plot the mean DW-Nominate scores for each party and congress over times. The lines linking the points implicitly convey progress through time. Color is also used to show progress through time. Labels are added to show the first and last congress in the data set to identify the parties.</p>
+<p>Alternatively, you can plot the mean DW-Nominate scores for each party and congress over time. This plot uses color for parties and lets the points and labels for the first and last congresses (80 and 112) to convey progress through time.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">party_means &lt;-
 <span class="st">  </span>congress <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(party <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Democrat&quot;</span>, <span class="st">&quot;Republican&quot;</span>)) <span class="op">%&gt;%</span>
@@ -705,19 +705,6 @@ party_endpoints &lt;-
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">label =</span> <span class="kw">str_c</span>(party, congress, <span class="dt">sep =</span> <span class="st">&quot; - &quot;</span>))
 
 <span class="kw">ggplot</span>(party_means, 
-         <span class="kw">aes</span>(<span class="dt">x =</span> dwnom1, <span class="dt">y =</span> dwnom2, <span class="dt">color =</span> congress,
-             <span class="dt">group =</span> party)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_path</span>() <span class="op">+</span>
-<span class="st">  </span>ggrepel<span class="op">::</span><span class="kw">geom_text_repel</span>(<span class="dt">data =</span> party_endpoints,
-                           <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">label =</span> label)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;racial liberalism/conservatism&quot;</span>,
-                     <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;economic liberalism/conservatism&quot;</span>,
-                     <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p>An alternative version uses color for parties and lets the points and labels for the first and last congresses (80 and 112) to convey progress through time.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(party_means, 
          <span class="kw">aes</span>(<span class="dt">x =</span> dwnom1, <span class="dt">y =</span> dwnom2, <span class="dt">color =</span> party,
              <span class="dt">group =</span> party)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
@@ -728,7 +715,7 @@ party_endpoints &lt;-
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;racial liberalism/conservatism&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;economic liberalism/conservatism&quot;</span>) <span class="op">+</span>
 <span class="st">  </span>scale_colour_parties</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div id="correlation" class="section level3">
 <h3><span class="header-section-number">3.5.1</span> Correlation</h3>
 <p>Let’s plot the Gini coefficient</p>
@@ -738,7 +725,7 @@ party_endpoints &lt;-
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Gini coefficient&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Income Inequality&quot;</span>)</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>To calculate a measure of party polarization take the code used in the plot of Republican and Democratic party median ideal points and adapt it to calculate the difference in the party medians:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">party_polarization &lt;-
 <span class="st">  </span>congress <span class="op">%&gt;%</span>
@@ -764,7 +751,7 @@ party_polarization
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Political Polarization&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Republican median − Democratic median&quot;</span>)</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="quantile-quantile-plot" class="section level3">
 <h3><span class="header-section-number">3.5.2</span> Quantile-Quantile Plot</h3>
@@ -775,7 +762,7 @@ party_polarization
 <span class="st">  </span><span class="kw">facet_grid</span>(party <span class="op">~</span><span class="st"> </span>.) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;racial liberalism/conservatism dimension&quot;</span>)
 <span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>The package <em>ggplot2</em> includes a function <code>stat_qq</code> which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distribution, usually the normal one. However, we can calculate one by hand, which may give more insight into exactly what the qq-plot is doing.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">party_qtiles &lt;-<span class="st"> </span><span class="kw">tibble</span>(
   <span class="dt">probs =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.01</span>),
@@ -803,7 +790,7 @@ party_qtiles
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_fixed</span>()</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-52-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="clustering" class="section level2">
@@ -845,7 +832,7 @@ k80two.clusters
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> congress80,
              <span class="kw">aes</span>(<span class="dt">x =</span> dwnom1, <span class="dt">y =</span> dwnom2, <span class="dt">colour =</span> cluster2)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> k80two.clusters, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> x1, <span class="dt">y =</span> x2))</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">congress80 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(party, cluster2) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>()
@@ -872,7 +859,7 @@ k112two.clusters &lt;-<span class="st"> </span><span class="kw">tidy</span>(k112
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> dwnom1, <span class="dt">y =</span> dwnom2, <span class="dt">colour =</span> cluster2)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> k112two.clusters,
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> x1, <span class="dt">y =</span> x2))</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Number of observations from each party in each cluster:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">congress112 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(party, cluster2) <span class="op">%&gt;%</span>
@@ -881,9 +868,9 @@ k112two.clusters &lt;-<span class="st"> </span><span class="kw">tidy</span>(k112
 <span class="co">#&gt; # Groups: party, cluster2 [3]</span>
 <span class="co">#&gt;   party      cluster2     n</span>
 <span class="co">#&gt;   &lt;chr&gt;      &lt;fctr&gt;   &lt;int&gt;</span>
-<span class="co">#&gt; 1 Democrat   2          200</span>
-<span class="co">#&gt; 2 Republican 1          242</span>
-<span class="co">#&gt; 3 Republican 2            1</span></code></pre></div>
+<span class="co">#&gt; 1 Democrat   1          200</span>
+<span class="co">#&gt; 2 Republican 1            1</span>
+<span class="co">#&gt; 3 Republican 2          242</span></code></pre></div>
 <p>Now repeat the same with four clusters on the 80th congress:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">k80four.out &lt;-
 <span class="st">  </span><span class="kw">kmeans</span>(<span class="kw">select</span>(<span class="kw">filter</span>(congress, congress <span class="op">==</span><span class="st"> </span><span class="dv">80</span>),
@@ -898,7 +885,7 @@ k80four.clusters &lt;-<span class="st"> </span><span class="kw">tidy</span>(k80f
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> dwnom1, <span class="dt">y =</span> dwnom2, <span class="dt">colour =</span> cluster2)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> k80four.clusters,
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> x1, <span class="dt">y =</span> x2), <span class="dt">size =</span> <span class="dv">3</span>)</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" /> and on the 112th congress:</p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-60-1.png" width="70%" style="display: block; margin: auto;" /> and on the 112th congress:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">k112four.out &lt;-
 <span class="st">  </span><span class="kw">kmeans</span>(<span class="kw">select</span>(<span class="kw">filter</span>(congress, congress <span class="op">==</span><span class="st"> </span><span class="dv">112</span>),
                 dwnom1, dwnom2),
@@ -912,7 +899,7 @@ k112four.clusters &lt;-<span class="st"> </span><span class="kw">tidy</span>(k11
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> dwnom1, <span class="dt">y =</span> dwnom2, <span class="dt">colour =</span> cluster2)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> k112four.clusters,
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> x1, <span class="dt">y =</span> x2), <span class="dt">size =</span> <span class="dv">3</span>)</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-62-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" /></p>
 
 </div>
 </div>

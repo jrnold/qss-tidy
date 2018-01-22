@@ -757,10 +757,9 @@ ggplot(party_polarization, aes(x = congress, y = polarization)) +
 congress %>%
   filter(congress == 112, party %in% c("Republican", "Democrat")) %>%
   ggplot(aes(x = dwnom2, y = ..density..)) +
-  geom_histogram() +
+  geom_histogram(binwidth = .2) +
   facet_grid(party ~ .) +
   labs(x = "racial liberalism/conservatism dimension")
-#> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
 <img src="measurement_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" />

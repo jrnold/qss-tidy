@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-01-19">
+<meta name="date" content="2018-01-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -758,10 +758,9 @@ party_polarization
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">congress <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(congress <span class="op">==</span><span class="st"> </span><span class="dv">112</span>, party <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Republican&quot;</span>, <span class="st">&quot;Democrat&quot;</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dwnom2, <span class="dt">y =</span> ..density..)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> .<span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_grid</span>(party <span class="op">~</span><span class="st"> </span>.) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;racial liberalism/conservatism dimension&quot;</span>)
-<span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;racial liberalism/conservatism dimension&quot;</span>)</code></pre></div>
 <p><img src="measurement_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>The package <em>ggplot2</em> includes a function <code>stat_qq</code> which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distribution, usually the normal one. However, we can calculate one by hand, which may give more insight into exactly what the qq-plot is doing.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">party_qtiles &lt;-<span class="st"> </span><span class="kw">tibble</span>(

@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-01-20">
+<meta name="date" content="2018-01-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -298,7 +298,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">QSS Tidyverse Code</h1>
 <h4 class="author"><em>Jeffrey B. Arnold</em></h4>
-<h4 class="date"><em>2018-01-20</em></h4>
+<h4 class="date"><em>2018-01-25</em></h4>
 </div>
 <section id="preface" class="level1 unnumbered">
 <h1>Preface</h1>
@@ -1926,10 +1926,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb144-9" data-line-number="9"><span class="co">#&gt; 3 times 2 is equal to 6 </span></a>
 <a class="sourceLine" id="cb144-10" data-line-number="10"><span class="co">#&gt; 6 times 2 is equal to 12</span></a></code></pre></div>
 <p>Note that the above code uses the for loop for pedagogical purposes only, this could have simply been written</p>
-<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb145-1" data-line-number="1">results &lt;-<span class="st"> </span>values <span class="op">*</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb145-1" data-line-number="1">results &lt;-<span class="st"> </span>values <span class="op">*</span><span class="st"> </span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb145-2" data-line-number="2">results</a>
+<a class="sourceLine" id="cb145-3" data-line-number="3"><span class="co">#&gt; [1]  4  6 12</span></a></code></pre></div>
 <p>In general, avoid using for loops when there is a <em>vectorized</em> function.</p>
 <p>But sticking with the for loop, there are several things that could be improved.</p>
-<p>Avoid using the idiom <code>1:n</code> in for loops. To see why, look what happens when values is empty:</p>
+<p>Avoid using the idiom <code>1:n</code> in for loops. To see why, look what happens when values are empty:</p>
 <div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb146-1" data-line-number="1">values &lt;-<span class="st"> </span><span class="kw">c</span>()</a>
 <a class="sourceLine" id="cb146-2" data-line-number="2">n &lt;-<span class="st"> </span><span class="kw">length</span>(values)</a>
 <a class="sourceLine" id="cb146-3" data-line-number="3">results &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, n)</a>
@@ -1968,7 +1970,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb149-4" data-line-number="4"><span class="kw">class</span>(results)</a>
 <a class="sourceLine" id="cb149-5" data-line-number="5"><span class="co">#&gt; [1] &quot;numeric&quot;</span></a></code></pre></div>
 <p>Often loops can be rewritten to use a map function. Read the <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/data-visualisation.html">Iteration</a> before proceeding.</p>
-<p>For a functional, we first write a function that will be applied to each element of the vector. When converting from a <code>for</code> loop to a function, this is usually simply the body of the <code>for</code> loop, though you may need to add arguments for any variables defined outside the body of the for loop. In this case,</p>
+<p>To do so, we first write a function that will be applied to each element of the vector. When converting from a <code>for</code> loop to a function, this is usually simply the body of the <code>for</code> loop, though you may need to add arguments for any variables defined outside the body of the for loop. In this case,</p>
 <div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb150-1" data-line-number="1">mult_by_two &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
 <a class="sourceLine" id="cb150-2" data-line-number="2">  x <span class="op">*</span><span class="st"> </span><span class="dv">2</span></a>
 <a class="sourceLine" id="cb150-3" data-line-number="3">}</a></code></pre></div>
@@ -1979,7 +1981,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb151-4" data-line-number="4"><span class="co">#&gt; [1] 5</span></a>
 <a class="sourceLine" id="cb151-5" data-line-number="5"><span class="kw">mult_by_two</span>(<span class="op">-</span><span class="dv">3</span>)</a>
 <a class="sourceLine" id="cb151-6" data-line-number="6"><span class="co">#&gt; [1] -6</span></a></code></pre></div>
-<p>At this point, we could replace the body of the <code>for</code> loop with this function</p>
+<p>At this point, we could replace the body of the <code>for</code> loop with this function:</p>
 <div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" data-line-number="1">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>)</a>
 <a class="sourceLine" id="cb152-2" data-line-number="2">n &lt;-<span class="st"> </span><span class="kw">length</span>(values)</a>
 <a class="sourceLine" id="cb152-3" data-line-number="3">results &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, n)</a>
@@ -2092,7 +2094,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb163-3" data-line-number="3">pres08 &lt;-</a>
 <a class="sourceLine" id="cb163-4" data-line-number="4"><span class="st">  </span>pres08 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">margin =</span> Obama <span class="op">-</span><span class="st"> </span>McCain)</a></code></pre></div>
 <p>To work with dates, the R package <a href="https://cran.r-project.org/package=lubridate">lubridate</a> makes wrangling them much easier. See the <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/dates-and-times.html">Dates and Times</a>.</p>
-<p>The function <a href="https://www.rdocumentation.org/packages/lubridate/topics/ymd">ymd</a> will convert character strings like <code>year-month-day</code> and more into dates, as long as the order is (year, month, day). See <a href="https://www.rdocumentation.org/packages/lubridate/topics/dmy">dmy</a>, <a href="https://www.rdocumentation.org/packages/lubridate/topics/ymd">ymd</a>, and others for other ways to convert strings to dates.</p>
+<p>The function <a href="https://www.rdocumentation.org/packages/lubridate/topics/ymd">ymd</a> will convert character strings like <code>year-month-day</code> and more into dates, as long as the order is (year, month, day). See <a href="https://www.rdocumentation.org/packages/lubridate/topics/dmy">dmy</a>, <a href="https://www.rdocumentation.org/packages/lubridate/topics/mdy">mdy</a>, and others for other ways to convert strings to dates.</p>
 <div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb164-1" data-line-number="1">x &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="st">&quot;2008-11-04&quot;</span>)</a>
 <a class="sourceLine" id="cb164-2" data-line-number="2">y &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="st">&quot;2008/9/1&quot;</span>)</a>
 <a class="sourceLine" id="cb164-3" data-line-number="3">x <span class="op">-</span><span class="st"> </span>y</a>
@@ -2174,7 +2176,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb176-6" data-line-number="6"><span class="st">  </span><span class="kw">coord_fixed</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb176-7" data-line-number="7"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Poll Results&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Actual Election Results&quot;</span>)</a></code></pre></div>
 <p><img src="prediction_files/figure-html/unnamed-chunk-33-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p>We can create a confusion matrix as follows. Create a new column <code>classification</code> which shows whether how the poll’s classification was related to the actual election outcome (“true positive”, “false positive”, “false negative”, “false positive”). If there were two outcomes, then we would use the function. But with more than two outcomes, it is easier to use the <a href="https://cran.r-project.org/package=dplyr">dplyr</a> function .</p>
+<p>We can create a confusion matrix as follows. Create a new column <code>classification</code> which shows how the poll’s classification was related to the actual election outcome (“true positive”, “false positive”, “true negative”, “false negative”). If there were two outcomes, then we would use the function. But with more than two outcomes, it is easier to use the <a href="https://cran.r-project.org/package=dplyr">dplyr</a> function .</p>
 <div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb177-1" data-line-number="1">last_polls &lt;-</a>
 <a class="sourceLine" id="cb177-2" data-line-number="2"><span class="st">  </span>last_polls <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb177-3" data-line-number="3"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></a>
@@ -2185,7 +2187,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb177-8" data-line-number="8">             (.<span class="op">$</span>margin <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>.<span class="op">$</span>elec_margin <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">~</span><span class="st"> &quot;true negative&quot;</span>,</a>
 <a class="sourceLine" id="cb177-9" data-line-number="9">             (.<span class="op">$</span>margin <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>.<span class="op">$</span>elec_margin <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">~</span><span class="st"> &quot;false negative&quot;</span></a>
 <a class="sourceLine" id="cb177-10" data-line-number="10">           ))</a></code></pre></div>
-<p>You need to use <code>.</code> to refer to the data frame when using <code>case_when</code> within <code>mutate()</code>. Also, we needed to first use in order to remove the grouping variable so <code>mutate</code> will work.</p>
+<p>You need to use <code>.</code> to refer to the data frame when using <code>case_when()</code> within <code>mutate()</code>. Also, we needed to first use in order to remove the grouping variable so <code>mutate()</code> will work.</p>
 <p>Now simply count the number of polls in each category of <code>classification</code>:</p>
 <div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb178-1" data-line-number="1">last_polls <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb178-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(classification) <span class="op">%&gt;%</span></a>
@@ -2209,7 +2211,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb179-8" data-line-number="8"><span class="co">#&gt; 1 IN        -5           1 false negative</span></a>
 <a class="sourceLine" id="cb179-9" data-line-number="9"><span class="co">#&gt; 2 NC        -1           1 false negative</span></a>
 <a class="sourceLine" id="cb179-10" data-line-number="10"><span class="co">#&gt; 3 MO         1          -1 false positive</span></a></code></pre></div>
-<p>What was the difference in the poll prediction of electoral votes and actual electoral votes. We hadn’t included the variable <code>EV</code> when we first merged, but that’s no problem, we’ll just merge again in order to grab that variable:</p>
+<p>What was the difference in the poll prediction of electoral votes and actual electoral votes? We hadn’t included the variable <code>EV</code> when we first merged, but that’s no problem, we’ll just merge again in order to grab that variable:</p>
 <div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb180-1" data-line-number="1">last_polls <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb180-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(<span class="kw">select</span>(pres08, state, EV), <span class="dt">by =</span> <span class="st">&quot;state&quot;</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb180-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">EV_pred =</span> <span class="kw">sum</span>( (margin <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">*</span><span class="st"> </span>EV),</a>
@@ -2242,7 +2244,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb183-19" data-line-number="19">}</a>
 <a class="sourceLine" id="cb183-20" data-line-number="20"></a>
 <a class="sourceLine" id="cb183-21" data-line-number="21">pop_vote_avg &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(pop_vote_avg)</a></code></pre></div>
-<p>Write a function which takes a <code>date</code>, and calculates the <code>days</code> (the default is 7 days) moving average using the dataset <code>.data</code>:</p>
+<p>Write a function which takes a <code>date</code>, and calculates the <code>days</code> (set the default to 7 days) moving average using the dataset <code>.data</code>:</p>
 <div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb184-1" data-line-number="1">poll_ma &lt;-<span class="st"> </span><span class="cf">function</span>(date, .data, <span class="dt">days =</span> <span class="dv">7</span>) {</a>
 <a class="sourceLine" id="cb184-2" data-line-number="2">  <span class="kw">filter</span>(.data,</a>
 <a class="sourceLine" id="cb184-3" data-line-number="3">        <span class="kw">as.integer</span>(middate <span class="op">-</span><span class="st"> </span>date) <span class="op">&lt;=</span><span class="st"> </span><span class="dv">0</span>,</a>
@@ -2282,7 +2284,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb189-5" data-line-number="5"><span class="st">  </span><span class="kw">scale_colour_manual</span>(<span class="st">&quot;Candidate&quot;</span>,</a>
 <a class="sourceLine" id="cb189-6" data-line-number="6">                      <span class="dt">values =</span> <span class="kw">c</span>(<span class="dt">Obama =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">McCain =</span> <span class="st">&quot;red&quot;</span>))</a></code></pre></div>
 <p><img src="prediction_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p><strong>Challenge</strong> read <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/iteration.html#the-map-functions">Iteration</a> and use the function <a href="https://www.rdocumentation.org/packages/purrr/topics/map_df">map_df</a> instead of a for loop.</p>
+<p><strong>Challenge</strong> read <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/iteration.html#the-map-functions">Iteration</a> and use the function <a href="https://www.rdocumentation.org/packages/purrr/topics/map_df">map_df</a> to create the object <code>poll_vote_avg</code> as above instead of a for loop.</p>
 <p>The 7-day average is similar to the simple method used by <a href="http://www.realclearpolitics.com/epolls/2016/president/us/general_election_trump_vs_clinton-5491.html">Real Clear Politics</a>. The RCP average is simply the average of all polls in their data for the last seven days. Sites like <a href="https://fivethirtyeight.com">538</a> and the <a href="http://elections.huffingtonpost.com/pollster">Huffpost Pollster</a>, on the other hand, also use what amounts to averaging polls, but using more sophisticated statistical methods to assign different weights to different polls.</p>
 <p><strong>Challenge</strong> Why do we need to use different polls for the popular vote data? Why not simply average all the state polls? What would you have to do? Would the overall popular vote be useful in predicting state-level polling, or vice-versa? How would you use them?</p>
 </section>
@@ -2431,7 +2433,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb206-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Obama2008_z =</span> <span class="kw">as.numeric</span>(<span class="kw">scale</span>(Obama_<span class="dv">08</span>)),</a>
 <a class="sourceLine" id="cb206-3" data-line-number="3">         <span class="dt">Obama2012_z =</span> <span class="kw">as.numeric</span>(<span class="kw">scale</span>(Obama_<span class="dv">12</span>)))</a></code></pre></div>
 <p>Likewise, <a href="https://www.rdocumentation.org/packages/dplyr/topics/bind_cols">bind_cols</a> concatenates data frames by row.</p>
-<p>We need to use the <code>as.numeric</code> function because <code>scale()</code> always returns a matrix. This will not produce an error in the code chunk above, since the columns of a data frame can be matrices, but will produce errors in some of the following code if it were omitted.</p>
+<p>We need to use the <code>as.numeric</code> function because <code>scale()</code> always returns a matrix. Omitting <code>as.numeric()</code> would not produce an error in the code chunk above, since the columns of a data frame can be matrices, but it would produce errors in some of the following code if it were omitted.</p>
 <p>Scatter plot of states with vote shares in 2008 and 2012</p>
 <div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb207-1" data-line-number="1"><span class="kw">ggplot</span>(pres, <span class="kw">aes</span>(<span class="dt">x =</span> Obama2008_z, <span class="dt">y =</span> Obama2012_z, <span class="dt">label =</span> state)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb207-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
@@ -2468,7 +2470,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb209-8" data-line-number="8"><span class="co">#&gt; Coefficients:</span></a>
 <a class="sourceLine" id="cb209-9" data-line-number="9"><span class="co">#&gt; (Intercept)      Perot96  </span></a>
 <a class="sourceLine" id="cb209-10" data-line-number="10"><span class="co">#&gt;      1.3458       0.0359</span></a></code></pre></div>
-<p>Calculate <span class="math inline">\(R ^ 2\)</span> from the results of <code>summary</code>,</p>
+<p>Extract <span class="math inline">\(R ^ 2\)</span> from the results of <code>summary</code>,</p>
 <div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb210-1" data-line-number="1"><span class="kw">summary</span>(fit2)<span class="op">$</span>r.squared</a>
 <a class="sourceLine" id="cb210-2" data-line-number="2"><span class="co">#&gt; [1] 0.513</span></a></code></pre></div>
 <p>Alternatively, can get the R squared value from the data frame <a href="https://www.rdocumentation.org/packages/broom/topics/glance.lm">glance</a> returns:</p>
@@ -2579,7 +2581,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">4.3.1</span> Randomized Experiments</h3>
 <p>Load data</p>
 <div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb221-1" data-line-number="1"><span class="kw">data</span>(<span class="st">&quot;women&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</a></code></pre></div>
-<p>proportion of female politicians in reserved GP vs. unreserved GP</p>
+<p>Proportion of female politicians in reserved GP vs. unreserved GP</p>
 <div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb222-1" data-line-number="1">women <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb222-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(reserved) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb222-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_female =</span> <span class="kw">mean</span>(female))</a>
@@ -2588,7 +2590,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb222-6" data-line-number="6"><span class="co">#&gt;      &lt;int&gt;       &lt;dbl&gt;</span></a>
 <a class="sourceLine" id="cb222-7" data-line-number="7"><span class="co">#&gt; 1        0      0.0748</span></a>
 <a class="sourceLine" id="cb222-8" data-line-number="8"><span class="co">#&gt; 2        1      1.00</span></a></code></pre></div>
-<p>The diff in diff estimator</p>
+<p>The diff in means estimator:</p>
 <div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb223-1" data-line-number="1"><span class="co"># drinking water facilities</span></a>
 <a class="sourceLine" id="cb223-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb223-3" data-line-number="3"><span class="co"># irrigation facilities</span></a>
@@ -2943,9 +2945,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb254-1" data-line-number="1">tory_fit3 &lt;-<span class="st"> </span><span class="kw">lm</span>(margin.pre <span class="op">~</span><span class="st"> </span>margin, <span class="dt">data =</span> <span class="kw">filter</span>(MPs_tory, margin <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>))</a>
 <a class="sourceLine" id="cb254-2" data-line-number="2">tory_fit4 &lt;-<span class="st"> </span><span class="kw">lm</span>(margin.pre <span class="op">~</span><span class="st"> </span>margin, <span class="dt">data =</span> <span class="kw">filter</span>(MPs_tory, margin <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>))</a>
 <a class="sourceLine" id="cb254-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb254-4" data-line-number="4">(<span class="kw">filter</span>(<span class="kw">tidy</span>(tory_fit3), term <span class="op">==</span><span class="st"> &quot;(Intercept)&quot;</span>)[[<span class="st">&quot;estimate&quot;</span>]] <span class="op">-</span></a>
-<a class="sourceLine" id="cb254-5" data-line-number="5"><span class="st"> </span><span class="kw">filter</span>(<span class="kw">tidy</span>(tory_fit4), term <span class="op">==</span><span class="st"> &quot;(Intercept)&quot;</span>)[[<span class="st">&quot;estimate&quot;</span>]])</a>
-<a class="sourceLine" id="cb254-6" data-line-number="6"><span class="co">#&gt; [1] 0.0173</span></a></code></pre></div>
+<a class="sourceLine" id="cb254-4" data-line-number="4">(<span class="kw">filter</span>(<span class="kw">tidy</span>(tory_fit4), term <span class="op">==</span><span class="st"> &quot;(Intercept)&quot;</span>)[[<span class="st">&quot;estimate&quot;</span>]] <span class="op">-</span></a>
+<a class="sourceLine" id="cb254-5" data-line-number="5"><span class="st"> </span><span class="kw">filter</span>(<span class="kw">tidy</span>(tory_fit3), term <span class="op">==</span><span class="st"> &quot;(Intercept)&quot;</span>)[[<span class="st">&quot;estimate&quot;</span>]])</a>
+<a class="sourceLine" id="cb254-6" data-line-number="6"><span class="co">#&gt; [1] -0.0173</span></a></code></pre></div>
 
 </section>
 </section>

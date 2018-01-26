@@ -583,13 +583,13 @@ So we'll add a state variable to the data.
 minwage %>%
   count(location)
 #> # A tibble: 5 x 2
-#>    location     n
-#>       <chr> <int>
+#>   location      n
+#>   <chr>     <int>
 #> 1 centralNJ    45
-#> 2   northNJ   146
-#> 3        PA    67
-#> 4   shoreNJ    33
-#> 5   southNJ    67
+#> 2 northNJ     146
+#> 3 PA           67
+#> 4 shoreNJ      33
+#> 5 southNJ      67
 ```
 
 We can extract the state from the final two characters of the location variable using the[stringr](https://cran.r-project.org/package=stringr) function [str_sub](https://www.rdocumentation.org/packages/stringr/topics/str_sub):
@@ -615,8 +615,8 @@ minwage %>%
 #> # A tibble: 2 x 3
 #>   state prop_after prop_Before
 #>   <chr>      <dbl>       <dbl>
-#> 1    NJ    0.00344       0.911
-#> 2    PA    0.95522       0.940
+#> 1 NJ       0.00344       0.911
+#> 2 PA       0.955         0.940
 ```
 
 Create a variable for the proportion of full-time employees in NJ and PA after the increase:

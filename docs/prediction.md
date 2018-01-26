@@ -50,13 +50,15 @@ Note that the above code uses the for loop for pedagogical purposes only, this c
 
 ```r
 results <- values * 2
+results
+#> [1]  4  6 12
 ```
 In general, avoid using for loops when there is a *vectorized* function.
 
 But sticking with the for loop, there are several things that could be improved.
 
 Avoid using the idiom `1:n` in for loops. 
-To see why, look what happens when values is empty:
+To see why, look what happens when values are empty:
 
 ```r
 values <- c()
@@ -117,7 +119,7 @@ class(results)
 Often loops can be rewritten to use a map function. 
 Read the [R for Data Science](http://r4ds.had.co.nz/) chapter [Iteration](http://r4ds.had.co.nz/data-visualisation.html) before proceeding.
 
-For a functional, we first write a function that will be applied to each element of the vector.
+To do so, we first write a function that will be applied to each element of the vector.
 When converting from a `for` loop to a function, this is usually simply the body of the `for` loop, though you 
 may need to add arguments for any variables defined outside the body of the for loop.
 In this case,
@@ -138,7 +140,7 @@ mult_by_two(-3)
 #> [1] -6
 ```
 
-At this point, we could replace the body of the `for` loop with this function
+At this point, we could replace the body of the `for` loop with this function:
 
 ```r
 values <- c(2, 4, 6)
@@ -169,7 +171,7 @@ results
 #> [1] 12
 ```
 
-The values of each element are correct, but `map` returns a list vector, not a numeric vector like we may have been expecting.
+The values of each element are correct, but `map` returns a list vector, not a numeric vector like we may have been expecting. 
 If we want a numeric vector, use `map_dbl`,
 
 ```r
@@ -307,7 +309,7 @@ much easier.
 See the [R for Data Science](http://r4ds.had.co.nz/) chapter [Dates and Times](http://r4ds.had.co.nz/dates-and-times.html).
 
 The function [ymd](https://www.rdocumentation.org/packages/lubridate/topics/ymd) will convert character strings like `year-month-day` and more
-into dates, as long as the order is (year, month, day). See [dmy](https://www.rdocumentation.org/packages/lubridate/topics/dmy), [ymd](https://www.rdocumentation.org/packages/lubridate/topics/ymd), and others for other ways to convert strings to dates.
+into dates, as long as the order is (year, month, day). See [dmy](https://www.rdocumentation.org/packages/lubridate/topics/dmy), [mdy](https://www.rdocumentation.org/packages/lubridate/topics/mdy), and others for other ways to convert strings to dates.
 
 ```r
 x <- ymd("2008-11-04")
@@ -455,7 +457,7 @@ ggplot(last_polls, aes(x = margin, y = elec_margin, label = state)) +
 <img src="prediction_files/figure-html/unnamed-chunk-33-1.png" width="70%" style="display: block; margin: auto;" />
 
 We can create a confusion matrix as follows.
-Create a new column `classification` which shows whether how the poll's classification was related to the actual election outcome ("true positive", "false positive", "false negative", "false positive").
+Create a new column `classification` which shows how the poll's classification was related to the actual election outcome ("true positive", "false positive", "true negative", "false negative").
 If there were two outcomes, then we would use the  function.
 But with more than two outcomes, it is easier to use the [dplyr](https://cran.r-project.org/package=dplyr) function .
 
@@ -471,8 +473,8 @@ last_polls <-
              (.$margin < 0 & .$elec_margin > 0) ~ "false negative"
            ))
 ```
-You need to use `.` to refer to the data frame when using `case_when` within `mutate()`.
-Also, we needed to first use  in order to remove the grouping variable so `mutate` will work.
+You need to use `.` to refer to the data frame when using `case_when()` within `mutate()`.
+Also, we needed to first use  in order to remove the grouping variable so `mutate()` will work.
 
 Now simply count the number of polls in each category of `classification`:
 
@@ -505,7 +507,7 @@ last_polls %>%
 #> 3 MO         1          -1 false positive
 ```
 
-What was the difference in the poll prediction of electoral votes and actual electoral votes.
+What was the difference in the poll prediction of electoral votes and actual electoral votes?
 We hadn't included the variable `EV` when we first merged, but that's no problem, we'll just merge again in order to grab that variable:
 
 ```r
@@ -557,8 +559,7 @@ for (i in seq_along(all_dates)) {
 pop_vote_avg <- bind_rows(pop_vote_avg)
 ```
 
-Write a function which takes a `date`, and calculates the `days` (the default is 7 days)
-moving average using the dataset `.data`:
+Write a function which takes a `date`, and calculates the `days` (set the default to 7 days) moving average using the dataset `.data`:
 
 ```r
 poll_ma <- function(date, .data, days = 7) {
@@ -633,7 +634,7 @@ ggplot(pop_vote_avg_tidy, aes(x = date, y = share,
 <img src="prediction_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" />
 
 
-**Challenge** read [R for Data Science](http://r4ds.had.co.nz/) chapter [Iteration](http://r4ds.had.co.nz/iteration.html#the-map-functions) and use the function [map_df](https://www.rdocumentation.org/packages/purrr/topics/map_df) instead of a for loop.
+**Challenge** read [R for Data Science](http://r4ds.had.co.nz/) chapter [Iteration](http://r4ds.had.co.nz/iteration.html#the-map-functions) and use the function [map_df](https://www.rdocumentation.org/packages/purrr/topics/map_df) to create the object `poll_vote_avg` as above instead of a for loop.
 
 The 7-day average is similar to the simple method used by [Real Clear Politics](http://www.realclearpolitics.com/epolls/2016/president/us/general_election_trump_vs_clinton-5491.html).
 The RCP average is simply the average of all polls in their data for the last seven days.
@@ -867,8 +868,8 @@ pres <- pres %>%
 Likewise, [bind_cols](https://www.rdocumentation.org/packages/dplyr/topics/bind_cols) concatenates data frames by row.
 
 We need to use the `as.numeric` function because `scale()` always returns a matrix.
-This will not produce an error in the code chunk above, since the columns of a data frame
-can be matrices, but will produce errors in some of the following code if it were omitted.
+Omitting `as.numeric()` would not produce an error in the code chunk above, since the columns of a data frame
+can be matrices, but it would produce errors in some of the following code if it were omitted.
 
 Scatter plot of states with vote shares in 2008 and 2012
 
@@ -919,7 +920,7 @@ fit2
 #>      1.3458       0.0359
 ```
 
-Calculate $R ^ 2$ from the results of `summary`,
+Extract $R ^ 2$ from the results of `summary`,
 
 ```r
 summary(fit2)$r.squared
@@ -1084,7 +1085,7 @@ Load data
 data("women", package = "qss")
 ```
 
-proportion of female politicians in reserved GP vs. unreserved GP
+Proportion of female politicians in reserved GP vs. unreserved GP
 
 ```r
 women %>%
@@ -1097,7 +1098,7 @@ women %>%
 #> 2        1      1.00
 ```
 
-The diff in diff estimator
+The diff in means estimator:
 
 ```r
 # drinking water facilities
@@ -1586,7 +1587,7 @@ spread_predictions(data_frame(margin = 0),
 tory_fit3 <- lm(margin.pre ~ margin, data = filter(MPs_tory, margin < 0))
 tory_fit4 <- lm(margin.pre ~ margin, data = filter(MPs_tory, margin > 0))
 
-(filter(tidy(tory_fit3), term == "(Intercept)")[["estimate"]] -
- filter(tidy(tory_fit4), term == "(Intercept)")[["estimate"]])
-#> [1] 0.0173
+(filter(tidy(tory_fit4), term == "(Intercept)")[["estimate"]] -
+ filter(tidy(tory_fit3), term == "(Intercept)")[["estimate"]])
+#> [1] -0.0173
 ```

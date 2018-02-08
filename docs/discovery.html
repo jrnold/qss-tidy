@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-01-10">
+<meta name="date" content="2018-01-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -276,7 +276,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Spatial data: <a href="https://cran.r-project.org/package=ggplot2">ggplot2</a> has some built-in support for maps. The <a href="https://cran.r-project.org/package=map">map</a> package provides map data.</li>
 </ul>
 <p>See the <a href="http://r4ds.had.co.nz/">R for Data Science</a> section <a href="http://r4ds.had.co.nz/tidy-data.html#non-tidy-data">12.7 Non-tidy data</a> and this post on <a href="http://simplystatistics.org/2016/02/17/non-tidy-data/">Non-tidy data</a> by Jeff Leek for more on non-tidy data.</p>
-
 <div id="textual-data" class="section level2">
 <h2><span class="header-section-number">5.1</span> Textual data</h2>
 <div id="prerequisites-4" class="section level3 unnumbered">
@@ -288,12 +287,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">library</span>(<span class="st">&quot;modelr&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;tm&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;SnowballC&quot;</span>)
-<span class="kw">library</span>(<span class="st">&quot;tidytext&quot;</span>)</code></pre></div>
+<span class="kw">library</span>(<span class="st">&quot;tidytext&quot;</span>)
+<span class="kw">library</span>(<span class="st">&quot;wordcloud&quot;</span>)</code></pre></div>
 <p>This section will primarily use the <a href="https://cran.r-project.org/package=tidytext">tidytext</a> package. It is a relatively new package. The <a href="https://cran.r-project.org/package=tm">tm</a> and <a href="https://cran.r-project.org/package=quanteda">quanteda</a> (by Ken Benoit) packages are more established and use the document-term matrix format as described in the QSS chapter. The <strong>tidytext</strong> package stores everything in a data frame; this may be less efficient than the other packages, but has the benefit of being able to easily take advantage of the tidyverse ecosystem. If your corpus is not too large, this shouldn’t be an issue.</p>
 <p>See <a href="http://tidytextmining.com/">Tidy Text Mining with R</a> for a full introduction to using <strong>tidytext</strong>.</p>
 <p>In tidy data, each row is an observation and each column is a variable. In the <strong>tidytext</strong> package, documents are stored as data frames with <strong>one-term-per-row</strong>.</p>
 <p>We can cast data into the <strong>tidytext</strong> format either from the <code>Corpus</code> object, or, after processing, from the document-term matrix object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DIR_SOURCE &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&quot;qss&quot;</span>, <span class="st">&quot;DISCOVERY&quot;</span>, <span class="st">&quot;federalist&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DIR_SOURCE &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/federalist&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)
 corpus_raw &lt;-<span class="st"> </span><span class="kw">VCorpus</span>(<span class="kw">DirSource</span>(<span class="dt">directory =</span> DIR_SOURCE, <span class="dt">pattern =</span> <span class="st">&quot;fp&quot;</span>))
 corpus_raw
 <span class="co">#&gt; &lt;&lt;VCorpus&gt;&gt;</span>
@@ -303,15 +303,15 @@ corpus_raw
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corpus_tidy &lt;-<span class="st"> </span><span class="kw">tidy</span>(corpus_raw, <span class="st">&quot;corpus&quot;</span>)
 corpus_tidy
 <span class="co">#&gt; # A tibble: 85 x 8</span>
-<span class="co">#&gt;   author       datetimestamp description heading       id language origin</span>
-<span class="co">#&gt;    &lt;lgl&gt;              &lt;dttm&gt;       &lt;lgl&gt;   &lt;lgl&gt;    &lt;chr&gt;    &lt;chr&gt;  &lt;lgl&gt;</span>
-<span class="co">#&gt; 1     NA 2017-12-22 22:41:17          NA      NA fp01.txt       en     NA</span>
-<span class="co">#&gt; 2     NA 2017-12-22 22:41:17          NA      NA fp02.txt       en     NA</span>
-<span class="co">#&gt; 3     NA 2017-12-22 22:41:17          NA      NA fp03.txt       en     NA</span>
-<span class="co">#&gt; 4     NA 2017-12-22 22:41:17          NA      NA fp04.txt       en     NA</span>
-<span class="co">#&gt; 5     NA 2017-12-22 22:41:17          NA      NA fp05.txt       en     NA</span>
-<span class="co">#&gt; 6     NA 2017-12-22 22:41:17          NA      NA fp06.txt       en     NA</span>
-<span class="co">#&gt; # ... with 79 more rows, and 1 more variables: text &lt;chr&gt;</span></code></pre></div>
+<span class="co">#&gt;   author datetimestamp       description heading id     lang… orig… text  </span>
+<span class="co">#&gt;   &lt;lgl&gt;  &lt;dttm&gt;              &lt;lgl&gt;       &lt;lgl&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;lgl&gt; &lt;chr&gt; </span>
+<span class="co">#&gt; 1 NA     2018-01-10 20:48:26 NA          NA      fp01.… en    NA    AFTER…</span>
+<span class="co">#&gt; 2 NA     2018-01-10 20:48:26 NA          NA      fp02.… en    NA    &quot;WHEN…</span>
+<span class="co">#&gt; 3 NA     2018-01-10 20:48:26 NA          NA      fp03.… en    NA    IT IS…</span>
+<span class="co">#&gt; 4 NA     2018-01-10 20:48:26 NA          NA      fp04.… en    NA    &quot;MY L…</span>
+<span class="co">#&gt; 5 NA     2018-01-10 20:48:26 NA          NA      fp05.… en    NA    &quot;QUEE…</span>
+<span class="co">#&gt; 6 NA     2018-01-10 20:48:26 NA          NA      fp06.… en    NA    &quot;THE …</span>
+<span class="co">#&gt; # ... with 79 more rows</span></code></pre></div>
 <p>The <code>text</code> column contains the text of the documents themselves. Since most of the metadata columns are either missings or irrelevant for our purposes, we’ll delete those columns, keeping only the document (<code>id</code>) and <code>text</code> columns.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corpus_tidy &lt;-<span class="st"> </span><span class="kw">select</span>(corpus_tidy, id, text)</code></pre></div>
 <p>Also, we want to extract the essay number and use that as the document id rather than its file name.</p>
@@ -328,14 +328,14 @@ corpus_tidy
 <span class="st">  </span><span class="kw">filter</span>(word <span class="op">!=</span><span class="st"> &quot;&quot;</span>)
 tokens
 <span class="co">#&gt; # A tibble: 202,089 x 2</span>
-<span class="co">#&gt;   document      word</span>
-<span class="co">#&gt;      &lt;int&gt;     &lt;chr&gt;</span>
-<span class="co">#&gt; 1        1     after</span>
-<span class="co">#&gt; 2        1        an</span>
+<span class="co">#&gt;   document word     </span>
+<span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;    </span>
+<span class="co">#&gt; 1        1 after    </span>
+<span class="co">#&gt; 2        1 an       </span>
 <span class="co">#&gt; 3        1 unequivoc</span>
-<span class="co">#&gt; 4        1    experi</span>
-<span class="co">#&gt; 5        1        of</span>
-<span class="co">#&gt; 6        1       the</span>
+<span class="co">#&gt; 4        1 experi   </span>
+<span class="co">#&gt; 5        1 of       </span>
+<span class="co">#&gt; 6        1 the      </span>
 <span class="co">#&gt; # ... with 2.021e+05 more rows</span></code></pre></div>
 <p>The <code>unnest_tokens</code> function uses the <a href="https://cran.r-project.org/package=tokenizers">tokenizers</a> package to tokenize the text. By default, it uses the function which removes punctuation, and lowercases the words. I set the tokenizer to to stem the word, using the <a href="https://cran.r-project.org/package=SnowballC">SnowballC</a> package.</p>
 <p>We can remove stop-words with an <a href="https://www.rdocumentation.org/packages/dplyr/topics/anti_join">anti_join</a> on the dataset <a href="https://www.rdocumentation.org/packages/tidytext/topics/stop_words">stop_words</a></p>
@@ -348,67 +348,66 @@ tokens &lt;-<span class="st"> </span><span class="kw">anti_join</span>(tokens, s
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm &lt;-<span class="st"> </span><span class="kw">count</span>(tokens, document, word)
 <span class="kw">head</span>(dtm)
 <span class="co">#&gt; # A tibble: 6 x 3</span>
-<span class="co">#&gt;   document       word     n</span>
-<span class="co">#&gt;      &lt;int&gt;      &lt;chr&gt; &lt;int&gt;</span>
-<span class="co">#&gt; 1        1        abl     1</span>
-<span class="co">#&gt; 2        1     absurd     1</span>
-<span class="co">#&gt; 3        1      accid     1</span>
-<span class="co">#&gt; 4        1     accord     1</span>
+<span class="co">#&gt;   document word           n</span>
+<span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;      &lt;int&gt;</span>
+<span class="co">#&gt; 1        1 abl            1</span>
+<span class="co">#&gt; 2        1 absurd         1</span>
+<span class="co">#&gt; 3        1 accid          1</span>
+<span class="co">#&gt; 4        1 accord         1</span>
 <span class="co">#&gt; 5        1 acknowledg     1</span>
-<span class="co">#&gt; 6        1        act     1</span></code></pre></div>
+<span class="co">#&gt; 6        1 act            1</span></code></pre></div>
 </div>
 <div id="topic-discovery" class="section level3">
 <h3><span class="header-section-number">5.1.2</span> Topic Discovery</h3>
 <p>Plot the word-clouds for essays 12 and 24:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;wordcloud&quot;</span>)
-<span class="kw">filter</span>(dtm, document <span class="op">==</span><span class="st"> </span><span class="dv">12</span>) <span class="op">%&gt;%</span><span class="st"> </span>{
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(dtm, document <span class="op">==</span><span class="st"> </span><span class="dv">12</span>) <span class="op">%&gt;%</span><span class="st"> </span>{
     <span class="kw">wordcloud</span>(.<span class="op">$</span>word, .<span class="op">$</span>n, <span class="dt">max.words =</span> <span class="dv">20</span>)
   }</code></pre></div>
-<p><img src="discovery-textual_files/figure-html/unnamed-chunk-10-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(dtm, document <span class="op">==</span><span class="st"> </span><span class="dv">24</span>) <span class="op">%&gt;%</span><span class="st"> </span>{
     <span class="kw">wordcloud</span>(.<span class="op">$</span>word, .<span class="op">$</span>n, <span class="dt">max.words =</span> <span class="dv">20</span>)
   }</code></pre></div>
-<p><img src="discovery-textual_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Use the function <a href="https://www.rdocumentation.org/packages/tidytext/topics/bind_tf_idf">bind_tf_idf</a> to add a column with the tf-idf to the data frame.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm &lt;-<span class="st"> </span><span class="kw">bind_tf_idf</span>(dtm, word, document, n)
 dtm
 <span class="co">#&gt; # A tibble: 38,847 x 6</span>
-<span class="co">#&gt;   document       word     n      tf   idf   tf_idf</span>
-<span class="co">#&gt;      &lt;int&gt;      &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1        1        abl     1 0.00145 0.705 0.001022</span>
-<span class="co">#&gt; 2        1     absurd     1 0.00145 1.735 0.002514</span>
-<span class="co">#&gt; 3        1      accid     1 0.00145 3.750 0.005434</span>
-<span class="co">#&gt; 4        1     accord     1 0.00145 0.754 0.001092</span>
-<span class="co">#&gt; 5        1 acknowledg     1 0.00145 1.552 0.002250</span>
-<span class="co">#&gt; 6        1        act     1 0.00145 0.400 0.000579</span>
+<span class="co">#&gt;   document word           n      tf   idf   tf_idf</span>
+<span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;      &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1        1 abl            1 0.00145 0.705 0.00102 </span>
+<span class="co">#&gt; 2        1 absurd         1 0.00145 1.73  0.00251 </span>
+<span class="co">#&gt; 3        1 accid          1 0.00145 3.75  0.00543 </span>
+<span class="co">#&gt; 4        1 accord         1 0.00145 0.754 0.00109 </span>
+<span class="co">#&gt; 5        1 acknowledg     1 0.00145 1.55  0.00225 </span>
+<span class="co">#&gt; 6        1 act            1 0.00145 0.400 0.000579</span>
 <span class="co">#&gt; # ... with 3.884e+04 more rows</span></code></pre></div>
 <p>The 10 most important words for Paper No. 12 are</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(document <span class="op">==</span><span class="st"> </span><span class="dv">12</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">top_n</span>(<span class="dv">10</span>, tf_idf)
 <span class="co">#&gt; # A tibble: 10 x 6</span>
-<span class="co">#&gt;   document       word     n      tf   idf  tf_idf</span>
-<span class="co">#&gt;      &lt;int&gt;      &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       12       cent     2 0.00199  4.44 0.00884</span>
-<span class="co">#&gt; 2       12      coast     3 0.00299  3.75 0.01119</span>
-<span class="co">#&gt; 3       12    commerc     8 0.00796  1.11 0.00884</span>
-<span class="co">#&gt; 4       12 contraband     3 0.00299  4.44 0.01326</span>
-<span class="co">#&gt; 5       12      excis     5 0.00498  2.65 0.01319</span>
-<span class="co">#&gt; 6       12     gallon     2 0.00199  4.44 0.00884</span>
+<span class="co">#&gt;   document word           n      tf   idf  tf_idf</span>
+<span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;      &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1       12 cent           2 0.00199  4.44 0.00884</span>
+<span class="co">#&gt; 2       12 coast          3 0.00299  3.75 0.0112 </span>
+<span class="co">#&gt; 3       12 commerc        8 0.00796  1.11 0.00884</span>
+<span class="co">#&gt; 4       12 contraband     3 0.00299  4.44 0.0133 </span>
+<span class="co">#&gt; 5       12 excis          5 0.00498  2.65 0.0132 </span>
+<span class="co">#&gt; 6       12 gallon         2 0.00199  4.44 0.00884</span>
 <span class="co">#&gt; # ... with 4 more rows</span></code></pre></div>
 <p>and for Paper No. 24,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(document <span class="op">==</span><span class="st"> </span><span class="dv">24</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">top_n</span>(<span class="dv">10</span>, tf_idf)
 <span class="co">#&gt; # A tibble: 10 x 6</span>
-<span class="co">#&gt;   document     word     n      tf   idf  tf_idf</span>
-<span class="co">#&gt;      &lt;int&gt;    &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       24     armi     7 0.00858  1.26 0.01085</span>
-<span class="co">#&gt; 2       24  arsenal     2 0.00245  3.75 0.00919</span>
-<span class="co">#&gt; 3       24     dock     3 0.00368  4.44 0.01633</span>
-<span class="co">#&gt; 4       24 frontier     3 0.00368  2.83 0.01042</span>
-<span class="co">#&gt; 5       24 garrison     6 0.00735  2.83 0.02083</span>
-<span class="co">#&gt; 6       24   nearer     2 0.00245  3.34 0.00820</span>
+<span class="co">#&gt;   document word         n      tf   idf  tf_idf</span>
+<span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;    &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1       24 armi         7 0.00858  1.26 0.0108 </span>
+<span class="co">#&gt; 2       24 arsenal      2 0.00245  3.75 0.00919</span>
+<span class="co">#&gt; 3       24 dock         3 0.00368  4.44 0.0163 </span>
+<span class="co">#&gt; 4       24 frontier     3 0.00368  2.83 0.0104 </span>
+<span class="co">#&gt; 5       24 garrison     6 0.00735  2.83 0.0208 </span>
+<span class="co">#&gt; 6       24 nearer       2 0.00245  3.34 0.00820</span>
 <span class="co">#&gt; # ... with 4 more rows</span></code></pre></div>
 <p>The slightly different results from the book are due to tokenization differences.</p>
 <p>Subset those documents known to have been written by Hamilton.</p>
@@ -430,14 +429,14 @@ km_out<span class="op">$</span>iter
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hamilton_words &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(hamilton_words, <span class="kw">as_tibble</span>(<span class="kw">t</span>(km_out<span class="op">$</span>centers)))
 hamilton_words
 <span class="co">#&gt; # A tibble: 3,850 x 5</span>
-<span class="co">#&gt;         word      `1`      `2`     `3`      `4`</span>
-<span class="co">#&gt;        &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1        abl 0.000939 0.000743 0.00000 0.000000</span>
-<span class="co">#&gt; 2     absurd 0.000000 0.000517 0.00000 0.000882</span>
-<span class="co">#&gt; 3      accid 0.000000 0.000202 0.00000 0.000000</span>
-<span class="co">#&gt; 4     accord 0.000000 0.000399 0.00000 0.000852</span>
-<span class="co">#&gt; 5 acknowledg 0.000000 0.000388 0.00000 0.000473</span>
-<span class="co">#&gt; 6        act 0.000000 0.000560 0.00176 0.000631</span>
+<span class="co">#&gt;   word            `1`      `2`     `3`      `4`</span>
+<span class="co">#&gt;   &lt;chr&gt;         &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 abl        0.000939 0.000743 0       0       </span>
+<span class="co">#&gt; 2 absurd     0        0.000517 0       0.000882</span>
+<span class="co">#&gt; 3 accid      0        0.000202 0       0       </span>
+<span class="co">#&gt; 4 accord     0        0.000399 0       0.000852</span>
+<span class="co">#&gt; 5 acknowledg 0        0.000388 0       0.000473</span>
+<span class="co">#&gt; 6 act        0        0.000560 0.00176 0.000631</span>
 <span class="co">#&gt; # ... with 3,844 more rows</span></code></pre></div>
 <p>To find the top 10 words in each centroid, we use <code>top_n</code> with <code>group_by</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">top_words_cluster &lt;-
@@ -669,10 +668,10 @@ author_data &lt;-<span class="st"> </span>author_data <span class="op">%&gt;%</s
 <span class="st">  </span><span class="kw">group_by</span>(author) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="st">`</span><span class="dt">Proportion Correct</span><span class="st">`</span> =<span class="st"> </span><span class="kw">mean</span>(author <span class="op">==</span><span class="st"> </span>pred_author))
 <span class="co">#&gt; # A tibble: 2 x 2</span>
-<span class="co">#&gt;     author `Proportion Correct`</span>
-<span class="co">#&gt;      &lt;chr&gt;                &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Hamilton                    1</span>
-<span class="co">#&gt; 2  Madison                    1</span></code></pre></div>
+<span class="co">#&gt;   author   `Proportion Correct`</span>
+<span class="co">#&gt;   &lt;chr&gt;                   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Hamilton                 1.00</span>
+<span class="co">#&gt; 2 Madison                  1.00</span></code></pre></div>
 <p>Create the cross-validation data-sets using . As in the chapter, I will use a leave-one-out cross-validation, which is a k-fold cross-validation where k is the number of observations. To simplify this, I define the <code>crossv_loo</code> function that runs <code>crossv_kfold</code> with <code>k = nrow(data)</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">crossv_loo &lt;-<span class="st"> </span><span class="cf">function</span>(data, <span class="dt">id =</span> <span class="st">&quot;.id&quot;</span>) {
   modelr<span class="op">::</span><span class="kw">crossv_kfold</span>(data, <span class="dt">k =</span> <span class="kw">nrow</span>(data), <span class="dt">id =</span> id)
@@ -683,7 +682,7 @@ cv &lt;-<span class="st"> </span>author_data <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(author)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">crossv_loo</span>()</code></pre></div>
 <p>Now estimate the model for each training dataset</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw">map</span>(cv<span class="op">$</span>train, <span class="op">~</span><span class="st"> </span><span class="kw">lm</span>(author2 <span class="op">~</span><span class="st"> </span>upon <span class="op">+</span><span class="st"> </span>there <span class="op">+</span><span class="st"> </span>consequently <span class="op">+</span><span class="st"> </span>whilst,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map</span>(cv<span class="op">$</span>train, <span class="op">~</span><span class="st"> </span><span class="kw">lm</span>(author2 <span class="op">~</span><span class="st"> </span>upon <span class="op">+</span><span class="st"> </span>there <span class="op">+</span><span class="st"> </span>consequently <span class="op">+</span><span class="st"> </span>whilst,
                              <span class="dt">data =</span> ., <span class="dt">model =</span> <span class="ot">FALSE</span>))</code></pre></div>
 <p>Note that I use <code>purrr::map</code> to ensure that the correct <code>map()</code> function is used since the <strong>maps</strong> package also defines a <code>map</code>.</p>
 <p>Now calculate the test performance on the held out observation,</p>
@@ -698,10 +697,10 @@ test <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(author) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="kw">mean</span>(correct))
 <span class="co">#&gt; # A tibble: 2 x 2</span>
-<span class="co">#&gt;     author `mean(correct)`</span>
-<span class="co">#&gt;      &lt;chr&gt;           &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Hamilton           1.000</span>
-<span class="co">#&gt; 2  Madison           0.786</span></code></pre></div>
+<span class="co">#&gt;   author   `mean(correct)`</span>
+<span class="co">#&gt;   &lt;chr&gt;              &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Hamilton           1.00 </span>
+<span class="co">#&gt; 2 Madison            0.786</span></code></pre></div>
 <p>When adding prediction with <code>add_predictions</code> it added predictions for missing values as well.</p>
 <p>Table of authorship of disputed papers</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">author_data <span class="op">%&gt;%</span>
@@ -805,8 +804,8 @@ test <span class="op">%&gt;%</span>
                                  <span class="st">&quot;Disputed&quot;</span> =<span class="st"> </span><span class="dv">17</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">colour =</span> <span class="st">&quot;Author&quot;</span>, <span class="dt">shape =</span> <span class="st">&quot;Author&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Federalist Papers&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Predicted values&quot;</span>)</code></pre></div>
-<p><img src="discovery-textual_files/figure-html/unnamed-chunk-33-1.png" width="70%" style="display: block; margin: auto;" /></p>
-
+<p><img src="discovery_files/figure-html/unnamed-chunk-30-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<!-- detach extraneous packages -->
 </div>
 </div>
 <div id="network-data" class="section level2">
@@ -841,8 +840,6 @@ test <span class="op">%&gt;%</span>
 senator &lt;-<span class="st"> </span>twitter.senator</code></pre></div>
 <p>Simply use the function since <code>twitter</code> consists of edges (a link from a senator to another). Since <code>graph_from_edgelist</code> expects a matrix, convert the data frame to a matrix using .</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">twitter_adj &lt;-<span class="st"> </span><span class="kw">graph_from_edgelist</span>(<span class="kw">as.matrix</span>(twitter))</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">environment</span>(degree)
-<span class="co">#&gt; &lt;environment: namespace:igraph&gt;</span></code></pre></div>
 <p>Add in- and out-degree variables to the <code>senator</code> data frame:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">senator &lt;-
 <span class="st">  </span><span class="kw">mutate</span>(senator,
@@ -853,11 +850,11 @@ senator &lt;-<span class="st"> </span>twitter.senator</code></pre></div>
 <span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(name, party, state, indegree, outdegree)
 <span class="co">#&gt; # A tibble: 3 x 5</span>
-<span class="co">#&gt;                name party state indegree outdegree</span>
-<span class="co">#&gt;               &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1        Tom Cotton     R    AR       64        15</span>
-<span class="co">#&gt; 2 Richard J. Durbin     D    IL       60        87</span>
-<span class="co">#&gt; 3     John Barrasso     R    WY       58        79</span></code></pre></div>
+<span class="co">#&gt;   name              party state indegree outdegree</span>
+<span class="co">#&gt;   &lt;chr&gt;             &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Tom Cotton        R     AR        64.0      15.0</span>
+<span class="co">#&gt; 2 Richard J. Durbin D     IL        60.0      87.0</span>
+<span class="co">#&gt; 3 John Barrasso     R     WY        58.0      79.0</span></code></pre></div>
 <p>or using the function:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">top_n</span>(senator, <span class="dv">3</span>, indegree) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(indegree)) <span class="op">%&gt;%</span>
@@ -897,7 +894,7 @@ senator <span class="op">%&gt;%</span>
 <span class="st">  </span>scale_colour_parties <span class="op">+</span>
 <span class="st">  </span>scale_shape_parties <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">main =</span> <span class="st">&quot;Closeness&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Incoming path&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Outgoing path&quot;</span>)</code></pre></div>
-<p><img src="discovery-network_files/figure-html/unnamed-chunk-10-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-40-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>What does the reference line indicate? What does that say about senators twitter networks?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">senator <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">betweenness_dir =</span> igraph<span class="op">::</span><span class="kw">betweenness</span>(twitter_adj, <span class="dt">directed =</span> <span class="ot">TRUE</span>),
@@ -910,7 +907,7 @@ senator <span class="op">%&gt;%</span>
 <span class="st">  </span>scale_colour_parties <span class="op">+</span>
 <span class="st">  </span>scale_shape_parties <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">main =</span> <span class="st">&quot;Betweenness&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Directed&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Undirected&quot;</span>)</code></pre></div>
-<p><img src="discovery-network_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>We’ve covered three different methods of calculating the importance of a node in a network: degree, closeness, and centrality. But what do they mean? What’s the “best” measure of importance? The answer to the the former is “it depends on the question”. There are probably other papers out there on this, but Borgatti (2005) is a good discussion:</p>
 <blockquote>
 <p>Borgatti, Stephen. 2005. “Centrality and Network Flow”. <em>Social Networks</em>. <a href="https://dx.doi.org/doi:10.1016/j.socnet.2004.11.008">DOI</a></p>
@@ -918,8 +915,10 @@ senator <span class="op">%&gt;%</span>
 <p>Add and plot page-rank:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">senator &lt;-<span class="st"> </span><span class="kw">mutate</span>(senator, <span class="dt">page_rank =</span> <span class="kw">page_rank</span>(twitter_adj)[[<span class="st">&quot;vector&quot;</span>]])
 <span class="kw">ggnet</span>(twitter_adj, <span class="dt">mode =</span> <span class="st">&quot;target&quot;</span>)</code></pre></div>
-<p><img src="discovery-network_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" /></p>
-
+<p><img src="discovery_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<!-- 
+remove network packages
+-->
 </div>
 </div>
 <div id="spatial-data" class="section level2">
@@ -964,11 +963,6 @@ senator <span class="op">%&gt;%</span>
 <span class="co">#&gt; $ long        &lt;dbl&gt; -99.7, -81.5, -122.3, -84.2, -73.8, -123.1, -106.6...</span>
 <span class="co">#&gt; $ capital     &lt;int&gt; 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">usa_map &lt;-<span class="st"> </span><span class="kw">map_data</span>(<span class="st">&quot;usa&quot;</span>)
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: &#39;maps&#39;</span>
-<span class="co">#&gt; The following object is masked from &#39;package:purrr&#39;:</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     map</span>
 capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
                    capital <span class="op">==</span><span class="st"> </span><span class="dv">2</span>,
                    <span class="op">!</span>country.etc <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;HI&quot;</span>, <span class="st">&quot;AK&quot;</span>))
@@ -983,7 +977,7 @@ capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
 <span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>, <span class="dt">title =</span> <span class="st">&quot;US State Capitals&quot;</span>,
        <span class="dt">size =</span> <span class="st">&quot;Population&quot;</span>)</code></pre></div>
-<p><img src="discovery-spatial_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cal_cities &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities, country.etc <span class="op">==</span><span class="st"> &quot;CA&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">top_n</span>(<span class="dv">7</span>, pop)
 
@@ -994,7 +988,7 @@ capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
 <span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
-<p><img src="discovery-spatial_files/figure-html/unnamed-chunk-5-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="colors-in-r" class="section level3">
 <h3><span class="header-section-number">5.3.2</span> Colors in R</h3>
@@ -1026,7 +1020,7 @@ capitals &lt;-<span class="st"> </span><span class="kw">filter</span>(us.cities,
 <span class="st">  </span><span class="kw">scale_alpha_identity</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid =</span> <span class="kw">element_blank</span>())</code></pre></div>
-<p><img src="discovery-spatial_files/figure-html/unnamed-chunk-6-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/color_red_black-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="united-states-presidential-elections" class="section level3">
 <h3><span class="header-section-number">5.3.3</span> United States Presidential Elections</h3>
@@ -1039,7 +1033,7 @@ pres08 &lt;-<span class="st"> </span>pres08 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;blue&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>()</code></pre></div>
-<p><img src="discovery-spatial_files/figure-html/unnamed-chunk-8-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cal_color &lt;-<span class="st"> </span><span class="kw">filter</span>(pres08, state <span class="op">==</span><span class="st"> &quot;CA&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>{
     <span class="kw">rgb</span>(<span class="dt">red =</span> .<span class="op">$</span>Rep, <span class="dt">green =</span> <span class="dv">0</span>, <span class="dt">blue =</span> .<span class="op">$</span>Dem)
   }
@@ -1048,7 +1042,7 @@ pres08 &lt;-<span class="st"> </span>pres08 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">borders</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>, <span class="dt">regions =</span> <span class="st">&quot;California&quot;</span>, <span class="dt">fill =</span> cal_color) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>()</code></pre></div>
-<p><img src="discovery-spatial_files/figure-html/unnamed-chunk-9-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># America as red and blue states</span>
 <span class="kw">map</span>(<span class="dt">database =</span> <span class="st">&quot;state&quot;</span>) <span class="co"># create a map</span>
 <span class="cf">for</span> (i  <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(pres08)) {
@@ -1085,7 +1079,7 @@ pres08 &lt;-<span class="st"> </span>pres08 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;Rep&quot;</span> =<span class="st"> &quot;red&quot;</span>, <span class="st">&quot;Dem&quot;</span> =<span class="st"> &quot;blue&quot;</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
-<p><img src="discovery-spatial_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>For plotting the purple states, I use since the <code>color</code> column contains the RGB values to use in the plot:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(states) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="dt">group =</span> group, <span class="dt">x =</span> long, <span class="dt">y =</span> lat,
@@ -1094,7 +1088,7 @@ pres08 &lt;-<span class="st"> </span>pres08 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">scale_fill_identity</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
-<p><img src="discovery-spatial_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-52-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>However, plotting purple states is not a good data visualization. Even though the colors are a proportional mixture of red and blue, human visual perception doesn’t work that way.</p>
 <p>The proportion of the democratic vote is best thought of a diverging scale with 0.5 is midpoint. And since the Democratic Party is associated with the color blue and the Republican Party is associated with the color red. The Color Brewer palette <a href="http://colorbrewer2.org/#type=diverging&amp;scheme=RdBu&amp;n=11">RdBu</a> is an example:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(states) <span class="op">+</span>
@@ -1104,7 +1098,7 @@ pres08 &lt;-<span class="st"> </span>pres08 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
-<p><img src="discovery-spatial_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-53-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="expansion-of-walmart" class="section level3">
 <h3><span class="header-section-number">5.3.4</span> Expansion of Walmart</h3>
@@ -1121,7 +1115,7 @@ pres08 &lt;-<span class="st"> </span>pres08 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">scale_size_identity</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="kw">guide_legend</span>(<span class="dt">override.aes =</span> <span class="kw">list</span>(<span class="dt">alpha =</span> <span class="dv">1</span>))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_void</span>()</code></pre></div>
-<p><img src="discovery-spatial_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" /> We don’t need to worry about colors since <code>ggplot</code> handles that. I use <a href="http://docs.ggplot2.org/current/guides.html">guides</a> to so that the colors or not transparent in the legend (see <em>R for Data Science</em> chapter<a href="http://r4ds.had.co.nz/graphics-for-communication.html">Graphics for communication</a>).</p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-54-1.png" width="70%" style="display: block; margin: auto;" /> We don’t need to worry about colors since <code>ggplot</code> handles that. I use <a href="http://docs.ggplot2.org/current/guides.html">guides</a> to so that the colors or not transparent in the legend (see <em>R for Data Science</em> chapter<a href="http://r4ds.had.co.nz/graphics-for-communication.html">Graphics for communication</a>).</p>
 <p>To make a plot showing all Walmart stores opened up through that year, I write a function, that takes the year and dataset as parameters.</p>
 <p>Since I am calling the function for its side effect (printing the plot) rather than the value it returns, I use the <a href="https://www.rdocumentation.org/packages/purrr/topics/walk">walk</a> function rather than <a href="https://www.rdocumentation.org/packages/purrr/topics/map">map</a>. See <a href="http://r4ds.had.co.nz/">R for Data Science</a>, <a href="http://r4ds.had.co.nz/iteration.html#walk">Chapter 21.8: Walk</a> for more information.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">map_walmart &lt;-<span class="st"> </span><span class="cf">function</span>(year, .data) {
@@ -1140,7 +1134,7 @@ pres08 &lt;-<span class="st"> </span>pres08 <span class="op">%&gt;%</span>
 
 years &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1975</span>, <span class="dv">1985</span>, <span class="dv">1995</span>, <span class="dv">2005</span>)
 <span class="kw">walk</span>(years, <span class="op">~</span><span class="st"> </span><span class="kw">print</span>(<span class="kw">map_walmart</span>(.x, walmart)))</code></pre></div>
-<p><img src="discovery-spatial_files/figure-html/unnamed-chunk-15-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery-spatial_files/figure-html/unnamed-chunk-15-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery-spatial_files/figure-html/unnamed-chunk-15-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery-spatial_files/figure-html/unnamed-chunk-15-4.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="discovery_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-55-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-55-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-55-4.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="animation-in-r" class="section level3">
 <h3><span class="header-section-number">5.3.5</span> Animation in R</h3>
@@ -1162,10 +1156,6 @@ devtools<span class="op">::</span><span class="kw">install_github</span>(<span c
 <span class="st">    </span><span class="kw">coord_quickmap</span>() <span class="op">+</span>
 <span class="st">    </span><span class="kw">theme_void</span>()
 <span class="kw">gganimate</span>(walmart_animated)</code></pre></div>
-<div class="figure">
-<img src="discovery-spatial_files/figure-html/unnamed-chunk-18-.gif" alt="unnamed-chunk-18" />
-<p class="caption">unnamed-chunk-18</p>
-</div>
 
 </div>
 </div>

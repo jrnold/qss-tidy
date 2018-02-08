@@ -336,5 +336,3 @@ walmart_animated <-
     theme_void()
 gganimate(walmart_animated)
 ```
-
-![unnamed-chunk-18](discovery-spatial_files/figure-html/unnamed-chunk-18-.gif)

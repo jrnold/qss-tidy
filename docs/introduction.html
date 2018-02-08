@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-01-10">
+<meta name="date" content="2018-01-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -271,6 +271,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">1</span> Introduction</h1>
 <div id="prerequisites" class="section level2 unnumbered">
 <h2>Prerequisites</h2>
+<p>In this and other chapters we will make use of data from the <code>qss</code> package, which is available on github. Install it using the <code>install_github()</code> function from the library <code>devtools</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;kosukeimai/qss-package&quot;</span>)
+<span class="co">#&gt; Using GitHub PAT from envvar GITHUB_PAT</span>
+<span class="co">#&gt; Skipping install of &#39;qss&#39; from a github remote, the SHA1 (1dc4b858) has not changed since last install.</span>
+<span class="co">#&gt;   Use `force = TRUE` to force installation</span>
+<span class="kw">library</span>(<span class="st">&quot;qss&quot;</span>)</code></pre></div>
 <p>In the prerequisites section of each chapter, we’ll load any packages needed for the chapter, and possibly define some functions or load data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</code></pre></div>
 <p>We also load the <strong>readr</strong> package to load <code>csv</code> files,</p>
@@ -283,14 +289,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="overview-of-the-book" class="section level2">
 <h2><span class="header-section-number">1.1</span> Overview of the Book</h2>
 <!-- define all sections so that numbering matches that of the book -->
+<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
 </div>
 <div id="how-to-use-the-book" class="section level2">
 <h2><span class="header-section-number">1.2</span> How to use the Book</h2>
+<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
 </div>
 <div id="introduction-to-r" class="section level2">
 <h2><span class="header-section-number">1.3</span> Introduction to R</h2>
-<p>These notes don’t aim to completely teach R and the tidyverse. However, there are many other resources for that.</p>
-<p><a href="http://r4ds.had.co.nz/">R for Data Science</a> is an comprehensive introduction to the using the Tidyverse.</p>
+<p>These notes do not aim to completely teach R and the tidyverse. However, there are many other resources for that.</p>
+<p><a href="http://r4ds.had.co.nz/">R for Data Science</a> is a comprehensive introduction to R using the tidyverse.</p>
 <p><a href="https://www.datacamp.com/home">Data Camp</a> has interactive courses. In particular, I recommend starting with the following two courses.</p>
 <ul>
 <li><a href="https://www.datacamp.com/courses/free-introduction-to-r">Introduction to R</a></li>
@@ -298,42 +306,43 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul>
 <div id="arithmetic-operations" class="section level3">
 <h3><span class="header-section-number">1.3.1</span> Arithmetic Operations</h3>
-<p>See <em>QSS</em> text</p>
+<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
 </div>
 <div id="objects" class="section level3">
 <h3><span class="header-section-number">1.3.2</span> Objects</h3>
-<p>See <em>QSS</em> text. Also see <a href="http://r4ds.had.co.nz/workflow-basics.html">R4DS: Workflow basics</a>.</p>
+<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
+<p>Also see <a href="http://r4ds.had.co.nz/workflow-basics.html">R4DS: Workflow basics</a>.</p>
 </div>
 <div id="vectors" class="section level3">
 <h3><span class="header-section-number">1.3.3</span> Vectors</h3>
-<p>See <em>QSS</em> text. Also see <a href="http://r4ds.had.co.nz/vectors.html">R4DS: Vectors</a>. In <em>R for Data Science</em> vectors are introduced much later, after data frames.</p>
+<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
+<p>Also see <a href="http://r4ds.had.co.nz/vectors.html">R4DS: Vectors</a>. In <em>R for Data Science</em> vectors are introduced much later, after data frames.</p>
 </div>
 <div id="functions" class="section level3">
 <h3><span class="header-section-number">1.3.4</span> Functions</h3>
-<p>See <em>QSS</em> text. Also see <a href="http://r4ds.had.co.nz/functions.html">R4DS: Functions</a>.</p>
+<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
+<p>Also see <a href="http://r4ds.had.co.nz/functions.html">R4DS: Functions</a>.</p>
 </div>
 <div id="data-files" class="section level3">
 <h3><span class="header-section-number">1.3.5</span> Data Files</h3>
 <p>Rather than using <code>setwd()</code> in scripts, data analysis should be organized in projects. Read the introduction on RStudio projects in <a href="http://r4ds.had.co.nz/workflow-projects.html">R4DS</a>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
 <p>Datasets used in R are accessed in two ways.</p>
 <ul>
-<li>Datasets can also be distributed with R packages. These are often smaller datasets used in examples and tutorials in packages. These are loaded with the <code>data()</code> function.</li>
-<li>Loaded from an external files including both stored R objects (<code>.RData</code>, <code>.rda</code>) and other formats (<code>.csv</code>, <code>.dta</code>, <code>.sav</code>).</li>
+<li>Datasets can be distributed with R packages. These are often smaller datasets used in examples and tutorials in packages. These are loaded with the <code>data()</code> function. For example you can load UN data on demographic statistics from the <strong>qss</strong> library, which distributes the data sets used in the <em>QSS</em> textbook. (The function <code>data()</code> called without any arguments will list all the datasets distributed with installed packages.)</li>
 </ul>
-<p>The function <code>data</code> with called without any arguments will list all the datasets distributed with installed packages.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>()</code></pre></div>
-<p>The <strong>qss</strong> library distributes the data sets used in the <em>QSS</em> textbook.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;UNpop&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
-<p>To read a <a href="https://en.wikipedia.org/wiki/Comma-separated_values">csv</a> file into R use the</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop_URL &lt;-<span class="st"> </span>stringr<span class="op">::</span><span class="kw">str_c</span>(<span class="st">&quot;https://raw.githubusercontent.com/&quot;</span>,
-                            <span class="st">&quot;kosukeimai/qss/master/INTRO/UNpop.csv&quot;</span>)
+<ul>
+<li>Datasets can be loaded from external files including both stored R objects (<code>.RData</code>, <code>.rda</code>) and other formats (<code>.csv</code>, <code>.dta</code>, <code>.sav</code>). To read a <a href="https://en.wikipedia.org/wiki/Comma-separated_values">csv</a> file into R use the <code>read_csv</code> function from the <strong>readr</strong> library, part of the tidyverse.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop_URL &lt;-<span class="st"> &quot;https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.csv&quot;</span>
 UNpop &lt;-<span class="st"> </span><span class="kw">read_csv</span>(UNpop_URL)
 <span class="co">#&gt; Parsed with column specification:</span>
 <span class="co">#&gt; cols(</span>
 <span class="co">#&gt;   year = col_integer(),</span>
 <span class="co">#&gt;   world.pop = col_integer()</span>
-<span class="co">#&gt; )</span>
-<span class="kw">class</span>(UNpop)
+<span class="co">#&gt; )</span></code></pre></div>
+<p>We use the readr function<code>read_csv()</code> instead of the base R function <code>read.csv()</code> used in the <em>QSS</em> text. It is slightly faster, and returns a <code>tibble</code> instead of a data frame. Check this by calling <code>class()</code> on the new object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(UNpop)
 <span class="co">#&gt; [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</span>
 UNpop
 <span class="co">#&gt; # A tibble: 7 x 2</span>
@@ -346,27 +355,28 @@ UNpop
 <span class="co">#&gt; 5  1990   5320817</span>
 <span class="co">#&gt; 6  2000   6127700</span>
 <span class="co">#&gt; # ... with 1 more row</span></code></pre></div>
-<p>When reading from csv files use <code>readr::read_csv</code> instead of the base R function <code>read.csv</code> used in the <em>QSS</em> text. It is slightly faster, and returns a <code>tibble</code> instead of a data frame. See <a href="http://r4ds.had.co.nz/">R for Data Science</a> <a href="http://r4ds.had.co.nz/tibbles.html#introduction-4">Ch 11: Data Import</a> for more discussion.</p>
-<p>Note that in the previous code we loaded the file directly from a URL, but it would also work with local files on your computer, e.g.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">read_csv</span>(<span class="st">&quot;INTRO/UNpop.csv&quot;</span>)</code></pre></div>
+<p>See <a href="http://r4ds.had.co.nz/">R for Data Science</a> <a href="http://r4ds.had.co.nz/tibbles.html#introduction-4">Ch 11: Data Import</a> for more discussion.</p>
+<p>Note that in the previous code we loaded the file directly from a URL, but we could also work with local files on your computer, e.g.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;INTRO/UNpop.csv&quot;</span>)</code></pre></div>
 <p>See <a href="http://r4ds.had.co.nz/">R for Data Science</a> <a href="http://r4ds.had.co.nz/tibbles.html">Ch 10: Tibbles</a> for a deeper discussion of data frames.</p>
-<p>The single bracket, <code>[</code>, is useful to select rows and columns in simple cases, but the <strong>dplyr</strong> functions to select rows by number, to select rows by certain criteria, or to select columns.</p>
-<p>Select rows 1–3:</p>
+<p>The single bracket, <code>[</code>, is useful to select rows and columns in simple cases.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), ]
 <span class="co">#&gt; # A tibble: 3 x 2</span>
 <span class="co">#&gt;    year world.pop</span>
 <span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span>
 <span class="co">#&gt; 1  1950   2525779</span>
 <span class="co">#&gt; 2  1960   3026003</span>
-<span class="co">#&gt; 3  1970   3691173</span>
-<span class="kw">slice</span>(UNpop, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)
+<span class="co">#&gt; 3  1970   3691173</span></code></pre></div>
+<p>There are <strong>dplyr</strong> functions to select rows by number, to select rows by certain criteria, or to select columns.</p>
+<p>To select rows 1–3, use <code>slice()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">slice</span>(UNpop, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)
 <span class="co">#&gt; # A tibble: 3 x 2</span>
 <span class="co">#&gt;    year world.pop</span>
 <span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span>
 <span class="co">#&gt; 1  1950   2525779</span>
 <span class="co">#&gt; 2  1960   3026003</span>
 <span class="co">#&gt; 3  1970   3691173</span></code></pre></div>
-<p>Select the <code>world.pop</code> column from the <code>UNpop</code> data frame:</p>
+<p>Base R allows you to choose the column <code>world.pop</code> column from the <code>UNpop</code> data frame:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[, <span class="st">&quot;world.pop&quot;</span>]
 <span class="co">#&gt; # A tibble: 7 x 1</span>
 <span class="co">#&gt;   world.pop</span>
@@ -393,8 +403,8 @@ UNpop[[<span class="st">&quot;world.pop&quot;</span>]]
 <span class="co">#&gt; 5   5320817</span>
 <span class="co">#&gt; 6   6127700</span>
 <span class="co">#&gt; # ... with 1 more row</span></code></pre></div>
-<p>However, note that, by default, <code>[</code> will return a vector rather than a data frame if only one column is selected. This may seem convenient, but it can result in many hard to find and surprising bugs in practice. The <code>[[</code> and <code>$</code> operators can only select a single column and return a vector. The function <code>select()</code> <strong>always</strong> returns a tibble (data frame), and never a vector, even if only one column is selected. Also, note that since <code>world.pop</code> is a tibble, using <code>[</code> also returns tibbles rather than a vector if it is only one column.</p>
-<p>Select rows 1–3 and the <code>year</code> column:</p>
+<p>Unlike <code>[</code>, the <code>[[</code> and <code>$</code> operators can only select a single column and return a vector.<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> The <code>dplyr</code> function <code>select()</code> <strong>always</strong> returns a tibble (data frame), and never a vector, even if only one column is selected.</p>
+<p>Select rows 1–3 of the <code>year</code> column:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="st">&quot;year&quot;</span>]
 <span class="co">#&gt; # A tibble: 3 x 1</span>
 <span class="co">#&gt;    year</span>
@@ -410,7 +420,7 @@ UNpop[[<span class="st">&quot;world.pop&quot;</span>]]
 <span class="co">#&gt; 1  1950</span>
 <span class="co">#&gt; 2  1960</span>
 <span class="co">#&gt; 3  1970</span></code></pre></div>
-<p>or,</p>
+<p>The same series of functions can be performed using the pipe operator, <code>%&gt;%</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(year)
@@ -420,7 +430,7 @@ UNpop[[<span class="st">&quot;world.pop&quot;</span>]]
 <span class="co">#&gt; 1  1950</span>
 <span class="co">#&gt; 2  1960</span>
 <span class="co">#&gt; 3  1970</span></code></pre></div>
-<p>For this example using these functions and <code>%&gt;%</code> to chain them together may seem verbose, but later we can produce more complicated transformations of the data by chaining together simple functions.</p>
+<p>This example may seem verbose, but later we can produce more complicated transformations of the data by chaining together simple functions.</p>
 <p>Select every other row from <code>UNpop</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop<span class="op">$</span>world.pop[<span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">1</span>, <span class="dt">to =</span> <span class="kw">nrow</span>(UNpop), <span class="dt">by =</span> <span class="dv">2</span>)]
 <span class="co">#&gt; [1] 2525779 3691173 5320817 6916183</span></code></pre></div>
@@ -445,18 +455,18 @@ UNpop[[<span class="st">&quot;world.pop&quot;</span>]]
 <span class="co">#&gt; 2  1970   3691173</span>
 <span class="co">#&gt; 3  1990   5320817</span>
 <span class="co">#&gt; 4  2010   6916183</span></code></pre></div>
-<p>The function when used in a <strong>dplyr</strong> function returns the number of rows in the data frame (or the number of rows in the group if used with ). The function returns the row number of an observation. The <code>%%</code> operator returns the modulus, e.g. division remainder.</p>
+<p>The function <code>n()</code> when used in a <strong>dplyr</strong> function returns the number of rows in the data frame (or the number of rows in the group if used with <code>group_by()</code>). The function <code>row_number()</code> returns the row number of an observation. The <code>%%</code> operator returns the modulus, i.e. division remainder.</p>
 </div>
 <div id="saving-objects" class="section level3">
 <h3><span class="header-section-number">1.3.6</span> Saving Objects</h3>
-<p>It is not recommended that you save the entire R workspace using using <code>save.image</code> due to the negative and unexpected impacts it can have on reproducibility.</p>
-<p>See the <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/workflow-projects.html">Workflow Projects</a>. You should uncheck the options in RStudio to avoid saving and restoring from <code>.RData</code> files. This will help ensure that your R code runs the way you think it does, instead of depending on some long forgotten code that is only saved in the workspace image. Everything important should be in a script. Anything saved or loaded from file should be done explicitly.</p>
+<p>It is not recommended that you save the entire R workspace using <code>save.image</code> due to the negative and unexpected impacts it can have on reproducibility.See the <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/workflow-projects.html">Workflow Projects</a>.</p>
+<p>You should uncheck the options in RStudio to avoid saving and restoring from <code>.RData</code> files (go to <code>Tools &gt; Global Options &gt; General</code>). This will help ensure that your R code runs the way you think it does, instead of depending on some long forgotten code that is only saved in the workspace image. Everything important should be in a script. Anything saved or loaded from file should be done explicitly.</p>
 <p>Your motto should be that the <strong>source is real</strong>, not the objects created by it.</p>
 <blockquote>
 <p>The source code is real. The objects are realizations of the source code. Source for EVERY user modified object is placed in a particular directory or directories, for later editing and retrieval. – from the <a href="https://ess.r-project.org/Manual/ess.html#Philosophies-for-using-ESS_0028S_0029">ESS manual</a></p>
 </blockquote>
 <p>This means that while you should not save the entire workplace it is perfectly fine practice to run a script and save or load R objects to files, using or .</p>
-<p>As with reading CSV files, use the <a href="http://readr.tidyverse.org/">readr</a> package functions. In this case, writes a csv file</p>
+<p>As with reading CSV files, use the <a href="http://readr.tidyverse.org/">readr</a> package functions. In this case, <code>write_csv()</code> writes a csv file and takes at least two objects: the data that you want to write to a csv and the name that you want to give the file.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write_csv</span>(UNpop, <span class="st">&quot;UNpop.csv&quot;</span>)</code></pre></div>
 </div>
 <div id="programming-and-learning-tips" class="section level3">
@@ -475,11 +485,11 @@ UNpop
 <span class="co">#&gt; 5  1990      5321</span>
 <span class="co">#&gt; 6  2000      6128</span>
 <span class="co">#&gt; # ... with 1 more row</span></code></pre></div>
-<p>There is also the equivalent <code>write_dta</code> function to create Stata datasets.</p>
+<p>There is also the equivalent <code>write_dta()</code> function to create Stata datasets.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write_dta</span>(UNpop, <span class="st">&quot;UNpop.dta&quot;</span>)</code></pre></div>
-<p>One thing to note is that Stata and SPSS have different concept</p>
+<p>While Stata and SPSS data sets are quite similar to data frames, they differ slightly in definitions of acceptable data types of columns and what metadata they store with the data. +Be careful when reading and writing from these formats to ensure that information is not lost.</p>
 <p>Also see the <a href="https://cran.r-project.org/package=rio">rio</a> package which makes loading data even easier with smart defaults.</p>
-<p>You can use the <code>import</code> function to load many types of files:</p>
+<p>You can use the <code>import()</code> function to load many types of files:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">import</span>(<span class="st">&quot;https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.csv&quot;</span>)
 <span class="co">#&gt;   year world.pop</span>
 <span class="co">#&gt; 1 1950   2525779</span>
@@ -489,6 +499,7 @@ UNpop
 <span class="co">#&gt; 5 1990   5320817</span>
 <span class="co">#&gt; 6 2000   6127700</span>
 <span class="co">#&gt; 7 2010   6916183</span>
+
 <span class="kw">import</span>(<span class="st">&quot;https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.RData&quot;</span>)
 <span class="co">#&gt;   year world.pop</span>
 <span class="co">#&gt; 1 1950   2525779</span>
@@ -498,6 +509,7 @@ UNpop
 <span class="co">#&gt; 5 1990   5320817</span>
 <span class="co">#&gt; 6 2000   6127700</span>
 <span class="co">#&gt; 7 2010   6916183</span>
+
 <span class="kw">import</span>(<span class="st">&quot;https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.dta&quot;</span>)
 <span class="co">#&gt;   year world_pop</span>
 <span class="co">#&gt; 1 1950      2526</span>
@@ -507,15 +519,15 @@ UNpop
 <span class="co">#&gt; 5 1990      5321</span>
 <span class="co">#&gt; 6 2000      6128</span>
 <span class="co">#&gt; 7 2010      6916</span></code></pre></div>
-<p>R also includes the <strong>foreign</strong> package, which contains functions for reading and writing <strong>haven</strong>. One reason to do so is that it is better maintained. For R function <code>read.dta</code> does not read files created by the most recent versions of Stata (13+).</p>
+<p>R also includes the <strong>foreign</strong> package, which contains functions for reading and writing files using <strong>haven</strong>. One reason to use these packages is that they are better maintained. For example, the R function <code>read.dta()</code> does not read files created by the most recent versions of Stata (13+), whereas <strong>haven</strong> does.</p>
 </div>
 <div id="style-guide" class="section level3">
 <h3><span class="header-section-number">1.3.8</span> Style Guide</h3>
-<p>Following a consistent coding style is important for your code to be readable by yourself and other. The preferred style is the <a href="http://style.tidyverse.org/">tidyverse style guide</a>, which differs slightly from <a href="http://style.tidyverse.org/">Google’s R style guide</a>.</p>
+<p>Following a consistent coding style is important for your code to be readable by you and others. The preferred style is the <a href="http://style.tidyverse.org/">tidyverse style guide</a>, which differs slightly from <a href="http://style.tidyverse.org/">Google’s R style guide</a>.</p>
 <ul>
-<li>The <a href="https://cran.r-project.org/package=lintr">lintr</a> package will check files for style errors</li>
+<li>The <a href="https://cran.r-project.org/package=lintr">lintr</a> package will check files for style errors.</li>
 <li>The <a href="https://cran.r-project.org/package=styler">styler</a> package provides functions for automatically formatting R code according to style guides.</li>
-<li>In RStudio, go to the <code>Tools &gt; Global Options &gt; Code &gt; Diagnostics</code> pane and check the box to activate style warnings. On this pane, there are other options that can be set in order to provide more or less warnings while writing R code in RStudio.</li>
+<li>In RStudio, go to the <code>Tools &gt; Global Options &gt; Code &gt; Diagnostics</code> pane and check the box to activate style warnings. On this pane, there are other options that can be set in order to increase or decrease the amount of warnings while writing R code in RStudio.</li>
 </ul>
 
 </div>
@@ -525,6 +537,7 @@ UNpop
 <hr />
 <ol start="1">
 <li id="fn1"><p>For more on using projects read <a href="https://www.tidyverse.org/articles/2017/12/workflow-vs-script/">Project-oriented workflow</a>.<a href="introduction.html#fnref1">↩</a></p></li>
+<li id="fn2"><p>See the discussion in <a href="http://r4ds.had.co.nz/tibbles.html#tibbles-vs.data.frame">R for Data Science</a> on how <code>tibble</code> objects differ from base <code>data.frame</code> objects in how <code>[</code> is handled.<a href="introduction.html#fnref2">↩</a></p></li>
 </ol>
 </div>
             </section>

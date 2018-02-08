@@ -53,7 +53,7 @@ Also see: http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/.
 
 ### Sampling without replacement
 
-Instead of using a for loop, we could do the simulations using a functional
+Instead of using a `for` loop, we could do the simulations using a functional
 as described in `r R4DS` chapter "Iterations".
 
 Define the function `sim_bdays` which randomly samples `k` birthdays, and returns
@@ -75,15 +75,15 @@ One helpful feature of a functional style of writing code vs. a `for` loop is th
 the function encapsulates the code and allows you to test that it works for different
 inputs before repeating it for many inputs.
 It is more difficult to debug functions that produce random outputs, but some sanity checks
-are that the function
+are that the function:
 
 - returns a logical vector of length one (`TRUE` or `FALSE`)
 - always returns `FALSE` when `k = 1` since there can never be a duplicates with one person
-- always returns `TRUE` when `k >= 365` by the [pidgeonhole principle](https://en.wikipedia.org/wiki/Pigeonhole_principle).
+- always returns `TRUE` when `k > 365` by the [pidgeonhole principle](https://en.wikipedia.org/wiki/Pigeonhole_principle).
 
 ```{r}
 sim_bdays(1)
-sim_bdays(365)
+sim_bdays(366)
 ```
 
 Set the parameters for 1,000 simulations, and 23 individuals.
@@ -95,13 +95,10 @@ map_lgl(seq_len(sims), ~ sim_bdays(k)) %>%
   mean()
 ```
 
-An alternative way of running this is using the `r rdoc("purrr", "rerun")`:
+An alternative way of running this is using the `r rdoc("purrr", "rerun")` and using `flatten` to turn the output to a numeric vector:
 ```{r}
-# rerun expression sim times
 rerun(sims, sim_bdays(k)) %>%
-  # flatten to a numeric vector
   flatten_dbl() %>%
-  # take mean
   mean()
 ```
 
@@ -109,13 +106,13 @@ rerun(sims, sim_bdays(k)) %>%
 
 ### Combinations
 
-The function for $\choose{84}{4}$ is:
+The function for $84\choose{6}$ is:
 ```{r}
 choose(84, 6)
 ```
-However, due to the the larges values that the binomial coefficient, it is almost always better to use the log of the binomial coefficient, $\log \choose{84}{4}$,
+However, due to the the larges values that the binomial coefficient, it is almost always better to use the log of the binomial coefficient, $\log{84\choose{6}}$,
 ```{r}
-lchoose(84, 4)
+lchoose(84, 6)
 ```
 
 
@@ -127,9 +124,13 @@ Load Florida voting data from the **qss** package:
 ```{r message=FALSE}
 data(FLVoters, package = "qss")
 dim(FLVoters)
+glimpse(FLVoters)
 FLVoters <- FLVoters %>%
   na.omit()
+dim(FLVoters)
 ```
+
+*Note the difference between `glimpse()` and `dim()` - what is different in how they handle NA observations?*
 
 Instead of using `r rdoc("base", "prop.base")`, we calculate the probabilities
 with a data frame.
@@ -144,7 +145,8 @@ margin_race
 
 Calculate the marginal probabilities of each gender:
 ```{r margin_gender}
-margin_gender <- FLVoters %>%
+margin_gender <- 
+  FLVoters %>%
   count(gender) %>%
   mutate(prop = n / sum(n))
 margin_gender
@@ -161,8 +163,6 @@ FLVoters %>%
 joint_p <-
   FLVoters %>%
   count(gender, race) %>%
-  # needed because the data frame is still grouped by gender
-  ungroup() %>%
   mutate(prop = n / sum(n))
 joint_p
 ```
@@ -170,7 +170,6 @@ joint_p
 We can convert the data frame to have gender as columns:
 ```{r joint_p_gender}
 joint_p %>%
-  ungroup() %>%
   select(-n) %>%
   spread(gender, prop)
 ```
@@ -216,7 +215,7 @@ margin_age
 
 
 Calculate the probabilities that each group is in a given age group, and show
-$P(\text{black} \land \text{female} | \text{"> 60""})
+$P(\text{black} \land \text{female} \land \text{age} > 60)$: (*Note: the symbol $\land$ is the logical symbol for 'and', implying the joint probability.*)
 ```{r}
 left_join(joint3,
           select(margin_age, age_group, margin_age = prop),
@@ -237,10 +236,11 @@ joint2
 
 The joint probability $P(\text{age} > 60 \land \text{female})$,
 ```{r}
-filter(joint2, age_group == "> 60", gender == "f")
+joint2 %>%
+  filter(age_group == "> 60", gender == "f")
 ```
 
-The conditional probabilities $P(race | gender, age)$,
+The conditional probabilities $P(\text{race } | \text{ gender, age})$,
 ```{r}
 condprob_race <-
   left_join(joint3, select(joint2, -n), by = c("age_group", "gender")) %>%
@@ -248,7 +248,7 @@ condprob_race <-
   arrange(age_group, gender) %>%
   select(age_group, gender, race, prob_race)
 ```
-Each row is the $P(race | age_group, gender)$, so $P(\text{black} | \text{female} \land \text{age} > 60)$,
+Each row is the $P(\text{race } | \text{ age group} \land \text{gender})$, so $P(\text{black } | \text{ female} \land \text{age} > 60)$,
 ```{r}
 filter(condprob_race, gender == "f", age_group == "> 60", race == "black")
 ```
@@ -290,7 +290,6 @@ of the three variables, and facets by age and gender.
 
 ```{r fig.height = 10, fig.width = 7, fig.asp = NA}
 joint_indep <-
-  # all combinations of race, age, gender
   crossing(select(margin_race, race, prob_race = prop),
            select(margin_age, age_group, prob_age = prop),
            select(margin_gender, gender, prob_gender = prop)) %>%
@@ -307,13 +306,12 @@ ggplot(joint_indep, aes(x = prob, y = indep_prob, colour = race)) +
   labs(x = "P(race and age and gender)",
        y = "P(race) * P(age) * P(gender)",
        title = "Joint Independence")
-
 ```
 
 
 While code in *QSS* only calculates the conditional independence given female,
 the following code calculates conditional independence for all values of `gender`:
-```{r fig.height = 10, fig.width = 7, fig.asp = NA}
+```{r}
 cond_gender <-
   left_join(select(joint3, race, age_group, gender, joint_prob = prop),
             select(margin_gender, gender, prob_gender = prop),
@@ -321,7 +319,7 @@ cond_gender <-
   mutate(cond_prob = joint_prob / prob_gender)
 ```
 
-Calculate the conditional distribution $\Pr(\mathtt{race} | \mathtt{gender})$:
+Calculate the conditional distribution $\Pr(\text{race} | \text{gender})$:
 ```{r}
 prob_race_gender <-
   left_join(select(joint_p, race, gender, prob_race_gender = prop),
@@ -330,8 +328,8 @@ prob_race_gender <-
   mutate(prob_race = prob_race_gender / prob_gender)
 ```
 
-Calculate the conditional distribution $\Pr(\mathtt{age} | \mathtt{gender})$:
-```{r}
+Calculate the conditional distribution $\Pr(\text{age} | \text{gender})$:
+```{r fig.height = 10, fig.width = 7, fig.asp = NA}
 prob_age_gender <-
   left_join(select(joint2, age_group, gender, prob_age_gender),
             select(margin_gender, gender, prob_gender = prop),
@@ -362,7 +360,7 @@ inner_join(select(indep_cond_gender, race, age_group, gender, indep_prob),
 
 **Monty-hall problem**
 
-The `for` loop approach in *QSS * is valid code, but here we provide a more
+The `for` loop approach in *QSS* is valid code, but here we provide a more
 functional approach to solving the problem.
 We will define a function to choose a door, repeat the function multiple times while storing
 the results in a data frame, and then summarize that data frame.
@@ -408,10 +406,9 @@ glimpse(cnames)
 ```
 
 
-
-For each surname, contains variables with the probability that it belongs to an individual of a given race (`pctwhite`, `pctblack`, ...).
+For each surname, `cnames` contains variables with the probability that it belongs to an individual of a given race (`pctwhite`, `pctblack`, ...).
 We want to find the most-likely race for a given surname, by finding the race with the maximum proportion.
-Instead of dealing with multiple variables, it is easier to use `max` on a single variable, so we will rearrange the data to in order to use a grouped summarize, and then merge the new variable back to the original data sets.
+Instead of dealing with multiple variables, it is easier to use `max` on a single variable, so we will rearrange the data to in order to use a grouped summarize, and then merge the new variable back to the original data sets. We will also remove the 'pct' prefix from each of the variable names.
 
 Calculate the most likely race for each name:
 ```{r most_likely_race}
@@ -436,17 +433,22 @@ most_likely_race <-
 Merge the data frame with the most likely race for each surname to the
 the original `cnames` data frame:
 ```{r cnames_merge}
-cnames <- left_join(cnames, most_likely_race, by = "surname")
+cnames <- 
+  cnames %>%
+  left_join(most_likely_race, by = "surname")
 ```
 
 Instead of using `match`, use `inner_join` to merge the surnames to `FLVoters`:
 ```{r}
-FLVoters <- inner_join(FLVoters, cnames, by = "surname")
+FLVoters <- 
+  FLVoters %>%
+  inner_join(cnames, by = "surname")
 dim(FLVoters)
 ```
 `FLVoters` also includes a "native" category that the surname dataset does not.
 ```{r}
-FLVoters <- FLVoters %>%
+FLVoters <- 
+  FLVoters %>%
   mutate(race2 = fct_recode(race, other = "native"))
 ```
 
@@ -454,8 +456,6 @@ Check that the levels of `race` and `race_pred` are the same:
 ```{r}
 FLVoters %>%
   count(race2)
-```
-```{r}
 FLVoters %>%
   count(race_pred)
 ```
@@ -480,7 +480,7 @@ Now add residence data using the `FLCensus` data included in the
 data("FLCensus", package = "qss")
 ```
 
-$P(race)$ in Florida:
+$P(\text{race})$ in Florida:
 ```{r}
 race.prop <-
   FLCensus %>%
@@ -500,7 +500,8 @@ data("pres08", package = "qss")
 ```
 Add a column `p` which contains Obama's vote share of the major parties:
 ```{r pres08_mutate}
-pres08 <- pres08 %>%
+pres08 <- 
+  pres08 %>%
   mutate(p = Obama / (Obama + McCain))
 ```
 
@@ -564,7 +565,7 @@ dunif(0.5, min = 0, max = 1)
 punif(1, min = -2, max = 2)
 ```
 
-Sample from a uniform distribution, and convert to a 
+Sample from a uniform distribution, and convert to a probability:
 ```{r}
 sims <- 1000
 p <- 0.5
@@ -792,7 +793,7 @@ pres08 %>%
   summarise(Obama_EV = sum(Obama_EV))
 ```
 
-Compare simulation and simulation variances:
+Compare theoretical and simulation variances:
 ```{r}
 # simulation variance
 var(Obama_EV_sims)
@@ -856,7 +857,7 @@ ggplot() +
 ### Central Limit Theorem
 
 
-The population mean of the binomial distribution is $\mu = p n$ and the variance is $\mu = p (1 - p) n$.
+The population mean of the binomial distribution is $\mu = p n$ and the variance is $\sigma^2 = p (1 - p) n$.
 ```{r}
 sims <- 1000
 n_samp <- 1000

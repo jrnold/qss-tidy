@@ -28,14 +28,14 @@ afghan %>%
   summary()
 ```
 
-With `income`, `r RDoc("readr::read_csv")` never converts strings to factors by default.
-To get a summary of the different levels, either convert it to a factor (R4DS Ch 15), or use `count()`
+Loading data with either `data()` or`read_csv()` does not convert strings to factors by default; see below with `income`.
+To get a summary of the different levels, either convert it to a factor (see [R4DS Ch 15](http://r4ds.had.co.nz/factors.html)), or use `count()`:
+
 ```{r}
-afghan %>%
-  count(income)
+count(afghan, income)
 ```
 
-Count the number a proportion of respondents who answer that they were harmed by the ISF (`violent.exp.ISAF`) and (`violent.exp.taliban`) respectively,
+Use count to calculate the proportion of respondents who answer that they were harmed by the ISAF or the Taliban (`violent.exp.ISAF` and `violent.exp.taliban`, respectively):
 ```{r}
 afghan %>%
   group_by(violent.exp.ISAF, violent.exp.taliban) %>%
@@ -46,8 +46,8 @@ afghan %>%
 
 We need to use `ungroup()` in order to ensure that `sum(n)` sums over the entire
 dataset as opposed to only within categories of `violent.exp.ISAF`.
-Unlike `prop.table`, the code above does not drop missing values.
-We can drop those values by adding a `filter` verb and using `!is.na()` to test
+Unlike `prop.table()`, the code above does not drop missing values.
+We can drop those values by adding `filter()` and `!is.na()` to test
 for missing values in those variables:
 ```{r}
 afghan %>%
@@ -58,11 +58,7 @@ afghan %>%
   mutate(prop = n / sum(n))
 ```
 
-```{r}
-x <- c(1, 2, 3, NA)
-mean(x)
-mean(x, na.rm = TRUE)
-```
+
 
 
 
@@ -70,7 +66,7 @@ mean(x, na.rm = TRUE)
 
 We already observed the issues with `NA` values in calculating the proportion
 answering the "experienced violence" questions.
-You can filter rows with specific variables having missing values using `filter`
+You can filter rows with specific variables having missing values using `filter()`
 as shown above.
 
 ```{r}
@@ -85,25 +81,34 @@ summarise(afghan,
           p_missing = mean(is.na(income)))
 ```
 
-Table of proportions that includes `NA`
+Mean, and other functions, do not by default exclude missing values. Use `na.rm = TRUE` in these cases.
+```{r}
+x <- c(1, 2, 3, NA)
+mean(x)
+mean(x, na.rm = TRUE)
+```
+
+Table of proportions of individuals harmed by the ISAF and Taliban that includes missing (`NA`) values:
 ```{r}
 violent_exp_prop <-
   afghan %>%
   group_by(violent.exp.ISAF, violent.exp.taliban) %>%
   count() %>%
   ungroup() %>%
-  mutate(prop = n / sum(n))
+  mutate(prop = n / sum(n)) %>%
+  select(-n)
 violent_exp_prop
 ```
-The data above is 
+
+The data frame above can be reorganized so that rows are ISAF and the columns are Taliban as follows:
+
 ```{r}
 violent_exp_prop %>%
-  select(-n) %>%
   spread(violent.exp.taliban, prop)
 ```
 
-`drop_na` is an alternative to `na.omit` that allows for selecting missing values,
-```{r}
+`drop_na` is an alternative to `na.omit` that allows for removing missing values,
+```{r results='hide',echo=TRUE}
 drop_na(afghan)
 ```
 
@@ -114,22 +119,21 @@ NA_integer_ # integer
 NA_real_ # double
 NA_character_ # character
 ```
-In many cases, this distinction does not matter since functions will coerce these missing
+In many cases, this distinction does not matter since many functions will coerce these missing
 values to the correct vector type. 
 However, you will need to use these in some tidyverse functions that require the outputs
-to the same type, e.g. `r rdoc("purrr", "map")` and most `r pkg("purrr")` functions,
-and `if_else`.
-This will produce an error, since the `TRUE` case returns an integer value (`x` is an integer),
+to be the same type, e.g. `map()` and most of the other `r pkg("purrr")` functions,
+and `if_else()`.
+The code below produces an error, since the `TRUE` case returns an integer value (`x` is an integer), but the `FALSE` case does not specify the type of `NA`.
 ```{r error=TRUE}
 x <- 1:5
 class(x)
 if_else(x < 3, x, NA)
 ```
-So instead of `NA`, use `NA_integer_`,
+So instead of `NA`, use `NA_integer_`:
 ```{r}
 if_else(x < 3, x, NA_integer_)
 ```
-
 
 
 ## Visualizing the Univariate Distribution
@@ -165,7 +169,7 @@ ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
   ggtitle("Civilian Victimization by the Taliban")
 ```
 
-Instead of creating two separate box-plots, create a single plot facetted by ISAF and Taliban,
+Instead of creating two separate box-plots, create a single plot facetted by ISAF and Taliban:
 ```{r}
 select(afghan, violent.exp.ISAF, violent.exp.taliban) %>%
   gather(variable, value) %>%
@@ -183,9 +187,8 @@ select(afghan, violent.exp.ISAF, violent.exp.taliban) %>%
   ggtitle("Civilian Victimization")
 ```
 
-
 This plot could improved by plotting the two values simultaneously to be able to better compare them.
-This will require creating a data frame that has the following columns: perpetrator (`ISAF`, `Taliban`), response (`No Harm`, `Harm`, `No response`).
+This will require creating a data frame that has the following columns: perpetrator (`ISAF`, `Taliban`) and response (`No Harm`, `Harm`, `No response`).
 ```{r}
 violent_exp <-
   afghan %>%
@@ -204,7 +207,7 @@ ggplot(violent_exp, aes(x = prop, y = response, color = perpetrator)) +
   scale_color_manual(values = c(ISAF = "green", Taliban = "black"))
 ```
 
-Black was chosen for the Taliban, and Green for ISAF because it is the color of their respective [flags](https://en.wikipedia.org/wiki/International_Security_Assistance_Force).
+Black was chosen for the Taliban, and Green for ISAF because they are the colors of their respective [flags](https://en.wikipedia.org/wiki/International_Security_Assistance_Force).
 
 
 ### Histogram
@@ -243,9 +246,9 @@ dens_plot <- ggplot(afghan, aes(x = age)) +
        y = "Age", x = "Density")
 dens_plot
 ```
-which can be combined with a `r rdoc("ggplot2", "geom_rug")` to show individual values:
+which can be combined with a `r rdoc("ggplot2", "geom_rug")` to create a rug plot, which puts small lines on the axis to represent the value of each observation. It can be combined with a scatter or density plot to add extra detail. Adjust the `alpha` to modify the color transparency of the rug and address overplotting.
 ```{r}
-dens_plot + geom_rug()
+dens_plot + geom_rug(alpha = .2)
 ```
 
 Frequency polygons (`r rdoc("ggplot2", "geom_freqpoly")`): See `r R4DS` [EDA](http://r4ds.had.co.nz/exploratory-data-analysis.html).
@@ -303,10 +306,11 @@ ggplot(afghan, aes(y = educ.years, x = province)) +
   labs(x = "Province", y = "Years of education",
        title = "Education by Province")
 ```
-Dot plot with jitter to avoid overplotting:
+Dot plot with jitter and adjusted alpha to avoid overplotting:
 ```{r}
 ggplot(afghan, aes(y = educ.years, x = province)) +
-  geom_point(position = position_jitter(width = 0.25, height = 0)) +
+  geom_point(position = position_jitter(width = 0.25, height = 0),
+             alpha = .2) +
   coord_flip() +
   labs(x = "Province", y = "Years of education",
        title = "Education by Province")
@@ -368,14 +372,13 @@ ggplot(afghan.village, aes(colour = factor(village.surveyed,
   geom_rug() +
   labs(x = "log(population)", colour = "")
 ```
-The function `r ggdoc("geom_rug")`, creates a rug plot, which puts small lines on the axis to represent the value of each observation.
-It can be combined with a scatter or density plot to add extra detail.
+
 
 
 ### Non-response and other sources of bias
 
-Calculate the rates of non-response by province to `violent.exp.ISAF` and
-`violent.exp.taliban`:
+Calculate the rates of item non-response by province to the question about civilian victimization by ISAF and Taliban forces (`violent.exp.ISAF` and
+`violent.exp.taliban`):
 ```{r}
 afghan %>%
   group_by(province) %>%
@@ -392,11 +395,11 @@ between the ISAF and control groups:
 ```
 
 To calculate the table responses to the list experiment in the control, ISAF,
-and Taliban groups>
+and Taliban groups:
 ```{r}
 afghan %>%
   group_by(list.response, list.group) %>%
-  count() %T>%
+  count() %>%
   glimpse() %>%
   spread(list.group, n, fill = 0)
 ```
@@ -429,7 +432,7 @@ q
 ```
 
 However, since there are colors associated with Democrats (blue) and Republicans (blue), we should use them rather than the defaults.
-There's some evidence that using semantically-resonant colors can help decoding data visualizations ([Lin, et al. 2013](http://vis.stanford.edu/files/2013-SemanticColor-EuroVis.pdf)).
+There's some evidence that using semantically-resonant colors can help decoding data visualizations (See [Lin, et al. 2013](http://vis.stanford.edu/files/2013-SemanticColor-EuroVis.pdf)).
 Since I'll reuse the scale several times, I'll save it in a variable.
 ```{r}
 scale_colour_parties <-
@@ -439,17 +442,19 @@ scale_colour_parties <-
 q + scale_colour_parties
 ```
 
-```{r fig.width = 7, fig.height = 7}
+
+
+```{r fig.width = 10, fig.height = 6, out.width = "100%", out.height = "100%"}
 congress %>%
   ggplot(aes(x = dwnom1, y = dwnom2, colour = party)) +
   geom_point() +
   facet_wrap(~ congress) +
   coord_fixed() +
   scale_y_continuous("racial liberalism/conservatism",
-                     limits = c(-1.5, 1.5)) +
+                     limits = c(-2, 2)) +
   scale_x_continuous("economic liberalism/conservatism",
-                     limits = c(-1.5, 1.5)) +
-  scale_colour_parties
+                     limits = c(-2, 2)) 
+  #scale_colour_parties
 ```
 
 ```{r}
@@ -464,6 +469,37 @@ congress %>%
   labs(y = "DW-NOMINATE score (1st Dimension)", x = "Congress",
        colour = "Party")
 ```
+
+Alternatively, you can plot the mean DW-Nominate scores for each party and congress over time. This plot uses color for parties and lets the points and labels for the first and last congresses (80 and 112) to convey progress through time.
+
+```{r}
+party_means <-
+  congress %>%
+  filter(party %in% c("Democrat", "Republican")) %>%
+  group_by(party, congress) %>%
+  summarise(dwnom1 = mean(dwnom1),
+            dwnom2 = mean(dwnom2))
+
+party_endpoints <-
+  party_means %>%
+  filter(congress %in% c(min(congress), max(congress))) %>%
+  mutate(label = str_c(party, congress, sep = " - "))
+
+ggplot(party_means, 
+         aes(x = dwnom1, y = dwnom2, color = party,
+             group = party)) +
+  geom_point() +
+  geom_path() +
+  ggrepel::geom_text_repel(data = party_endpoints,
+                           mapping = aes(label = congress),
+                           color = "black") +
+  scale_y_continuous("racial liberalism/conservatism") +
+  scale_x_continuous("economic liberalism/conservatism") +
+  scale_colour_parties
+
+```
+
+
 
 ### Correlation
 
@@ -508,12 +544,12 @@ ggplot(party_polarization, aes(x = congress, y = polarization)) +
 congress %>%
   filter(congress == 112, party %in% c("Republican", "Democrat")) %>%
   ggplot(aes(x = dwnom2, y = ..density..)) +
-  geom_histogram() +
+  geom_histogram(binwidth = .2) +
   facet_grid(party ~ .) +
   labs(x = "racial liberalism/conservatism dimension")
 ```
 
-*ggplot2* includes a `stat_qq` which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distribution, usually the normal one.
+The package *ggplot2* includes a function `stat_qq` which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distribution, usually the normal one.
 However, we can calculate one by hand, which may give more insight into exactly what the qq-plot is doing.
 ```{r}
 party_qtiles <- tibble(
@@ -553,12 +589,12 @@ See `r R4DS` chapter [Vectors](http://r4ds.had.co.nz/vectors.html).
 
 ### Lists
 
-See `r R4DS` chapters [Vectors](http://r4ds.had.co.nz/vectors.html), [Iteration](http://r4ds.had.co.nz/iteration.html) and the `r pkg("purrr")` package for more powerful methods of computing on lists.
+See `r R4DS` chapters [Vectors](http://r4ds.had.co.nz/vectors.html) and [Iteration](http://r4ds.had.co.nz/iteration.html), as well as the `r pkg("purrr")` package for more powerful methods of computing on lists.
 
 
 ### k-means algorithms
 
-Calculate the clusters by the 80th and 112th congresses,
+Calculate the clusters by the 80th and 112th congresses:
 ```{r}
 k80two.out <-
   kmeans(select(filter(congress, congress == 80),
@@ -566,7 +602,7 @@ k80two.out <-
               centers = 2, nstart = 5)
 ```
 
-Add the cluster ids to data sets
+Add the cluster ids to data sets:
 ```{r}
 congress80 <-
   congress %>%
@@ -587,7 +623,7 @@ k80two.clusters <- tidy(k80two.out)
 k80two.clusters
 ```
 
-Plot the ideal points and clusters
+Plot the ideal points and clusters:
 ```{r}
 ggplot() +
   geom_point(data = congress80,

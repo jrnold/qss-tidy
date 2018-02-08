@@ -32,7 +32,7 @@ or, after processing, from the document-term matrix object.
 
 
 ```r
-DIR_SOURCE <- file.path("qss", "DISCOVERY", "federalist")
+DIR_SOURCE <- system.file("extdata/federalist", package = "qss")
 corpus_raw <- VCorpus(DirSource(directory = DIR_SOURCE, pattern = "fp"))
 corpus_raw
 #> <<VCorpus>>
@@ -46,15 +46,15 @@ Use the function [tidy](https://www.rdocumentation.org/packages/tidyytext/topics
 corpus_tidy <- tidy(corpus_raw, "corpus")
 corpus_tidy
 #> # A tibble: 85 x 8
-#>   author       datetimestamp description heading       id language origin
-#>    <lgl>              <dttm>       <lgl>   <lgl>    <chr>    <chr>  <lgl>
-#> 1     NA 2017-12-22 22:41:17          NA      NA fp01.txt       en     NA
-#> 2     NA 2017-12-22 22:41:17          NA      NA fp02.txt       en     NA
-#> 3     NA 2017-12-22 22:41:17          NA      NA fp03.txt       en     NA
-#> 4     NA 2017-12-22 22:41:17          NA      NA fp04.txt       en     NA
-#> 5     NA 2017-12-22 22:41:17          NA      NA fp05.txt       en     NA
-#> 6     NA 2017-12-22 22:41:17          NA      NA fp06.txt       en     NA
-#> # ... with 79 more rows, and 1 more variables: text <chr>
+#>   author datetimestamp       description heading id     lang… orig… text  
+#>   <lgl>  <dttm>              <lgl>       <lgl>   <chr>  <chr> <lgl> <chr> 
+#> 1 NA     2018-01-10 16:44:39 NA          NA      fp01.… en    NA    AFTER…
+#> 2 NA     2018-01-10 16:44:39 NA          NA      fp02.… en    NA    "WHEN…
+#> 3 NA     2018-01-10 16:44:39 NA          NA      fp03.… en    NA    IT IS…
+#> 4 NA     2018-01-10 16:44:39 NA          NA      fp04.… en    NA    "MY L…
+#> 5 NA     2018-01-10 16:44:39 NA          NA      fp05.… en    NA    "QUEE…
+#> 6 NA     2018-01-10 16:44:39 NA          NA      fp06.… en    NA    "THE …
+#> # ... with 79 more rows
 ```
 
 The `text` column contains the text of the documents themselves.
@@ -85,14 +85,14 @@ tokens <- corpus_tidy %>%
   filter(word != "")
 tokens
 #> # A tibble: 202,089 x 2
-#>   document      word
-#>      <int>     <chr>
-#> 1        1     after
-#> 2        1        an
+#>   document word     
+#>      <int> <chr>    
+#> 1        1 after    
+#> 2        1 an       
 #> 3        1 unequivoc
-#> 4        1    experi
-#> 5        1        of
-#> 6        1       the
+#> 4        1 experi   
+#> 5        1 of       
+#> 6        1 the      
 #> # ... with 2.021e+05 more rows
 ```
 
@@ -121,14 +121,14 @@ and a column with the number of times the term appeared in the document.
 dtm <- count(tokens, document, word)
 head(dtm)
 #> # A tibble: 6 x 3
-#>   document       word     n
-#>      <int>      <chr> <int>
-#> 1        1        abl     1
-#> 2        1     absurd     1
-#> 3        1      accid     1
-#> 4        1     accord     1
+#>   document word           n
+#>      <int> <chr>      <int>
+#> 1        1 abl            1
+#> 2        1 absurd         1
+#> 3        1 accid          1
+#> 4        1 accord         1
 #> 5        1 acknowledg     1
-#> 6        1        act     1
+#> 6        1 act            1
 ```
 
 
@@ -161,14 +161,14 @@ Use the function [bind_tf_idf](https://www.rdocumentation.org/packages/tidytext/
 dtm <- bind_tf_idf(dtm, word, document, n)
 dtm
 #> # A tibble: 38,847 x 6
-#>   document       word     n      tf   idf   tf_idf
-#>      <int>      <chr> <int>   <dbl> <dbl>    <dbl>
-#> 1        1        abl     1 0.00145 0.705 0.001022
-#> 2        1     absurd     1 0.00145 1.735 0.002514
-#> 3        1      accid     1 0.00145 3.750 0.005434
-#> 4        1     accord     1 0.00145 0.754 0.001092
-#> 5        1 acknowledg     1 0.00145 1.552 0.002250
-#> 6        1        act     1 0.00145 0.400 0.000579
+#>   document word           n      tf   idf   tf_idf
+#>      <int> <chr>      <int>   <dbl> <dbl>    <dbl>
+#> 1        1 abl            1 0.00145 0.705 0.00102 
+#> 2        1 absurd         1 0.00145 1.73  0.00251 
+#> 3        1 accid          1 0.00145 3.75  0.00543 
+#> 4        1 accord         1 0.00145 0.754 0.00109 
+#> 5        1 acknowledg     1 0.00145 1.55  0.00225 
+#> 6        1 act            1 0.00145 0.400 0.000579
 #> # ... with 3.884e+04 more rows
 ```
 
@@ -179,14 +179,14 @@ dtm %>%
   filter(document == 12) %>%
   top_n(10, tf_idf)
 #> # A tibble: 10 x 6
-#>   document       word     n      tf   idf  tf_idf
-#>      <int>      <chr> <int>   <dbl> <dbl>   <dbl>
-#> 1       12       cent     2 0.00199  4.44 0.00884
-#> 2       12      coast     3 0.00299  3.75 0.01119
-#> 3       12    commerc     8 0.00796  1.11 0.00884
-#> 4       12 contraband     3 0.00299  4.44 0.01326
-#> 5       12      excis     5 0.00498  2.65 0.01319
-#> 6       12     gallon     2 0.00199  4.44 0.00884
+#>   document word           n      tf   idf  tf_idf
+#>      <int> <chr>      <int>   <dbl> <dbl>   <dbl>
+#> 1       12 cent           2 0.00199  4.44 0.00884
+#> 2       12 coast          3 0.00299  3.75 0.0112 
+#> 3       12 commerc        8 0.00796  1.11 0.00884
+#> 4       12 contraband     3 0.00299  4.44 0.0133 
+#> 5       12 excis          5 0.00498  2.65 0.0132 
+#> 6       12 gallon         2 0.00199  4.44 0.00884
 #> # ... with 4 more rows
 ```
 and for Paper No. 24,
@@ -196,14 +196,14 @@ dtm %>%
   filter(document == 24) %>%
   top_n(10, tf_idf)
 #> # A tibble: 10 x 6
-#>   document     word     n      tf   idf  tf_idf
-#>      <int>    <chr> <int>   <dbl> <dbl>   <dbl>
-#> 1       24     armi     7 0.00858  1.26 0.01085
-#> 2       24  arsenal     2 0.00245  3.75 0.00919
-#> 3       24     dock     3 0.00368  4.44 0.01633
-#> 4       24 frontier     3 0.00368  2.83 0.01042
-#> 5       24 garrison     6 0.00735  2.83 0.02083
-#> 6       24   nearer     2 0.00245  3.34 0.00820
+#>   document word         n      tf   idf  tf_idf
+#>      <int> <chr>    <int>   <dbl> <dbl>   <dbl>
+#> 1       24 armi         7 0.00858  1.26 0.0108 
+#> 2       24 arsenal      2 0.00245  3.75 0.00919
+#> 3       24 dock         3 0.00368  4.44 0.0163 
+#> 4       24 frontier     3 0.00368  2.83 0.0104 
+#> 5       24 garrison     6 0.00735  2.83 0.0208 
+#> 6       24 nearer       2 0.00245  3.34 0.00820
 #> # ... with 4 more rows
 ```
 
@@ -249,14 +249,14 @@ dim(km_out$centers)
 hamilton_words <- bind_cols(hamilton_words, as_tibble(t(km_out$centers)))
 hamilton_words
 #> # A tibble: 3,850 x 5
-#>         word      `1`      `2`     `3`      `4`
-#>        <chr>    <dbl>    <dbl>   <dbl>    <dbl>
-#> 1        abl 0.000939 0.000743 0.00000 0.000000
-#> 2     absurd 0.000000 0.000517 0.00000 0.000882
-#> 3      accid 0.000000 0.000202 0.00000 0.000000
-#> 4     accord 0.000000 0.000399 0.00000 0.000852
-#> 5 acknowledg 0.000000 0.000388 0.00000 0.000473
-#> 6        act 0.000000 0.000560 0.00176 0.000631
+#>   word            `1`      `2`     `3`      `4`
+#>   <chr>         <dbl>    <dbl>   <dbl>    <dbl>
+#> 1 abl        0.000939 0.000743 0       0       
+#> 2 absurd     0        0.000517 0       0.000882
+#> 3 accid      0        0.000202 0       0       
+#> 4 accord     0        0.000399 0       0.000852
+#> 5 acknowledg 0        0.000388 0       0.000473
+#> 6 act        0        0.000560 0.00176 0.000631
 #> # ... with 3,844 more rows
 ```
 To find the top 10 words in each centroid, we use `top_n` with `group_by`:
@@ -437,10 +437,10 @@ author_data %>%
   group_by(author) %>%
   summarise(`Proportion Correct` = mean(author == pred_author))
 #> # A tibble: 2 x 2
-#>     author `Proportion Correct`
-#>      <chr>                <dbl>
-#> 1 Hamilton                    1
-#> 2  Madison                    1
+#>   author   `Proportion Correct`
+#>   <chr>                   <dbl>
+#> 1 Hamilton                 1.00
+#> 2 Madison                  1.00
 ```
 
 Create the cross-validation data-sets using .
@@ -480,10 +480,10 @@ test %>%
   group_by(author) %>%
   summarise(mean(correct))
 #> # A tibble: 2 x 2
-#>     author `mean(correct)`
-#>      <chr>           <dbl>
-#> 1 Hamilton           1.000
-#> 2  Madison           0.786
+#>   author   `mean(correct)`
+#>   <chr>              <dbl>
+#> 1 Hamilton           1.00 
+#> 2 Madison            0.786
 ```
 
 When adding prediction with `add_predictions` it added predictions for missing  values as well.

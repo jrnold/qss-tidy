@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>QSS Tidyverse Code</title>
   <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
 
   <meta property="og:title" content="QSS Tidyverse Code" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-01-21">
+<meta name="date" content="2018-02-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -308,7 +308,7 @@ bday &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="d
 </div>
 <div id="sampling-without-replacement" class="section level3">
 <h3><span class="header-section-number">6.1.4</span> Sampling without replacement</h3>
-<p>Instead of using a for loop, we could do the simulations using a functional as described in <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter “Iterations”.</p>
+<p>Instead of using a <code>for</code> loop, we could do the simulations using a functional as described in <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter “Iterations”.</p>
 <p>Define the function <code>sim_bdays</code> which randomly samples <code>k</code> birthdays, and returns <code>TRUE</code> if there are any duplicate birthdays, and <code>FALSE</code> if there are none.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim_bdays &lt;-<span class="st"> </span><span class="cf">function</span>(k) {
   days &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">365</span>, k, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
@@ -318,39 +318,36 @@ bday &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim_bdays</span>(<span class="dv">10</span>)
 <span class="co">#&gt; [1] FALSE</span></code></pre></div>
 <p>Since the function is randomly sampling birthdays, running it multiple times will produce different answers.</p>
-<p>One helpful feature of a functional style of writing code vs. a <code>for</code> loop is that the function encapsulates the code and allows you to test that it works for different inputs before repeating it for many inputs. It is more difficult to debug functions that produce random outputs, but some sanity checks are that the function</p>
+<p>One helpful feature of a functional style of writing code vs. a <code>for</code> loop is that the function encapsulates the code and allows you to test that it works for different inputs before repeating it for many inputs. It is more difficult to debug functions that produce random outputs, but some sanity checks are that the function:</p>
 <ul>
 <li>returns a logical vector of length one (<code>TRUE</code> or <code>FALSE</code>)</li>
 <li>always returns <code>FALSE</code> when <code>k = 1</code> since there can never be a duplicates with one person</li>
-<li>always returns <code>TRUE</code> when <code>k &gt;= 365</code> by the <a href="https://en.wikipedia.org/wiki/Pigeonhole_principle">pidgeonhole principle</a>.</li>
+<li>always returns <code>TRUE</code> when <code>k &gt; 365</code> by the <a href="https://en.wikipedia.org/wiki/Pigeonhole_principle">pidgeonhole principle</a>.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim_bdays</span>(<span class="dv">1</span>)
 <span class="co">#&gt; [1] FALSE</span>
-<span class="kw">sim_bdays</span>(<span class="dv">365</span>)
+<span class="kw">sim_bdays</span>(<span class="dv">366</span>)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>Set the parameters for 1,000 simulations, and 23 individuals. We use <code>map_lgl</code> since <code>sim_bdays</code> returns a logical value (<code>TRUE</code>, <code>FALSE</code>):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sims &lt;-<span class="st"> </span><span class="dv">1000</span>
 k &lt;-<span class="st"> </span><span class="dv">23</span>
 <span class="kw">map_lgl</span>(<span class="kw">seq_len</span>(sims), <span class="op">~</span><span class="st"> </span><span class="kw">sim_bdays</span>(k)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mean</span>()
-<span class="co">#&gt; [1] 0.475</span></code></pre></div>
-<p>An alternative way of running this is using the <a href="https://www.rdocumentation.org/packages/purrr/topics/rerun">rerun</a>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># rerun expression sim times</span>
-<span class="kw">rerun</span>(sims, <span class="kw">sim_bdays</span>(k)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="co"># flatten to a numeric vector</span>
+<span class="co">#&gt; [1] 0.489</span></code></pre></div>
+<p>An alternative way of running this is using the <a href="https://www.rdocumentation.org/packages/purrr/topics/rerun">rerun</a> and using <code>flatten</code> to turn the output to a numeric vector:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rerun</span>(sims, <span class="kw">sim_bdays</span>(k)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">flatten_dbl</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="co"># take mean</span>
 <span class="st">  </span><span class="kw">mean</span>()
 <span class="co">#&gt; [1] 0.477</span></code></pre></div>
 </div>
 <div id="combinations" class="section level3">
 <h3><span class="header-section-number">6.1.5</span> Combinations</h3>
-<p>The function for <span class="math inline">\(\choose{84}{4}\)</span> is:</p>
+<p>The function for <span class="math inline">\(84\choose{6}\)</span> is:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">choose</span>(<span class="dv">84</span>, <span class="dv">6</span>)
 <span class="co">#&gt; [1] 4.06e+08</span></code></pre></div>
-<p>However, due to the the larges values that the binomial coefficient, it is almost always better to use the log of the binomial coefficient, <span class="math inline">\(\log \choose{84}{4}\)</span>,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lchoose</span>(<span class="dv">84</span>, <span class="dv">4</span>)
-<span class="co">#&gt; [1] 14.5</span></code></pre></div>
+<p>However, due to the the larges values that the binomial coefficient, it is almost always better to use the log of the binomial coefficient, <span class="math inline">\(\log{84\choose{6}}\)</span>,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lchoose</span>(<span class="dv">84</span>, <span class="dv">6</span>)
+<span class="co">#&gt; [1] 19.8</span></code></pre></div>
 </div>
 </div>
 <div id="conditional-probability" class="section level2">
@@ -361,8 +358,20 @@ k &lt;-<span class="st"> </span><span class="dv">23</span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(FLVoters, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)
 <span class="kw">dim</span>(FLVoters)
 <span class="co">#&gt; [1] 10000     6</span>
+<span class="kw">glimpse</span>(FLVoters)
+<span class="co">#&gt; Observations: 10,000</span>
+<span class="co">#&gt; Variables: 6</span>
+<span class="co">#&gt; $ surname &lt;chr&gt; &quot;PIEDRA&quot;, &quot;LYNCH&quot;, &quot;CHESTER&quot;, &quot;LATHROP&quot;, &quot;HUMMEL&quot;, &quot;CH...</span>
+<span class="co">#&gt; $ county  &lt;int&gt; 115, 115, 115, 115, 115, 115, 115, 115, 1, 1, 115, 115...</span>
+<span class="co">#&gt; $ VTD     &lt;int&gt; 66, 13, 103, 80, 8, 55, 84, 48, 41, 39, 26, 45, 11, 48...</span>
+<span class="co">#&gt; $ age     &lt;int&gt; 58, 51, 63, 54, 77, 49, 77, 34, 56, 60, 44, 45, 80, 83...</span>
+<span class="co">#&gt; $ gender  &lt;chr&gt; &quot;f&quot;, &quot;m&quot;, &quot;m&quot;, &quot;m&quot;, &quot;f&quot;, &quot;m&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;m&quot;, &quot;m&quot;,...</span>
+<span class="co">#&gt; $ race    &lt;chr&gt; &quot;white&quot;, &quot;white&quot;, NA, &quot;white&quot;, &quot;white&quot;, &quot;white&quot;, &quot;whit...</span>
 FLVoters &lt;-<span class="st"> </span>FLVoters <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">na.omit</span>()</code></pre></div>
+<span class="st">  </span><span class="kw">na.omit</span>()
+<span class="kw">dim</span>(FLVoters)
+<span class="co">#&gt; [1] 9113    6</span></code></pre></div>
+<p><em>Note the difference between <code>glimpse()</code> and <code>dim()</code> - what is different in how they handle NA observations?</em></p>
 <p>Instead of using <a href="https://www.rdocumentation.org/packages/base/topics/prop.base">prop.base</a>, we calculate the probabilities with a data frame. Calculate the marginal probabilities of each race:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">margin_race &lt;-
 <span class="st">  </span>FLVoters <span class="op">%&gt;%</span>
@@ -379,7 +388,8 @@ margin_race
 <span class="co">#&gt; 5 other      310 0.0340 </span>
 <span class="co">#&gt; 6 white     6213 0.682</span></code></pre></div>
 <p>Calculate the marginal probabilities of each gender:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">margin_gender &lt;-<span class="st"> </span>FLVoters <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">margin_gender &lt;-<span class="st"> </span>
+<span class="st">  </span>FLVoters <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>(gender) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))
 margin_gender
@@ -404,8 +414,6 @@ margin_gender
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">joint_p &lt;-
 <span class="st">  </span>FLVoters <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>(gender, race) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="co"># needed because the data frame is still grouped by gender</span>
-<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))
 joint_p
 <span class="co">#&gt; # A tibble: 12 x 4</span>
@@ -420,12 +428,11 @@ joint_p
 <span class="co">#&gt; # ... with 6 more rows</span></code></pre></div>
 <p>We can convert the data frame to have gender as columns:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">joint_p <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>n) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">spread</span>(gender, prop)
 <span class="co">#&gt; # A tibble: 6 x 3</span>
 <span class="co">#&gt;   race           f       m</span>
-<span class="co">#&gt; * &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 asian    0.00911 0.0101 </span>
 <span class="co">#&gt; 2 black    0.0744  0.0566 </span>
 <span class="co">#&gt; 3 hispanic 0.0731  0.0577 </span>
@@ -466,7 +473,7 @@ joint_p
 joint3
 <span class="co">#&gt; # A tibble: 47 x 5</span>
 <span class="co">#&gt;   race  age_group gender     n     prop</span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;fctr&gt;    &lt;chr&gt;  &lt;int&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;fct&gt;     &lt;chr&gt;  &lt;int&gt;    &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 asian &lt;= 20     f          1 0.000110</span>
 <span class="co">#&gt; 2 asian &lt;= 20     m          2 0.000219</span>
 <span class="co">#&gt; 3 asian 20-40     f         24 0.00263 </span>
@@ -482,12 +489,12 @@ joint3
 margin_age
 <span class="co">#&gt; # A tibble: 4 x 3</span>
 <span class="co">#&gt;   age_group     n   prop</span>
-<span class="co">#&gt;   &lt;fctr&gt;    &lt;int&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt;   &lt;fct&gt;     &lt;int&gt;  &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 &lt;= 20       161 0.0177</span>
 <span class="co">#&gt; 2 20-40      2469 0.271 </span>
 <span class="co">#&gt; 3 40-60      3285 0.360 </span>
 <span class="co">#&gt; 4 &gt; 60       3198 0.351</span></code></pre></div>
-<p>Calculate the probabilities that each group is in a given age group, and show $P(  | )</p>
+<p>Calculate the probabilities that each group is in a given age group, and show <span class="math inline">\(P(\text{black} \land \text{female} \land \text{age} &gt; 60)\)</span>: (<em>Note: the symbol <span class="math inline">\(\land\)</span> is the logical symbol for ‘and’, implying the joint probability.</em>)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">left_join</span>(joint3,
           <span class="kw">select</span>(margin_age, age_group, <span class="dt">margin_age =</span> prop),
           <span class="dt">by =</span> <span class="st">&quot;age_group&quot;</span>) <span class="op">%&gt;%</span>
@@ -496,7 +503,7 @@ margin_age
 <span class="st">  </span><span class="kw">select</span>(race, age_group, gender, prob_age_group)
 <span class="co">#&gt; # A tibble: 1 x 4</span>
 <span class="co">#&gt;   race  age_group gender prob_age_group</span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;fctr&gt;    &lt;chr&gt;           &lt;dbl&gt;</span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;fct&gt;     &lt;chr&gt;           &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 black &gt; 60      f              0.0538</span></code></pre></div>
 <p>Two-way joint probability table for age group and gender</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">joint2 &lt;-<span class="st"> </span>FLVoters <span class="op">%&gt;%</span>
@@ -506,7 +513,7 @@ margin_age
 joint2
 <span class="co">#&gt; # A tibble: 8 x 4</span>
 <span class="co">#&gt;   age_group gender     n prob_age_gender</span>
-<span class="co">#&gt;   &lt;fctr&gt;    &lt;chr&gt;  &lt;int&gt;           &lt;dbl&gt;</span>
+<span class="co">#&gt;   &lt;fct&gt;     &lt;chr&gt;  &lt;int&gt;           &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 &lt;= 20     f         88         0.00966</span>
 <span class="co">#&gt; 2 &lt;= 20     m         73         0.00801</span>
 <span class="co">#&gt; 3 20-40     f       1304         0.143  </span>
@@ -515,22 +522,23 @@ joint2
 <span class="co">#&gt; 6 40-60     m       1555         0.171  </span>
 <span class="co">#&gt; # ... with 2 more rows</span></code></pre></div>
 <p>The joint probability <span class="math inline">\(P(\text{age} &gt; 60 \land \text{female})\)</span>,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(joint2, age_group <span class="op">==</span><span class="st"> &quot;&gt; 60&quot;</span>, gender <span class="op">==</span><span class="st"> &quot;f&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">joint2 <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(age_group <span class="op">==</span><span class="st"> &quot;&gt; 60&quot;</span>, gender <span class="op">==</span><span class="st"> &quot;f&quot;</span>)
 <span class="co">#&gt; # A tibble: 1 x 4</span>
 <span class="co">#&gt;   age_group gender     n prob_age_gender</span>
-<span class="co">#&gt;   &lt;fctr&gt;    &lt;chr&gt;  &lt;int&gt;           &lt;dbl&gt;</span>
+<span class="co">#&gt;   &lt;fct&gt;     &lt;chr&gt;  &lt;int&gt;           &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 &gt; 60      f       1761           0.193</span></code></pre></div>
-<p>The conditional probabilities <span class="math inline">\(P(race | gender, age)\)</span>,</p>
+<p>The conditional probabilities <span class="math inline">\(P(\text{race } | \text{ gender, age})\)</span>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">condprob_race &lt;-
 <span class="st">  </span><span class="kw">left_join</span>(joint3, <span class="kw">select</span>(joint2, <span class="op">-</span>n), <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;age_group&quot;</span>, <span class="st">&quot;gender&quot;</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prob_race =</span> prop <span class="op">/</span><span class="st"> </span>prob_age_gender) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">arrange</span>(age_group, gender) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(age_group, gender, race, prob_race)</code></pre></div>
-<p>Each row is the <span class="math inline">\(P(race | age_group, gender)\)</span>, so <span class="math inline">\(P(\text{black} | \text{female} \land \text{age} &gt; 60)\)</span>,</p>
+<p>Each row is the <span class="math inline">\(P(\text{race } | \text{ age group} \land \text{gender})\)</span>, so <span class="math inline">\(P(\text{black } | \text{ female} \land \text{age} &gt; 60)\)</span>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(condprob_race, gender <span class="op">==</span><span class="st"> &quot;f&quot;</span>, age_group <span class="op">==</span><span class="st"> &quot;&gt; 60&quot;</span>, race <span class="op">==</span><span class="st"> &quot;black&quot;</span>)
 <span class="co">#&gt; # A tibble: 1 x 4</span>
 <span class="co">#&gt;   age_group gender race  prob_race</span>
-<span class="co">#&gt;   &lt;fctr&gt;    &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt;   &lt;fct&gt;     &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 &gt; 60      f      black    0.0977</span></code></pre></div>
 </div>
 <div id="independence" class="section level3">
@@ -566,7 +574,6 @@ race_gender_indep
 <p><img src="probability_files/figure-html/unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>While the original code only calculates joint-independence value for values of age &gt; 60, and female, this calculates the joint probabilities for all combinations of the three variables, and facets by age and gender.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">joint_indep &lt;-
-<span class="st">  </span><span class="co"># all combinations of race, age, gender</span>
 <span class="st">  </span><span class="kw">crossing</span>(<span class="kw">select</span>(margin_race, race, <span class="dt">prob_race =</span> prop),
            <span class="kw">select</span>(margin_age, age_group, <span class="dt">prob_age =</span> prop),
            <span class="kw">select</span>(margin_gender, gender, <span class="dt">prob_gender =</span> prop)) <span class="op">%&gt;%</span>
@@ -590,13 +597,13 @@ race_gender_indep
             <span class="kw">select</span>(margin_gender, gender, <span class="dt">prob_gender =</span> prop),
             <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;gender&quot;</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cond_prob =</span> joint_prob <span class="op">/</span><span class="st"> </span>prob_gender)</code></pre></div>
-<p>Calculate the conditional distribution <span class="math inline">\(\Pr(\mathtt{race} | \mathtt{gender})\)</span>:</p>
+<p>Calculate the conditional distribution <span class="math inline">\(\Pr(\text{race} | \text{gender})\)</span>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">prob_race_gender &lt;-
 <span class="st">  </span><span class="kw">left_join</span>(<span class="kw">select</span>(joint_p, race, gender, <span class="dt">prob_race_gender =</span> prop),
             <span class="kw">select</span>(margin_gender, gender, <span class="dt">prob_gender =</span> prop),
             <span class="dt">by =</span> <span class="st">&quot;gender&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prob_race =</span> prob_race_gender <span class="op">/</span><span class="st"> </span>prob_gender)</code></pre></div>
-<p>Calculate the conditional distribution <span class="math inline">\(\Pr(\mathtt{age} | \mathtt{gender})\)</span>:</p>
+<p>Calculate the conditional distribution <span class="math inline">\(\Pr(\text{age} | \text{gender})\)</span>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">prob_age_gender &lt;-
 <span class="st">  </span><span class="kw">left_join</span>(<span class="kw">select</span>(joint2, age_group, gender, prob_age_gender),
             <span class="kw">select</span>(margin_gender, gender, <span class="dt">prob_gender =</span> prop),
@@ -623,7 +630,7 @@ indep_cond_gender &lt;-
        <span class="dt">title =</span> <span class="st">&quot;Marginal independence&quot;</span>)</code></pre></div>
 <p><img src="probability_files/figure-html/unnamed-chunk-23-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><strong>Monty-hall problem</strong></p>
-<p>The <code>for</code> loop approach in <em>QSS </em> is valid code, but here we provide a more functional approach to solving the problem. We will define a function to choose a door, repeat the function multiple times while storing the results in a data frame, and then summarize that data frame.</p>
+<p>The <code>for</code> loop approach in <em>QSS</em> is valid code, but here we provide a more functional approach to solving the problem. We will define a function to choose a door, repeat the function multiple times while storing the results in a data frame, and then summarize that data frame.</p>
 <p>First, create a function for a single iteration. This returns a single logical value:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">choose_door &lt;-<span class="st"> </span><span class="cf">function</span>(.iter) {
   <span class="co"># what&#39;s behind each door door:</span>
@@ -647,7 +654,7 @@ indep_cond_gender &lt;-
 <span class="co">#&gt; # A tibble: 1 x 1</span>
 <span class="co">#&gt;   win_pct</span>
 <span class="co">#&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1   0.670</span></code></pre></div>
+<span class="co">#&gt; 1   0.648</span></code></pre></div>
 </div>
 <div id="bayes-rule" class="section level3">
 <h3><span class="header-section-number">6.2.3</span> Bayes’ Rule</h3>
@@ -666,7 +673,7 @@ indep_cond_gender &lt;-
 <span class="co">#&gt; $ pctapi      &lt;dbl&gt; 0.40, 0.42, 0.37, 0.41, 0.35, 0.42, 0.40, 1.43, 0....</span>
 <span class="co">#&gt; $ pcthispanic &lt;dbl&gt; 1.56, 1.50, 1.60, 1.64, 1.44, 1.43, 1.58, 90.82, 9...</span>
 <span class="co">#&gt; $ pctothers   &lt;dbl&gt; 2.48, 2.73, 2.79, 2.69, 2.79, 1.94, 2.52, 1.09, 0....</span></code></pre></div>
-<p>For each surname, contains variables with the probability that it belongs to an individual of a given race (<code>pctwhite</code>, <code>pctblack</code>, …). We want to find the most-likely race for a given surname, by finding the race with the maximum proportion. Instead of dealing with multiple variables, it is easier to use <code>max</code> on a single variable, so we will rearrange the data to in order to use a grouped summarize, and then merge the new variable back to the original data sets.</p>
+<p>For each surname, <code>cnames</code> contains variables with the probability that it belongs to an individual of a given race (<code>pctwhite</code>, <code>pctblack</code>, …). We want to find the most-likely race for a given surname, by finding the race with the maximum proportion. Instead of dealing with multiple variables, it is easier to use <code>max</code> on a single variable, so we will rearrange the data to in order to use a grouped summarize, and then merge the new variable back to the original data sets. We will also remove the ‘pct’ prefix from each of the variable names.</p>
 <p>Calculate the most likely race for each name:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">most_likely_race &lt;-
 <span class="st">  </span>cnames <span class="op">%&gt;%</span>
@@ -684,26 +691,31 @@ indep_cond_gender &lt;-
 <span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>pct) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">race_pred =</span> <span class="kw">recode</span>(race_pred, <span class="dt">asian =</span> <span class="st">&quot;api&quot;</span>, <span class="dt">other =</span> <span class="st">&quot;others&quot;</span>))</code></pre></div>
 <p>Merge the data frame with the most likely race for each surname to the the original <code>cnames</code> data frame:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnames &lt;-<span class="st"> </span><span class="kw">left_join</span>(cnames, most_likely_race, <span class="dt">by =</span> <span class="st">&quot;surname&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnames &lt;-<span class="st"> </span>
+<span class="st">  </span>cnames <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">left_join</span>(most_likely_race, <span class="dt">by =</span> <span class="st">&quot;surname&quot;</span>)</code></pre></div>
 <p>Instead of using <code>match</code>, use <code>inner_join</code> to merge the surnames to <code>FLVoters</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLVoters &lt;-<span class="st"> </span><span class="kw">inner_join</span>(FLVoters, cnames, <span class="dt">by =</span> <span class="st">&quot;surname&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLVoters &lt;-<span class="st"> </span>
+<span class="st">  </span>FLVoters <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">inner_join</span>(cnames, <span class="dt">by =</span> <span class="st">&quot;surname&quot;</span>)
 <span class="kw">dim</span>(FLVoters)
 <span class="co">#&gt; [1] 8022   14</span></code></pre></div>
 <p><code>FLVoters</code> also includes a “native” category that the surname dataset does not.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLVoters &lt;-<span class="st"> </span>FLVoters <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLVoters &lt;-<span class="st"> </span>
+<span class="st">  </span>FLVoters <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">race2 =</span> <span class="kw">fct_recode</span>(race, <span class="dt">other =</span> <span class="st">&quot;native&quot;</span>))</code></pre></div>
 <p>Check that the levels of <code>race</code> and <code>race_pred</code> are the same:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLVoters <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>(race2)
 <span class="co">#&gt; # A tibble: 5 x 2</span>
 <span class="co">#&gt;   race2        n</span>
-<span class="co">#&gt;   &lt;fctr&gt;   &lt;int&gt;</span>
+<span class="co">#&gt;   &lt;fct&gt;    &lt;int&gt;</span>
 <span class="co">#&gt; 1 asian      140</span>
 <span class="co">#&gt; 2 black     1078</span>
 <span class="co">#&gt; 3 hispanic  1023</span>
 <span class="co">#&gt; 4 other      277</span>
-<span class="co">#&gt; 5 white     5504</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLVoters <span class="op">%&gt;%</span>
+<span class="co">#&gt; 5 white     5504</span>
+FLVoters <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>(race_pred)
 <span class="co">#&gt; # A tibble: 5 x 2</span>
 <span class="co">#&gt;   race_pred     n</span>
@@ -720,7 +732,7 @@ indep_cond_gender &lt;-
 <span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(tp))
 <span class="co">#&gt; # A tibble: 5 x 2</span>
 <span class="co">#&gt;   race2       tp</span>
-<span class="co">#&gt;   &lt;fctr&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt;   &lt;fct&gt;    &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 white    0.950</span>
 <span class="co">#&gt; 2 hispanic 0.847</span>
 <span class="co">#&gt; 3 black    0.160</span>
@@ -741,7 +753,7 @@ indep_cond_gender &lt;-
 <span class="co">#&gt; 5 white     0.197</span></code></pre></div>
 <p>Now add residence data using the <code>FLCensus</code> data included in the</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;FLCensus&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
-<p><span class="math inline">\(P(race)\)</span> in Florida:</p>
+<p><span class="math inline">\(P(\text{race})\)</span> in Florida:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">race.prop &lt;-
 <span class="st">  </span>FLCensus <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(total.pop, white, black, api, hispanic, others) <span class="op">%&gt;%</span>
@@ -764,7 +776,8 @@ race.prop
 <p>Load the <code>pres08</code> data from the <strong>qss</strong> package.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;pres08&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
 <p>Add a column <code>p</code> which contains Obama’s vote share of the major parties:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres08 &lt;-<span class="st"> </span>pres08 <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres08 &lt;-<span class="st"> </span>
+<span class="st">  </span>pres08 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p =</span> Obama <span class="op">/</span><span class="st"> </span>(Obama <span class="op">+</span><span class="st"> </span>McCain))</code></pre></div>
 <p>Write a function to simulate the elections. <code>df</code> is the data frame (<code>pres08</code>) with the state, EV, and <code>p</code> columns. <code>n_draws</code> is the size of the binomial distribution to draw from. <code>.id</code> is the simulation number.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim_election &lt;-<span class="st"> </span><span class="cf">function</span>(.id, df, <span class="dt">n_draws =</span> <span class="dv">1000</span>) {
@@ -785,12 +798,12 @@ sim_results &lt;-<span class="st"> </span><span class="kw">map_df</span>(<span c
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="dv">10</span>, <span class="dt">fill =</span> <span class="st">&quot;gray30&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> ELECTION_EV, <span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Electoral Votes&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;density&quot;</span>)</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-37-1.png" width="70%" style="display: block; margin: auto;" /> Simulation mean, variance, and standard deviations:</p>
+<p><img src="probability_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" /> Simulation mean, variance, and standard deviations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim_results <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(EV) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise_all</span>(<span class="kw">funs</span>(mean, var, sd))
 <span class="co">#&gt;   mean var   sd</span>
-<span class="co">#&gt; 1  352 270 16.4</span></code></pre></div>
+<span class="co">#&gt; 1  352 269 16.4</span></code></pre></div>
 <p>Theoretical probabilities from a binomial distribution:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># we cannot use n, because mutate will look for n() first.</span>
 n_draws &lt;-<span class="st"> </span><span class="dv">1000</span>
@@ -813,7 +826,7 @@ pres08 <span class="op">%&gt;%</span>
 <span class="co">#&gt; [1] 1</span>
 <span class="kw">punif</span>(<span class="dv">1</span>, <span class="dt">min =</span> <span class="op">-</span><span class="dv">2</span>, <span class="dt">max =</span> <span class="dv">2</span>)
 <span class="co">#&gt; [1] 0.75</span></code></pre></div>
-<p>Sample from a uniform distribution, and convert to a</p>
+<p>Sample from a uniform distribution, and convert to a probability:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sims &lt;-<span class="st"> </span><span class="dv">1000</span>
 p &lt;-<span class="st"> </span><span class="fl">0.5</span>
 
@@ -821,7 +834,7 @@ p &lt;-<span class="st"> </span><span class="fl">0.5</span>
 y &lt;-<span class="st"> </span><span class="kw">as.integer</span>(<span class="kw">runif</span>(sims, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1</span>) <span class="op">&lt;=</span><span class="st"> </span>p)
 <span class="co"># mean probability</span>
 <span class="kw">mean</span>(y)
-<span class="co">#&gt; [1] 0.461</span></code></pre></div>
+<span class="co">#&gt; [1] 0.495</span></code></pre></div>
 </div>
 <div id="binomial-distribution" class="section level3">
 <h3><span class="header-section-number">6.3.2</span> Binomial distribution</h3>
@@ -875,14 +888,14 @@ y &lt;-<span class="st"> </span><span class="kw">as.integer</span>(<span class="
 <span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">geom =</span> <span class="st">&quot;line&quot;</span>, <span class="dt">fun =</span> dnorm) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Standardized residuals&quot;</span>,
                      <span class="dt">breaks =</span> <span class="op">-</span><span class="dv">3</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>))</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(err, <span class="kw">aes</span>(<span class="dt">sample =</span> err_std)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> <span class="dv">0</span>, <span class="dt">slope =</span> <span class="dv">1</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_fixed</span>(<span class="dt">ratio =</span> <span class="dv">1</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Sample quantiles&quot;</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Theoretical quantiles&quot;</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>))</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Alternatively, you can use the <code>augment</code> function from <strong>broom</strong> which returns the residuals for each observation in the <code>.resid</code> column.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">augment</span>(fit1) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.resid_z =</span> .resid <span class="op">/</span><span class="st"> </span><span class="kw">sd</span>(.resid)) <span class="op">%&gt;%</span>
@@ -892,7 +905,7 @@ y &lt;-<span class="st"> </span><span class="kw">as.integer</span>(<span class="
 <span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">geom =</span> <span class="st">&quot;line&quot;</span>, <span class="dt">fun =</span> dnorm) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Standardized residuals&quot;</span>,
                      <span class="dt">breaks =</span> <span class="op">-</span><span class="dv">3</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>))</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Obama’s vote shares in 2008 and 2012.</p>
 <p>Standard deviation of errors:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">err_sd &lt;-<span class="st"> </span><span class="kw">sd</span>(<span class="kw">resid</span>(fit1))</code></pre></div>
@@ -922,7 +935,7 @@ CA_mean_<span class="dv">2012</span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Standardized vote share of Obama (2008)&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Pr. 2012 vote share greater than 2008&quot;</span>)</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="expectation-and-variance" class="section level3">
 <h3><span class="header-section-number">6.3.4</span> Expectation and Variance</h3>
@@ -975,11 +988,11 @@ Obama_EV_sims &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(<spa
                      <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">300</span>, <span class="dv">400</span>, <span class="dt">by =</span> <span class="dv">20</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Density&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Prediction of election outcomes&quot;</span>)</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-64-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-63-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Summarize the simulations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(Obama_EV_sims)
 <span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">#&gt;     278     340     353     352     364     401</span></code></pre></div>
+<span class="co">#&gt;     289     340     353     352     364     398</span></code></pre></div>
 <p>Compare theoretical and simulation means:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># simulation EV</span>
 <span class="kw">mean</span>(Obama_EV_sims)
@@ -992,10 +1005,10 @@ pres08 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Obama_EV =</span> <span class="kw">sum</span>(Obama_EV))
 <span class="co">#&gt;   Obama_EV</span>
 <span class="co">#&gt; 1      352</span></code></pre></div>
-<p>Compare simulation and simulation variances:</p>
+<p>Compare theoretical and simulation variances:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># simulation variance</span>
 <span class="kw">var</span>(Obama_EV_sims)
-<span class="co">#&gt; [1] 272</span>
+<span class="co">#&gt; [1] 269</span>
 <span class="co"># theoretical variance</span>
 Obama_EV_var &lt;-<span class="st"> </span>pres08 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pb =</span> <span class="kw">pbinom</span>(n <span class="op">/</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">size =</span> n, <span class="dt">prob =</span> p, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>),
@@ -1007,7 +1020,7 @@ Obama_EV_var
 <p>and standard deviations</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># sim</span>
 <span class="kw">sd</span>(Obama_EV_sims)
-<span class="co">#&gt; [1] 16.5</span>
+<span class="co">#&gt; [1] 16.4</span>
 <span class="co"># theoretical</span>
 <span class="kw">sqrt</span>(Obama_EV_var)
 <span class="co">#&gt; [1] 16.4</span></code></pre></div>
@@ -1047,7 +1060,7 @@ lln_binom &lt;-<span class="st"> </span><span class="kw">tibble</span>(
 </div>
 <div id="central-limit-theorem" class="section level3">
 <h3><span class="header-section-number">6.4.2</span> Central Limit Theorem</h3>
-<p>The population mean of the binomial distribution is <span class="math inline">\(\mu = p n\)</span> and the variance is <span class="math inline">\(\mu = p (1 - p) n\)</span>.</p>
+<p>The population mean of the binomial distribution is <span class="math inline">\(\mu = p n\)</span> and the variance is <span class="math inline">\(\sigma^2 = p (1 - p) n\)</span>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sims &lt;-<span class="st"> </span><span class="dv">1000</span>
 n_samp &lt;-<span class="st"> </span><span class="dv">1000</span></code></pre></div>
 <p>Write functions to calculate the mean of a binomial distribution with size, <code>size</code>, and probability, <code>p</code>,</p>
@@ -1142,9 +1155,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

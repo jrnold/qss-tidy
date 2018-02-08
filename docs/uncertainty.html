@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>QSS Tidyverse Code</title>
   <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
 
   <meta property="og:title" content="QSS Tidyverse Code" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-01-21">
+<meta name="date" content="2018-02-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -653,7 +653,7 @@ star_estimates &lt;-
 star_estimates
 <span class="co">#&gt; # A tibble: 3 x 6</span>
 <span class="co">#&gt;   classtype                  n   est    se   lwr   upr</span>
-<span class="co">#&gt;   &lt;fctr&gt;                 &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt;   &lt;fct&gt;                  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 small class              726   723  1.91   720   727</span>
 <span class="co">#&gt; 2 regular class            836   720  1.84   716   723</span>
 <span class="co">#&gt; 3 regular class with aid   791   721  1.86   717   724</span></code></pre></div>
@@ -762,13 +762,13 @@ approx &lt;-
           <span class="dt">by =</span> <span class="st">&quot;correct&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diff =</span> prob_sim <span class="op">-</span><span class="st"> </span>prob_exact)
 <span class="co">#&gt; # A tibble: 5 x 4</span>
-<span class="co">#&gt;   correct prob_sim prob_exact      diff</span>
-<span class="co">#&gt;     &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1    0      0.0200     0.0143  0.00571 </span>
-<span class="co">#&gt; 2    2.00   0.229      0.229   0.000429</span>
-<span class="co">#&gt; 3    4.00   0.492      0.514  -0.0223  </span>
-<span class="co">#&gt; 4    6.00   0.246      0.229   0.0174  </span>
-<span class="co">#&gt; 5    8.00   0.0130     0.0143 -0.00129</span></code></pre></div>
+<span class="co">#&gt;   correct prob_sim prob_exact     diff</span>
+<span class="co">#&gt;     &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1    0      0.0110     0.0143 -0.00329</span>
+<span class="co">#&gt; 2    2.00   0.234      0.229   0.00543</span>
+<span class="co">#&gt; 3    4.00   0.486      0.514  -0.0283 </span>
+<span class="co">#&gt; 4    6.00   0.253      0.229   0.0244 </span>
+<span class="co">#&gt; 5    8.00   0.0160     0.0143  0.00171</span></code></pre></div>
 </div>
 <div id="the-general-framework" class="section level3">
 <h3><span class="header-section-number">7.2.2</span> The General Framework</h3>
@@ -802,7 +802,7 @@ y
 <span class="kw">select</span>(<span class="kw">spread</span>(x, Truth, Number), <span class="op">-</span>Guess)
 <span class="co">#&gt; # A tibble: 2 x 2</span>
 <span class="co">#&gt;    Milk   Tea</span>
-<span class="co">#&gt; * &lt;int&gt; &lt;int&gt;</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;int&gt;</span>
 <span class="co">#&gt; 1     4     0</span>
 <span class="co">#&gt; 2     0     4</span>
 <span class="co"># Use spread to make it a 2 x 2 table</span>
@@ -961,7 +961,7 @@ x &lt;-<span class="st"> </span>resume <span class="op">%&gt;%</span>
 x
 <span class="co">#&gt; # A tibble: 2 x 3</span>
 <span class="co">#&gt;   race    `0`   `1`</span>
-<span class="co">#&gt; * &lt;chr&gt; &lt;int&gt; &lt;int&gt;</span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt;</span>
 <span class="co">#&gt; 1 black  2278   157</span>
 <span class="co">#&gt; 2 white  2200   235</span>
 <span class="kw">prop.test</span>(<span class="kw">as.matrix</span>(<span class="kw">select</span>(x, <span class="op">-</span>race)), <span class="dt">alternative =</span> <span class="st">&quot;greater&quot;</span>)
@@ -1330,9 +1330,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

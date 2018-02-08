@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>QSS Tidyverse Code</title>
   <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
 
   <meta property="og:title" content="QSS Tidyverse Code" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-01-21">
+<meta name="date" content="2018-02-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -313,7 +313,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="st">  </span><span class="kw">count</span>()
 race_call_tab
 <span class="co">#&gt; # A tibble: 4 x 3</span>
-<span class="co">#&gt; # Groups: race, call [4]</span>
+<span class="co">#&gt; # Groups:   race, call [4]</span>
 <span class="co">#&gt;   race   call     n</span>
 <span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt;</span>
 <span class="co">#&gt; 1 black     0  2278</span>
@@ -329,7 +329,7 @@ race_call_tab
 <span class="st">  </span><span class="kw">select</span>(race, call_rate)
 race_call_rate
 <span class="co">#&gt; # A tibble: 2 x 2</span>
-<span class="co">#&gt; # Groups: race [2]</span>
+<span class="co">#&gt; # Groups:   race [2]</span>
 <span class="co">#&gt;   race  call_rate</span>
 <span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 black    0.0645</span>
@@ -382,7 +382,7 @@ race_call_rate
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">call =</span> <span class="kw">mean</span>(call))
 <span class="kw">head</span>(resume_race_sex)
 <span class="co">#&gt; # A tibble: 4 x 3</span>
-<span class="co">#&gt; # Groups: race [2]</span>
+<span class="co">#&gt; # Groups:   race [2]</span>
 <span class="co">#&gt;   race  sex      call</span>
 <span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 black female 0.0663</span>
@@ -398,7 +398,7 @@ resume_sex &lt;-
 resume_sex
 <span class="co">#&gt; # A tibble: 2 x 3</span>
 <span class="co">#&gt;   sex     black  white</span>
-<span class="co">#&gt; * &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt;   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 female 0.0663 0.0989</span>
 <span class="co">#&gt; 2 male   0.0583 0.0887</span></code></pre></div>
 <p>Now we can calculate the race wage differences by sex as before,</p>
@@ -447,7 +447,7 @@ resume_sex
 <span class="st">  </span><span class="kw">group_by</span>(BlackFemale, race, sex) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>()
 <span class="co">#&gt; # A tibble: 4 x 4</span>
-<span class="co">#&gt; # Groups: BlackFemale, race, sex [4]</span>
+<span class="co">#&gt; # Groups:   BlackFemale, race, sex [4]</span>
 <span class="co">#&gt;   BlackFemale race  sex        n</span>
 <span class="co">#&gt;         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;int&gt;</span>
 <span class="co">#&gt; 1        0    black male     549</span>
@@ -534,7 +534,7 @@ resume_sex
 <span class="st">  </span><span class="kw">group_by</span>(race, sex) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">call =</span> <span class="kw">mean</span>(call))
 <span class="co">#&gt; # A tibble: 4 x 3</span>
-<span class="co">#&gt; # Groups: race [?]</span>
+<span class="co">#&gt; # Groups:   race [?]</span>
 <span class="co">#&gt;   race  sex      call</span>
 <span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 black female 0.0663</span>
@@ -672,13 +672,13 @@ turnout_by_message
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>(location)
 <span class="co">#&gt; # A tibble: 5 x 2</span>
-<span class="co">#&gt;    location     n</span>
-<span class="co">#&gt;       &lt;chr&gt; &lt;int&gt;</span>
+<span class="co">#&gt;   location      n</span>
+<span class="co">#&gt;   &lt;chr&gt;     &lt;int&gt;</span>
 <span class="co">#&gt; 1 centralNJ    45</span>
-<span class="co">#&gt; 2   northNJ   146</span>
-<span class="co">#&gt; 3        PA    67</span>
-<span class="co">#&gt; 4   shoreNJ    33</span>
-<span class="co">#&gt; 5   southNJ    67</span></code></pre></div>
+<span class="co">#&gt; 2 northNJ     146</span>
+<span class="co">#&gt; 3 PA           67</span>
+<span class="co">#&gt; 4 shoreNJ      33</span>
+<span class="co">#&gt; 5 southNJ      67</span></code></pre></div>
 <p>We can extract the state from the final two characters of the location variable using the<a href="https://cran.r-project.org/package=stringr">stringr</a> function <a href="https://www.rdocumentation.org/packages/stringr/topics/str_sub">str_sub</a>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage &lt;-
 <span class="st">  </span><span class="kw">mutate</span>(minwage, <span class="dt">state =</span> <span class="kw">str_sub</span>(location, <span class="op">-</span>2L))</code></pre></div>
@@ -693,8 +693,8 @@ turnout_by_message
 <span class="co">#&gt; # A tibble: 2 x 3</span>
 <span class="co">#&gt;   state prop_after prop_Before</span>
 <span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;       &lt;dbl&gt;</span>
-<span class="co">#&gt; 1    NJ    0.00344       0.911</span>
-<span class="co">#&gt; 2    PA    0.95522       0.940</span></code></pre></div>
+<span class="co">#&gt; 1 NJ       0.00344       0.911</span>
+<span class="co">#&gt; 2 PA       0.955         0.940</span></code></pre></div>
 <p>Create a variable for the proportion of full-time employees in NJ and PA after the increase:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage &lt;-<span class="st"> </span>
 <span class="st">  </span>minwage <span class="op">%&gt;%</span>
@@ -742,7 +742,7 @@ full_prop_by_state
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">fullPropAfter =</span> <span class="kw">mean</span>(fullPropAfter))
 full_prop_by_state_chain
 <span class="co">#&gt; # A tibble: 8 x 3</span>
-<span class="co">#&gt; # Groups: state [?]</span>
+<span class="co">#&gt; # Groups:   state [?]</span>
 <span class="co">#&gt;   state chain      fullPropAfter</span>
 <span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 NJ    burgerking         0.358</span>
@@ -909,9 +909,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

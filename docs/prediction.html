@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>QSS Tidyverse Code</title>
   <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
 
   <meta property="og:title" content="QSS Tidyverse Code" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-01-21">
+<meta name="date" content="2018-02-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -295,10 +295,12 @@ results &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="o
 <span class="co">#&gt; 3 times 2 is equal to 6 </span>
 <span class="co">#&gt; 6 times 2 is equal to 12</span></code></pre></div>
 <p>Note that the above code uses the for loop for pedagogical purposes only, this could have simply been written</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span>values <span class="op">*</span><span class="st"> </span><span class="dv">2</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span>values <span class="op">*</span><span class="st"> </span><span class="dv">2</span>
+results
+<span class="co">#&gt; [1]  4  6 12</span></code></pre></div>
 <p>In general, avoid using for loops when there is a <em>vectorized</em> function.</p>
 <p>But sticking with the for loop, there are several things that could be improved.</p>
-<p>Avoid using the idiom <code>1:n</code> in for loops. To see why, look what happens when values is empty:</p>
+<p>Avoid using the idiom <code>1:n</code> in for loops. To see why, look what happens when values are empty:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>()
 n &lt;-<span class="st"> </span><span class="kw">length</span>(values)
 results &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, n)
@@ -337,7 +339,7 @@ results
 <span class="kw">class</span>(results)
 <span class="co">#&gt; [1] &quot;numeric&quot;</span></code></pre></div>
 <p>Often loops can be rewritten to use a map function. Read the <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/data-visualisation.html">Iteration</a> before proceeding.</p>
-<p>For a functional, we first write a function that will be applied to each element of the vector. When converting from a <code>for</code> loop to a function, this is usually simply the body of the <code>for</code> loop, though you may need to add arguments for any variables defined outside the body of the for loop. In this case,</p>
+<p>To do so, we first write a function that will be applied to each element of the vector. When converting from a <code>for</code> loop to a function, this is usually simply the body of the <code>for</code> loop, though you may need to add arguments for any variables defined outside the body of the for loop. In this case,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mult_by_two &lt;-<span class="st"> </span><span class="cf">function</span>(x) {
   x <span class="op">*</span><span class="st"> </span><span class="dv">2</span>
 }</code></pre></div>
@@ -348,7 +350,7 @@ results
 <span class="co">#&gt; [1] 5</span>
 <span class="kw">mult_by_two</span>(<span class="op">-</span><span class="dv">3</span>)
 <span class="co">#&gt; [1] -6</span></code></pre></div>
-<p>At this point, we could replace the body of the <code>for</code> loop with this function</p>
+<p>At this point, we could replace the body of the <code>for</code> loop with this function:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>)
 n &lt;-<span class="st"> </span><span class="kw">length</span>(values)
 results &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, n)
@@ -461,7 +463,7 @@ results
 pres08 &lt;-
 <span class="st">  </span>pres08 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">margin =</span> Obama <span class="op">-</span><span class="st"> </span>McCain)</code></pre></div>
 <p>To work with dates, the R package <a href="https://cran.r-project.org/package=lubridate">lubridate</a> makes wrangling them much easier. See the <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/dates-and-times.html">Dates and Times</a>.</p>
-<p>The function <a href="https://www.rdocumentation.org/packages/lubridate/topics/ymd">ymd</a> will convert character strings like <code>year-month-day</code> and more into dates, as long as the order is (year, month, day). See <a href="https://www.rdocumentation.org/packages/lubridate/topics/dmy">dmy</a>, <a href="https://www.rdocumentation.org/packages/lubridate/topics/ymd">ymd</a>, and others for other ways to convert strings to dates.</p>
+<p>The function <a href="https://www.rdocumentation.org/packages/lubridate/topics/ymd">ymd</a> will convert character strings like <code>year-month-day</code> and more into dates, as long as the order is (year, month, day). See <a href="https://www.rdocumentation.org/packages/lubridate/topics/dmy">dmy</a>, <a href="https://www.rdocumentation.org/packages/lubridate/topics/mdy">mdy</a>, and others for other ways to convert strings to dates.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="st">&quot;2008-11-04&quot;</span>)
 y &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="st">&quot;2008/9/1&quot;</span>)
 x <span class="op">-</span><span class="st"> </span>y
@@ -499,16 +501,17 @@ x <span class="op">-</span><span class="st"> </span>y
 <span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span>)
 last_polls
 <span class="co">#&gt; # A tibble: 51 x 9</span>
-<span class="co">#&gt; # Groups: state [51]</span>
-<span class="co">#&gt;   state Pollster        Obama McCain middate    margin `ELECT… elec… error</span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;           &lt;int&gt;  &lt;int&gt; &lt;date&gt;      &lt;int&gt; &lt;time&gt;  &lt;int&gt; &lt;int&gt;</span>
-<span class="co">#&gt; 1 AK    Research 2000-3    39     58 2008-10-29    -19 6         -21   - 2</span>
-<span class="co">#&gt; 2 AL    SurveyUSA-2        36     61 2008-10-27    -25 8         -21     4</span>
-<span class="co">#&gt; 3 AR    ARG-4              44     51 2008-10-29    - 7 6         -20   -13</span>
-<span class="co">#&gt; 4 AZ    ARG-3              46     50 2008-10-29    - 4 6         - 9   - 5</span>
-<span class="co">#&gt; 5 CA    SurveyUSA-3        60     36 2008-10-30     24 5          24     0</span>
-<span class="co">#&gt; 6 CO    ARG-3              52     45 2008-10-29      7 6           9     2</span>
-<span class="co">#&gt; # ... with 45 more rows</span></code></pre></div>
+<span class="co">#&gt; # Groups:   state [51]</span>
+<span class="co">#&gt;   state Pollster      Obama McCain middate    margin `ELECTION_DAY - midd…</span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;         &lt;int&gt;  &lt;int&gt; &lt;date&gt;      &lt;int&gt; &lt;time&gt;               </span>
+<span class="co">#&gt; 1 AK    Research 200…    39     58 2008-10-29    -19 6                    </span>
+<span class="co">#&gt; 2 AL    SurveyUSA-2      36     61 2008-10-27    -25 8                    </span>
+<span class="co">#&gt; 3 AR    ARG-4            44     51 2008-10-29    - 7 6                    </span>
+<span class="co">#&gt; 4 AZ    ARG-3            46     50 2008-10-29    - 4 6                    </span>
+<span class="co">#&gt; 5 CA    SurveyUSA-3      60     36 2008-10-30     24 5                    </span>
+<span class="co">#&gt; 6 CO    ARG-3            52     45 2008-10-29      7 6                    </span>
+<span class="co">#&gt; # ... with 45 more rows, and 2 more variables: elec_margin &lt;int&gt;,</span>
+<span class="co">#&gt; #   error &lt;int&gt;</span></code></pre></div>
 <p><strong>Challenge:</strong> Instead of using the last poll, use the average of polls in the last week? Last month? How do the margins on the polls change over the election period?</p>
 <p>To simplify things for later, let’s define a function <code>rmse</code> which calculates the root mean squared error, as defined in the book. See the <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/functions.html">Functions</a> for more on writing functions.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rmse &lt;-<span class="st"> </span><span class="cf">function</span>(actual, pred) {
@@ -543,7 +546,7 @@ last_polls
 <span class="st">  </span><span class="kw">coord_fixed</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Poll Results&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Actual Election Results&quot;</span>)</code></pre></div>
 <p><img src="prediction_files/figure-html/unnamed-chunk-33-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p>We can create a confusion matrix as follows. Create a new column <code>classification</code> which shows whether how the poll’s classification was related to the actual election outcome (“true positive”, “false positive”, “false negative”, “false positive”). If there were two outcomes, then we would use the function. But with more than two outcomes, it is easier to use the <a href="https://cran.r-project.org/package=dplyr">dplyr</a> function .</p>
+<p>We can create a confusion matrix as follows. Create a new column <code>classification</code> which shows how the poll’s classification was related to the actual election outcome (“true positive”, “false positive”, “true negative”, “false negative”). If there were two outcomes, then we would use the function. But with more than two outcomes, it is easier to use the <a href="https://cran.r-project.org/package=dplyr">dplyr</a> function .</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">last_polls &lt;-
 <span class="st">  </span>last_polls <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
@@ -554,13 +557,13 @@ last_polls
              (.<span class="op">$</span>margin <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>.<span class="op">$</span>elec_margin <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">~</span><span class="st"> &quot;true negative&quot;</span>,
              (.<span class="op">$</span>margin <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>.<span class="op">$</span>elec_margin <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">~</span><span class="st"> &quot;false negative&quot;</span>
            ))</code></pre></div>
-<p>You need to use <code>.</code> to refer to the data frame when using <code>case_when</code> within <code>mutate()</code>. Also, we needed to first use in order to remove the grouping variable so <code>mutate</code> will work.</p>
+<p>You need to use <code>.</code> to refer to the data frame when using <code>case_when()</code> within <code>mutate()</code>. Also, we needed to first use in order to remove the grouping variable so <code>mutate()</code> will work.</p>
 <p>Now simply count the number of polls in each category of <code>classification</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">last_polls <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(classification) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>()
 <span class="co">#&gt; # A tibble: 4 x 2</span>
-<span class="co">#&gt; # Groups: classification [4]</span>
+<span class="co">#&gt; # Groups:   classification [4]</span>
 <span class="co">#&gt;   classification     n</span>
 <span class="co">#&gt;   &lt;chr&gt;          &lt;int&gt;</span>
 <span class="co">#&gt; 1 false negative     2</span>
@@ -578,7 +581,7 @@ last_polls
 <span class="co">#&gt; 1 IN        -5           1 false negative</span>
 <span class="co">#&gt; 2 NC        -1           1 false negative</span>
 <span class="co">#&gt; 3 MO         1          -1 false positive</span></code></pre></div>
-<p>What was the difference in the poll prediction of electoral votes and actual electoral votes. We hadn’t included the variable <code>EV</code> when we first merged, but that’s no problem, we’ll just merge again in order to grab that variable:</p>
+<p>What was the difference in the poll prediction of electoral votes and actual electoral votes? We hadn’t included the variable <code>EV</code> when we first merged, but that’s no problem, we’ll just merge again in order to grab that variable:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">last_polls <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">left_join</span>(<span class="kw">select</span>(pres08, state, EV), <span class="dt">by =</span> <span class="st">&quot;state&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">EV_pred =</span> <span class="kw">sum</span>( (margin <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">*</span><span class="st"> </span>EV),
@@ -611,7 +614,7 @@ pop_vote_avg &lt;-<span class="st"> </span><span class="kw">vector</span>(<span 
 }
 
 pop_vote_avg &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(pop_vote_avg)</code></pre></div>
-<p>Write a function which takes a <code>date</code>, and calculates the <code>days</code> (the default is 7 days) moving average using the dataset <code>.data</code>:</p>
+<p>Write a function which takes a <code>date</code>, and calculates the <code>days</code> (set the default to 7 days) moving average using the dataset <code>.data</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">poll_ma &lt;-<span class="st"> </span><span class="cf">function</span>(date, .data, <span class="dt">days =</span> <span class="dv">7</span>) {
   <span class="kw">filter</span>(.data,
         <span class="kw">as.integer</span>(middate <span class="op">-</span><span class="st"> </span>date) <span class="op">&lt;=</span><span class="st"> </span><span class="dv">0</span>,
@@ -651,7 +654,7 @@ pop_vote_avg &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(pop
 <span class="st">  </span><span class="kw">scale_colour_manual</span>(<span class="st">&quot;Candidate&quot;</span>,
                       <span class="dt">values =</span> <span class="kw">c</span>(<span class="dt">Obama =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">McCain =</span> <span class="st">&quot;red&quot;</span>))</code></pre></div>
 <p><img src="prediction_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p><strong>Challenge</strong> read <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/iteration.html#the-map-functions">Iteration</a> and use the function <a href="https://www.rdocumentation.org/packages/purrr/topics/map_df">map_df</a> instead of a for loop.</p>
+<p><strong>Challenge</strong> read <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/iteration.html#the-map-functions">Iteration</a> and use the function <a href="https://www.rdocumentation.org/packages/purrr/topics/map_df">map_df</a> to create the object <code>poll_vote_avg</code> as above instead of a for loop.</p>
 <p>The 7-day average is similar to the simple method used by <a href="http://www.realclearpolitics.com/epolls/2016/president/us/general_election_trump_vs_clinton-5491.html">Real Clear Politics</a>. The RCP average is simply the average of all polls in their data for the last seven days. Sites like <a href="https://fivethirtyeight.com">538</a> and the <a href="http://elections.huffingtonpost.com/pollster">Huffpost Pollster</a>, on the other hand, also use what amounts to averaging polls, but using more sophisticated statistical methods to assign different weights to different polls.</p>
 <p><strong>Challenge</strong> Why do we need to use different polls for the popular vote data? Why not simply average all the state polls? What would you have to do? Would the overall popular vote be useful in predicting state-level polling, or vice-versa? How would you use them?</p>
 </div>
@@ -800,7 +803,7 @@ fit
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Obama2008_z =</span> <span class="kw">as.numeric</span>(<span class="kw">scale</span>(Obama_<span class="dv">08</span>)),
          <span class="dt">Obama2012_z =</span> <span class="kw">as.numeric</span>(<span class="kw">scale</span>(Obama_<span class="dv">12</span>)))</code></pre></div>
 <p>Likewise, <a href="https://www.rdocumentation.org/packages/dplyr/topics/bind_cols">bind_cols</a> concatenates data frames by row.</p>
-<p>We need to use the <code>as.numeric</code> function because <code>scale()</code> always returns a matrix. This will not produce an error in the code chunk above, since the columns of a data frame can be matrices, but will produce errors in some of the following code if it were omitted.</p>
+<p>We need to use the <code>as.numeric</code> function because <code>scale()</code> always returns a matrix. Omitting <code>as.numeric()</code> would not produce an error in the code chunk above, since the columns of a data frame can be matrices, but it would produce errors in some of the following code if it were omitted.</p>
 <p>Scatter plot of states with vote shares in 2008 and 2012</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(pres, <span class="kw">aes</span>(<span class="dt">x =</span> Obama2008_z, <span class="dt">y =</span> Obama2012_z, <span class="dt">label =</span> state)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
@@ -837,7 +840,7 @@ fit2
 <span class="co">#&gt; Coefficients:</span>
 <span class="co">#&gt; (Intercept)      Perot96  </span>
 <span class="co">#&gt;      1.3458       0.0359</span></code></pre></div>
-<p>Calculate <span class="math inline">\(R ^ 2\)</span> from the results of <code>summary</code>,</p>
+<p>Extract <span class="math inline">\(R ^ 2\)</span> from the results of <code>summary</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(fit2)<span class="op">$</span>r.squared
 <span class="co">#&gt; [1] 0.513</span></code></pre></div>
 <p>Alternatively, can get the R squared value from the data frame <a href="https://www.rdocumentation.org/packages/broom/topics/glance.lm">glance</a> returns:</p>
@@ -948,7 +951,7 @@ fit3
 <h3><span class="header-section-number">4.3.1</span> Randomized Experiments</h3>
 <p>Load data</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;women&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
-<p>proportion of female politicians in reserved GP vs. unreserved GP</p>
+<p>Proportion of female politicians in reserved GP vs. unreserved GP</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">women <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(reserved) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_female =</span> <span class="kw">mean</span>(female))
@@ -957,7 +960,7 @@ fit3
 <span class="co">#&gt;      &lt;int&gt;       &lt;dbl&gt;</span>
 <span class="co">#&gt; 1        0      0.0748</span>
 <span class="co">#&gt; 2        1      1.00</span></code></pre></div>
-<p>The diff in diff estimator</p>
+<p>The diff in means estimator:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># drinking water facilities</span>
 
 <span class="co"># irrigation facilities</span>
@@ -1143,7 +1146,7 @@ fit.control
 <span class="st">  </span><span class="kw">select</span>(primary2004, Neighbors, Control, ate_Neighbors)
 ate
 <span class="co">#&gt; # A tibble: 2 x 4</span>
-<span class="co">#&gt; # Groups: primary2004 [2]</span>
+<span class="co">#&gt; # Groups:   primary2004 [2]</span>
 <span class="co">#&gt;   primary2004 Neighbors Control ate_Neighbors</span>
 <span class="co">#&gt;         &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;         &lt;dbl&gt;</span>
 <span class="co">#&gt; 1           0     0.306   0.237        0.0693</span>
@@ -1312,9 +1315,9 @@ y2_tory &lt;-
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tory_fit3 &lt;-<span class="st"> </span><span class="kw">lm</span>(margin.pre <span class="op">~</span><span class="st"> </span>margin, <span class="dt">data =</span> <span class="kw">filter</span>(MPs_tory, margin <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>))
 tory_fit4 &lt;-<span class="st"> </span><span class="kw">lm</span>(margin.pre <span class="op">~</span><span class="st"> </span>margin, <span class="dt">data =</span> <span class="kw">filter</span>(MPs_tory, margin <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>))
 
-(<span class="kw">filter</span>(<span class="kw">tidy</span>(tory_fit3), term <span class="op">==</span><span class="st"> &quot;(Intercept)&quot;</span>)[[<span class="st">&quot;estimate&quot;</span>]] <span class="op">-</span>
-<span class="st"> </span><span class="kw">filter</span>(<span class="kw">tidy</span>(tory_fit4), term <span class="op">==</span><span class="st"> &quot;(Intercept)&quot;</span>)[[<span class="st">&quot;estimate&quot;</span>]])
-<span class="co">#&gt; [1] 0.0173</span></code></pre></div>
+(<span class="kw">filter</span>(<span class="kw">tidy</span>(tory_fit4), term <span class="op">==</span><span class="st"> &quot;(Intercept)&quot;</span>)[[<span class="st">&quot;estimate&quot;</span>]] <span class="op">-</span>
+<span class="st"> </span><span class="kw">filter</span>(<span class="kw">tidy</span>(tory_fit3), term <span class="op">==</span><span class="st"> &quot;(Intercept)&quot;</span>)[[<span class="st">&quot;estimate&quot;</span>]])
+<span class="co">#&gt; [1] -0.0173</span></code></pre></div>
 
 </div>
 </div>
@@ -1361,9 +1364,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

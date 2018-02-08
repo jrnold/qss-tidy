@@ -105,7 +105,7 @@ sims <- 1000
 k <- 23
 map_lgl(seq_len(sims), ~ sim_bdays(k)) %>%
   mean()
-#> [1] 0.475
+#> [1] 0.489
 ```
 
 An alternative way of running this is using the [rerun](https://www.rdocumentation.org/packages/purrr/topics/rerun) and using `flatten` to turn the output to a numeric vector:
@@ -242,7 +242,7 @@ joint_p %>%
   spread(gender, prop)
 #> # A tibble: 6 x 3
 #>   race           f       m
-#> * <chr>      <dbl>   <dbl>
+#>   <chr>      <dbl>   <dbl>
 #> 1 asian    0.00911 0.0101 
 #> 2 black    0.0744  0.0566 
 #> 3 hispanic 0.0731  0.0577 
@@ -299,7 +299,7 @@ joint3 <-
 joint3
 #> # A tibble: 47 x 5
 #>   race  age_group gender     n     prop
-#>   <chr> <fctr>    <chr>  <int>    <dbl>
+#>   <chr> <fct>     <chr>  <int>    <dbl>
 #> 1 asian <= 20     f          1 0.000110
 #> 2 asian <= 20     m          2 0.000219
 #> 3 asian 20-40     f         24 0.00263 
@@ -319,7 +319,7 @@ margin_age <-
 margin_age
 #> # A tibble: 4 x 3
 #>   age_group     n   prop
-#>   <fctr>    <int>  <dbl>
+#>   <fct>     <int>  <dbl>
 #> 1 <= 20       161 0.0177
 #> 2 20-40      2469 0.271 
 #> 3 40-60      3285 0.360 
@@ -339,7 +339,7 @@ left_join(joint3,
   select(race, age_group, gender, prob_age_group)
 #> # A tibble: 1 x 4
 #>   race  age_group gender prob_age_group
-#>   <chr> <fctr>    <chr>           <dbl>
+#>   <chr> <fct>     <chr>           <dbl>
 #> 1 black > 60      f              0.0538
 ```
 
@@ -353,7 +353,7 @@ joint2 <- FLVoters %>%
 joint2
 #> # A tibble: 8 x 4
 #>   age_group gender     n prob_age_gender
-#>   <fctr>    <chr>  <int>           <dbl>
+#>   <fct>     <chr>  <int>           <dbl>
 #> 1 <= 20     f         88         0.00966
 #> 2 <= 20     m         73         0.00801
 #> 3 20-40     f       1304         0.143  
@@ -370,7 +370,7 @@ joint2 %>%
   filter(age_group == "> 60", gender == "f")
 #> # A tibble: 1 x 4
 #>   age_group gender     n prob_age_gender
-#>   <fctr>    <chr>  <int>           <dbl>
+#>   <fct>     <chr>  <int>           <dbl>
 #> 1 > 60      f       1761           0.193
 ```
 
@@ -389,7 +389,7 @@ Each row is the $P(\text{race } | \text{ age group} \land \text{gender})$, so $P
 filter(condprob_race, gender == "f", age_group == "> 60", race == "black")
 #> # A tibble: 1 x 4
 #>   age_group gender race  prob_race
-#>   <fctr>    <chr>  <chr>     <dbl>
+#>   <fct>     <chr>  <chr>     <dbl>
 #> 1 > 60      f      black    0.0977
 ```
 
@@ -555,7 +555,7 @@ map_df(seq_len(sims), choose_door) %>%
 #> # A tibble: 1 x 1
 #>   win_pct
 #>     <dbl>
-#> 1   0.670
+#> 1   0.648
 ```
 
 
@@ -639,7 +639,7 @@ FLVoters %>%
   count(race2)
 #> # A tibble: 5 x 2
 #>   race2        n
-#>   <fctr>   <int>
+#>   <fct>    <int>
 #> 1 asian      140
 #> 2 black     1078
 #> 3 hispanic  1023
@@ -666,7 +666,7 @@ FLVoters %>%
   arrange(desc(tp))
 #> # A tibble: 5 x 2
 #>   race2       tp
-#>   <fctr>   <dbl>
+#>   <fct>    <dbl>
 #> 1 white    0.950
 #> 2 hispanic 0.847
 #> 3 black    0.160
@@ -774,7 +774,7 @@ sim_results %>%
   select(EV) %>%
   summarise_all(funs(mean, var, sd))
 #>   mean var   sd
-#> 1  352 271 16.5
+#> 1  352 269 16.4
 ```
 
 Theoretical probabilities from a binomial distribution:
@@ -817,7 +817,7 @@ p <- 0.5
 y <- as.integer(runif(sims, min = 0, max = 1) <= p)
 # mean probability
 mean(y)
-#> [1] 0.501
+#> [1] 0.495
 ```
 
 ### Binomial distribution
@@ -1037,7 +1037,7 @@ This function returns the electoral votes for Obama for a single simulation:
 
 ```r
 sim_election(pres08)
-#> [1] 349
+#> [1] 326
 ```
 
 Run this simulation `sims` times, saving the electoral votes of Obama in each simulation:
@@ -1055,6 +1055,11 @@ OBAMA_EV <- 364
 
 ```r
 library("glue")
+#> 
+#> Attaching package: 'glue'
+#> The following object is masked from 'package:dplyr':
+#> 
+#>     collapse
 ggplot(tibble(Obama_EV = Obama_EV_sims),
        aes(x = Obama_EV, y = ..density..)) +
   geom_histogram(binwidth = 10, boundary = 0, fill = "gray60") +
@@ -1074,7 +1079,7 @@ Summarize the simulations:
 ```r
 summary(Obama_EV_sims)
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>     278     340     353     352     364     401
+#>     289     340     353     352     364     398
 ```
 
 Compare theoretical and simulation means:
@@ -1098,7 +1103,7 @@ Compare theoretical and simulation variances:
 ```r
 # simulation variance
 var(Obama_EV_sims)
-#> [1] 273
+#> [1] 269
 # theoretical variance
 Obama_EV_var <- pres08 %>%
   mutate(pb = pbinom(n / 2, size = n, prob = p, lower.tail = FALSE),
@@ -1113,7 +1118,7 @@ and standard deviations
 ```r
 # sim
 sd(Obama_EV_sims)
-#> [1] 16.5
+#> [1] 16.4
 # theoretical
 sqrt(Obama_EV_var)
 #> [1] 16.4

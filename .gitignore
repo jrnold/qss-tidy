@@ -13,7 +13,8 @@ tmp-pdfcrop-*
 /bookdown*
 
 # intermediate Markdown files
-*.utf8.md*.knit.md
+*.utf8.md
+*.knit.md
 /*.md
 !README.md
 !style.md

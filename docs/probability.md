@@ -121,13 +121,13 @@ rerun(sims, sim_bdays(k)) %>%
 
 ### Combinations
 
-The function for ${84}\choose{6}$ is:
+The function for $84\choose{6}$ is:
 
 ```r
 choose(84, 6)
 #> [1] 4.06e+08
 ```
-However, due to the the larges values that the binomial coefficient, it is almost always better to use the log of the binomial coefficient, $\log{{84}\choose{6}}$,
+However, due to the the larges values that the binomial coefficient, it is almost always better to use the log of the binomial coefficient, $\log{84\choose{6}}$,
 
 ```r
 lchoose(84, 6)

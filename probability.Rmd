@@ -145,7 +145,7 @@ margin_race
 
 Calculate the marginal probabilities of each gender:
 ```{r margin_gender}
-margin_gender <- 
+margin_gender <-
   FLVoters %>%
   count(gender) %>%
   mutate(prop = n / sum(n))
@@ -433,21 +433,21 @@ most_likely_race <-
 Merge the data frame with the most likely race for each surname to the
 the original `cnames` data frame:
 ```{r cnames_merge}
-cnames <- 
+cnames <-
   cnames %>%
   left_join(most_likely_race, by = "surname")
 ```
 
 Instead of using `match`, use `inner_join` to merge the surnames to `FLVoters`:
 ```{r}
-FLVoters <- 
+FLVoters <-
   FLVoters %>%
   inner_join(cnames, by = "surname")
 dim(FLVoters)
 ```
 `FLVoters` also includes a "native" category that the surname dataset does not.
 ```{r}
-FLVoters <- 
+FLVoters <-
   FLVoters %>%
   mutate(race2 = fct_recode(race, other = "native"))
 ```
@@ -500,8 +500,7 @@ data("pres08", package = "qss")
 ```
 Add a column `p` which contains Obama's vote share of the major parties:
 ```{r pres08_mutate}
-pres08 <- 
-  pres08 %>%
+pres08 <- pres08 %>%
   mutate(p = Obama / (Obama + McCain))
 ```
 
@@ -569,12 +568,125 @@ Sample from a uniform distribution, and convert to a probability:
 ```{r}
 sims <- 1000
 p <- 0.5
+```
 
-# Sample of size sims from Bernoulli distribution with probability p
-y <- as.integer(runif(sims, min = 0, max = 1) <= p)
-# mean probability
+A Bernoulli distribution is a discrete distribution which randomly samples from 0 and 1. 
+A random variable $X$ with a Bernoulli distribution with probability parameter $p$ has the distribution,
+$$
+\begin{aligned}
+P(X = 1 | p) &= p \\
+P(X = 0 | p) &= 1 - p
+\end{aligned}
+$$
+
+R does not have a `rbernoulli` for the  Bernoulli distribution (because as we will see it is a special case of the Binomial distribution, and there are several other ways to sample from it):
+Here are three ways to sample from a Bernoulli distribution.
+
+First, we can use the `sample` from values `c(0, 1)` with replacement. By default it will set sample 0 and 1 with equal probability ($p = 0.5$), but using the `prob` argument we can sample 0 and 1 with difference probabilities.
+Take 50 samples from a Bernoulli distribution with `p = 0.6`,
+```{r}
+p <- 0.6
+n <- 100
+y <- sample(c(0, 1), n, prob = c(1 - p, p), replace = TRUE)
+head(y)
 mean(y)
 ```
+
+A second method to sample $n$ values from a Bernoulli distribution that has a probability parameter $p$ is,
+
+1. Take a sample of $n$ values from a uniform distribution. Call this vector $x$.
+2. To generate a sample $y$ taking values of 0 and 1 from this vector $x$, set $y_i = 1$ if $x_i >= p$, and $y_i = 0$ if $x_i < p$.
+
+Note how this method works. Given a value $p$ between 0 and 1, in a sample from Uniform distribution, in expectation a fraction of $p$ values will be less than $p$, and in expectation a fraction of $1 - p$ values will be greater than $p$.
+These are exactly the probabilities of sampling 1 and 0 in the probability mass of the Uniform distribution:
+```{r}
+y <- as.integer(runif(n, min = 0, max = 1) <= p)
+head(y)
+mean(y)
+```
+
+Third, note that the Bernoulli distribution is a special case of the binomial distribution (discussed in the next section), where $size = 1$.
+Thus, we can use the `rbinom` function to sample from a binomial distribution.
+```{r}
+y <- rbinom(n, size = 1, prob = p)
+head(y)
+mean(y)
+```
+
+
+Since the R functions for the Binomial distribution don't exist here are examples of how you would write them as examples of writing functions to sample and calculate the PDF or PMF, CDF, and quantile functions of a distribution.
+Sample from the distribution:
+```{r}
+rbernoulli <- function(n, prob = 0.5) {
+  sample(c(1L, 0L), n, replace = FALSE, prob = c(prob, 1 - prob))
+}
+```
+Probability mass function (PMF):
+```{r}
+dbernoulli <- function(x, prob = 0.5) {
+  d <- rep(NA_real_, length(x))
+  d[x == 1] <- prob
+  d[x == 0] <- 1 - prob
+  d
+}
+```
+Cumulative density function (CDF):
+$$
+P(X \leq x|p) = \begin{cases}
+0 & \text{if } x < 0 , \\
+1 - p & \text{if } 0 \leq x < 1 ,\\
+1 & \text{if } x \geq 1 .
+\end{cases}
+$$
+```{r}
+pbernoulli <- function(q, prob = 0.5) {
+  p <- rep(NA_real_, length(q))
+  p[q < 0] <- 0
+  p[q >= 0 & q < 1] <- 1 - prob
+  p[q >= 1] <- 1
+  p
+}
+```
+
+The inverse cumulative density function or quantile function,
+$$
+q =
+\begin{cases}
+\emptyset & \text{if } x \leq 1 - p, \\
+0 & \text{if } 1 - p \leq x < 1 ,\\
+1 & \text{if } x \geq 1 .
+\end{cases}
+$$
+where,
+$$
+q \text{ such that } P(X \leq q|p) = x.
+$$
+```{r}
+qbernoulli <- function(p, prob = 0.5) {
+  q <- rep(NA_integer_, length(p))
+  q[prob >= 1 - p & prob < 1] <- 0L
+  q[prob >= 1] <- 1L
+  q
+}
+```
+
+Alternatively, since the Bernoulli distribution is a special case of the Binomial distribution, write `*bernoulli` functions that wrap calls to to `*binom` functions for the special case where `size = 1`:
+```{r}
+rbernoulli <- function(n, prob = 0.5, ...) {
+  rbinom(n, size = 1, prob = prob, ...)
+}
+pbernoulli <- function(q, prob = 0.5, ...) {
+  rbinom(q, size = 1, prob = prob, ...)
+}
+pbernoulli <- function(q, prob = 0.5, ...) {
+  rbinom(q, size = 1, prob = prob, ...)
+}
+dbernoulli <- function(x, prob = 0.5, ...) {
+  rbinom(x, size = 1, prob = prob, ...)
+}
+```
+
+
 
 ### Binomial distribution
 

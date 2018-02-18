@@ -14,7 +14,8 @@ In this and other chapters we will make use of data from the `qss` package, whic
 
 ```r
 devtools::install_github("kosukeimai/qss-package")
-#> Skipping install of 'qss' from a github remote, the SHA1 (1dc4b858) has not changed since last install.
+#> Using GitHub PAT from envvar GITHUB_PAT
+#> Skipping install of 'qss' from a github remote, the SHA1 (898fffb4) has not changed since last install.
 #>   Use `force = TRUE` to force installation
 library("qss")
 ```

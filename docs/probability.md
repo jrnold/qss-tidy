@@ -105,7 +105,7 @@ sims <- 1000
 k <- 23
 map_lgl(seq_len(sims), ~ sim_bdays(k)) %>%
   mean()
-#> [1] 0.475
+#> [1] 0.489
 ```
 
 An alternative way of running this is using the [rerun](https://www.rdocumentation.org/packages/purrr/topics/rerun) and using `flatten` to turn the output to a numeric vector:
@@ -186,7 +186,7 @@ margin_race
 Calculate the marginal probabilities of each gender:
 
 ```r
-margin_gender <- 
+margin_gender <-
   FLVoters %>%
   count(gender) %>%
   mutate(prop = n / sum(n))
@@ -242,7 +242,7 @@ joint_p %>%
   spread(gender, prop)
 #> # A tibble: 6 x 3
 #>   race           f       m
-#> * <chr>      <dbl>   <dbl>
+#>   <chr>      <dbl>   <dbl>
 #> 1 asian    0.00911 0.0101 
 #> 2 black    0.0744  0.0566 
 #> 3 hispanic 0.0731  0.0577 
@@ -299,7 +299,7 @@ joint3 <-
 joint3
 #> # A tibble: 47 x 5
 #>   race  age_group gender     n     prop
-#>   <chr> <fctr>    <chr>  <int>    <dbl>
+#>   <chr> <fct>     <chr>  <int>    <dbl>
 #> 1 asian <= 20     f          1 0.000110
 #> 2 asian <= 20     m          2 0.000219
 #> 3 asian 20-40     f         24 0.00263 
@@ -319,7 +319,7 @@ margin_age <-
 margin_age
 #> # A tibble: 4 x 3
 #>   age_group     n   prop
-#>   <fctr>    <int>  <dbl>
+#>   <fct>     <int>  <dbl>
 #> 1 <= 20       161 0.0177
 #> 2 20-40      2469 0.271 
 #> 3 40-60      3285 0.360 
@@ -339,7 +339,7 @@ left_join(joint3,
   select(race, age_group, gender, prob_age_group)
 #> # A tibble: 1 x 4
 #>   race  age_group gender prob_age_group
-#>   <chr> <fctr>    <chr>           <dbl>
+#>   <chr> <fct>     <chr>           <dbl>
 #> 1 black > 60      f              0.0538
 ```
 
@@ -353,7 +353,7 @@ joint2 <- FLVoters %>%
 joint2
 #> # A tibble: 8 x 4
 #>   age_group gender     n prob_age_gender
-#>   <fctr>    <chr>  <int>           <dbl>
+#>   <fct>     <chr>  <int>           <dbl>
 #> 1 <= 20     f         88         0.00966
 #> 2 <= 20     m         73         0.00801
 #> 3 20-40     f       1304         0.143  
@@ -370,7 +370,7 @@ joint2 %>%
   filter(age_group == "> 60", gender == "f")
 #> # A tibble: 1 x 4
 #>   age_group gender     n prob_age_gender
-#>   <fctr>    <chr>  <int>           <dbl>
+#>   <fct>     <chr>  <int>           <dbl>
 #> 1 > 60      f       1761           0.193
 ```
 
@@ -389,7 +389,7 @@ Each row is the $P(\text{race } | \text{ age group} \land \text{gender})$, so $P
 filter(condprob_race, gender == "f", age_group == "> 60", race == "black")
 #> # A tibble: 1 x 4
 #>   age_group gender race  prob_race
-#>   <fctr>    <chr>  <chr>     <dbl>
+#>   <fct>     <chr>  <chr>     <dbl>
 #> 1 > 60      f      black    0.0977
 ```
 
@@ -555,7 +555,7 @@ map_df(seq_len(sims), choose_door) %>%
 #> # A tibble: 1 x 1
 #>   win_pct
 #>     <dbl>
-#> 1   0.670
+#> 1   0.648
 ```
 
 
@@ -610,7 +610,7 @@ Merge the data frame with the most likely race for each surname to the
 the original `cnames` data frame:
 
 ```r
-cnames <- 
+cnames <-
   cnames %>%
   left_join(most_likely_race, by = "surname")
 ```
@@ -618,7 +618,7 @@ cnames <-
 Instead of using `match`, use `inner_join` to merge the surnames to `FLVoters`:
 
 ```r
-FLVoters <- 
+FLVoters <-
   FLVoters %>%
   inner_join(cnames, by = "surname")
 dim(FLVoters)
@@ -627,7 +627,7 @@ dim(FLVoters)
 `FLVoters` also includes a "native" category that the surname dataset does not.
 
 ```r
-FLVoters <- 
+FLVoters <-
   FLVoters %>%
   mutate(race2 = fct_recode(race, other = "native"))
 ```
@@ -639,7 +639,7 @@ FLVoters %>%
   count(race2)
 #> # A tibble: 5 x 2
 #>   race2        n
-#>   <fctr>   <int>
+#>   <fct>    <int>
 #> 1 asian      140
 #> 2 black     1078
 #> 3 hispanic  1023
@@ -666,7 +666,7 @@ FLVoters %>%
   arrange(desc(tp))
 #> # A tibble: 5 x 2
 #>   race2       tp
-#>   <fctr>   <dbl>
+#>   <fct>    <dbl>
 #> 1 white    0.950
 #> 2 hispanic 0.847
 #> 3 black    0.160
@@ -727,8 +727,7 @@ data("pres08", package = "qss")
 Add a column `p` which contains Obama's vote share of the major parties:
 
 ```r
-pres08 <- 
-  pres08 %>%
+pres08 <- pres08 %>%
   mutate(p = Obama / (Obama + McCain))
 ```
 
@@ -774,7 +773,7 @@ sim_results %>%
   select(EV) %>%
   summarise_all(funs(mean, var, sd))
 #>   mean var   sd
-#> 1  352 271 16.5
+#> 1  352 269 16.4
 ```
 
 Theoretical probabilities from a binomial distribution:
@@ -812,13 +811,139 @@ Sample from a uniform distribution, and convert to a probability:
 ```r
 sims <- 1000
 p <- 0.5
-
-# Sample of size sims from Bernoulli distribution with probability p
-y <- as.integer(runif(sims, min = 0, max = 1) <= p)
-# mean probability
-mean(y)
-#> [1] 0.501
 ```
+
+A Bernoulli distribution is a discrete distribution which randomly samples from 0 and 1. 
+A random variable $X$ with a Bernoulli distribution with probability parameter $p$ has the distribution,
+$$
+\begin{aligned}
+P(X = 1 | p) &= p \\
+P(X = 0 | p) &= 1 - p
+\end{aligned}
+$$
+
+R does not have a `rbernoulli` for the  Bernoulli distribution (because as we will see it is a special case of the Binomial distribution, and there are several other ways to sample from it):
+Here are three ways to sample from a Bernoulli distribution.
+
+First, we can use the `sample` from values `c(0, 1)` with replacement. By default it will set sample 0 and 1 with equal probability ($p = 0.5$), but using the `prob` argument we can sample 0 and 1 with difference probabilities.
+Take 50 samples from a Bernoulli distribution with `p = 0.6`,
+
+```r
+p <- 0.6
+n <- 100
+y <- sample(c(0, 1), n, prob = c(1 - p, p), replace = TRUE)
+head(y)
+#> [1] 1 0 1 1 1 1
+mean(y)
+#> [1] 0.57
+```
+
+A second method to sample $n$ values from a Bernoulli distribution that has a probability parameter $p$ is,
+
+1. Take a sample of $n$ values from a uniform distribution. Call this vector $x$.
+2. To generate a sample $y$ taking values of 0 and 1 from this vector $x$, set $y_i = 1$ if $x_i >= p$, and $y_i = 0$ if $x_i < p$.
+
+Note how this method works. Given a value $p$ between 0 and 1, in a sample from Uniform distribution, in expectation a fraction of $p$ values will be less than $p$, and in expectation a fraction of $1 - p$ values will be greater than $p$.
+These are exactly the probabilities of sampling 1 and 0 in the probability mass of the Uniform distribution:
+
+```r
+y <- as.integer(runif(n, min = 0, max = 1) <= p)
+head(y)
+#> [1] 1 1 1 0 1 1
+mean(y)
+#> [1] 0.64
+```
+
+Third, note that the Bernoulli distribution is a special case of the binomial distribution (discussed in the next section), where $size = 1$.
+Thus, we can use the `rbinom` function to sample from a binomial distribution.
+
+```r
+y <- rbinom(n, size = 1, prob = p)
+head(y)
+#> [1] 0 0 0 1 1 1
+mean(y)
+#> [1] 0.6
+```
+
+
+Since the R functions for the Binomial distribution don't exist here are examples of how you would write them as examples of writing functions to sample and calculate the PDF or PMF, CDF, and quantile functions of a distribution.
+Sample from the distribution:
+
+```r
+rbernoulli <- function(n, prob = 0.5) {
+  sample(c(1L, 0L), n, replace = FALSE, prob = c(prob, 1 - prob))
+}
+```
+Probability mass function (PMF):
+
+```r
+dbernoulli <- function(x, prob = 0.5) {
+  d <- rep(NA_real_, length(x))
+  d[x == 1] <- prob
+  d[x == 0] <- 1 - prob
+  d
+}
+```
+Cumulative density function (CDF):
+$$
+P(X \leq x|p) = \begin{cases}
+0 & \text{if } x < 0 , \\
+1 - p & \text{if } 0 \leq x < 1 ,\\
+1 & \text{if } x \geq 1 .
+\end{cases}
+$$
+
+```r
+pbernoulli <- function(q, prob = 0.5) {
+  p <- rep(NA_real_, length(q))
+  p[q < 0] <- 0
+  p[q >= 0 & q < 1] <- 1 - prob
+  p[q >= 1] <- 1
+  p
+}
+```
+
+The inverse cumulative density function or quantile function,
+$$
+q =
+\begin{cases}
+\emptyset & \text{if } x \leq 1 - p, \\
+0 & \text{if } 1 - p \leq x < 1 ,\\
+1 & \text{if } x \geq 1 .
+\end{cases}
+$$
+where,
+$$
+q \text{ such that } P(X \leq q|p) = x.
+$$
+
+```r
+qbernoulli <- function(p, prob = 0.5) {
+  q <- rep(NA_integer_, length(p))
+  q[prob >= 1 - p & prob < 1] <- 0L
+  q[prob >= 1] <- 1L
+  q
+}
+```
+
+Alternatively, since the Bernoulli distribution is a special case of the Binomial distribution, write `*bernoulli` functions that wrap calls to to `*binom` functions for the special case where `size = 1`:
+
+```r
+rbernoulli <- function(n, prob = 0.5, ...) {
+  rbinom(n, size = 1, prob = prob, ...)
+}
+pbernoulli <- function(q, prob = 0.5, ...) {
+  rbinom(q, size = 1, prob = prob, ...)
+}
+pbernoulli <- function(q, prob = 0.5, ...) {
+  rbinom(q, size = 1, prob = prob, ...)
+}
+dbernoulli <- function(x, prob = 0.5, ...) {
+  rbinom(x, size = 1, prob = prob, ...)
+}
+```
+
+
 
 ### Binomial distribution
 
@@ -904,7 +1029,7 @@ ggplot(err, aes(x = err_std)) +
                      breaks = -3:3, limits = c(-3, 3))
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -916,7 +1041,7 @@ ggplot(err, aes(sample = err_std)) +
   scale_x_continuous("Theoretical quantiles", limits = c(-3, 3))
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" />
 
 Alternatively, you can use the `augment` function from **broom** which returns the residuals for each observation in the `.resid` column.
 
@@ -931,7 +1056,7 @@ augment(fit1) %>%
                      breaks = -3:3, limits = c(-3, 3))
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 Obama's vote shares in 2008 and 2012.
@@ -990,7 +1115,7 @@ ggplot(pres_gt_2008, aes(x = Obama_2008_z, y = p_greater)) +
        y = "Pr. 2012 vote share greater than 2008")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-65-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 
@@ -1037,7 +1162,7 @@ This function returns the electoral votes for Obama for a single simulation:
 
 ```r
 sim_election(pres08)
-#> [1] 349
+#> [1] 364
 ```
 
 Run this simulation `sims` times, saving the electoral votes of Obama in each simulation:
@@ -1067,14 +1192,14 @@ ggplot(tibble(Obama_EV = Obama_EV_sims),
   labs(title = "Prediction of election outcomes")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-63-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-71-1.png" width="70%" style="display: block; margin: auto;" />
 
 Summarize the simulations:
 
 ```r
 summary(Obama_EV_sims)
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>     278     340     353     352     364     401
+#>     289     340     353     352     364     398
 ```
 
 Compare theoretical and simulation means:
@@ -1098,7 +1223,7 @@ Compare theoretical and simulation variances:
 ```r
 # simulation variance
 var(Obama_EV_sims)
-#> [1] 273
+#> [1] 269
 # theoretical variance
 Obama_EV_var <- pres08 %>%
   mutate(pb = pbinom(n / 2, size = n, prob = p, lower.tail = FALSE),
@@ -1113,7 +1238,7 @@ and standard deviations
 ```r
 # sim
 sd(Obama_EV_sims)
-#> [1] 16.5
+#> [1] 16.4
 # theoretical
 sqrt(Obama_EV_var)
 #> [1] 16.4

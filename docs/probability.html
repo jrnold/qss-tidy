@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-02-08">
+<meta name="date" content="2018-02-18">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -388,7 +388,7 @@ margin_race
 <span class="co">#&gt; 5 other      310 0.0340 </span>
 <span class="co">#&gt; 6 white     6213 0.682</span></code></pre></div>
 <p>Calculate the marginal probabilities of each gender:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">margin_gender &lt;-<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">margin_gender &lt;-
 <span class="st">  </span>FLVoters <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>(gender) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))
@@ -691,17 +691,17 @@ indep_cond_gender &lt;-
 <span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>pct) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">race_pred =</span> <span class="kw">recode</span>(race_pred, <span class="dt">asian =</span> <span class="st">&quot;api&quot;</span>, <span class="dt">other =</span> <span class="st">&quot;others&quot;</span>))</code></pre></div>
 <p>Merge the data frame with the most likely race for each surname to the the original <code>cnames</code> data frame:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnames &lt;-<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnames &lt;-
 <span class="st">  </span>cnames <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">left_join</span>(most_likely_race, <span class="dt">by =</span> <span class="st">&quot;surname&quot;</span>)</code></pre></div>
 <p>Instead of using <code>match</code>, use <code>inner_join</code> to merge the surnames to <code>FLVoters</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLVoters &lt;-<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLVoters &lt;-
 <span class="st">  </span>FLVoters <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">inner_join</span>(cnames, <span class="dt">by =</span> <span class="st">&quot;surname&quot;</span>)
 <span class="kw">dim</span>(FLVoters)
 <span class="co">#&gt; [1] 8022   14</span></code></pre></div>
 <p><code>FLVoters</code> also includes a “native” category that the surname dataset does not.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLVoters &lt;-<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FLVoters &lt;-
 <span class="st">  </span>FLVoters <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">race2 =</span> <span class="kw">fct_recode</span>(race, <span class="dt">other =</span> <span class="st">&quot;native&quot;</span>))</code></pre></div>
 <p>Check that the levels of <code>race</code> and <code>race_pred</code> are the same:</p>
@@ -776,8 +776,7 @@ race.prop
 <p>Load the <code>pres08</code> data from the <strong>qss</strong> package.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;pres08&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
 <p>Add a column <code>p</code> which contains Obama’s vote share of the major parties:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres08 &lt;-<span class="st"> </span>
-<span class="st">  </span>pres08 <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pres08 &lt;-<span class="st"> </span>pres08 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p =</span> Obama <span class="op">/</span><span class="st"> </span>(Obama <span class="op">+</span><span class="st"> </span>McCain))</code></pre></div>
 <p>Write a function to simulate the elections. <code>df</code> is the data frame (<code>pres08</code>) with the state, EV, and <code>p</code> columns. <code>n_draws</code> is the size of the binomial distribution to draw from. <code>.id</code> is the simulation number.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim_election &lt;-<span class="st"> </span><span class="cf">function</span>(.id, df, <span class="dt">n_draws =</span> <span class="dv">1000</span>) {
@@ -828,13 +827,93 @@ pres08 <span class="op">%&gt;%</span>
 <span class="co">#&gt; [1] 0.75</span></code></pre></div>
 <p>Sample from a uniform distribution, and convert to a probability:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sims &lt;-<span class="st"> </span><span class="dv">1000</span>
-p &lt;-<span class="st"> </span><span class="fl">0.5</span>
-
-<span class="co"># Sample of size sims from Bernoulli distribution with probability p</span>
-y &lt;-<span class="st"> </span><span class="kw">as.integer</span>(<span class="kw">runif</span>(sims, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1</span>) <span class="op">&lt;=</span><span class="st"> </span>p)
-<span class="co"># mean probability</span>
+p &lt;-<span class="st"> </span><span class="fl">0.5</span></code></pre></div>
+<p>A Bernoulli distribution is a discrete distribution which randomly samples from 0 and 1. A random variable <span class="math inline">\(X\)</span> with a Bernoulli distribution with probability parameter <span class="math inline">\(p\)</span> has the distribution, <span class="math display">\[
+\begin{aligned}
+P(X = 1 | p) &amp;= p \\
+P(X = 0 | p) &amp;= 1 - p
+\end{aligned}
+\]</span></p>
+<p>R does not have a <code>rbernoulli</code> for the Bernoulli distribution (because as we will see it is a special case of the Binomial distribution, and there are several other ways to sample from it): Here are three ways to sample from a Bernoulli distribution.</p>
+<p>First, we can use the <code>sample</code> from values <code>c(0, 1)</code> with replacement. By default it will set sample 0 and 1 with equal probability (<span class="math inline">\(p = 0.5\)</span>), but using the <code>prob</code> argument we can sample 0 and 1 with difference probabilities. Take 50 samples from a Bernoulli distribution with <code>p = 0.6</code>,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="fl">0.6</span>
+n &lt;-<span class="st"> </span><span class="dv">100</span>
+y &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), n, <span class="dt">prob =</span> <span class="kw">c</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p, p), <span class="dt">replace =</span> <span class="ot">TRUE</span>)
+<span class="kw">head</span>(y)
+<span class="co">#&gt; [1] 1 0 1 1 1 1</span>
 <span class="kw">mean</span>(y)
-<span class="co">#&gt; [1] 0.495</span></code></pre></div>
+<span class="co">#&gt; [1] 0.57</span></code></pre></div>
+<p>A second method to sample <span class="math inline">\(n\)</span> values from a Bernoulli distribution that has a probability parameter <span class="math inline">\(p\)</span> is,</p>
+<ol style="list-style-type: decimal">
+<li>Take a sample of <span class="math inline">\(n\)</span> values from a uniform distribution. Call this vector <span class="math inline">\(x\)</span>.</li>
+<li>To generate a sample <span class="math inline">\(y\)</span> taking values of 0 and 1 from this vector <span class="math inline">\(x\)</span>, set <span class="math inline">\(y_i = 1\)</span> if <span class="math inline">\(x_i &gt;= p\)</span>, and <span class="math inline">\(y_i = 0\)</span> if <span class="math inline">\(x_i &lt; p\)</span>.</li>
+</ol>
+<p>Note how this method works. Given a value <span class="math inline">\(p\)</span> between 0 and 1, in a sample from Uniform distribution, in expectation a fraction of <span class="math inline">\(p\)</span> values will be less than <span class="math inline">\(p\)</span>, and in expectation a fraction of <span class="math inline">\(1 - p\)</span> values will be greater than <span class="math inline">\(p\)</span>. These are exactly the probabilities of sampling 1 and 0 in the probability mass of the Uniform distribution:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y &lt;-<span class="st"> </span><span class="kw">as.integer</span>(<span class="kw">runif</span>(n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1</span>) <span class="op">&lt;=</span><span class="st"> </span>p)
+<span class="kw">head</span>(y)
+<span class="co">#&gt; [1] 1 1 1 0 1 1</span>
+<span class="kw">mean</span>(y)
+<span class="co">#&gt; [1] 0.64</span></code></pre></div>
+<p>Third, note that the Bernoulli distribution is a special case of the binomial distribution (discussed in the next section), where <span class="math inline">\(size = 1\)</span>. Thus, we can use the <code>rbinom</code> function to sample from a binomial distribution.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y &lt;-<span class="st"> </span><span class="kw">rbinom</span>(n, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> p)
+<span class="kw">head</span>(y)
+<span class="co">#&gt; [1] 0 0 0 1 1 1</span>
+<span class="kw">mean</span>(y)
+<span class="co">#&gt; [1] 0.6</span></code></pre></div>
+<p>Since the R functions for the Binomial distribution don’t exist here are examples of how you would write them as examples of writing functions to sample and calculate the PDF or PMF, CDF, and quantile functions of a distribution. Sample from the distribution:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rbernoulli &lt;-<span class="st"> </span><span class="cf">function</span>(n, <span class="dt">prob =</span> <span class="fl">0.5</span>) {
+  <span class="kw">sample</span>(<span class="kw">c</span>(1L, 0L), n, <span class="dt">replace =</span> <span class="ot">FALSE</span>, <span class="dt">prob =</span> <span class="kw">c</span>(prob, <span class="dv">1</span> <span class="op">-</span><span class="st"> </span>prob))
+}</code></pre></div>
+<p>Probability mass function (PMF):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dbernoulli &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">prob =</span> <span class="fl">0.5</span>) {
+  d &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA_real_</span>, <span class="kw">length</span>(x))
+  d[x <span class="op">==</span><span class="st"> </span><span class="dv">1</span>] &lt;-<span class="st"> </span>prob
+  d[x <span class="op">==</span><span class="st"> </span><span class="dv">0</span>] &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>prob
+  d
+}</code></pre></div>
+<p>Cumulative density function (CDF): <span class="math display">\[
+P(X \leq x|p) = \begin{cases}
+0 &amp; \text{if } x &lt; 0 , \\
+1 - p &amp; \text{if } 0 \leq x &lt; 1 ,\\
+1 &amp; \text{if } x \geq 1 .
+\end{cases}
+\]</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pbernoulli &lt;-<span class="st"> </span><span class="cf">function</span>(q, <span class="dt">prob =</span> <span class="fl">0.5</span>) {
+  p &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA_real_</span>, <span class="kw">length</span>(q))
+  p[q <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>] &lt;-<span class="st"> </span><span class="dv">0</span>
+  p[q <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>q <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>] &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>prob
+  p[q <span class="op">&gt;=</span><span class="st"> </span><span class="dv">1</span>] &lt;-<span class="st"> </span><span class="dv">1</span>
+  p
+}</code></pre></div>
+<p>The inverse cumulative density function or quantile function, <span class="math display">\[
+q =
+\begin{cases}
+\emptyset &amp; \text{if } x \leq 1 - p, \\
+0 &amp; \text{if } 1 - p \leq x &lt; 1 ,\\
+1 &amp; \text{if } x \geq 1 .
+\end{cases}
+\]</span> where, <span class="math display">\[
+q \text{ such that } P(X \leq q|p) = x.
+\]</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qbernoulli &lt;-<span class="st"> </span><span class="cf">function</span>(p, <span class="dt">prob =</span> <span class="fl">0.5</span>) {
+  q &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA_integer_</span>, <span class="kw">length</span>(p))
+  q[prob <span class="op">&gt;=</span><span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p <span class="op">&amp;</span><span class="st"> </span>prob <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>] &lt;-<span class="st"> </span>0L
+  q[prob <span class="op">&gt;=</span><span class="st"> </span><span class="dv">1</span>] &lt;-<span class="st"> </span>1L
+  q
+}</code></pre></div>
+<p>Alternatively, since the Bernoulli distribution is a special case of the Binomial distribution, write <code>*bernoulli</code> functions that wrap calls to to <code>*binom</code> functions for the special case where <code>size = 1</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rbernoulli &lt;-<span class="st"> </span><span class="cf">function</span>(n, <span class="dt">prob =</span> <span class="fl">0.5</span>, ...) {
+  <span class="kw">rbinom</span>(n, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> prob, ...)
+}
+pbernoulli &lt;-<span class="st"> </span><span class="cf">function</span>(q, <span class="dt">prob =</span> <span class="fl">0.5</span>, ...) {
+  <span class="kw">rbinom</span>(q, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> prob, ...)
+}
+pbernoulli &lt;-<span class="st"> </span><span class="cf">function</span>(q, <span class="dt">prob =</span> <span class="fl">0.5</span>, ...) {
+  <span class="kw">rbinom</span>(q, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> prob, ...)
+}
+dbernoulli &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">prob =</span> <span class="fl">0.5</span>, ...) {
+  <span class="kw">rbinom</span>(x, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> prob, ...)
+}</code></pre></div>
 </div>
 <div id="binomial-distribution" class="section level3">
 <h3><span class="header-section-number">6.3.2</span> Binomial distribution</h3>
@@ -888,14 +967,14 @@ y &lt;-<span class="st"> </span><span class="kw">as.integer</span>(<span class="
 <span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">geom =</span> <span class="st">&quot;line&quot;</span>, <span class="dt">fun =</span> dnorm) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Standardized residuals&quot;</span>,
                      <span class="dt">breaks =</span> <span class="op">-</span><span class="dv">3</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>))</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(err, <span class="kw">aes</span>(<span class="dt">sample =</span> err_std)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> <span class="dv">0</span>, <span class="dt">slope =</span> <span class="dv">1</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_fixed</span>(<span class="dt">ratio =</span> <span class="dv">1</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Sample quantiles&quot;</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Theoretical quantiles&quot;</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>))</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Alternatively, you can use the <code>augment</code> function from <strong>broom</strong> which returns the residuals for each observation in the <code>.resid</code> column.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">augment</span>(fit1) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.resid_z =</span> .resid <span class="op">/</span><span class="st"> </span><span class="kw">sd</span>(.resid)) <span class="op">%&gt;%</span>
@@ -905,7 +984,7 @@ y &lt;-<span class="st"> </span><span class="kw">as.integer</span>(<span class="
 <span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">geom =</span> <span class="st">&quot;line&quot;</span>, <span class="dt">fun =</span> dnorm) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Standardized residuals&quot;</span>,
                      <span class="dt">breaks =</span> <span class="op">-</span><span class="dv">3</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>))</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Obama’s vote shares in 2008 and 2012.</p>
 <p>Standard deviation of errors:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">err_sd &lt;-<span class="st"> </span><span class="kw">sd</span>(<span class="kw">resid</span>(fit1))</code></pre></div>
@@ -935,7 +1014,7 @@ CA_mean_<span class="dv">2012</span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Standardized vote share of Obama (2008)&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Pr. 2012 vote share greater than 2008&quot;</span>)</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-65-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="expectation-and-variance" class="section level3">
 <h3><span class="header-section-number">6.3.4</span> Expectation and Variance</h3>
@@ -966,18 +1045,13 @@ pres08 &lt;-<span class="st"> </span><span class="kw">mutate</span>(pres08, <spa
 }</code></pre></div>
 <p>This function returns the electoral votes for Obama for a single simulation:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim_election</span>(pres08)
-<span class="co">#&gt; [1] 326</span></code></pre></div>
+<span class="co">#&gt; [1] 364</span></code></pre></div>
 <p>Run this simulation <code>sims</code> times, saving the electoral votes of Obama in each simulation:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sims &lt;-<span class="st"> </span><span class="dv">10000</span>
 Obama_EV_sims &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(<span class="kw">seq_len</span>(sims), <span class="op">~</span><span class="st"> </span><span class="kw">sim_election</span>(pres08))</code></pre></div>
 <p>Obama’s actual electoral value</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OBAMA_EV &lt;-<span class="st"> </span><span class="dv">364</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;glue&quot;</span>)
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: &#39;glue&#39;</span>
-<span class="co">#&gt; The following object is masked from &#39;package:dplyr&#39;:</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     collapse</span>
 <span class="kw">ggplot</span>(<span class="kw">tibble</span>(<span class="dt">Obama_EV =</span> Obama_EV_sims),
        <span class="kw">aes</span>(<span class="dt">x =</span> Obama_EV, <span class="dt">y =</span> ..density..)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="dv">10</span>, <span class="dt">boundary =</span> <span class="dv">0</span>, <span class="dt">fill =</span> <span class="st">&quot;gray60&quot;</span>) <span class="op">+</span>
@@ -988,7 +1062,7 @@ Obama_EV_sims &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(<spa
                      <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">300</span>, <span class="dv">400</span>, <span class="dt">by =</span> <span class="dv">20</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Density&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Prediction of election outcomes&quot;</span>)</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-63-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-71-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Summarize the simulations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(Obama_EV_sims)
 <span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>

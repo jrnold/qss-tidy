@@ -371,17 +371,16 @@ last_polls <-
   slice(1)
 last_polls
 #> # A tibble: 51 x 9
-#> # Groups:   state [51]
-#>   state Pollster      Obama McCain middate    margin `ELECTION_DAY - midd…
-#>   <chr> <chr>         <int>  <int> <date>      <int> <time>               
-#> 1 AK    Research 200…    39     58 2008-10-29    -19 6                    
-#> 2 AL    SurveyUSA-2      36     61 2008-10-27    -25 8                    
-#> 3 AR    ARG-4            44     51 2008-10-29    - 7 6                    
-#> 4 AZ    ARG-3            46     50 2008-10-29    - 4 6                    
-#> 5 CA    SurveyUSA-3      60     36 2008-10-30     24 5                    
-#> 6 CO    ARG-3            52     45 2008-10-29      7 6                    
-#> # ... with 45 more rows, and 2 more variables: elec_margin <int>,
-#> #   error <int>
+#> # Groups: state [51]
+#>   state Pollster        Obama McCain middate    margin `ELECT… elec… error
+#>   <chr> <chr>           <int>  <int> <date>      <int> <time>  <int> <int>
+#> 1 AK    Research 2000-3    39     58 2008-10-29    -19 6         -21   - 2
+#> 2 AL    SurveyUSA-2        36     61 2008-10-27    -25 8         -21     4
+#> 3 AR    ARG-4              44     51 2008-10-29    - 7 6         -20   -13
+#> 4 AZ    ARG-3              46     50 2008-10-29    - 4 6         - 9   - 5
+#> 5 CA    SurveyUSA-3        60     36 2008-10-30     24 5          24     0
+#> 6 CO    ARG-3              52     45 2008-10-29      7 6           9     2
+#> # ... with 45 more rows
 ```
 
 
@@ -484,7 +483,7 @@ last_polls %>%
   group_by(classification) %>%
   count()
 #> # A tibble: 4 x 2
-#> # Groups:   classification [4]
+#> # Groups: classification [4]
 #>   classification     n
 #>   <chr>          <int>
 #> 1 false negative     2
@@ -1350,7 +1349,7 @@ ate <-
   select(primary2004, Neighbors, Control, ate_Neighbors)
 ate
 #> # A tibble: 2 x 4
-#> # Groups:   primary2004 [2]
+#> # Groups: primary2004 [2]
 #>   primary2004 Neighbors Control ate_Neighbors
 #>         <int>     <dbl>   <dbl>         <dbl>
 #> 1           0     0.306   0.237        0.0693

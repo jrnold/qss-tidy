@@ -52,7 +52,7 @@ SATE
 ```
 
 
-Simulations of RCTs. Write a function that takes the sample as an input `smpl`, randomly assigns the treatment to each individual:
+Simulations of RCTs. Write a function that takes the sample as an input `smpl`, then randomly assigns the treatment to each individual:
 
 ```r
 sim_treat <- function(smpl) {
@@ -264,9 +264,7 @@ pate_sims_coverage <- function(.data, level = 0.95) {
          includes_pate = PATE > ci_lower & PATE < ci_upper) %>%
     summarise(coverage = mean(includes_pate))
 }
-```
 
-```r
 pate_sims_coverage(pate_sims_se, 0.95)
 #> # A tibble: 1 x 1
 #>   coverage
@@ -320,6 +318,7 @@ mean(map_lgl(seq_len(sims), ~ binom_ci_contains(n, p)))
 ```
 
 Encapsulate the above code in a function that calculates the coverage of a confidence interval with size, `n`, and success probability, `p`:
+
 
 ```r
 binom_ci_coverage <- function(n, p, sims) {
@@ -380,7 +379,7 @@ ggplot(props, aes(x = p, y = n, colour = factor(MoE))) +
   theme(legend.position = "bottom")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-30-1.png" width="70%" style="display: block; margin: auto;" />
 [read_csv](https://www.rdocumentation.org/packages/readr/topics/read_csv) already recognizes the date columns, so we don't need to convert them.
 The 2008 election was on Nov 11, 2008, so we'll store that in a variable.
 
@@ -459,7 +458,7 @@ ggplot(poll_pred, aes(x = actual, y = Obama,
   theme(legend.position = "bottom")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-35-1.png" width="70%" style="display: block; margin: auto;" />
 
 Proportion of polls with confidence intervals that include the election outcome?
 
@@ -530,11 +529,7 @@ ggplot(filter(STAR,
              colour = "white", size = 2) +
   facet_grid(classtype ~ .) +
   labs(x = "Fourth grade reading score", y = "Density")
-```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" />
-
-```r
 alpha <- 0.05
 star_estimates <-
   STAR %>%
@@ -548,13 +543,11 @@ star_estimates <-
 star_estimates
 #> # A tibble: 3 x 6
 #>   classtype                  n   est    se   lwr   upr
-#>   <fct>                  <int> <dbl> <dbl> <dbl> <dbl>
+#>   <fctr>                 <int> <dbl> <dbl> <dbl> <dbl>
 #> 1 small class              726   723  1.91   720   727
 #> 2 regular class            836   720  1.84   716   723
 #> 3 regular class with aid   791   721  1.86   717   724
-```
 
-```r
 star_estimates %>%
   filter(classtype %in% c("small class", "regular class")) %>%
   # ensure that it is ordered small then regular
@@ -570,7 +563,11 @@ star_estimates %>%
 #>   <dbl> <dbl>  <dbl> <dbl>
 #> 1  2.65  3.50  -1.70  8.70
 ```
+
+<img src="uncertainty_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" />
+
 Use we could use [spread](https://www.rdocumentation.org/packages/tidyr/topics/spread) and [gather](https://www.rdocumentation.org/packages/tidyr/topics/gather):
+
 
 ```r
 star_ate <-
@@ -656,9 +653,7 @@ true
 #> 3    4.00 36.0  0.514 
 #> 4    6.00 16.0  0.229 
 #> 5    8.00  1.00 0.0143
-```
 
-```r
 sims <- 1000
 guess <- tibble(guess = c("M", "T", "T", "M", "M", "T", "T", "M"))
 randomize_tea <- function(df) {
@@ -721,7 +716,7 @@ y
 select(spread(x, Truth, Number), -Guess)
 #> # A tibble: 2 x 2
 #>    Milk   Tea
-#>   <int> <int>
+#> * <int> <int>
 #> 1     4     0
 #> 2     0     4
 # Use spread to make it a 2 x 2 table
@@ -857,10 +852,7 @@ star_ate %>%
 #>   p_value_1sided p_value_2sided
 #>            <dbl>          <dbl>
 #> 1         0.0935          0.187
-```
 
-
-```r
 t.test(g4reading ~ classtype,
   data = filter(STAR, classtype %in% c("small class", "regular class")))
 #> 
@@ -903,7 +895,7 @@ x <- resume %>%
 x
 #> # A tibble: 2 x 3
 #>   race    `0`   `1`
-#>   <chr> <int> <int>
+#> * <chr> <int> <int>
 #> 1 black  2278   157
 #> 2 white  2200   235
 prop.test(as.matrix(select(x, -race)), alternative = "greater")
@@ -921,33 +913,34 @@ prop.test(as.matrix(select(x, -race)), alternative = "greater")
 #>  0.936  0.903
 ```
 
+Assign sample sizes and proportions, then calculate point estimates, standard error, z-statistic and one-sided p-value.
+
 
 ```r
-# sample size
 n0 <- sum(resume$race == "black")
 n1 <- sum(resume$race == "white")
-# sample proportions
-p <- mean(resume$call) # overall
+
+p <- mean(resume$call) 
 p0 <- mean(filter(resume, race == "black")$call)
 p1 <- mean(filter(resume, race == "white")$call)
-# point estimate
+
 est <- p1 - p0
 est
 #> [1] 0.032
-# standard error
+
 se <- sqrt(p * (1 - p) * (1 / n0 + 1 / n1))
 se
 #> [1] 0.0078
-# z statistic
+
 zstat <- est / se
 zstat
 #> [1] 4.11
-# one sided p value
+
 pnorm(-abs(zstat))
 #> [1] 1.99e-05
 ```
-The only thing that changed is using [filter](https://www.rdocumentation.org/packages/dplyr/topics/filter) for selecting the groups.
 
+The only thing that changed is using [filter](https://www.rdocumentation.org/packages/dplyr/topics/filter) for selecting the groups.
 
 ### Power Analysis
 
@@ -1198,7 +1191,7 @@ ggplot() +
   labs(x = "Margin of vitory", y = "log net wealth")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-68-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-63-1.png" width="70%" style="display: block; margin: auto;" />
 
 ```r
 tory_y1 <- augment(tory_fit1, newdata = tibble(margin = 0))

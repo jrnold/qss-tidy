@@ -68,7 +68,7 @@ race_call_tab <-
   count()
 race_call_tab
 #> # A tibble: 4 x 3
-#> # Groups:   race, call [4]
+#> # Groups: race, call [4]
 #>   race   call     n
 #>   <chr> <int> <int>
 #> 1 black     0  2278
@@ -88,7 +88,7 @@ race_call_rate <-
   select(race, call_rate)
 race_call_rate
 #> # A tibble: 2 x 2
-#> # Groups:   race [2]
+#> # Groups: race [2]
 #>   race  call_rate
 #>   <chr>     <dbl>
 #> 1 black    0.0645
@@ -169,7 +169,7 @@ resume_race_sex <-
   summarise(call = mean(call))
 head(resume_race_sex)
 #> # A tibble: 4 x 3
-#> # Groups:   race [2]
+#> # Groups: race [2]
 #>   race  sex      call
 #>   <chr> <chr>   <dbl>
 #> 1 black female 0.0663
@@ -188,7 +188,7 @@ resume_sex <-
 resume_sex
 #> # A tibble: 2 x 3
 #>   sex     black  white
-#>   <chr>   <dbl>  <dbl>
+#> * <chr>   <dbl>  <dbl>
 #> 1 female 0.0663 0.0989
 #> 2 male   0.0583 0.0887
 ```
@@ -260,7 +260,7 @@ resume %>%
   group_by(BlackFemale, race, sex) %>%
   count()
 #> # A tibble: 4 x 4
-#> # Groups:   BlackFemale, race, sex [4]
+#> # Groups: BlackFemale, race, sex [4]
 #>   BlackFemale race  sex        n
 #>         <dbl> <chr> <chr>  <int>
 #> 1        0    black male     549
@@ -397,7 +397,7 @@ resume %>%
   group_by(race, sex) %>%
   summarise(call = mean(call))
 #> # A tibble: 4 x 3
-#> # Groups:   race [?]
+#> # Groups: race [?]
 #>   race  sex      call
 #>   <chr> <chr>   <dbl>
 #> 1 black female 0.0663
@@ -696,7 +696,7 @@ full_prop_by_state_chain <-
   summarise(fullPropAfter = mean(fullPropAfter))
 full_prop_by_state_chain
 #> # A tibble: 8 x 3
-#> # Groups:   state [?]
+#> # Groups: state [?]
 #>   state chain      fullPropAfter
 #>   <chr> <chr>              <dbl>
 #> 1 NJ    burgerking         0.358

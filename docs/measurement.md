@@ -170,7 +170,7 @@ violent_exp_prop %>%
   spread(violent.exp.taliban, prop)
 #> # A tibble: 3 x 4
 #>   violent.exp.ISAF     `0`     `1`  `<NA>`
-#>              <int>   <dbl>   <dbl>   <dbl>
+#> *            <int>   <dbl>   <dbl>   <dbl>
 #> 1                0 0.483   0.129   0.00799
 #> 2                1 0.172   0.191   0.00799
 #> 3               NA 0.00254 0.00290 0.00363
@@ -562,9 +562,9 @@ afghan %>%
 #> $ list.group    <chr> "control", "ISAF", "control", "ISAF", "taliban",...
 #> $ n             <int> 188, 174, 265, 278, 433, 265, 260, 287, 200, 182...
 #> # A tibble: 5 x 4
-#> # Groups:   list.response [5]
+#> # Groups: list.response [5]
 #>   list.response control  ISAF taliban
-#>           <int>   <dbl> <dbl>   <dbl>
+#> *         <int>   <dbl> <dbl>   <dbl>
 #> 1             0     188 174         0
 #> 2             1     265 278       433
 #> 3             2     265 260       287
@@ -726,7 +726,7 @@ party_polarization <-
   mutate(polarization = Republican - Democrat)
 party_polarization
 #> # A tibble: 33 x 4
-#> # Groups:   congress [33]
+#> # Groups: congress [33]
 #>   congress Democrat Republican polarization
 #>      <int>    <dbl>      <dbl>        <dbl>
 #> 1       80   -0.146      0.276        0.421
@@ -879,9 +879,9 @@ congress80 %>%
   group_by(party, cluster2) %>%
   count()
 #> # A tibble: 5 x 3
-#> # Groups:   party, cluster2 [5]
+#> # Groups: party, cluster2 [5]
 #>   party      cluster2     n
-#>   <chr>      <fct>    <int>
+#>   <chr>      <fctr>   <int>
 #> 1 Democrat   1          132
 #> 2 Democrat   2           62
 #> 3 Other      2            2
@@ -916,9 +916,9 @@ congress112 %>%
   group_by(party, cluster2) %>%
   count()
 #> # A tibble: 3 x 3
-#> # Groups:   party, cluster2 [3]
+#> # Groups: party, cluster2 [3]
 #>   party      cluster2     n
-#>   <chr>      <fct>    <int>
+#>   <chr>      <fctr>   <int>
 #> 1 Democrat   1          200
 #> 2 Republican 1            1
 #> 3 Republican 2          242

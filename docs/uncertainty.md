@@ -543,7 +543,7 @@ star_estimates <-
 star_estimates
 #> # A tibble: 3 x 6
 #>   classtype                  n   est    se   lwr   upr
-#>   <fctr>                 <int> <dbl> <dbl> <dbl> <dbl>
+#>   <fct>                  <int> <dbl> <dbl> <dbl> <dbl>
 #> 1 small class              726   723  1.91   720   727
 #> 2 regular class            836   720  1.84   716   723
 #> 3 regular class with aid   791   721  1.86   717   724
@@ -716,7 +716,7 @@ y
 select(spread(x, Truth, Number), -Guess)
 #> # A tibble: 2 x 2
 #>    Milk   Tea
-#> * <int> <int>
+#>   <int> <int>
 #> 1     4     0
 #> 2     0     4
 # Use spread to make it a 2 x 2 table
@@ -895,7 +895,7 @@ x <- resume %>%
 x
 #> # A tibble: 2 x 3
 #>   race    `0`   `1`
-#> * <chr> <int> <int>
+#>   <chr> <int> <int>
 #> 1 black  2278   157
 #> 2 white  2200   235
 prop.test(as.matrix(select(x, -race)), alternative = "greater")

@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-02-08">
+<meta name="date" content="2018-02-18">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -301,7 +301,7 @@ smpl &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">SATE &lt;-<span class="st"> </span><span class="kw">mean</span>(smpl[[<span class="st">&quot;tau&quot;</span>]])
 SATE
 <span class="co">#&gt; [1] 0.952</span></code></pre></div>
-<p>Simulations of RCTs. Write a function that takes the sample as an input <code>smpl</code>, randomly assigns the treatment to each individual:</p>
+<p>Simulations of RCTs. Write a function that takes the sample as an input <code>smpl</code>, then randomly assigns the treatment to each individual:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim_treat &lt;-<span class="st"> </span><span class="cf">function</span>(smpl) {
   n &lt;-<span class="st"> </span><span class="kw">nrow</span>(smpl)
   SATE &lt;-<span class="st"> </span><span class="kw">mean</span>(smpl[[<span class="st">&quot;tau&quot;</span>]])
@@ -453,8 +453,9 @@ pate_sims_se <span class="op">%&gt;%</span>
          <span class="dt">ci_upper =</span> diff_mean <span class="op">+</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>level) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span>se,
          <span class="dt">includes_pate =</span> PATE <span class="op">&gt;</span><span class="st"> </span>ci_lower <span class="op">&amp;</span><span class="st"> </span>PATE <span class="op">&lt;</span><span class="st"> </span>ci_upper) <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw">summarise</span>(<span class="dt">coverage =</span> <span class="kw">mean</span>(includes_pate))
-}</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pate_sims_coverage</span>(pate_sims_se, <span class="fl">0.95</span>)
+}
+
+<span class="kw">pate_sims_coverage</span>(pate_sims_se, <span class="fl">0.95</span>)
 <span class="co">#&gt; # A tibble: 1 x 1</span>
 <span class="co">#&gt;   coverage</span>
 <span class="co">#&gt;      &lt;dbl&gt;</span>
@@ -532,7 +533,7 @@ props &lt;-<span class="st"> </span><span class="kw">map_df</span>(MoE, moe_pop_
        <span class="dt">x =</span> <span class="st">&quot;population proportion&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;sample size&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" /> <a href="https://www.rdocumentation.org/packages/readr/topics/read_csv">read_csv</a> already recognizes the date columns, so we don’t need to convert them. The 2008 election was on Nov 11, 2008, so we’ll store that in a variable.</p>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-30-1.png" width="70%" style="display: block; margin: auto;" /> <a href="https://www.rdocumentation.org/packages/readr/topics/read_csv">read_csv</a> already recognizes the date columns, so we don’t need to convert them. The 2008 election was on Nov 11, 2008, so we’ll store that in a variable.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ELECTION_DATE &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="dv">20081104</span>)</code></pre></div>
 <p>Load the final vote shares,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;pres08&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
@@ -588,7 +589,7 @@ poll_pred
 <span class="st">  </span><span class="kw">scale_colour_discrete</span>(<span class="st">&quot;CI includes result?&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_fixed</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-35-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Proportion of polls with confidence intervals that include the election outcome?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">poll_pred <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="kw">mean</span>(covers))
@@ -638,9 +639,9 @@ poll_pred <span class="op">%&gt;%</span>
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">xintercept =</span> g4reading),
              <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_grid</span>(classtype <span class="op">~</span><span class="st"> </span>.) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Fourth grade reading score&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Density&quot;</span>)</code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">alpha &lt;-<span class="st"> </span><span class="fl">0.05</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Fourth grade reading score&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Density&quot;</span>)
+
+alpha &lt;-<span class="st"> </span><span class="fl">0.05</span>
 star_estimates &lt;-
 <span class="st">  </span>STAR <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(g4reading)) <span class="op">%&gt;%</span>
@@ -656,8 +657,9 @@ star_estimates
 <span class="co">#&gt;   &lt;fct&gt;                  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 small class              726   723  1.91   720   727</span>
 <span class="co">#&gt; 2 regular class            836   720  1.84   716   723</span>
-<span class="co">#&gt; 3 regular class with aid   791   721  1.86   717   724</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">star_estimates <span class="op">%&gt;%</span>
+<span class="co">#&gt; 3 regular class with aid   791   721  1.86   717   724</span>
+
+star_estimates <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(classtype <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;small class&quot;</span>, <span class="st">&quot;regular class&quot;</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># ensure that it is ordered small then regular</span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(classtype)) <span class="op">%&gt;%</span>
@@ -671,6 +673,7 @@ star_estimates
 <span class="co">#&gt;      se   est ci_lwr ci_up</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  2.65  3.50  -1.70  8.70</span></code></pre></div>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Use we could use <a href="https://www.rdocumentation.org/packages/tidyr/topics/spread">spread</a> and <a href="https://www.rdocumentation.org/packages/tidyr/topics/gather">gather</a>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">star_ate &lt;-
 <span class="st">  </span>star_estimates <span class="op">%&gt;%</span>
@@ -743,8 +746,9 @@ true
 <span class="co">#&gt; 2    2.00 16.0  0.229 </span>
 <span class="co">#&gt; 3    4.00 36.0  0.514 </span>
 <span class="co">#&gt; 4    6.00 16.0  0.229 </span>
-<span class="co">#&gt; 5    8.00  1.00 0.0143</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sims &lt;-<span class="st"> </span><span class="dv">1000</span>
+<span class="co">#&gt; 5    8.00  1.00 0.0143</span>
+
+sims &lt;-<span class="st"> </span><span class="dv">1000</span>
 guess &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">guess =</span> <span class="kw">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;T&quot;</span>, <span class="st">&quot;T&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;T&quot;</span>, <span class="st">&quot;T&quot;</span>, <span class="st">&quot;M&quot;</span>))
 randomize_tea &lt;-<span class="st"> </span><span class="cf">function</span>(df) {
   <span class="co"># randomize the order of teas</span>
@@ -925,8 +929,9 @@ z.score
 <span class="co">#&gt; # A tibble: 1 x 2</span>
 <span class="co">#&gt;   p_value_1sided p_value_2sided</span>
 <span class="co">#&gt;            &lt;dbl&gt;          &lt;dbl&gt;</span>
-<span class="co">#&gt; 1         0.0935          0.187</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">t.test</span>(g4reading <span class="op">~</span><span class="st"> </span>classtype,
+<span class="co">#&gt; 1         0.0935          0.187</span>
+
+<span class="kw">t.test</span>(g4reading <span class="op">~</span><span class="st"> </span>classtype,
   <span class="dt">data =</span> <span class="kw">filter</span>(STAR, classtype <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;small class&quot;</span>, <span class="st">&quot;regular class&quot;</span>)))
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  Welch Two Sample t-test</span>
@@ -977,26 +982,26 @@ x
 <span class="co">#&gt; sample estimates:</span>
 <span class="co">#&gt; prop 1 prop 2 </span>
 <span class="co">#&gt;  0.936  0.903</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># sample size</span>
-n0 &lt;-<span class="st"> </span><span class="kw">sum</span>(resume<span class="op">$</span>race <span class="op">==</span><span class="st"> &quot;black&quot;</span>)
+<p>Assign sample sizes and proportions, then calculate point estimates, standard error, z-statistic and one-sided p-value.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n0 &lt;-<span class="st"> </span><span class="kw">sum</span>(resume<span class="op">$</span>race <span class="op">==</span><span class="st"> &quot;black&quot;</span>)
 n1 &lt;-<span class="st"> </span><span class="kw">sum</span>(resume<span class="op">$</span>race <span class="op">==</span><span class="st"> &quot;white&quot;</span>)
-<span class="co"># sample proportions</span>
-p &lt;-<span class="st"> </span><span class="kw">mean</span>(resume<span class="op">$</span>call) <span class="co"># overall</span>
+
+p &lt;-<span class="st"> </span><span class="kw">mean</span>(resume<span class="op">$</span>call) 
 p0 &lt;-<span class="st"> </span><span class="kw">mean</span>(<span class="kw">filter</span>(resume, race <span class="op">==</span><span class="st"> &quot;black&quot;</span>)<span class="op">$</span>call)
 p1 &lt;-<span class="st"> </span><span class="kw">mean</span>(<span class="kw">filter</span>(resume, race <span class="op">==</span><span class="st"> &quot;white&quot;</span>)<span class="op">$</span>call)
-<span class="co"># point estimate</span>
+
 est &lt;-<span class="st"> </span>p1 <span class="op">-</span><span class="st"> </span>p0
 est
 <span class="co">#&gt; [1] 0.032</span>
-<span class="co"># standard error</span>
+
 se &lt;-<span class="st"> </span><span class="kw">sqrt</span>(p <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p) <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">/</span><span class="st"> </span>n0 <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span>n1))
 se
 <span class="co">#&gt; [1] 0.0078</span>
-<span class="co"># z statistic</span>
+
 zstat &lt;-<span class="st"> </span>est <span class="op">/</span><span class="st"> </span>se
 zstat
 <span class="co">#&gt; [1] 4.11</span>
-<span class="co"># one sided p value</span>
+
 <span class="kw">pnorm</span>(<span class="op">-</span><span class="kw">abs</span>(zstat))
 <span class="co">#&gt; [1] 1.99e-05</span></code></pre></div>
 <p>The only thing that changed is using <a href="https://www.rdocumentation.org/packages/dplyr/topics/filter">filter</a> for selecting the groups.</p>
@@ -1208,7 +1213,7 @@ tory_y1 &lt;-<span class="st"> </span><span class="kw">augment</span>(tory_fit2,
               <span class="dt">data =</span> tory_y1, <span class="dt">alpha =</span> <span class="fl">0.3</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> margin, <span class="dt">y =</span> .fitted), <span class="dt">data =</span> tory_y1) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Margin of vitory&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;log net wealth&quot;</span>)</code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-68-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-63-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tory_y1 &lt;-<span class="st"> </span><span class="kw">augment</span>(tory_fit1, <span class="dt">newdata =</span> <span class="kw">tibble</span>(<span class="dt">margin =</span> <span class="dv">0</span>))
 tory_y1
 <span class="co">#&gt;   margin .fitted .se.fit</span>

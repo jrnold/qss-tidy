@@ -6,36 +6,37 @@ editor_options:
 
 # Introduction
 
+
 ## Prerequisites {-}
 
 In this and other chapters we will make use of data from the `qss` package, which is available on github. Install it using the `install_github()` function from the library `devtools`. 
 
-```{r}
+```{r eval=FALSE}
 devtools::install_github("kosukeimai/qss-package")
+```
+```{r message=FALSE}
 library("qss")
 ```
 
+In the prerequisites section of each chapter, we'll load any packages needed for the chapter, possibly define some functions, and possibly load data.
+It is good practice to load necessary libraries at the start of an R markdown file or script.
 
-In the prerequisites section of each chapter, we'll load any packages
-needed for the chapter, and possibly define some functions or load data.
-
-
-```{r}
+```{r message=FALSE}
 library("tidyverse")
 ```
 We also load the **readr** package to load `csv` files,
 
-```{r}
+```{r message=FALSE}
 library("readr")
 ```
 the **haven** package to load Stata `dta` files,
 
-```{r}
+```{r message=FALSE}
 library("haven")
 ```
-and the **rio** package to load multiple types of files.
+and the **rio** package to load multiple types of files
 
-```{r}
+```{r message = FALSE}
 library("rio")
 ```
 
@@ -66,19 +67,19 @@ I recommend starting with the following two courses.
 
 ### Arithmetic Operations
 
-*This sections contains no code to translate -- see*QSS* text.*
+This sections contains no code to translate---see *QSS* text.
 
 
 ### Objects
 
-*This sections contains no code to translate -- see*QSS* text.*
+This sections contains no code to translate---see *QSS* text.
 
 Also see [R4DS: Workflow basics](http://r4ds.had.co.nz/workflow-basics.html).
 
 
 ### Vectors
 
-*This sections contains no code to translate -- see*QSS* text.*
+This sections contains no code to translate---see *QSS* text.
 
 Also see [R4DS: Vectors](http://r4ds.had.co.nz/vectors.html). In 
 *R for Data Science* vectors are introduced much later, after data frames.
@@ -86,20 +87,17 @@ Also see [R4DS: Vectors](http://r4ds.had.co.nz/vectors.html). In
 
 ### Functions
 
-*This sections contains no code to translate -- see*QSS* text.*
+This sections contains no code to translate---see *QSS* text.
 
 Also see [R4DS: Functions](http://r4ds.had.co.nz/functions.html).
 
 
 ### Data Files
 
-
 Rather than using `setwd()` in scripts, data analysis should be organized in
 projects. Read the introduction on RStudio projects in  [R4DS](http://r4ds.had.co.nz/workflow-projects.html).[^setwd]
 
-
 [^setwd]: For more on using projects read [Project-oriented workflow](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/).
-
 
 Datasets used in R are accessed in two ways.
 

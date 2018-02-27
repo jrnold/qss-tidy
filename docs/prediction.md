@@ -371,17 +371,16 @@ last_polls <-
   slice(1)
 last_polls
 #> # A tibble: 51 x 9
-#> # Groups:   state [51]
-#>   state Pollster      Obama McCain middate    margin `ELECTION_DAY - midd…
-#>   <chr> <chr>         <int>  <int> <date>      <int> <time>               
-#> 1 AK    Research 200…    39     58 2008-10-29    -19 6                    
-#> 2 AL    SurveyUSA-2      36     61 2008-10-27    -25 8                    
-#> 3 AR    ARG-4            44     51 2008-10-29    - 7 6                    
-#> 4 AZ    ARG-3            46     50 2008-10-29    - 4 6                    
-#> 5 CA    SurveyUSA-3      60     36 2008-10-30     24 5                    
-#> 6 CO    ARG-3            52     45 2008-10-29      7 6                    
-#> # ... with 45 more rows, and 2 more variables: elec_margin <int>,
-#> #   error <int>
+#> # Groups: state [51]
+#>   state Pollster        Obama McCain middate    margin `ELECT… elec… error
+#>   <chr> <chr>           <int>  <int> <date>      <int> <time>  <int> <int>
+#> 1 AK    Research 2000-3    39     58 2008-10-29    -19 6         -21   - 2
+#> 2 AL    SurveyUSA-2        36     61 2008-10-27    -25 8         -21     4
+#> 3 AR    ARG-4              44     51 2008-10-29    - 7 6         -20   -13
+#> 4 AZ    ARG-3              46     50 2008-10-29    - 4 6         - 9   - 5
+#> 5 CA    SurveyUSA-3        60     36 2008-10-30     24 5          24     0
+#> 6 CO    ARG-3              52     45 2008-10-29      7 6           9     2
+#> # ... with 45 more rows
 ```
 
 
@@ -484,7 +483,7 @@ last_polls %>%
   group_by(classification) %>%
   count()
 #> # A tibble: 4 x 2
-#> # Groups:   classification [4]
+#> # Groups: classification [4]
 #>   classification     n
 #>   <chr>          <int>
 #> 1 false negative     2
@@ -1274,8 +1273,8 @@ social %>%
 Linear regression without intercept.
 
 ```r
-fit.noint <- lm(primary2006 ~ -1 + messages, data = social)
-fit.noint
+fit_noint <- lm(primary2006 ~ -1 + messages, data = social)
+fit_noint
 #> 
 #> Call:
 #> lm(formula = primary2006 ~ -1 + messages, data = social)
@@ -1291,10 +1290,10 @@ Calculating the regression average effect is also easier if we make the control 
 Use [fct_relevel](https://www.rdocumentation.org/packages/forcats/topics/fct_relevel) to make "Control"
 
 ```r
-fit.control <-
- mutate(social, messages = fct_relevel(messages, "Control")) %>%
- lm(primary2006 ~ messages, data = .)
-fit.control
+fit_control <-
+  mutate(social, messages = fct_relevel(messages, "Control")) %>%
+  lm(primary2006 ~ messages, data = .)
+fit_control
 #> 
 #> Call:
 #> lm(formula = primary2006 ~ messages, data = .)
@@ -1318,7 +1317,7 @@ social %>%
 #>   messages   primary2006 Control   diff
 #>   <chr>            <dbl>   <dbl>  <dbl>
 #> 1 Civic Duty       0.315   0.297 0.0179
-#> 2 Control          0.297   0.297 0     
+#> 2 Control          0.297   0.297 0.    
 #> 3 Hawthorne        0.322   0.297 0.0257
 #> 4 Neighbors        0.378   0.297 0.0813
 ```
@@ -1366,16 +1365,16 @@ diff(ate$ate_Neighbors)
 
 
 ```r
-social.neighbor <- social %>%
+social_neighbor <- social %>%
   filter( (messages == "Control") | (messages == "Neighbors"))
 
-fit.int <- lm(primary2006 ~ primary2004 + messages + primary2004:messages,
-              data = social.neighbor)
-fit.int
+fit_int <- lm(primary2006 ~ primary2004 + messages + primary2004:messages,
+              data = social_neighbor)
+fit_int
 #> 
 #> Call:
 #> lm(formula = primary2006 ~ primary2004 + messages + primary2004:messages, 
-#>     data = social.neighbor)
+#>     data = social_neighbor)
 #> 
 #> Coefficients:
 #>                   (Intercept)                    primary2004  
@@ -1386,10 +1385,10 @@ fit.int
 
 
 ```r
-lm(primary2006 ~ primary2004 * messages, data = social.neighbor)
+lm(primary2006 ~ primary2004 * messages, data = social_neighbor)
 #> 
 #> Call:
-#> lm(formula = primary2006 ~ primary2004 * messages, data = social.neighbor)
+#> lm(formula = primary2006 ~ primary2004 * messages, data = social_neighbor)
 #> 
 #> Coefficients:
 #>                   (Intercept)                    primary2004  
@@ -1400,19 +1399,19 @@ lm(primary2006 ~ primary2004 * messages, data = social.neighbor)
 
 
 ```r
-social.neighbor <-
-  social.neighbor %>%
+social_neighbor <-
+  social_neighbor %>%
   mutate(age = 2008 - yearofbirth)
 
-summary(social.neighbor$age)
+summary(social_neighbor$age)
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #>    22.0    43.0    52.0    51.8    61.0   108.0
 
-fit.age <- lm(primary2006 ~ age * messages, data = social.neighbor)
+fit.age <- lm(primary2006 ~ age * messages, data = social_neighbor)
 fit.age
 #> 
 #> Call:
-#> lm(formula = primary2006 ~ age * messages, data = social.neighbor)
+#> lm(formula = primary2006 ~ age * messages, data = social_neighbor)
 #> 
 #> Coefficients:
 #>           (Intercept)                    age      messagesNeighbors  
@@ -1434,10 +1433,10 @@ ate.age
 #> # A tibble: 4 x 4
 #>     age Control Neighbors   diff
 #>   <dbl>   <dbl>     <dbl>  <dbl>
-#> 1  25.0   0.189     0.254 0.0643
-#> 2  45.0   0.269     0.346 0.0768
-#> 3  65.0   0.349     0.439 0.0894
-#> 4  85.0   0.429     0.531 0.102
+#> 1   25.   0.189     0.254 0.0643
+#> 2   45.   0.269     0.346 0.0768
+#> 3   65.   0.349     0.439 0.0894
+#> 4   85.   0.429     0.531 0.102
 ```
 
 You can use [poly](https://www.rdocumentation.org/packages/base/topics/poly) function to calculate polynomials instead of adding each term, `age + I(age ^ 2)`.
@@ -1446,11 +1445,11 @@ However, you really shouldn't interpret the coefficients directly anyways, so th
 
 ```r
 fit.age2 <- lm(primary2006 ~ poly(age, 2) * messages,
-               data = social.neighbor)
+               data = social_neighbor)
 fit.age2
 #> 
 #> Call:
-#> lm(formula = primary2006 ~ poly(age, 2) * messages, data = social.neighbor)
+#> lm(formula = primary2006 ~ poly(age, 2) * messages, data = social_neighbor)
 #> 
 #> Coefficients:
 #>                     (Intercept)                    poly(age, 2)1  
@@ -1465,7 +1464,7 @@ Create a data frame of combinations of ages and messages using [data_grid](https
 
 ```r
 y.hat <-
-  data_grid(social.neighbor, age, messages) %>%
+  data_grid(social_neighbor, age, messages) %>%
   add_predictions(fit.age2)
 ```
 

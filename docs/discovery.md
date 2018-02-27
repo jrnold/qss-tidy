@@ -63,15 +63,15 @@ Use the function [tidy](https://www.rdocumentation.org/packages/tidyytext/topics
 corpus_tidy <- tidy(corpus_raw, "corpus")
 corpus_tidy
 #> # A tibble: 85 x 8
-#>   author datetimestamp       description heading id       language origin
-#>   <lgl>  <dttm>              <lgl>       <lgl>   <chr>    <chr>    <lgl> 
-#> 1 NA     2018-02-08 03:01:45 NA          NA      fp01.txt en       NA    
-#> 2 NA     2018-02-08 03:01:45 NA          NA      fp02.txt en       NA    
-#> 3 NA     2018-02-08 03:01:45 NA          NA      fp03.txt en       NA    
-#> 4 NA     2018-02-08 03:01:45 NA          NA      fp04.txt en       NA    
-#> 5 NA     2018-02-08 03:01:45 NA          NA      fp05.txt en       NA    
-#> 6 NA     2018-02-08 03:01:45 NA          NA      fp06.txt en       NA    
-#> # ... with 79 more rows, and 1 more variable: text <chr>
+#>   author datetimestamp       description heading id     lang… orig… text  
+#>   <lgl>  <dttm>              <lgl>       <lgl>   <chr>  <chr> <lgl> <chr> 
+#> 1 NA     2018-01-10 20:48:26 NA          NA      fp01.… en    NA    AFTER…
+#> 2 NA     2018-01-10 20:48:26 NA          NA      fp02.… en    NA    "WHEN…
+#> 3 NA     2018-01-10 20:48:26 NA          NA      fp03.… en    NA    IT IS…
+#> 4 NA     2018-01-10 20:48:26 NA          NA      fp04.… en    NA    "MY L…
+#> 5 NA     2018-01-10 20:48:26 NA          NA      fp05.… en    NA    "QUEE…
+#> 6 NA     2018-01-10 20:48:26 NA          NA      fp06.… en    NA    "THE …
+#> # ... with 79 more rows
 ```
 
 The `text` column contains the text of the documents themselves.

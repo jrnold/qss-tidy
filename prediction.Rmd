@@ -937,7 +937,7 @@ social_neighbor <- social %>%
 
 fit_int <- lm(primary2006 ~ primary2004 + messages + primary2004:messages,
               data = social_neighbor)
-fit.int
+fit_int
 ```
 
 ```{r}

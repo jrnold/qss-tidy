@@ -5,27 +5,27 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>QSS Tidyverse Code</title>
-  <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
+  <title>Quantitive Social Science: The R Tidyverse Code</title>
+  <meta name="description" content="This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.">
+  <meta name="generator" content="bookdown 0.7.1 and GitBook 2.6.7">
 
-  <meta property="og:title" content="QSS Tidyverse Code" />
+  <meta property="og:title" content="Quantitive Social Science: The R Tidyverse Code" />
   <meta property="og:type" content="book" />
+  <meta property="og:url" content="http://jrnold.github.io/qss-tidy" />
   
-  
-  
+  <meta property="og:description" content="This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text." />
   <meta name="github-repo" content="jrnold/qss-tidy" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="QSS Tidyverse Code" />
+  <meta name="twitter:title" content="Quantitive Social Science: The R Tidyverse Code" />
   
-  
+  <meta name="twitter:description" content="This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text." />
   
 
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-02-18">
+<meta name="date" content="2018-02-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -50,41 +50,69 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 </head>
@@ -99,6 +127,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
+<li><strong><a href="./">QSS Tidyverse Code</a></strong></li>
+
+<li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#colophon"><i class="fa fa-check"></i>Colophon</a></li>
 </ul></li>
@@ -259,7 +290,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">QSS Tidyverse Code</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Quantitive Social Science: The R Tidyverse Code</a>
           </h1>
         </div>
 
@@ -272,19 +303,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="prerequisites" class="section level2 unnumbered">
 <h2>Prerequisites</h2>
 <p>In this and other chapters we will make use of data from the <code>qss</code> package, which is available on github. Install it using the <code>install_github()</code> function from the library <code>devtools</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;kosukeimai/qss-package&quot;</span>)
-<span class="co">#&gt; Using GitHub PAT from envvar GITHUB_PAT</span>
-<span class="co">#&gt; Skipping install of &#39;qss&#39; from a github remote, the SHA1 (898fffb4) has not changed since last install.</span>
-<span class="co">#&gt;   Use `force = TRUE` to force installation</span>
-<span class="kw">library</span>(<span class="st">&quot;qss&quot;</span>)</code></pre></div>
-<p>In the prerequisites section of each chapter, we’ll load any packages needed for the chapter, and possibly define some functions or load data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;kosukeimai/qss-package&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;qss&quot;</span>)</a></code></pre></div>
+<p>In the prerequisites section of each chapter, we’ll load any packages needed for the chapter, possibly define some functions, and possibly load data.
+It is good practice to load necessary libraries at the start of an R markdown file or script.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</a></code></pre></div>
 <p>We also load the <strong>readr</strong> package to load <code>csv</code> files,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)</a></code></pre></div>
 <p>the <strong>haven</strong> package to load Stata <code>dta</code> files,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;haven&quot;</span>)</code></pre></div>
-<p>and the <strong>rio</strong> package to load multiple types of files.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;rio&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;haven&quot;</span>)</a></code></pre></div>
+<p>and the <strong>rio</strong> package to load multiple types of files</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;rio&quot;</span>)</a></code></pre></div>
 </div>
 <div id="overview-of-the-book" class="section level2">
 <h2><span class="header-section-number">1.1</span> Overview of the Book</h2>
@@ -297,237 +326,260 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="introduction-to-r" class="section level2">
 <h2><span class="header-section-number">1.3</span> Introduction to R</h2>
-<p>These notes do not aim to completely teach R and the tidyverse. However, there are many other resources for that.</p>
-<p><a href="http://r4ds.had.co.nz/">R for Data Science</a> is a comprehensive introduction to R using the tidyverse.</p>
-<p><a href="https://www.datacamp.com/home">Data Camp</a> has interactive courses. In particular, I recommend starting with the following two courses.</p>
+<p>These notes do not aim to completely teach R and the tidyverse.
+However, there are many other resources for that.</p>
+<p><a href="http://r4ds.had.co.nz/">R for Data Science</a> is a comprehensive introduction to R
+using the tidyverse.</p>
+<p><a href="https://www.datacamp.com/home">Data Camp</a> has interactive courses. In particular,
+I recommend starting with the following two courses.</p>
 <ul>
 <li><a href="https://www.datacamp.com/courses/free-introduction-to-r">Introduction to R</a></li>
 <li><a href="https://www.datacamp.com/courses/introduction-to-the-tidyverse">Introduction to the Tidyverse</a></li>
 </ul>
 <div id="arithmetic-operations" class="section level3">
 <h3><span class="header-section-number">1.3.1</span> Arithmetic Operations</h3>
-<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
+<p>This sections contains no code to translate—see <em>QSS</em> text.</p>
 </div>
 <div id="objects" class="section level3">
 <h3><span class="header-section-number">1.3.2</span> Objects</h3>
-<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
+<p>This sections contains no code to translate—see <em>QSS</em> text.</p>
 <p>Also see <a href="http://r4ds.had.co.nz/workflow-basics.html">R4DS: Workflow basics</a>.</p>
 </div>
 <div id="vectors" class="section level3">
 <h3><span class="header-section-number">1.3.3</span> Vectors</h3>
-<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
-<p>Also see <a href="http://r4ds.had.co.nz/vectors.html">R4DS: Vectors</a>. In <em>R for Data Science</em> vectors are introduced much later, after data frames.</p>
+<p>This sections contains no code to translate—see <em>QSS</em> text.</p>
+<p>Also see <a href="http://r4ds.had.co.nz/vectors.html">R4DS: Vectors</a>. In
+<em>R for Data Science</em> vectors are introduced much later, after data frames.</p>
 </div>
 <div id="functions" class="section level3">
 <h3><span class="header-section-number">1.3.4</span> Functions</h3>
-<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
+<p>This sections contains no code to translate—see <em>QSS</em> text.</p>
 <p>Also see <a href="http://r4ds.had.co.nz/functions.html">R4DS: Functions</a>.</p>
 </div>
 <div id="data-files" class="section level3">
 <h3><span class="header-section-number">1.3.5</span> Data Files</h3>
-<p>Rather than using <code>setwd()</code> in scripts, data analysis should be organized in projects. Read the introduction on RStudio projects in <a href="http://r4ds.had.co.nz/workflow-projects.html">R4DS</a>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p>Rather than using <code>setwd()</code> in scripts, data analysis should be organized in
+projects. Read the introduction on RStudio projects in <a href="http://r4ds.had.co.nz/workflow-projects.html">R4DS</a>.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <p>Datasets used in R are accessed in two ways.</p>
 <ul>
 <li>Datasets can be distributed with R packages. These are often smaller datasets used in examples and tutorials in packages. These are loaded with the <code>data()</code> function. For example you can load UN data on demographic statistics from the <strong>qss</strong> library, which distributes the data sets used in the <em>QSS</em> textbook. (The function <code>data()</code> called without any arguments will list all the datasets distributed with installed packages.)</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;UNpop&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">data</span>(<span class="st">&quot;UNpop&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</a></code></pre></div>
 <ul>
 <li>Datasets can be loaded from external files including both stored R objects (<code>.RData</code>, <code>.rda</code>) and other formats (<code>.csv</code>, <code>.dta</code>, <code>.sav</code>). To read a <a href="https://en.wikipedia.org/wiki/Comma-separated_values">csv</a> file into R use the <code>read_csv</code> function from the <strong>readr</strong> library, part of the tidyverse.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop_URL &lt;-<span class="st"> &quot;https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.csv&quot;</span>
-UNpop &lt;-<span class="st"> </span><span class="kw">read_csv</span>(UNpop_URL)
-<span class="co">#&gt; Parsed with column specification:</span>
-<span class="co">#&gt; cols(</span>
-<span class="co">#&gt;   year = col_integer(),</span>
-<span class="co">#&gt;   world.pop = col_integer()</span>
-<span class="co">#&gt; )</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">UNpop_URL &lt;-<span class="st"> &quot;https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.csv&quot;</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">UNpop &lt;-<span class="st"> </span><span class="kw">read_csv</span>(UNpop_URL)</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">#&gt; Parsed with column specification:</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co">#&gt; cols(</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">#&gt;   year = col_integer(),</span></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#&gt;   world.pop = col_integer()</span></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt; )</span></a></code></pre></div>
 <p>We use the readr function<code>read_csv()</code> instead of the base R function <code>read.csv()</code> used in the <em>QSS</em> text. It is slightly faster, and returns a <code>tibble</code> instead of a data frame. Check this by calling <code>class()</code> on the new object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(UNpop)
-<span class="co">#&gt; [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</span>
-UNpop
-<span class="co">#&gt; # A tibble: 7 x 2</span>
-<span class="co">#&gt;    year world.pop</span>
-<span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span>
-<span class="co">#&gt; 1  1950   2525779</span>
-<span class="co">#&gt; 2  1960   3026003</span>
-<span class="co">#&gt; 3  1970   3691173</span>
-<span class="co">#&gt; 4  1980   4449049</span>
-<span class="co">#&gt; 5  1990   5320817</span>
-<span class="co">#&gt; 6  2000   6127700</span>
-<span class="co">#&gt; # ... with 1 more row</span></code></pre></div>
-<p>See <a href="http://r4ds.had.co.nz/">R for Data Science</a> <a href="http://r4ds.had.co.nz/tibbles.html#introduction-4">Ch 11: Data Import</a> for more discussion.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">class</span>(UNpop)</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">#&gt; [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</span></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">UNpop</a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="co">#&gt; # A tibble: 7 x 2</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5"><span class="co">#&gt;    year world.pop</span></a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="co">#&gt; 1  1950   2525779</span></a>
+<a class="sourceLine" id="cb11-8" data-line-number="8"><span class="co">#&gt; 2  1960   3026003</span></a>
+<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="co">#&gt; 3  1970   3691173</span></a>
+<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">#&gt; 4  1980   4449049</span></a>
+<a class="sourceLine" id="cb11-11" data-line-number="11"><span class="co">#&gt; 5  1990   5320817</span></a>
+<a class="sourceLine" id="cb11-12" data-line-number="12"><span class="co">#&gt; 6  2000   6127700</span></a>
+<a class="sourceLine" id="cb11-13" data-line-number="13"><span class="co">#&gt; # ... with 1 more row</span></a></code></pre></div>
+<p>See <a href="http://r4ds.had.co.nz/">R for Data Science</a> <a href="http://r4ds.had.co.nz/tibbles.html#introduction-4">Ch 11: Data Import</a>
+for more discussion.</p>
 <p>Note that in the previous code we loaded the file directly from a URL, but we could also work with local files on your computer, e.g.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;INTRO/UNpop.csv&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">UNpop &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;INTRO/UNpop.csv&quot;</span>)</a></code></pre></div>
 <p>See <a href="http://r4ds.had.co.nz/">R for Data Science</a> <a href="http://r4ds.had.co.nz/tibbles.html">Ch 10: Tibbles</a> for a deeper discussion of data frames.</p>
 <p>The single bracket, <code>[</code>, is useful to select rows and columns in simple cases.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), ]
-<span class="co">#&gt; # A tibble: 3 x 2</span>
-<span class="co">#&gt;    year world.pop</span>
-<span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span>
-<span class="co">#&gt; 1  1950   2525779</span>
-<span class="co">#&gt; 2  1960   3026003</span>
-<span class="co">#&gt; 3  1970   3691173</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">UNpop[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), ]</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="co">#&gt; # A tibble: 3 x 2</span></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="co">#&gt;    year world.pop</span></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5"><span class="co">#&gt; 1  1950   2525779</span></a>
+<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="co">#&gt; 2  1960   3026003</span></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7"><span class="co">#&gt; 3  1970   3691173</span></a></code></pre></div>
 <p>There are <strong>dplyr</strong> functions to select rows by number, to select rows by certain criteria, or to select columns.</p>
 <p>To select rows 1–3, use <code>slice()</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">slice</span>(UNpop, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)
-<span class="co">#&gt; # A tibble: 3 x 2</span>
-<span class="co">#&gt;    year world.pop</span>
-<span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span>
-<span class="co">#&gt; 1  1950   2525779</span>
-<span class="co">#&gt; 2  1960   3026003</span>
-<span class="co">#&gt; 3  1970   3691173</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">slice</span>(UNpop, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="co">#&gt; # A tibble: 3 x 2</span></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="co">#&gt;    year world.pop</span></a>
+<a class="sourceLine" id="cb14-4" data-line-number="4"><span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb14-5" data-line-number="5"><span class="co">#&gt; 1  1950   2525779</span></a>
+<a class="sourceLine" id="cb14-6" data-line-number="6"><span class="co">#&gt; 2  1960   3026003</span></a>
+<a class="sourceLine" id="cb14-7" data-line-number="7"><span class="co">#&gt; 3  1970   3691173</span></a></code></pre></div>
 <p>Base R allows you to choose the column <code>world.pop</code> column from the <code>UNpop</code> data frame:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[, <span class="st">&quot;world.pop&quot;</span>]
-<span class="co">#&gt; # A tibble: 7 x 1</span>
-<span class="co">#&gt;   world.pop</span>
-<span class="co">#&gt;       &lt;int&gt;</span>
-<span class="co">#&gt; 1   2525779</span>
-<span class="co">#&gt; 2   3026003</span>
-<span class="co">#&gt; 3   3691173</span>
-<span class="co">#&gt; 4   4449049</span>
-<span class="co">#&gt; 5   5320817</span>
-<span class="co">#&gt; 6   6127700</span>
-<span class="co">#&gt; # ... with 1 more row</span>
-UNpop<span class="op">$</span>world.pop
-<span class="co">#&gt; [1] 2525779 3026003 3691173 4449049 5320817 6127700 6916183</span>
-UNpop[[<span class="st">&quot;world.pop&quot;</span>]]
-<span class="co">#&gt; [1] 2525779 3026003 3691173 4449049 5320817 6127700 6916183</span>
-<span class="kw">select</span>(UNpop, world.pop)
-<span class="co">#&gt; # A tibble: 7 x 1</span>
-<span class="co">#&gt;   world.pop</span>
-<span class="co">#&gt;       &lt;int&gt;</span>
-<span class="co">#&gt; 1   2525779</span>
-<span class="co">#&gt; 2   3026003</span>
-<span class="co">#&gt; 3   3691173</span>
-<span class="co">#&gt; 4   4449049</span>
-<span class="co">#&gt; 5   5320817</span>
-<span class="co">#&gt; 6   6127700</span>
-<span class="co">#&gt; # ... with 1 more row</span></code></pre></div>
-<p>Unlike <code>[</code>, the <code>[[</code> and <code>$</code> operators can only select a single column and return a vector.<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> The <code>dplyr</code> function <code>select()</code> <strong>always</strong> returns a tibble (data frame), and never a vector, even if only one column is selected.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">UNpop[, <span class="st">&quot;world.pop&quot;</span>]</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co">#&gt; # A tibble: 7 x 1</span></a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"><span class="co">#&gt;   world.pop</span></a>
+<a class="sourceLine" id="cb15-4" data-line-number="4"><span class="co">#&gt;       &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="co">#&gt; 1   2525779</span></a>
+<a class="sourceLine" id="cb15-6" data-line-number="6"><span class="co">#&gt; 2   3026003</span></a>
+<a class="sourceLine" id="cb15-7" data-line-number="7"><span class="co">#&gt; 3   3691173</span></a>
+<a class="sourceLine" id="cb15-8" data-line-number="8"><span class="co">#&gt; 4   4449049</span></a>
+<a class="sourceLine" id="cb15-9" data-line-number="9"><span class="co">#&gt; 5   5320817</span></a>
+<a class="sourceLine" id="cb15-10" data-line-number="10"><span class="co">#&gt; 6   6127700</span></a>
+<a class="sourceLine" id="cb15-11" data-line-number="11"><span class="co">#&gt; # ... with 1 more row</span></a>
+<a class="sourceLine" id="cb15-12" data-line-number="12">UNpop<span class="op">$</span>world.pop</a>
+<a class="sourceLine" id="cb15-13" data-line-number="13"><span class="co">#&gt; [1] 2525779 3026003 3691173 4449049 5320817 6127700 6916183</span></a>
+<a class="sourceLine" id="cb15-14" data-line-number="14">UNpop[[<span class="st">&quot;world.pop&quot;</span>]]</a>
+<a class="sourceLine" id="cb15-15" data-line-number="15"><span class="co">#&gt; [1] 2525779 3026003 3691173 4449049 5320817 6127700 6916183</span></a>
+<a class="sourceLine" id="cb15-16" data-line-number="16"><span class="kw">select</span>(UNpop, world.pop)</a>
+<a class="sourceLine" id="cb15-17" data-line-number="17"><span class="co">#&gt; # A tibble: 7 x 1</span></a>
+<a class="sourceLine" id="cb15-18" data-line-number="18"><span class="co">#&gt;   world.pop</span></a>
+<a class="sourceLine" id="cb15-19" data-line-number="19"><span class="co">#&gt;       &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb15-20" data-line-number="20"><span class="co">#&gt; 1   2525779</span></a>
+<a class="sourceLine" id="cb15-21" data-line-number="21"><span class="co">#&gt; 2   3026003</span></a>
+<a class="sourceLine" id="cb15-22" data-line-number="22"><span class="co">#&gt; 3   3691173</span></a>
+<a class="sourceLine" id="cb15-23" data-line-number="23"><span class="co">#&gt; 4   4449049</span></a>
+<a class="sourceLine" id="cb15-24" data-line-number="24"><span class="co">#&gt; 5   5320817</span></a>
+<a class="sourceLine" id="cb15-25" data-line-number="25"><span class="co">#&gt; 6   6127700</span></a>
+<a class="sourceLine" id="cb15-26" data-line-number="26"><span class="co">#&gt; # ... with 1 more row</span></a></code></pre></div>
+<p>Unlike <code>[</code>, the <code>[[</code> and <code>$</code> operators can only select a single column and return a vector.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>
+The <code>dplyr</code> function <code>select()</code> <strong>always</strong> returns a tibble (data frame), and never a vector, even if only one column is selected.</p>
 <p>Select rows 1–3 of the <code>year</code> column:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="st">&quot;year&quot;</span>]
-<span class="co">#&gt; # A tibble: 3 x 1</span>
-<span class="co">#&gt;    year</span>
-<span class="co">#&gt;   &lt;int&gt;</span>
-<span class="co">#&gt; 1  1950</span>
-<span class="co">#&gt; 2  1960</span>
-<span class="co">#&gt; 3  1970</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">UNpop[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="st">&quot;year&quot;</span>]</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="co">#&gt; # A tibble: 3 x 1</span></a>
+<a class="sourceLine" id="cb16-3" data-line-number="3"><span class="co">#&gt;    year</span></a>
+<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="co">#&gt;   &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb16-5" data-line-number="5"><span class="co">#&gt; 1  1950</span></a>
+<a class="sourceLine" id="cb16-6" data-line-number="6"><span class="co">#&gt; 2  1960</span></a>
+<a class="sourceLine" id="cb16-7" data-line-number="7"><span class="co">#&gt; 3  1970</span></a></code></pre></div>
 <p>or,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">select</span>(<span class="kw">slice</span>(UNpop, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>), year)
-<span class="co">#&gt; # A tibble: 3 x 1</span>
-<span class="co">#&gt;    year</span>
-<span class="co">#&gt;   &lt;int&gt;</span>
-<span class="co">#&gt; 1  1950</span>
-<span class="co">#&gt; 2  1960</span>
-<span class="co">#&gt; 3  1970</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">select</span>(<span class="kw">slice</span>(UNpop, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>), year)</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="co">#&gt; # A tibble: 3 x 1</span></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="co">#&gt;    year</span></a>
+<a class="sourceLine" id="cb17-4" data-line-number="4"><span class="co">#&gt;   &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="co">#&gt; 1  1950</span></a>
+<a class="sourceLine" id="cb17-6" data-line-number="6"><span class="co">#&gt; 2  1960</span></a>
+<a class="sourceLine" id="cb17-7" data-line-number="7"><span class="co">#&gt; 3  1970</span></a></code></pre></div>
 <p>The same series of functions can be performed using the pipe operator, <code>%&gt;%</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(year)
-<span class="co">#&gt; # A tibble: 3 x 1</span>
-<span class="co">#&gt;    year</span>
-<span class="co">#&gt;   &lt;int&gt;</span>
-<span class="co">#&gt; 1  1950</span>
-<span class="co">#&gt; 2  1960</span>
-<span class="co">#&gt; 3  1970</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">UNpop <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(year)</a>
+<a class="sourceLine" id="cb18-4" data-line-number="4"><span class="co">#&gt; # A tibble: 3 x 1</span></a>
+<a class="sourceLine" id="cb18-5" data-line-number="5"><span class="co">#&gt;    year</span></a>
+<a class="sourceLine" id="cb18-6" data-line-number="6"><span class="co">#&gt;   &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb18-7" data-line-number="7"><span class="co">#&gt; 1  1950</span></a>
+<a class="sourceLine" id="cb18-8" data-line-number="8"><span class="co">#&gt; 2  1960</span></a>
+<a class="sourceLine" id="cb18-9" data-line-number="9"><span class="co">#&gt; 3  1970</span></a></code></pre></div>
 <p>This example may seem verbose, but later we can produce more complicated transformations of the data by chaining together simple functions.</p>
 <p>Select every other row from <code>UNpop</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop<span class="op">$</span>world.pop[<span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">1</span>, <span class="dt">to =</span> <span class="kw">nrow</span>(UNpop), <span class="dt">by =</span> <span class="dv">2</span>)]
-<span class="co">#&gt; [1] 2525779 3691173 5320817 6916183</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">UNpop<span class="op">$</span>world.pop[<span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">1</span>, <span class="dt">to =</span> <span class="kw">nrow</span>(UNpop), <span class="dt">by =</span> <span class="dv">2</span>)]</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="co">#&gt; [1] 2525779 3691173 5320817 6916183</span></a></code></pre></div>
 <p>or</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">slice</span>(<span class="kw">seq</span>(<span class="dv">1</span>, <span class="kw">n</span>(), <span class="dt">by =</span> <span class="dv">2</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(world.pop)
-<span class="co">#&gt; # A tibble: 4 x 1</span>
-<span class="co">#&gt;   world.pop</span>
-<span class="co">#&gt;       &lt;int&gt;</span>
-<span class="co">#&gt; 1   2525779</span>
-<span class="co">#&gt; 2   3691173</span>
-<span class="co">#&gt; 3   5320817</span>
-<span class="co">#&gt; 4   6916183</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">UNpop <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="st">  </span><span class="kw">slice</span>(<span class="kw">seq</span>(<span class="dv">1</span>, <span class="kw">n</span>(), <span class="dt">by =</span> <span class="dv">2</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(world.pop)</a>
+<a class="sourceLine" id="cb20-4" data-line-number="4"><span class="co">#&gt; # A tibble: 4 x 1</span></a>
+<a class="sourceLine" id="cb20-5" data-line-number="5"><span class="co">#&gt;   world.pop</span></a>
+<a class="sourceLine" id="cb20-6" data-line-number="6"><span class="co">#&gt;       &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb20-7" data-line-number="7"><span class="co">#&gt; 1   2525779</span></a>
+<a class="sourceLine" id="cb20-8" data-line-number="8"><span class="co">#&gt; 2   3691173</span></a>
+<a class="sourceLine" id="cb20-9" data-line-number="9"><span class="co">#&gt; 3   5320817</span></a>
+<a class="sourceLine" id="cb20-10" data-line-number="10"><span class="co">#&gt; 4   6916183</span></a></code></pre></div>
 <p>or</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(<span class="kw">row_number</span>() <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
-<span class="co">#&gt; # A tibble: 4 x 2</span>
-<span class="co">#&gt;    year world.pop</span>
-<span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span>
-<span class="co">#&gt; 1  1950   2525779</span>
-<span class="co">#&gt; 2  1970   3691173</span>
-<span class="co">#&gt; 3  1990   5320817</span>
-<span class="co">#&gt; 4  2010   6916183</span></code></pre></div>
-<p>The function <code>n()</code> when used in a <strong>dplyr</strong> function returns the number of rows in the data frame (or the number of rows in the group if used with <code>group_by()</code>). The function <code>row_number()</code> returns the row number of an observation. The <code>%%</code> operator returns the modulus, i.e. division remainder.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">UNpop <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">row_number</span>() <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="co">#&gt; # A tibble: 4 x 2</span></a>
+<a class="sourceLine" id="cb21-4" data-line-number="4"><span class="co">#&gt;    year world.pop</span></a>
+<a class="sourceLine" id="cb21-5" data-line-number="5"><span class="co">#&gt;   &lt;int&gt;     &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb21-6" data-line-number="6"><span class="co">#&gt; 1  1950   2525779</span></a>
+<a class="sourceLine" id="cb21-7" data-line-number="7"><span class="co">#&gt; 2  1970   3691173</span></a>
+<a class="sourceLine" id="cb21-8" data-line-number="8"><span class="co">#&gt; 3  1990   5320817</span></a>
+<a class="sourceLine" id="cb21-9" data-line-number="9"><span class="co">#&gt; 4  2010   6916183</span></a></code></pre></div>
+<p>The function <code>n()</code> when used in a <strong>dplyr</strong> function returns the number of rows in the data frame (or the number of rows in the group if used with <code>group_by()</code>).
+The function <code>row_number()</code> returns the row number of an observation.
+The <code>%%</code> operator returns the modulus, i.e. division remainder.</p>
 </div>
 <div id="saving-objects" class="section level3">
 <h3><span class="header-section-number">1.3.6</span> Saving Objects</h3>
 <p>It is not recommended that you save the entire R workspace using <code>save.image</code> due to the negative and unexpected impacts it can have on reproducibility.See the <a href="http://r4ds.had.co.nz/">R for Data Science</a> chapter <a href="http://r4ds.had.co.nz/workflow-projects.html">Workflow Projects</a>.</p>
-<p>You should uncheck the options in RStudio to avoid saving and restoring from <code>.RData</code> files (go to <code>Tools &gt; Global Options &gt; General</code>). This will help ensure that your R code runs the way you think it does, instead of depending on some long forgotten code that is only saved in the workspace image. Everything important should be in a script. Anything saved or loaded from file should be done explicitly.</p>
+<p>You should uncheck the options in RStudio to avoid saving and restoring from <code>.RData</code> files (go to <code>Tools &gt; Global Options &gt; General</code>).
+This will help ensure that your R code runs the way you think it does, instead of depending on some long forgotten code that is only saved in the workspace image.
+Everything important should be in a script. Anything saved or loaded from file
+should be done explicitly.</p>
 <p>Your motto should be that the <strong>source is real</strong>, not the objects created by it.</p>
 <blockquote>
 <p>The source code is real. The objects are realizations of the source code. Source for EVERY user modified object is placed in a particular directory or directories, for later editing and retrieval. – from the <a href="https://ess.r-project.org/Manual/ess.html#Philosophies-for-using-ESS_0028S_0029">ESS manual</a></p>
 </blockquote>
 <p>This means that while you should not save the entire workplace it is perfectly fine practice to run a script and save or load R objects to files, using or .</p>
-<p>As with reading CSV files, use the <a href="http://readr.tidyverse.org/">readr</a> package functions. In this case, <code>write_csv()</code> writes a csv file and takes at least two objects: the data that you want to write to a csv and the name that you want to give the file.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write_csv</span>(UNpop, <span class="st">&quot;UNpop.csv&quot;</span>)</code></pre></div>
+<p>As with reading CSV files, use the <a href="http://readr.tidyverse.org/">readr</a> package functions.
+In this case, <code>write_csv()</code> writes a csv file and takes at least two objects: the data that you want to write to a csv and the name that you want to give the file.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">write_csv</span>(UNpop, <span class="st">&quot;UNpop.csv&quot;</span>)</a></code></pre></div>
 </div>
 <div id="programming-and-learning-tips" class="section level3">
 <h3><span class="header-section-number">1.3.7</span> Programming and Learning Tips</h3>
-<p>Use the <a href="http://haven.tidyverse.org/">haven</a> package to read and write Stata (<code>.dta</code>) and SPSS (<code>.sav</code>) files. Stata and SPSS are two other statistical programs commonly used in social science. Even if you don’t ever use them, you’ll almost certainly encounter data stored in their native formats.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop_dta_url &lt;-<span class="st"> &quot;https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.dta&quot;</span>
-UNpop &lt;-<span class="st"> </span><span class="kw">read_dta</span>(UNpop_dta_url)
-UNpop
-<span class="co">#&gt; # A tibble: 7 x 2</span>
-<span class="co">#&gt;    year world_pop</span>
-<span class="co">#&gt;   &lt;dbl&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  1950      2526</span>
-<span class="co">#&gt; 2  1960      3026</span>
-<span class="co">#&gt; 3  1970      3691</span>
-<span class="co">#&gt; 4  1980      4449</span>
-<span class="co">#&gt; 5  1990      5321</span>
-<span class="co">#&gt; 6  2000      6128</span>
-<span class="co">#&gt; # ... with 1 more row</span></code></pre></div>
+<p>Use the <a href="http://haven.tidyverse.org/">haven</a> package to read and write Stata (<code>.dta</code>) and SPSS (<code>.sav</code>) files.
+Stata and SPSS are two other statistical programs commonly used in social science.
+Even if you don’t ever use them, you’ll almost certainly encounter data stored in their native formats.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">UNpop_dta_url &lt;-<span class="st"> &quot;https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.dta&quot;</span></a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">UNpop &lt;-<span class="st"> </span><span class="kw">read_dta</span>(UNpop_dta_url)</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">UNpop</a>
+<a class="sourceLine" id="cb23-4" data-line-number="4"><span class="co">#&gt; # A tibble: 7 x 2</span></a>
+<a class="sourceLine" id="cb23-5" data-line-number="5"><span class="co">#&gt;    year world_pop</span></a>
+<a class="sourceLine" id="cb23-6" data-line-number="6"><span class="co">#&gt;   &lt;dbl&gt;     &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb23-7" data-line-number="7"><span class="co">#&gt; 1 1950.     2526.</span></a>
+<a class="sourceLine" id="cb23-8" data-line-number="8"><span class="co">#&gt; 2 1960.     3026.</span></a>
+<a class="sourceLine" id="cb23-9" data-line-number="9"><span class="co">#&gt; 3 1970.     3691.</span></a>
+<a class="sourceLine" id="cb23-10" data-line-number="10"><span class="co">#&gt; 4 1980.     4449.</span></a>
+<a class="sourceLine" id="cb23-11" data-line-number="11"><span class="co">#&gt; 5 1990.     5321.</span></a>
+<a class="sourceLine" id="cb23-12" data-line-number="12"><span class="co">#&gt; 6 2000.     6128.</span></a>
+<a class="sourceLine" id="cb23-13" data-line-number="13"><span class="co">#&gt; # ... with 1 more row</span></a></code></pre></div>
 <p>There is also the equivalent <code>write_dta()</code> function to create Stata datasets.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write_dta</span>(UNpop, <span class="st">&quot;UNpop.dta&quot;</span>)</code></pre></div>
-<p>While Stata and SPSS data sets are quite similar to data frames, they differ slightly in definitions of acceptable data types of columns and what metadata they store with the data. +Be careful when reading and writing from these formats to ensure that information is not lost.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">write_dta</span>(UNpop, <span class="st">&quot;UNpop.dta&quot;</span>)</a></code></pre></div>
+<p>While Stata and SPSS data sets are quite similar to data frames, they differ slightly in definitions of acceptable data types of columns and what metadata they store with the data.
++Be careful when reading and writing from these formats to ensure that information is not lost.</p>
 <p>Also see the <a href="https://cran.r-project.org/package=rio">rio</a> package which makes loading data even easier with smart defaults.</p>
 <p>You can use the <code>import()</code> function to load many types of files:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">import</span>(<span class="st">&quot;https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.csv&quot;</span>)
-<span class="co">#&gt;   year world.pop</span>
-<span class="co">#&gt; 1 1950   2525779</span>
-<span class="co">#&gt; 2 1960   3026003</span>
-<span class="co">#&gt; 3 1970   3691173</span>
-<span class="co">#&gt; 4 1980   4449049</span>
-<span class="co">#&gt; 5 1990   5320817</span>
-<span class="co">#&gt; 6 2000   6127700</span>
-<span class="co">#&gt; 7 2010   6916183</span>
-
-<span class="kw">import</span>(<span class="st">&quot;https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.RData&quot;</span>)
-<span class="co">#&gt;   year world.pop</span>
-<span class="co">#&gt; 1 1950   2525779</span>
-<span class="co">#&gt; 2 1960   3026003</span>
-<span class="co">#&gt; 3 1970   3691173</span>
-<span class="co">#&gt; 4 1980   4449049</span>
-<span class="co">#&gt; 5 1990   5320817</span>
-<span class="co">#&gt; 6 2000   6127700</span>
-<span class="co">#&gt; 7 2010   6916183</span>
-
-<span class="kw">import</span>(<span class="st">&quot;https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.dta&quot;</span>)
-<span class="co">#&gt;   year world_pop</span>
-<span class="co">#&gt; 1 1950      2526</span>
-<span class="co">#&gt; 2 1960      3026</span>
-<span class="co">#&gt; 3 1970      3691</span>
-<span class="co">#&gt; 4 1980      4449</span>
-<span class="co">#&gt; 5 1990      5321</span>
-<span class="co">#&gt; 6 2000      6128</span>
-<span class="co">#&gt; 7 2010      6916</span></code></pre></div>
-<p>R also includes the <strong>foreign</strong> package, which contains functions for reading and writing files using <strong>haven</strong>. One reason to use these packages is that they are better maintained. For example, the R function <code>read.dta()</code> does not read files created by the most recent versions of Stata (13+), whereas <strong>haven</strong> does.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">import</span>(<span class="st">&quot;https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="co">#&gt;   year world.pop</span></a>
+<a class="sourceLine" id="cb25-3" data-line-number="3"><span class="co">#&gt; 1 1950   2525779</span></a>
+<a class="sourceLine" id="cb25-4" data-line-number="4"><span class="co">#&gt; 2 1960   3026003</span></a>
+<a class="sourceLine" id="cb25-5" data-line-number="5"><span class="co">#&gt; 3 1970   3691173</span></a>
+<a class="sourceLine" id="cb25-6" data-line-number="6"><span class="co">#&gt; 4 1980   4449049</span></a>
+<a class="sourceLine" id="cb25-7" data-line-number="7"><span class="co">#&gt; 5 1990   5320817</span></a>
+<a class="sourceLine" id="cb25-8" data-line-number="8"><span class="co">#&gt; 6 2000   6127700</span></a>
+<a class="sourceLine" id="cb25-9" data-line-number="9"><span class="co">#&gt; 7 2010   6916183</span></a>
+<a class="sourceLine" id="cb25-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb25-11" data-line-number="11"><span class="kw">import</span>(<span class="st">&quot;https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.RData&quot;</span>)</a>
+<a class="sourceLine" id="cb25-12" data-line-number="12"><span class="co">#&gt;   year world.pop</span></a>
+<a class="sourceLine" id="cb25-13" data-line-number="13"><span class="co">#&gt; 1 1950   2525779</span></a>
+<a class="sourceLine" id="cb25-14" data-line-number="14"><span class="co">#&gt; 2 1960   3026003</span></a>
+<a class="sourceLine" id="cb25-15" data-line-number="15"><span class="co">#&gt; 3 1970   3691173</span></a>
+<a class="sourceLine" id="cb25-16" data-line-number="16"><span class="co">#&gt; 4 1980   4449049</span></a>
+<a class="sourceLine" id="cb25-17" data-line-number="17"><span class="co">#&gt; 5 1990   5320817</span></a>
+<a class="sourceLine" id="cb25-18" data-line-number="18"><span class="co">#&gt; 6 2000   6127700</span></a>
+<a class="sourceLine" id="cb25-19" data-line-number="19"><span class="co">#&gt; 7 2010   6916183</span></a>
+<a class="sourceLine" id="cb25-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb25-21" data-line-number="21"><span class="kw">import</span>(<span class="st">&quot;https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.dta&quot;</span>)</a>
+<a class="sourceLine" id="cb25-22" data-line-number="22"><span class="co">#&gt;   year world_pop</span></a>
+<a class="sourceLine" id="cb25-23" data-line-number="23"><span class="co">#&gt; 1 1950      2526</span></a>
+<a class="sourceLine" id="cb25-24" data-line-number="24"><span class="co">#&gt; 2 1960      3026</span></a>
+<a class="sourceLine" id="cb25-25" data-line-number="25"><span class="co">#&gt; 3 1970      3691</span></a>
+<a class="sourceLine" id="cb25-26" data-line-number="26"><span class="co">#&gt; 4 1980      4449</span></a>
+<a class="sourceLine" id="cb25-27" data-line-number="27"><span class="co">#&gt; 5 1990      5321</span></a>
+<a class="sourceLine" id="cb25-28" data-line-number="28"><span class="co">#&gt; 6 2000      6128</span></a>
+<a class="sourceLine" id="cb25-29" data-line-number="29"><span class="co">#&gt; 7 2010      6916</span></a></code></pre></div>
+<p>R also includes the <strong>foreign</strong> package, which contains functions for reading and writing files using <strong>haven</strong>.
+One reason to use these packages is that they are better maintained.
+For example, the R function <code>read.dta()</code> does not read files created by the most recent versions of Stata (13+), whereas <strong>haven</strong> does.</p>
 </div>
 <div id="style-guide" class="section level3">
 <h3><span class="header-section-number">1.3.8</span> Style Guide</h3>
-<p>Following a consistent coding style is important for your code to be readable by you and others. The preferred style is the <a href="http://style.tidyverse.org/">tidyverse style guide</a>, which differs slightly from <a href="http://style.tidyverse.org/">Google’s R style guide</a>.</p>
+<p>Following a consistent coding style is important for your code to be readable by you and others.
+The preferred style is the <a href="http://style.tidyverse.org/">tidyverse style guide</a>, which
+differs slightly from <a href="http://style.tidyverse.org/">Google’s R style guide</a>.</p>
 <ul>
 <li>The <a href="https://cran.r-project.org/package=lintr">lintr</a> package will check files for style errors.</li>
-<li>The <a href="https://cran.r-project.org/package=styler">styler</a> package provides functions for automatically formatting R code according to style guides.</li>
-<li>In RStudio, go to the <code>Tools &gt; Global Options &gt; Code &gt; Diagnostics</code> pane and check the box to activate style warnings. On this pane, there are other options that can be set in order to increase or decrease the amount of warnings while writing R code in RStudio.</li>
+<li>The <a href="https://cran.r-project.org/package=styler">styler</a> package provides functions for automatically formatting
+R code according to style guides.</li>
+<li>In RStudio, go to the <code>Tools &gt; Global Options &gt; Code &gt; Diagnostics</code> pane and check the
+box to activate style warnings. On this pane, there are other options that can be
+set in order to increase or decrease the amount of warnings while writing R code in RStudio.</li>
 </ul>
 
 </div>
@@ -536,8 +588,8 @@ UNpop
 <div class="footnotes">
 <hr />
 <ol start="1">
-<li id="fn1"><p>For more on using projects read <a href="https://www.tidyverse.org/articles/2017/12/workflow-vs-script/">Project-oriented workflow</a>.<a href="introduction.html#fnref1">↩</a></p></li>
-<li id="fn2"><p>See the discussion in <a href="http://r4ds.had.co.nz/tibbles.html#tibbles-vs.data.frame">R for Data Science</a> on how <code>tibble</code> objects differ from base <code>data.frame</code> objects in how <code>[</code> is handled.<a href="introduction.html#fnref2">↩</a></p></li>
+<li id="fn1"><p>For more on using projects read <a href="https://www.tidyverse.org/articles/2017/12/workflow-vs-script/">Project-oriented workflow</a>.<a href="introduction.html#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>See the discussion in <a href="http://r4ds.had.co.nz/tibbles.html#tibbles-vs.data.frame">R for Data Science</a> on how <code>tibble</code> objects differ from base <code>data.frame</code> objects in how <code>[</code> is handled.<a href="introduction.html#fnref2" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -569,7 +621,7 @@ gitbook.start({
 "link": "https://github.com/jrnold/qss-tidy/edit/master/introduction.Rmd",
 "text": "Edit"
 },
-"download": null,
+"download": ["qss-tidy.pdf"],
 "toc": {
 "collapse": "section"
 }
@@ -582,7 +634,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

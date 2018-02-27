@@ -105,7 +105,7 @@ sims <- 1000
 k <- 23
 map_lgl(seq_len(sims), ~ sim_bdays(k)) %>%
   mean()
-#> [1] 0.489
+#> [1] 0.475
 ```
 
 An alternative way of running this is using the [rerun](https://www.rdocumentation.org/packages/purrr/topics/rerun) and using `flatten` to turn the output to a numeric vector:
@@ -555,7 +555,7 @@ map_df(seq_len(sims), choose_door) %>%
 #> # A tibble: 1 x 1
 #>   win_pct
 #>     <dbl>
-#> 1   0.648
+#> 1   0.670
 ```
 
 
@@ -670,8 +670,8 @@ FLVoters %>%
 #> 1 white    0.950
 #> 2 hispanic 0.847
 #> 3 black    0.160
-#> 4 asian    0    
-#> 5 other    0
+#> 4 asian    0.   
+#> 5 other    0.
 ```
 and the *False discovery rate* for *all* races,
 
@@ -773,7 +773,7 @@ sim_results %>%
   select(EV) %>%
   summarise_all(funs(mean, var, sd))
 #>   mean var   sd
-#> 1  352 269 16.4
+#> 1  352 270 16.4
 ```
 
 Theoretical probabilities from a binomial distribution:
@@ -833,9 +833,9 @@ p <- 0.6
 n <- 100
 y <- sample(c(0, 1), n, prob = c(1 - p, p), replace = TRUE)
 head(y)
-#> [1] 1 0 1 1 1 1
+#> [1] 0 1 1 0 0 0
 mean(y)
-#> [1] 0.57
+#> [1] 0.46
 ```
 
 A second method to sample $n$ values from a Bernoulli distribution that has a probability parameter $p$ is,
@@ -849,9 +849,9 @@ These are exactly the probabilities of sampling 1 and 0 in the probability mass 
 ```r
 y <- as.integer(runif(n, min = 0, max = 1) <= p)
 head(y)
-#> [1] 1 1 1 0 1 1
+#> [1] 1 1 1 1 1 1
 mean(y)
-#> [1] 0.64
+#> [1] 0.58
 ```
 
 Third, note that the Bernoulli distribution is a special case of the binomial distribution (discussed in the next section), where $size = 1$.
@@ -860,9 +860,9 @@ Thus, we can use the `rbinom` function to sample from a binomial distribution.
 ```r
 y <- rbinom(n, size = 1, prob = p)
 head(y)
-#> [1] 0 0 0 1 1 1
+#> [1] 1 1 1 1 1 1
 mean(y)
-#> [1] 0.6
+#> [1] 0.63
 ```
 
 
@@ -1132,7 +1132,7 @@ p * (1 - p)
 y <- sample(c(0, 1), size = 1000, replace = TRUE, prob = c(p, 1 - p))
 # the sample variance of that sample
 var(y)
-#> [1] 0.25
+#> [1] 0.249
 ```
 
 
@@ -1162,7 +1162,7 @@ This function returns the electoral votes for Obama for a single simulation:
 
 ```r
 sim_election(pres08)
-#> [1] 364
+#> [1] 338
 ```
 
 Run this simulation `sims` times, saving the electoral votes of Obama in each simulation:
@@ -1199,7 +1199,7 @@ Summarize the simulations:
 ```r
 summary(Obama_EV_sims)
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>     289     340     353     352     364     398
+#>     278     340     353     352     364     401
 ```
 
 Compare theoretical and simulation means:
@@ -1223,7 +1223,7 @@ Compare theoretical and simulation variances:
 ```r
 # simulation variance
 var(Obama_EV_sims)
-#> [1] 269
+#> [1] 272
 # theoretical variance
 Obama_EV_var <- pres08 %>%
   mutate(pb = pbinom(n / 2, size = n, prob = p, lower.tail = FALSE),
@@ -1238,7 +1238,7 @@ and standard deviations
 ```r
 # sim
 sd(Obama_EV_sims)
-#> [1] 16.4
+#> [1] 16.5
 # theoretical
 sqrt(Obama_EV_var)
 #> [1] 16.4

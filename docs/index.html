@@ -5,27 +5,27 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>QSS Tidyverse Code</title>
-  <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
+  <title>Quantitive Social Science: The R Tidyverse Code</title>
+  <meta name="description" content="This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.">
+  <meta name="generator" content="bookdown 0.7.1 and GitBook 2.6.7">
 
-  <meta property="og:title" content="QSS Tidyverse Code" />
+  <meta property="og:title" content="Quantitive Social Science: The R Tidyverse Code" />
   <meta property="og:type" content="book" />
+  <meta property="og:url" content="http://jrnold.github.io/qss-tidy" />
   
-  
-  
+  <meta property="og:description" content="This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text." />
   <meta name="github-repo" content="jrnold/qss-tidy" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="QSS Tidyverse Code" />
+  <meta name="twitter:title" content="Quantitive Social Science: The R Tidyverse Code" />
   
-  
+  <meta name="twitter:description" content="This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text." />
   
 
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-02-18">
+<meta name="date" content="2018-02-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -50,41 +50,69 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 </head>
@@ -99,6 +127,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
+<li><strong><a href="./">QSS Tidyverse Code</a></strong></li>
+
+<li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#colophon"><i class="fa fa-check"></i>Colophon</a></li>
 </ul></li>
@@ -259,7 +290,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">QSS Tidyverse Code</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Quantitive Social Science: The R Tidyverse Code</a>
           </h1>
         </div>
 
@@ -268,21 +299,28 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="header">
-<h1 class="title">QSS Tidyverse Code</h1>
+<h1 class="title">Quantitive Social Science: The R Tidyverse Code</h1>
 <h4 class="author"><em>Jeffrey B. Arnold</em></h4>
-<h4 class="date"><em>2018-02-18</em></h4>
+<h4 class="date"><em>2018-02-26</em></h4>
 </div>
 <div id="preface" class="section level1 unnumbered">
 <h1>Preface</h1>
-<p>This is tidyverse R code to supplement the book, <a href="http://press.princeton.edu/titles/11025.html">Quantitative Social Science: An Introduction</a>, by Kosuke Imai, to be published by Princeton University Press in March 2017.</p>
-<p>The R code included with the text of <em>QSS</em> and the supplementary materials relies mostly on base R functions. This translates the code examples provided with <em>QSS</em> to tidyverse R code. <a href="https://github.com/tidyverse/tidyverse">Tidyverse</a> refers to a set of packages (<strong>ggplot2</strong>, <strong>dplyr</strong>, <strong>tidyr</strong>, <strong>readr</strong>, <strong>purrr</strong>, <strong>tibble</strong>, and a few others) that share common data representations, especially the use of data frames for return values.</p>
-<p>These notes do not aim to teach tidyverse, The book <a href="http://r4ds.had.co.nz/">R for Data Science</a> by Hadley Wickham and Garrett Grolemond is an introduction.</p>
+<p>This is tidyverse R code to supplement the book, <a href="http://press.princeton.edu/titles/11025.html">Quantitative Social Science: An Introduction</a>, by Kosuke Imai.</p>
+<p>The R code included with the text of <em>QSS</em> and the supplementary materials relies mostly on base R functions.
+This translates the code examples provided with <em>QSS</em> to tidyverse R code.
+<a href="https://github.com/tidyverse/tidyverse">Tidyverse</a> refers to a set of packages (<strong>ggplot2</strong>, <strong>dplyr</strong>, <strong>tidyr</strong>, <strong>readr</strong>, <strong>purrr</strong>, <strong>tibble</strong>, and a few others) that share common data representations, especially the use of data frames for return values.</p>
+<p>This is not a complete introduction to R and the tidyverse.
+I suggest pairing it with <a href="http://r4ds.had.co.nz/">R for Data Science</a> by Hadley Wickham and Garrett Grolemond.</p>
+<p>These materials are supplement to replace the existing <em>QSS</em> code with the tidvyerse dialect of R.
+Thus it does not replicate the substantive material, and not meant to be used independently of the <em>QSS</em> text.
+However, the provided code is not merely a translation of the <em>QSS</em> code.
+It often uses the topics in <em>QSS</em> to delve deeper into data science, data visualization, and computational topics.</p>
 <p>I wrote this code while teaching course that employed both texts in order to make the excellent examples and statistical material in <em>QSS</em> more compatible with the modern data science using R approach in <em>R4DS</em>.</p>
 <div id="colophon" class="section level2 unnumbered">
 <h2>Colophon</h2>
 <p>To install the R packages used in this work run the following code, installs the <strong>qsstidy</strong> package which contains no code or data, but will install the needed dependencies.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)
-<span class="kw">install_github</span>(<span class="st">&quot;jrnold/qss-tidy&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">install_github</span>(<span class="st">&quot;jrnold/qss-tidy&quot;</span>)</a></code></pre></div>
 <p>Additionally, the <a href="https://cran.r-project.org/package=gganimate">gganimate</a> package requires installing <a href="https://ffmpeg.org/">ffmpeg</a> with libvpx support.</p>
 <p>The source of the book is available <a href="https://github.com/jrnold/qsstidy">here</a> and was built with versions of packages below:</p>
 <pre><code>#&gt; Session info -------------------------------------------------------------
@@ -295,77 +333,76 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 #&gt;  tz       America/Los_Angeles         
 #&gt;  date     2017-12-22
 #&gt; Packages -----------------------------------------------------------------
-#&gt;  package    * version    date       source                          
-#&gt;  animation  * 2.5        2017-03-30 cran (@2.5)                     
-#&gt;  assertthat   0.2.0      2017-04-11 CRAN (R 3.4.0)                  
-#&gt;  backports    1.1.1      2017-09-25 CRAN (R 3.4.2)                  
-#&gt;  base       * 3.4.3      2017-12-07 local                           
-#&gt;  bindr        0.1        2016-11-13 CRAN (R 3.4.0)                  
-#&gt;  bindrcpp     0.2        2017-06-17 CRAN (R 3.4.0)                  
-#&gt;  bookdown     0.5        2017-08-20 CRAN (R 3.4.1)                  
-#&gt;  broom        0.4.3      2017-11-20 CRAN (R 3.4.2)                  
-#&gt;  cellranger   1.1.0      2016-07-27 CRAN (R 3.4.0)                  
-#&gt;  cli          1.0.0      2017-11-05 cran (@1.0.0)                   
-#&gt;  colorspace   1.3-2      2016-12-14 CRAN (R 3.4.0)                  
-#&gt;  compiler     3.4.3      2017-12-07 local                           
-#&gt;  crayon       1.3.4      2017-09-16 CRAN (R 3.4.1)                  
-#&gt;  datasets   * 3.4.3      2017-12-07 local                           
-#&gt;  devtools     1.13.4     2017-11-09 CRAN (R 3.4.2)                  
-#&gt;  digest       0.6.13     2017-12-14 cran (@0.6.13)                  
-#&gt;  dplyr      * 0.7.4.9000 2017-12-22 Github (tidyverse/dplyr@c04deb3)
-#&gt;  evaluate     0.10.1     2017-06-24 CRAN (R 3.4.0)                  
-#&gt;  forcats    * 0.2.0      2017-01-23 CRAN (R 3.4.0)                  
-#&gt;  foreign      0.8-69     2017-06-22 CRAN (R 3.4.3)                  
-#&gt;  ggplot2    * 2.2.1      2016-12-30 CRAN (R 3.4.0)                  
-#&gt;  glue         1.2.0      2017-10-29 CRAN (R 3.4.2)                  
-#&gt;  graphics   * 3.4.3      2017-12-07 local                           
-#&gt;  grDevices  * 3.4.3      2017-12-07 local                           
-#&gt;  grid         3.4.3      2017-12-07 local                           
-#&gt;  gtable       0.2.0      2016-02-26 CRAN (R 3.4.0)                  
-#&gt;  haven        1.1.0      2017-07-09 CRAN (R 3.4.1)                  
-#&gt;  hms          0.4.0      2017-11-23 CRAN (R 3.4.3)                  
-#&gt;  htmltools    0.3.6      2017-04-28 CRAN (R 3.4.0)                  
-#&gt;  httr         1.3.1      2017-08-20 CRAN (R 3.4.1)                  
-#&gt;  jsonlite     1.5        2017-06-01 CRAN (R 3.4.0)                  
-#&gt;  knitr        1.17       2017-08-10 CRAN (R 3.4.1)                  
-#&gt;  lattice      0.20-35    2017-03-25 CRAN (R 3.4.3)                  
-#&gt;  lazyeval     0.2.1      2017-10-29 CRAN (R 3.4.2)                  
-#&gt;  lubridate    1.7.1      2017-11-03 cran (@1.7.1)                   
-#&gt;  magrittr     1.5        2014-11-22 CRAN (R 3.4.0)                  
-#&gt;  memoise      1.1.0      2017-04-21 CRAN (R 3.4.0)                  
-#&gt;  methods      3.4.3      2017-12-07 local                           
-#&gt;  mnormt       1.5-5      2016-10-15 CRAN (R 3.4.0)                  
-#&gt;  modelr       0.1.1      2017-07-24 CRAN (R 3.4.1)                  
-#&gt;  munsell      0.4.3      2016-02-13 CRAN (R 3.4.0)                  
-#&gt;  nlme         3.1-131    2017-02-06 CRAN (R 3.4.3)                  
-#&gt;  parallel     3.4.3      2017-12-07 local                           
-#&gt;  pkgconfig    2.0.1      2017-03-21 CRAN (R 3.4.0)                  
-#&gt;  plyr         1.8.4      2016-06-08 CRAN (R 3.4.0)                  
-#&gt;  psych        1.7.8      2017-09-09 CRAN (R 3.4.2)                  
-#&gt;  purrr      * 0.2.4      2017-10-18 cran (@0.2.4)                   
-#&gt;  R6           2.2.2      2017-06-17 cran (@2.2.2)                   
-#&gt;  Rcpp         0.12.14    2017-11-23 cran (@0.12.14)                 
-#&gt;  readr      * 1.1.1      2017-05-16 CRAN (R 3.4.0)                  
-#&gt;  readxl       1.0.0      2017-04-18 CRAN (R 3.4.0)                  
-#&gt;  reshape2     1.4.2      2016-10-22 CRAN (R 3.4.0)                  
-#&gt;  rlang        0.1.4.9000 2017-12-19 Github (hadley/rlang@cc7587c)   
-#&gt;  rmarkdown    1.8        2017-11-17 CRAN (R 3.4.2)                  
-#&gt;  rprojroot    1.2        2017-01-16 CRAN (R 3.4.0)                  
-#&gt;  rstudioapi   0.7        2017-09-07 CRAN (R 3.4.1)                  
-#&gt;  rvest        0.3.2      2016-06-17 CRAN (R 3.4.0)                  
-#&gt;  scales       0.5.0      2017-08-24 CRAN (R 3.4.1)                  
-#&gt;  stats      * 3.4.3      2017-12-07 local                           
-#&gt;  stringi      1.1.6      2017-11-17 cran (@1.1.6)                   
-#&gt;  stringr    * 1.2.0      2017-02-18 CRAN (R 3.4.0)                  
-#&gt;  tibble     * 1.3.4      2017-08-22 CRAN (R 3.4.1)                  
-#&gt;  tidyr      * 0.7.2.9000 2017-11-30 Github (tidyverse/tidyr@efd9ea5)
-#&gt;  tidyselect   0.2.3      2017-11-06 cran (@0.2.3)                   
-#&gt;  tidyverse  * 1.2.1      2017-11-14 cran (@1.2.1)                   
-#&gt;  tools        3.4.3      2017-12-07 local                           
-#&gt;  utils      * 3.4.3      2017-12-07 local                           
-#&gt;  withr        2.1.1      2017-12-19 cran (@2.1.1)                   
-#&gt;  xml2         1.1.1      2017-01-24 CRAN (R 3.4.0)                  
-#&gt;  yaml         2.1.15     2017-12-01 CRAN (R 3.4.2)</code></pre>
+#&gt;  package    * version date       source        
+#&gt;  animation  * 2.5     2017-03-30 cran (@2.5)   
+#&gt;  assertthat   0.2.0   2017-04-11 CRAN (R 3.4.0)
+#&gt;  backports    1.1.2   2017-12-13 CRAN (R 3.4.3)
+#&gt;  base       * 3.4.3   2017-12-07 local         
+#&gt;  bindr        0.1     2016-11-13 CRAN (R 3.4.0)
+#&gt;  bindrcpp     0.2     2017-06-17 CRAN (R 3.4.0)
+#&gt;  bookdown     0.5     2017-08-20 CRAN (R 3.4.1)
+#&gt;  broom        0.4.3   2017-11-20 CRAN (R 3.4.3)
+#&gt;  cellranger   1.1.0   2016-07-27 CRAN (R 3.4.0)
+#&gt;  cli          1.0.0   2017-11-05 cran (@1.0.0) 
+#&gt;  colorspace   1.3-2   2016-12-14 CRAN (R 3.4.0)
+#&gt;  compiler     3.4.3   2017-12-07 local         
+#&gt;  crayon       1.3.4   2017-09-16 CRAN (R 3.4.1)
+#&gt;  datasets   * 3.4.3   2017-12-07 local         
+#&gt;  devtools     1.13.4  2017-11-09 CRAN (R 3.4.2)
+#&gt;  digest       0.6.13  2017-12-14 CRAN (R 3.4.3)
+#&gt;  dplyr      * 0.7.4   2017-09-28 CRAN (R 3.4.2)
+#&gt;  evaluate     0.10.1  2017-06-24 CRAN (R 3.4.1)
+#&gt;  forcats    * 0.2.0   2017-01-23 CRAN (R 3.4.0)
+#&gt;  foreign      0.8-69  2017-06-22 CRAN (R 3.4.3)
+#&gt;  ggplot2    * 2.2.1   2016-12-30 CRAN (R 3.4.0)
+#&gt;  glue         1.2.0   2017-10-29 CRAN (R 3.4.2)
+#&gt;  graphics   * 3.4.3   2017-12-07 local         
+#&gt;  grDevices  * 3.4.3   2017-12-07 local         
+#&gt;  grid         3.4.3   2017-12-07 local         
+#&gt;  gtable       0.2.0   2016-02-26 CRAN (R 3.4.0)
+#&gt;  haven        1.1.0   2017-07-09 CRAN (R 3.4.1)
+#&gt;  hms          0.4.0   2017-11-23 CRAN (R 3.4.3)
+#&gt;  htmltools    0.3.6   2017-04-28 CRAN (R 3.4.0)
+#&gt;  httr         1.3.1   2017-08-20 CRAN (R 3.4.1)
+#&gt;  jsonlite     1.5     2017-06-01 CRAN (R 3.4.0)
+#&gt;  knitr        1.17    2017-08-10 CRAN (R 3.4.1)
+#&gt;  lattice      0.20-35 2017-03-25 CRAN (R 3.4.3)
+#&gt;  lazyeval     0.2.1   2017-10-29 CRAN (R 3.4.2)
+#&gt;  lubridate    1.7.1   2017-11-03 cran (@1.7.1) 
+#&gt;  magrittr     1.5     2014-11-22 CRAN (R 3.4.0)
+#&gt;  memoise      1.1.0   2017-04-21 CRAN (R 3.4.0)
+#&gt;  methods      3.4.3   2017-12-07 local         
+#&gt;  mnormt       1.5-5   2016-10-15 CRAN (R 3.4.0)
+#&gt;  modelr       0.1.1   2017-07-24 CRAN (R 3.4.1)
+#&gt;  munsell      0.4.3   2016-02-13 CRAN (R 3.4.0)
+#&gt;  nlme         3.1-131 2017-02-06 CRAN (R 3.4.3)
+#&gt;  parallel     3.4.3   2017-12-07 local         
+#&gt;  pkgconfig    2.0.1   2017-03-21 CRAN (R 3.4.0)
+#&gt;  plyr         1.8.4   2016-06-08 CRAN (R 3.4.0)
+#&gt;  psych        1.7.8   2017-09-09 CRAN (R 3.4.1)
+#&gt;  purrr      * 0.2.4   2017-10-18 cran (@0.2.4) 
+#&gt;  R6           2.2.2   2017-06-17 CRAN (R 3.4.0)
+#&gt;  Rcpp         0.12.14 2017-11-23 CRAN (R 3.4.3)
+#&gt;  readr      * 1.1.1   2017-05-16 CRAN (R 3.4.0)
+#&gt;  readxl       1.0.0   2017-04-18 CRAN (R 3.4.0)
+#&gt;  reshape2     1.4.3   2017-12-11 CRAN (R 3.4.3)
+#&gt;  rlang        0.1.4   2017-11-05 CRAN (R 3.4.2)
+#&gt;  rmarkdown    1.8     2017-11-17 CRAN (R 3.4.2)
+#&gt;  rprojroot    1.3-1   2017-12-18 CRAN (R 3.4.3)
+#&gt;  rstudioapi   0.7     2017-09-07 CRAN (R 3.4.1)
+#&gt;  rvest        0.3.2   2016-06-17 CRAN (R 3.4.0)
+#&gt;  scales       0.5.0   2017-08-24 CRAN (R 3.4.1)
+#&gt;  stats      * 3.4.3   2017-12-07 local         
+#&gt;  stringi      1.1.6   2017-11-17 CRAN (R 3.4.2)
+#&gt;  stringr    * 1.2.0   2017-02-18 CRAN (R 3.4.0)
+#&gt;  tibble     * 1.3.4   2017-08-22 CRAN (R 3.4.1)
+#&gt;  tidyr      * 0.7.2   2017-10-16 cran (@0.7.2) 
+#&gt;  tidyverse  * 1.2.1   2017-11-14 CRAN (R 3.4.2)
+#&gt;  tools        3.4.3   2017-12-07 local         
+#&gt;  utils      * 3.4.3   2017-12-07 local         
+#&gt;  withr        2.1.1   2017-12-19 cran (@2.1.1) 
+#&gt;  xml2         1.1.1   2017-01-24 CRAN (R 3.4.0)
+#&gt;  yaml         2.1.16  2017-12-12 CRAN (R 3.4.3)</code></pre>
 
 </div>
 </div>
@@ -398,7 +435,7 @@ gitbook.start({
 "link": "https://github.com/jrnold/qss-tidy/edit/master/index.Rmd",
 "text": "Edit"
 },
-"download": null,
+"download": ["qss-tidy.pdf"],
 "toc": {
 "collapse": "section"
 }
@@ -411,7 +448,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

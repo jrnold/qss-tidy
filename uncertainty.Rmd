@@ -3,6 +3,7 @@ output: html_document
 editor_options: 
   chunk_output_type: console
 ---
+
 # Uncertainty
 
 
@@ -80,7 +81,8 @@ summary(sate_sims[["est_error"]])
 Simulate the PATE:
 ```{r}
 PATE <- mu1 - mu0
-
+```
+```{r}
 sim_pate <- function(n, mu0, mu1, sd0, sd1) {
   smpl <- tibble(Y0 = rnorm(n, mean = mu0, sd = sd0),
                  Y1 = rnorm(n, mean = mu1, sd = sd1),
@@ -611,53 +613,81 @@ pnorm(-abs(zstat))
 
 The only thing that changed is using `r rdoc("dplyr", "filter")` for selecting the groups.
 
+
 ### Power Analysis
 
-```{r eval=FALSE}
-# set the parameters
+Set the parameters: the sample size,
+```{r}
 n <- 250
-p_star <- 0.48 # data generating process
-p <- 0.5 # null value
+```
+the population proportional under the alternative data generating process,
+```{r}
+p_star <- 0.48
+```
+the null hypothesis,
+```{r}
+p <- 0.5 
+```
+the p-value,
+```{r}
 alpha <- 0.05
 ```
-critical value
+and 
 ```{r}
 cr_value <- qnorm(1 - alpha / 2)
 ```
-standard errors under the hypothetical data generating process
+The standard errors under the hypothetical data generating process is
 ```{r}
 se_star <- sqrt(p_star * (1 - p_star) / n)
 ```
-standard error under the null
+and the standard error under the null is
 ```{r}
 se <- sqrt(p * (1 - p) / n)
 ```
-power
+The power for this test is
 ```{r}
 pnorm(p - cr_value * se, mean = p_star, sd = se_star) +
-    pnorm(p + cr_value * se, mean = p_star, sd = se_star, lower.tail = FALSE)
+    pnorm(p + cr_value * se, mean = p_star, sd = se_star,
+          lower.tail = FALSE)
 ```
-parameters
+
+
+The parameters (sample sizes and proportions) are
 ```{r}
 n1 <- 500
 n0 <- 500
 p1_star <- 0.05
 p0_star <- 0.1
 ```
-overall call back rate as a weighted average
+Calculate the overall call back rate as a weighted average,
 ```{r}
-p <- (n1 * p1.star + n0 * p0.star) / (n1 + n0)
-# standard error under the null
+p <- (n1 * p1_star + n0 * p0_star) / (n1 + n0)
+```
+the standard error under the null,
+```{r}
 se <- sqrt(p * (1 - p) * (1 / n1 + 1 / n0))
-# standard error under the hypothetical data generating process
-se.star <- sqrt(p1.star * (1 - p1.star) / n1 + p0.star * (1 - p0.star) / n0)
-pnorm(-cr.value * se, mean = p1.star - p0.star, sd = se.star) +
-    pnorm(cr.value * se, mean = p1.star - p0.star, sd = se.star,
+```
+the standard error under the hypothetical data generating process,
+```{r}
+se.star <- sqrt(p1_star * (1 - p1_star) / n1 + p0_star * (1 - p0_star) / n0)
+```
+```{r}
+pnorm(-cr_value * se, mean = p1_star - p0_star, sd = se.star) +
+    pnorm(cr_value * se, mean = p1_star - p0_star, sd = se.star,
           lower.tail = FALSE)
+```{r}
 power.prop.test(n = 500, p1 = 0.05, p2 = 0.1, sig.level = 0.05)
+```
+```{r}
 power.prop.test(p1 = 0.05, p2 = 0.1, sig.level = 0.05, power = 0.9)
+```
+```{r}
 power.t.test(n = 100, delta = 0.25, sd = 1, type = "one.sample")
+```
+```{r}
 power.t.test(power = 0.9, delta = 0.25, sd = 1, type = "one.sample")
+```
+```{r}
 power.t.test(delta = 0.25, sd = 1, type = "two.sample",
              alternative = "one.sided", power = 0.9)
 ```
@@ -792,8 +822,8 @@ CI <- c(diff_est - se_diff * qnorm(0.975),
         diff_est + se_diff * qnorm(0.975))
 CI
 # hypothesis test
-z.score <- diff_est / se_diff
+z_score <- diff_est / se_diff
 # two sided p value
-p.value <- 2 * pnorm(abs(z.score), lower.tail = FALSE)
-p.value
+p_value <- 2 * pnorm(abs(z_score), lower.tail = FALSE)
+p_value
 ```

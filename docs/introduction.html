@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>QSS Tidyverse Code</title>
   <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
 
   <meta property="og:title" content="QSS Tidyverse Code" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-01-21">
+<meta name="date" content="2018-02-18">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -274,7 +274,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>In this and other chapters we will make use of data from the <code>qss</code> package, which is available on github. Install it using the <code>install_github()</code> function from the library <code>devtools</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;kosukeimai/qss-package&quot;</span>)
 <span class="co">#&gt; Using GitHub PAT from envvar GITHUB_PAT</span>
-<span class="co">#&gt; Skipping install of &#39;qss&#39; from a github remote, the SHA1 (1dc4b858) has not changed since last install.</span>
+<span class="co">#&gt; Skipping install of &#39;qss&#39; from a github remote, the SHA1 (898fffb4) has not changed since last install.</span>
 <span class="co">#&gt;   Use `force = TRUE` to force installation</span>
 <span class="kw">library</span>(<span class="st">&quot;qss&quot;</span>)</code></pre></div>
 <p>In the prerequisites section of each chapter, we’ll load any packages needed for the chapter, and possibly define some functions or load data.</p>
@@ -582,9 +582,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

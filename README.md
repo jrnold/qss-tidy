@@ -19,7 +19,7 @@ devtools::install()
 
 Render the book by running:
 ```r
-bookdown::render_book("index.Rmd")`
+bookdown::render_book("index.Rmd")
 ```
 
 Serve the book and render on change to files by running:

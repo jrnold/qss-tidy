@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>QSS Tidyverse Code</title>
   <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
 
   <meta property="og:title" content="QSS Tidyverse Code" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-01-21">
+<meta name="date" content="2018-02-18">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -303,15 +303,15 @@ corpus_raw
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corpus_tidy &lt;-<span class="st"> </span><span class="kw">tidy</span>(corpus_raw, <span class="st">&quot;corpus&quot;</span>)
 corpus_tidy
 <span class="co">#&gt; # A tibble: 85 x 8</span>
-<span class="co">#&gt;   author datetimestamp       description heading id     lang… orig… text  </span>
-<span class="co">#&gt;   &lt;lgl&gt;  &lt;dttm&gt;              &lt;lgl&gt;       &lt;lgl&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;lgl&gt; &lt;chr&gt; </span>
-<span class="co">#&gt; 1 NA     2018-01-10 20:48:26 NA          NA      fp01.… en    NA    AFTER…</span>
-<span class="co">#&gt; 2 NA     2018-01-10 20:48:26 NA          NA      fp02.… en    NA    &quot;WHEN…</span>
-<span class="co">#&gt; 3 NA     2018-01-10 20:48:26 NA          NA      fp03.… en    NA    IT IS…</span>
-<span class="co">#&gt; 4 NA     2018-01-10 20:48:26 NA          NA      fp04.… en    NA    &quot;MY L…</span>
-<span class="co">#&gt; 5 NA     2018-01-10 20:48:26 NA          NA      fp05.… en    NA    &quot;QUEE…</span>
-<span class="co">#&gt; 6 NA     2018-01-10 20:48:26 NA          NA      fp06.… en    NA    &quot;THE …</span>
-<span class="co">#&gt; # ... with 79 more rows</span></code></pre></div>
+<span class="co">#&gt;   author datetimestamp       description heading id       language origin</span>
+<span class="co">#&gt;   &lt;lgl&gt;  &lt;dttm&gt;              &lt;lgl&gt;       &lt;lgl&gt;   &lt;chr&gt;    &lt;chr&gt;    &lt;lgl&gt; </span>
+<span class="co">#&gt; 1 NA     2018-02-08 03:01:45 NA          NA      fp01.txt en       NA    </span>
+<span class="co">#&gt; 2 NA     2018-02-08 03:01:45 NA          NA      fp02.txt en       NA    </span>
+<span class="co">#&gt; 3 NA     2018-02-08 03:01:45 NA          NA      fp03.txt en       NA    </span>
+<span class="co">#&gt; 4 NA     2018-02-08 03:01:45 NA          NA      fp04.txt en       NA    </span>
+<span class="co">#&gt; 5 NA     2018-02-08 03:01:45 NA          NA      fp05.txt en       NA    </span>
+<span class="co">#&gt; 6 NA     2018-02-08 03:01:45 NA          NA      fp06.txt en       NA    </span>
+<span class="co">#&gt; # ... with 79 more rows, and 1 more variable: text &lt;chr&gt;</span></code></pre></div>
 <p>The <code>text</code> column contains the text of the documents themselves. Since most of the metadata columns are either missings or irrelevant for our purposes, we’ll delete those columns, keeping only the document (<code>id</code>) and <code>text</code> columns.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corpus_tidy &lt;-<span class="st"> </span><span class="kw">select</span>(corpus_tidy, id, text)</code></pre></div>
 <p>Also, we want to extract the essay number and use that as the document id rather than its file name.</p>
@@ -1202,9 +1202,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

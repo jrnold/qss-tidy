@@ -14,6 +14,7 @@ Imports:
   gganimate,
   ggnetwork,
   ggrepel,
+  ggthemes,
   igraph,
   intergraph,
   haven,

@@ -883,17 +883,17 @@ social %>%
 
 Linear regression without intercept.
 ```{r}
-fit.noint <- lm(primary2006 ~ -1 + messages, data = social)
-fit.noint
+fit_noint <- lm(primary2006 ~ -1 + messages, data = social)
+fit_noint
 ```
 
 Calculating the regression average effect is also easier if we make the control group the first level so all regression coefficients are comparisons to it.
 Use `r rdoc("forcats", "fct_relevel")` to make "Control"
 ```{r}
-fit.control <-
- mutate(social, messages = fct_relevel(messages, "Control")) %>%
- lm(primary2006 ~ messages, data = .)
-fit.control
+fit_control <-
+  mutate(social, messages = fct_relevel(messages, "Control")) %>%
+  lm(primary2006 ~ messages, data = .)
+fit_control
 ```
 
 Difference in means
@@ -932,26 +932,26 @@ diff(ate$ate_Neighbors)
 
 
 ```{r}
-social.neighbor <- social %>%
+social_neighbor <- social %>%
   filter( (messages == "Control") | (messages == "Neighbors"))
 
-fit.int <- lm(primary2006 ~ primary2004 + messages + primary2004:messages,
-              data = social.neighbor)
+fit_int <- lm(primary2006 ~ primary2004 + messages + primary2004:messages,
+              data = social_neighbor)
 fit.int
 ```
 
 ```{r}
-lm(primary2006 ~ primary2004 * messages, data = social.neighbor)
+lm(primary2006 ~ primary2004 * messages, data = social_neighbor)
 ```
 
 ```{r}
-social.neighbor <-
-  social.neighbor %>%
+social_neighbor <-
+  social_neighbor %>%
   mutate(age = 2008 - yearofbirth)
 
-summary(social.neighbor$age)
+summary(social_neighbor$age)
 
-fit.age <- lm(primary2006 ~ age * messages, data = social.neighbor)
+fit.age <- lm(primary2006 ~ age * messages, data = social_neighbor)
 fit.age
 ```
 
@@ -971,14 +971,14 @@ Though note that the coefficients will be be different since by default `poly` c
 However, you really shouldn't interpret the coefficients directly anyways, so this should matter.
 ```{r}
 fit.age2 <- lm(primary2006 ~ poly(age, 2) * messages,
-               data = social.neighbor)
+               data = social_neighbor)
 fit.age2
 ```
 
 Create a data frame of combinations of ages and messages using `r rdoc("modelr", "data_grid")`, which means that we only need to specify the variables, and not the specific values,
 ```{r}
 y.hat <-
-  data_grid(social.neighbor, age, messages) %>%
+  data_grid(social_neighbor, age, messages) %>%
   add_predictions(fit.age2)
 ```
 

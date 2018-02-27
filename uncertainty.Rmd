@@ -527,25 +527,25 @@ fisher.test(select(spread(y, Truth, Number), -Guess))
 
 ```{r}
 n <- 1018
-x.bar <- 550 / n
+x_bar <- 550 / n
 se <- sqrt(0.5 * 0.5 / n) # standard deviation of sampling distribution
 # upper red area in the figure
-upper <- pnorm(x.bar, mean = 0.5, sd = se, lower.tail = FALSE)
+upper <- pnorm(x_bar, mean = 0.5, sd = se, lower.tail = FALSE)
 # lower red area in the figure; identical to the upper area
-lower <- pnorm(0.5 - (x.bar - 0.5), mean = 0.5, sd = se)
+lower <- pnorm(0.5 - (x_bar - 0.5), mean = 0.5, sd = se)
 # two side p value
 upper + lower
 2 * upper
 # one sided p value
 upper
-z.score <- (x.bar - 0.5) / se
-z.score
-pnorm(z.score, lower.tail = FALSE) # one-sided p-value
-2 * pnorm(z.score, lower.tail = FALSE) # two-sided p-value
+z_score <- (x_bar - 0.5) / se
+z_score
+pnorm(z_score, lower.tail = FALSE) # one-sided p-value
+2 * pnorm(z_score, lower.tail = FALSE) # two-sided p-value
 # 99% confidence interval contains 0.5
-c(x.bar - qnorm(0.995) * se, x.bar + qnorm(0.995) * se)
+c(x_bar - qnorm(0.995) * se, x_bar + qnorm(0.995) * se)
 # 95% confidence interval does not contain 0.5
-c(x.bar - qnorm(0.975) * se, x.bar + qnorm(0.975) * se)
+c(x_bar - qnorm(0.975) * se, x_bar + qnorm(0.975) * se)
 # no continuity correction to get the same p-value as above
 prop.test(550, n = n, p = 0.5, correct = FALSE)
 # with continuity correction
@@ -618,24 +618,36 @@ The only thing that changed is using `r rdoc("dplyr", "filter")` for selecting t
 ```{r eval=FALSE}
 # set the parameters
 n <- 250
-p.star <- 0.48 # data generating process
+p_star <- 0.48 # data generating process
 p <- 0.5 # null value
 alpha <- 0.05
-# critical value
-cr.value <- qnorm(1 - alpha / 2)
-# standard errors under the hypothetical data generating process
-se.star <- sqrt(p.star * (1 - p.star) / n)
-# standard error under the null
+```
+critical value
+```{r}
+cr_value <- qnorm(1 - alpha / 2)
+```
+standard errors under the hypothetical data generating process
+```{r}
+se_star <- sqrt(p_star * (1 - p_star) / n)
+```
+standard error under the null
+```{r}
 se <- sqrt(p * (1 - p) / n)
-# power
-pnorm(p - cr.value * se, mean = p.star, sd = se.star) +
-    pnorm(p + cr.value * se, mean = p.star, sd = se.star, lower.tail = FALSE)
-# parameters
+```
+power
+```{r}
+pnorm(p - cr_value * se, mean = p_star, sd = se_star) +
+    pnorm(p + cr_value * se, mean = p_star, sd = se_star, lower.tail = FALSE)
+```
+parameters
+```{r}
 n1 <- 500
 n0 <- 500
-p1.star <- 0.05
-p0.star <- 0.1
-# overall call back rate as a weighted average
+p1_star <- 0.05
+p0_star <- 0.1
+```
+overall call back rate as a weighted average
+```{r}
 p <- (n1 * p1.star + n0 * p0.star) / (n1 + n0)
 # standard error under the null
 se <- sqrt(p * (1 - p) * (1 / n1 + 1 / n0))

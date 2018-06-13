@@ -1,26 +1,36 @@
 
 ---
-title: "QSS Tidyverse Code"
+knit: "bookdown::render_book"
+title: "Quantatitive Social Science: The R Tidyverse Code"
+description: >
+  This supplement for Kosuke Imai's "Quantitative Social Science: An Introduction"
+  contains Tidyverse R code versions of the code in the original text.
 author: "Jeffrey B. Arnold"
-date: "2018-02-18"
-github-repo: jrnold/qss-tidy
+twitter: jrnld
+github-repo: "jrnold/qss-tidy"
+url: 'http\://jrnold.github.io/qss-tidy'
+date: "2018-06-12"
 site: "bookdown::bookdown_site"
 documentclass: book
 ---
 
 # Preface {-}
 
-This is tidyverse R code to supplement the book, [Quantitative Social Science: An Introduction](http://press.princeton.edu/titles/11025.html), by Kosuke Imai, to
-be published by Princeton University Press in March 2017.
+This is tidyverse R code to supplement the book, [Quantitative Social Science: An Introduction](http://press.princeton.edu/titles/11025.html), by Kosuke Imai.
 
-The R code included with the text of *QSS* and the supplementary materials relies mostly on base R functions. 
-This translates the code examples provided with *QSS* to tidyverse R code. 
-[Tidyverse](https://github.com/tidyverse/tidyverse) refers to a set of packages (**ggplot2**, **dplyr**, **tidyr**, **readr**, **purrr**, **tibble**,  and a few others) that share common data representations, especially the use of data frames for return values. 
+The R code included with the text of *QSS* and the supplementary materials relies mostly on base R functions.
+This translates the code examples provided with *QSS* to tidyverse R code.
+[Tidyverse](https://github.com/tidyverse/tidyverse) refers to a set of packages (**ggplot2**, **dplyr**, **tidyr**, **readr**, **purrr**, **tibble**,  and a few others) that share common data representations, especially the use of data frames for return values.
 
-These notes do not aim to teach tidyverse, The book [R for Data Science](http://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemond is an introduction. 
+This is not a complete introduction to R and the tidyverse.
+I suggest pairing it with [R for Data Science](http://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemond.
+
+These materials are supplement to replace the existing *QSS* code with the tidvyerse dialect of R.
+Thus it does not replicate the substantive material, and not meant to be used independently of the *QSS* text.
+However, the provided code is not merely a translation of the *QSS* code.
+It often uses the topics in *QSS* to delve deeper into data science, data visualization, and computational topics.
 
 I wrote this code while teaching course that employed both texts in order to make the excellent examples and statistical material in *QSS* more compatible with the modern data science using R approach in *R4DS*.
-
 
 ## Colophon {-}
 

@@ -5,27 +5,27 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>QSS Tidyverse Code</title>
-  <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
+  <title>Quantatitive Social Science: The R Tidyverse Code</title>
+  <meta name="description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
-  <meta property="og:title" content="QSS Tidyverse Code" />
+  <meta property="og:title" content="Quantatitive Social Science: The R Tidyverse Code" />
   <meta property="og:type" content="book" />
+  <meta property="og:url" content="http://jrnold.github.io/qss-tidy" />
   
-  
-  
+  <meta property="og:description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>" />
   <meta name="github-repo" content="jrnold/qss-tidy" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="QSS Tidyverse Code" />
+  <meta name="twitter:title" content="Quantatitive Social Science: The R Tidyverse Code" />
   
-  
+  <meta name="twitter:description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>" />
   
 
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-02-18">
+<meta name="date" content="2018-06-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -99,6 +99,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
+<li><strong><a href="./">QSS Tidyverse Code</a></strong></li>
+
+<li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#colophon"><i class="fa fa-check"></i>Colophon</a></li>
 </ul></li>
@@ -195,10 +198,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.3.1" data-path="discovery.html"><a href="discovery.html#spatial-data-in-r"><i class="fa fa-check"></i><b>5.3.1</b> Spatial Data in R</a></li>
 <li class="chapter" data-level="5.3.2" data-path="discovery.html"><a href="discovery.html#colors-in-r"><i class="fa fa-check"></i><b>5.3.2</b> Colors in R</a></li>
 <li class="chapter" data-level="5.3.3" data-path="discovery.html"><a href="discovery.html#united-states-presidential-elections"><i class="fa fa-check"></i><b>5.3.3</b> United States Presidential Elections</a></li>
-</ul></li>
-<li class="chapter" data-level="5.4" data-path="discovery.html"><a href="discovery.html#america-as-purple-states"><i class="fa fa-check"></i><b>5.4</b> America as purple states</a><ul>
-<li class="chapter" data-level="5.4.1" data-path="discovery.html"><a href="discovery.html#expansion-of-walmart"><i class="fa fa-check"></i><b>5.4.1</b> Expansion of Walmart</a></li>
-<li class="chapter" data-level="5.4.2" data-path="discovery.html"><a href="discovery.html#animation-in-r"><i class="fa fa-check"></i><b>5.4.2</b> Animation in R</a></li>
+<li class="chapter" data-level="5.3.4" data-path="discovery.html"><a href="discovery.html#expansion-of-walmart"><i class="fa fa-check"></i><b>5.3.4</b> Expansion of Walmart</a></li>
+<li class="chapter" data-level="5.3.5" data-path="discovery.html"><a href="discovery.html#animation-in-r"><i class="fa fa-check"></i><b>5.3.5</b> Animation in R</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="probability.html"><a href="probability.html"><i class="fa fa-check"></i><b>6</b> Probability</a><ul>
@@ -261,7 +262,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">QSS Tidyverse Code</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Quantatitive Social Science: The R Tidyverse Code</a>
           </h1>
         </div>
 
@@ -277,9 +278,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">library</span>(<span class="st">&quot;forcats&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;stringr&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;broom&quot;</span>)</code></pre></div>
+<!-- lint disable no-duplicate-headings -->
 </div>
 <div id="probability-1" class="section level2">
 <h2><span class="header-section-number">6.1</span> Probability</h2>
+<!-- lint enable no-duplicate-headings -->
 <div id="frequentist-vs.bayesian" class="section level3">
 <h3><span class="header-section-number">6.1.1</span> Frequentist vs. Bayesian</h3>
 </div>
@@ -296,7 +299,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 }
 
 bday &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">k =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, <span class="dt">pr =</span> <span class="kw">birthday</span>(k))
-               
+
 <span class="kw">ggplot</span>(bday, <span class="kw">aes</span>(<span class="dt">x =</span> k, <span class="dt">y =</span> pr)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="fl">0.5</span>, <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
@@ -306,7 +309,7 @@ bday &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="d
                      <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Number of people&quot;</span>)</code></pre></div>
 <p><img src="probability_files/figure-html/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p><strong>Note:</strong> The logarithm is used for numerical stability. Basically, “floating-point” numbers are approximations of numbers. If you perform arithmetic with numbers that are very large, very small, or vary differently in magnitudes, you could have problems. Logarithms help with some of those issues. See “Falling Into the Floating Point Trap” in <a href="http://www.burns-stat.com/pages/Tutor/R_inferno.pdf">The R Inferno</a> for a summary of floating point numbers. See these John Fox posts <a href="http://www.johndcook.com/blog/2008/09/26/comparing-three-methods-of-computing-standard-deviation/">1</a> <a href="http://www.johndcook.com/blog/2008/09/28/theoretical-explanation-for-numerical-results/">2</a> for an example of numerical stability gone wrong. Also see: <a href="http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/" class="uri">http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/</a>.</p>
+<p><strong>Note:</strong> The logarithm is used for numerical stability. Basically, “floating-point” numbers are approximations of numbers. If you perform arithmetic with numbers that are very large, very small, or vary differently in magnitudes, you could have problems. Logarithms help with some of those issues. See “Falling Into the Floating Point Trap” in <a href="http://www.burns-stat.com/pages/Tutor/R_inferno.pdf">The R Inferno</a> for a summary of floating point numbers. See these John Fox posts <a href="http://www.johndcook.com/blog/2008/09/26/comparing-three-methods-of-computing-standard-deviation/">1</a> <a href="http://www.johndcook.com/blog/2008/09/28/theoretical-explanation-for-numerical-results/">2</a> for an example of numerical stability gone wrong. Also see this article on the <a href="http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/">log sum of exponentials</a>.</p>
 </div>
 <div id="sampling-without-replacement" class="section level3">
 <h3><span class="header-section-number">6.1.4</span> Sampling without replacement</h3>
@@ -373,7 +376,7 @@ FLVoters &lt;-<span class="st"> </span>FLVoters <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">na.omit</span>()
 <span class="kw">dim</span>(FLVoters)
 <span class="co">#&gt; [1] 9113    6</span></code></pre></div>
-<p><em>Note the difference between <code>glimpse()</code> and <code>dim()</code> - what is different in how they handle NA observations?</em></p>
+<p>Note the difference between <code>glimpse()</code> and <code>dim()</code>. What is different in how they handle NA observations?</p>
 <p>Instead of using <a href="https://www.rdocumentation.org/packages/base/topics/prop.base">prop.base</a>, we calculate the probabilities with a data frame. Calculate the marginal probabilities of each race:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">margin_race &lt;-
 <span class="st">  </span>FLVoters <span class="op">%&gt;%</span>
@@ -631,7 +634,8 @@ indep_cond_gender &lt;-
        <span class="dt">y =</span> <span class="st">&quot;P(race | gender) * P(age | gender)&quot;</span>,
        <span class="dt">title =</span> <span class="st">&quot;Marginal independence&quot;</span>)</code></pre></div>
 <p><img src="probability_files/figure-html/unnamed-chunk-23-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p><strong>Monty-hall problem</strong></p>
+<div id="monty-hall-problem" class="section level4">
+<h4><span class="header-section-number">6.2.2.1</span> Monty-hall problem</h4>
 <p>The <code>for</code> loop approach in <em>QSS</em> is valid code, but here we provide a more functional approach to solving the problem. We will define a function to choose a door, repeat the function multiple times while storing the results in a data frame, and then summarize that data frame.</p>
 <p>First, create a function for a single iteration. This returns a single logical value:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">choose_door &lt;-<span class="st"> </span><span class="cf">function</span>(.iter) {
@@ -657,6 +661,7 @@ indep_cond_gender &lt;-
 <span class="co">#&gt;   win_pct</span>
 <span class="co">#&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1   0.648</span></code></pre></div>
+</div>
 </div>
 <div id="bayes-rule" class="section level3">
 <h3><span class="header-section-number">6.2.3</span> Bayes’ Rule</h3>
@@ -748,8 +753,8 @@ FLVoters <span class="op">%&gt;%</span>
 <span class="co">#&gt; # A tibble: 5 x 2</span>
 <span class="co">#&gt;   race_pred    fp</span>
 <span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 api       1.00 </span>
-<span class="co">#&gt; 2 others    1.00 </span>
+<span class="co">#&gt; 1 api       1    </span>
+<span class="co">#&gt; 2 others    1    </span>
 <span class="co">#&gt; 3 black     0.329</span>
 <span class="co">#&gt; 4 hispanic  0.227</span>
 <span class="co">#&gt; 5 white     0.197</span></code></pre></div>
@@ -850,18 +855,13 @@ y &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">
 <li>Take a sample of <span class="math inline">\(n\)</span> values from a uniform distribution. Call this vector <span class="math inline">\(x\)</span>.</li>
 <li>To generate a sample <span class="math inline">\(y\)</span> taking values of 0 and 1 from this vector <span class="math inline">\(x\)</span>, set <span class="math inline">\(y_i = 1\)</span> if <span class="math inline">\(x_i &gt;= p\)</span>, and <span class="math inline">\(y_i = 0\)</span> if <span class="math inline">\(x_i &lt; p\)</span>.</li>
 </ol>
-<p>Note how this method works. Given a value <span class="math inline">\(p\)</span> between 0 and 1, in a sample from Uniform distribution, in expectation a fraction of <span class="math inline">\(p\)</span> values will be less than <span class="math inline">\(p\)</span>, and in expectation a fraction of <span class="math inline">\(1 - p\)</span> values will be greater than <span class="math inline">\(p\)</span>. These are exactly the probabilities of sampling 1 and 0 in the probability mass of the Uniform distribution:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y &lt;-<span class="st"> </span><span class="kw">as.integer</span>(<span class="kw">runif</span>(n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1</span>) <span class="op">&lt;=</span><span class="st"> </span>p)
+<p>Note how this method works. Given a value <span class="math inline">\(p\)</span> between 0 and 1, in a sample from Uniform distribution, in expectation a fraction of <span class="math inline">\(p\)</span> values will be less than <span class="math inline">\(p\)</span>, and in expectation a fraction of <span class="math inline">\(1 - p\)</span> values will be greater than <span class="math inline">\(p\)</span>. These are exactly the probabilities of sampling 1 and 0 in the probability mass of the Uniform distribution: <code>{r} y &lt;- as.integer(runif(n, min = 0, max = 1) &lt;= p) head(y) mean(y)</code>ß</p>
+<p>Third, note that the Bernoulli distribution is a special case of the binomial distribution (discussed in the next section), where <span class="math inline">\(size = 1\)</span>. Thus, we can use the <code>rbinom</code> function to sample from a binomial distribution.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y &lt;-<span class="st"> </span><span class="kw">rbinom</span>(n, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> p)
 <span class="kw">head</span>(y)
 <span class="co">#&gt; [1] 1 1 1 0 1 1</span>
 <span class="kw">mean</span>(y)
 <span class="co">#&gt; [1] 0.64</span></code></pre></div>
-<p>Third, note that the Bernoulli distribution is a special case of the binomial distribution (discussed in the next section), where <span class="math inline">\(size = 1\)</span>. Thus, we can use the <code>rbinom</code> function to sample from a binomial distribution.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y &lt;-<span class="st"> </span><span class="kw">rbinom</span>(n, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> p)
-<span class="kw">head</span>(y)
-<span class="co">#&gt; [1] 0 0 0 1 1 1</span>
-<span class="kw">mean</span>(y)
-<span class="co">#&gt; [1] 0.6</span></code></pre></div>
 <p>Since the R functions for the Binomial distribution don’t exist here are examples of how you would write them as examples of writing functions to sample and calculate the PDF or PMF, CDF, and quantile functions of a distribution. Sample from the distribution:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rbernoulli &lt;-<span class="st"> </span><span class="cf">function</span>(n, <span class="dt">prob =</span> <span class="fl">0.5</span>) {
   <span class="kw">sample</span>(<span class="kw">c</span>(1L, 0L), n, <span class="dt">replace =</span> <span class="ot">FALSE</span>, <span class="dt">prob =</span> <span class="kw">c</span>(prob, <span class="dv">1</span> <span class="op">-</span><span class="st"> </span>prob))
@@ -969,14 +969,14 @@ dbernoulli &lt;-<span class="st"> </span><span class="cf">function</span>(x, <sp
 <span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">geom =</span> <span class="st">&quot;line&quot;</span>, <span class="dt">fun =</span> dnorm) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Standardized residuals&quot;</span>,
                      <span class="dt">breaks =</span> <span class="op">-</span><span class="dv">3</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>))</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(err, <span class="kw">aes</span>(<span class="dt">sample =</span> err_std)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> <span class="dv">0</span>, <span class="dt">slope =</span> <span class="dv">1</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_fixed</span>(<span class="dt">ratio =</span> <span class="dv">1</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Sample quantiles&quot;</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Theoretical quantiles&quot;</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>))</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Alternatively, you can use the <code>augment</code> function from <strong>broom</strong> which returns the residuals for each observation in the <code>.resid</code> column.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">augment</span>(fit1) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.resid_z =</span> .resid <span class="op">/</span><span class="st"> </span><span class="kw">sd</span>(.resid)) <span class="op">%&gt;%</span>
@@ -986,7 +986,7 @@ dbernoulli &lt;-<span class="st"> </span><span class="cf">function</span>(x, <sp
 <span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">geom =</span> <span class="st">&quot;line&quot;</span>, <span class="dt">fun =</span> dnorm) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Standardized residuals&quot;</span>,
                      <span class="dt">breaks =</span> <span class="op">-</span><span class="dv">3</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>))</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Obama’s vote shares in 2008 and 2012.</p>
 <p>Standard deviation of errors:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">err_sd &lt;-<span class="st"> </span><span class="kw">sd</span>(<span class="kw">resid</span>(fit1))</code></pre></div>
@@ -1016,7 +1016,7 @@ CA_mean_<span class="dv">2012</span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Standardized vote share of Obama (2008)&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Pr. 2012 vote share greater than 2008&quot;</span>)</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-65-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-64-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="expectation-and-variance" class="section level3">
 <h3><span class="header-section-number">6.3.4</span> Expectation and Variance</h3>
@@ -1047,7 +1047,7 @@ pres08 &lt;-<span class="st"> </span><span class="kw">mutate</span>(pres08, <spa
 }</code></pre></div>
 <p>This function returns the electoral votes for Obama for a single simulation:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim_election</span>(pres08)
-<span class="co">#&gt; [1] 364</span></code></pre></div>
+<span class="co">#&gt; [1] 353</span></code></pre></div>
 <p>Run this simulation <code>sims</code> times, saving the electoral votes of Obama in each simulation:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sims &lt;-<span class="st"> </span><span class="dv">10000</span>
 Obama_EV_sims &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(<span class="kw">seq_len</span>(sims), <span class="op">~</span><span class="st"> </span><span class="kw">sim_election</span>(pres08))</code></pre></div>
@@ -1064,7 +1064,7 @@ Obama_EV_sims &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(<spa
                      <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">300</span>, <span class="dv">400</span>, <span class="dt">by =</span> <span class="dv">20</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Density&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Prediction of election outcomes&quot;</span>)</code></pre></div>
-<p><img src="probability_files/figure-html/unnamed-chunk-71-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="probability_files/figure-html/unnamed-chunk-70-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Summarize the simulations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(Obama_EV_sims)
 <span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
@@ -1218,7 +1218,7 @@ gitbook.start({
 "link": "https://github.com/jrnold/qss-tidy/edit/master/probability.Rmd",
 "text": "Edit"
 },
-"download": null,
+"download": ["qss-tidy.pdf"],
 "toc": {
 "collapse": "section"
 }

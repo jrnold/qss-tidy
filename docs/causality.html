@@ -5,27 +5,27 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>QSS Tidyverse Code</title>
-  <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
+  <title>Quantatitive Social Science: The R Tidyverse Code</title>
+  <meta name="description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
-  <meta property="og:title" content="QSS Tidyverse Code" />
+  <meta property="og:title" content="Quantatitive Social Science: The R Tidyverse Code" />
   <meta property="og:type" content="book" />
+  <meta property="og:url" content="http://jrnold.github.io/qss-tidy" />
   
-  
-  
+  <meta property="og:description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>" />
   <meta name="github-repo" content="jrnold/qss-tidy" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="QSS Tidyverse Code" />
+  <meta name="twitter:title" content="Quantatitive Social Science: The R Tidyverse Code" />
   
-  
+  <meta name="twitter:description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>" />
   
 
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-02-18">
+<meta name="date" content="2018-06-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -99,6 +99,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
+<li><strong><a href="./">QSS Tidyverse Code</a></strong></li>
+
+<li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#colophon"><i class="fa fa-check"></i>Colophon</a></li>
 </ul></li>
@@ -259,7 +262,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">QSS Tidyverse Code</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Quantatitive Social Science: The R Tidyverse Code</a>
           </h1>
         </div>
 
@@ -307,7 +310,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co">#&gt; $ call      &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0...</span></code></pre></div>
 <p>The code in <em>QSS</em> uses <code>table()</code> and <code>addmargins()</code> to construct the table. However, this can be done easily with the <strong>dplyr</strong> package using grouping and summarizing.</p>
 <p>Use <code>group_by()</code> to identify each combination of <code>race</code> and <code>call</code>, and then <code>count()</code> the observations:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">race_call_tab &lt;-<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">race_call_tab &lt;-
 <span class="st">  </span>resume <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(race, call) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">count</span>()
@@ -321,7 +324,7 @@ race_call_tab
 <span class="co">#&gt; 3 white     0  2200</span>
 <span class="co">#&gt; 4 white     1   235</span></code></pre></div>
 <p>If we want to calculate callback rates by race, we can use the <code>mutate()</code> function from <strong>dplyr</strong>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">race_call_rate &lt;-<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">race_call_rate &lt;-
 <span class="st">  </span>race_call_tab <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(race) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">call_rate =</span>  n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)) <span class="op">%&gt;%</span>
@@ -696,12 +699,12 @@ turnout_by_message
 <span class="co">#&gt; 1 NJ       0.00344       0.911</span>
 <span class="co">#&gt; 2 PA       0.955         0.940</span></code></pre></div>
 <p>Create a variable for the proportion of full-time employees in NJ and PA after the increase:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage &lt;-<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage &lt;-
 <span class="st">  </span>minwage <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">totalAfter =</span> fullAfter <span class="op">+</span><span class="st"> </span>partAfter,
         <span class="dt">fullPropAfter =</span> fullAfter <span class="op">/</span><span class="st"> </span>totalAfter)</code></pre></div>
 <p>Now calculate the average proportion of full-time employees for each state:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">full_prop_by_state &lt;-<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">full_prop_by_state &lt;-
 <span class="st">  </span>minwage <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">fullPropAfter =</span> <span class="kw">mean</span>(fullPropAfter))
@@ -807,10 +810,10 @@ full_prop_by_state
 <span class="co">#&gt; # A tibble: 4 x 3</span>
 <span class="co">#&gt;   state period fullProp</span>
 <span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 NJ      1.00    0.320</span>
-<span class="co">#&gt; 2 PA      1.00    0.272</span>
-<span class="co">#&gt; 3 NJ      0       0.297</span>
-<span class="co">#&gt; 4 PA      0       0.310</span></code></pre></div>
+<span class="co">#&gt; 1 NJ         1    0.320</span>
+<span class="co">#&gt; 2 PA         1    0.272</span>
+<span class="co">#&gt; 3 NJ         0    0.297</span>
+<span class="co">#&gt; 4 PA         0    0.310</span></code></pre></div>
 <p>Now plot this new dataset:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(full_prop_by_state, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> fullProp, <span class="dt">colour =</span> state)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
@@ -841,8 +844,8 @@ full_prop_by_state
 <span class="co">#&gt; # A tibble: 2 x 3</span>
 <span class="co">#&gt;   state wageAfter wageBefore</span>
 <span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 NJ        0          0.620</span>
-<span class="co">#&gt; 2 PA        0.575      0.750</span></code></pre></div>
+<span class="co">#&gt; 1 NJ        0           0.62</span>
+<span class="co">#&gt; 2 PA        0.575       0.75</span></code></pre></div>
 <p>Calculate the variance and standard deviation of <code>wageAfter</code> and <code>wageBefore</code> for each state:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">minwage <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span>
@@ -896,7 +899,7 @@ gitbook.start({
 "link": "https://github.com/jrnold/qss-tidy/edit/master/causality.Rmd",
 "text": "Edit"
 },
-"download": null,
+"download": ["qss-tidy.pdf"],
 "toc": {
 "collapse": "section"
 }

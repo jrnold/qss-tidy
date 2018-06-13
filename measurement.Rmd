@@ -1,6 +1,6 @@
 ---
 output: html_document
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 # Measurement
@@ -13,7 +13,6 @@ library("forcats")
 library("broom")
 library("tidyr")
 ```
-
 
 ## Measuring Civilian Victimization during Wartime
 
@@ -57,10 +56,6 @@ afghan %>%
   ungroup() %>%
   mutate(prop = n / sum(n))
 ```
-
-
-
-
 
 ## Handling Missing Data in R
 
@@ -120,7 +115,7 @@ NA_real_ # double
 NA_character_ # character
 ```
 In many cases, this distinction does not matter since many functions will coerce these missing
-values to the correct vector type. 
+values to the correct vector type.
 However, you will need to use these in some tidyverse functions that require the outputs
 to be the same type, e.g. `map()` and most of the other `r pkg("purrr")` functions,
 and `if_else()`.
@@ -135,9 +130,7 @@ So instead of `NA`, use `NA_integer_`:
 if_else(x < 3, x, NA_integer_)
 ```
 
-
 ## Visualizing the Univariate Distribution
-
 
 ### Barplot
 
@@ -209,7 +202,6 @@ ggplot(violent_exp, aes(x = prop, y = response, color = perpetrator)) +
 
 Black was chosen for the Taliban, and Green for ISAF because they are the colors of their respective [flags](https://en.wikipedia.org/wiki/International_Security_Assistance_Force).
 
-
 ### Histogram
 
 See the documentation for `r rdoc("ggplot2", "geom_histogram")`.
@@ -232,7 +224,6 @@ ggplot(afghan, aes(x = educ.years, y = ..density..)) +
   labs(title = "Distribution of respondent's education",
        x = "Years of education",
        y = "Density")
-  
 ```
 
 There are several alternatives to the histogram.
@@ -246,7 +237,13 @@ dens_plot <- ggplot(afghan, aes(x = age)) +
        y = "Age", x = "Density")
 dens_plot
 ```
-which can be combined with a `r rdoc("ggplot2", "geom_rug")` to create a rug plot, which puts small lines on the axis to represent the value of each observation. It can be combined with a scatter or density plot to add extra detail. Adjust the `alpha` to modify the color transparency of the rug and address overplotting.
+
+which can be combined with a `r rdoc("ggplot2", "geom_rug")` to create a rug
+plot, which puts small lines on the axis to represent the value of each
+observation. It can be combined with a scatter or density plot to add extra
+detail. Adjust the `alpha` to modify the color transparency of the rug and
+address overplotting.
+
 ```{r}
 dens_plot + geom_rug(alpha = .2)
 ```
@@ -259,8 +256,6 @@ ggplot(afghan, aes(x = age)) +
   labs(title = "Distribution of respondent's age",
        y = "Age", x = "Density")
 ```
-
-
 
 ### Boxplot
 
@@ -296,7 +291,6 @@ afghan %>%
 
 An alternatives to the traditional boxplot:
 
-
 The Tufte boxplot:
 ```{r}
 library("ggthemes")
@@ -324,20 +318,14 @@ ggplot(afghan, aes(y = educ.years, x = province)) +
        title = "Education by Province")
 ```
 
-
 ### Printing and saving graphics
 
 Use the function `rdoc ("ggplot2", "ggsave")` to save `r pkg("ggplot2")` graphics.
 Also, R Markdown files have their own means of creating and saving plots created by code-chunks.
 
-
-
-
 ## Survey Sampling
 
-
 ### The Role of Randomization
-
 
 ```{r message=FALSE}
 data("afghan.village", package = "qss")
@@ -373,8 +361,6 @@ ggplot(afghan.village, aes(colour = factor(village.surveyed,
   labs(x = "log(population)", colour = "")
 ```
 
-
-
 ### Non-response and other sources of bias
 
 Calculate the rates of item non-response by province to the question about civilian victimization by ISAF and Taliban forces (`violent.exp.ISAF` and
@@ -403,7 +389,6 @@ afghan %>%
   glimpse() %>%
   spread(list.group, n, fill = 0)
 ```
-
 
 ## Measuring Political Polarization
 
@@ -442,8 +427,6 @@ scale_colour_parties <-
 q + scale_colour_parties
 ```
 
-
-
 ```{r fig.width = 10, fig.height = 6, out.width = "100%", out.height = "100%"}
 congress %>%
   ggplot(aes(x = dwnom1, y = dwnom2, colour = party)) +
@@ -453,7 +436,7 @@ congress %>%
   scale_y_continuous("racial liberalism/conservatism",
                      limits = c(-2, 2)) +
   scale_x_continuous("economic liberalism/conservatism",
-                     limits = c(-2, 2)) 
+                     limits = c(-2, 2))
   #scale_colour_parties
 ```
 
@@ -485,7 +468,7 @@ party_endpoints <-
   filter(congress %in% c(min(congress), max(congress))) %>%
   mutate(label = str_c(party, congress, sep = " - "))
 
-ggplot(party_means, 
+ggplot(party_means,
          aes(x = dwnom1, y = dwnom2, color = party,
              group = party)) +
   geom_point() +
@@ -498,8 +481,6 @@ ggplot(party_means,
   scale_colour_parties
 
 ```
-
-
 
 ### Correlation
 
@@ -537,7 +518,6 @@ ggplot(party_polarization, aes(x = congress, y = polarization)) +
   labs(x = "Year", y = "Republican median − Democratic median")
 ```
 
-
 ### Quantile-Quantile Plot
 
 ```{r}
@@ -564,7 +544,6 @@ party_qtiles <- tibble(
 party_qtiles
 ```
 
-
 The plot looks different than the one in the text since the x- and y-scales are in the original values instead of z-scores (see the next section).
 
 ```{r}
@@ -575,9 +554,7 @@ party_qtiles %>%
   coord_fixed()
 ```
 
-
 ## Clustering
-
 
 ### Matrices
 
@@ -586,11 +563,9 @@ implementing algorithms, generally keeping data in data frames is more convenien
 
 See `r R4DS` chapter [Vectors](http://r4ds.had.co.nz/vectors.html).
 
-
 ### Lists
 
 See `r R4DS` chapters [Vectors](http://r4ds.had.co.nz/vectors.html) and [Iteration](http://r4ds.had.co.nz/iteration.html), as well as the `r pkg("purrr")` package for more powerful methods of computing on lists.
-
 
 ### k-means algorithms
 

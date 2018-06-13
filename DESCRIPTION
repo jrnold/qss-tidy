@@ -40,3 +40,4 @@ Suggests:
   lintr,
   spelling
 Language: en-US
+RoxygenNote: 6.0.1

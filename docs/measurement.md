@@ -1,7 +1,7 @@
 
 ---
 output: html_document
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 # Measurement
@@ -15,7 +15,6 @@ library("forcats")
 library("broom")
 library("tidyr")
 ```
-
 
 ## Measuring Civilian Victimization during Wartime
 
@@ -97,10 +96,6 @@ afghan %>%
 #> 3                1                   0   475 0.177
 #> 4                1                   1   526 0.196
 ```
-
-
-
-
 
 ## Handling Missing Data in R
 
@@ -195,7 +190,7 @@ NA_character_ # character
 #> [1] NA
 ```
 In many cases, this distinction does not matter since many functions will coerce these missing
-values to the correct vector type. 
+values to the correct vector type.
 However, you will need to use these in some tidyverse functions that require the outputs
 to be the same type, e.g. `map()` and most of the other [purrr](https://cran.r-project.org/package=purrr) functions,
 and `if_else()`.
@@ -215,9 +210,7 @@ if_else(x < 3, x, NA_integer_)
 #> [1]  1  2 NA NA NA
 ```
 
-
 ## Visualizing the Univariate Distribution
-
 
 ### Barplot
 
@@ -301,7 +294,6 @@ ggplot(violent_exp, aes(x = prop, y = response, color = perpetrator)) +
 
 Black was chosen for the Taliban, and Green for ISAF because they are the colors of their respective [flags](https://en.wikipedia.org/wiki/International_Security_Assistance_Force).
 
-
 ### Histogram
 
 See the documentation for [geom_histogram](https://www.rdocumentation.org/packages/ggplot2/topics/geom_histogram).
@@ -328,7 +320,6 @@ ggplot(afghan, aes(x = educ.years, y = ..density..)) +
   labs(title = "Distribution of respondent's education",
        x = "Years of education",
        y = "Density")
-  
 ```
 
 <img src="measurement_files/figure-html/unnamed-chunk-21-1.png" width="70%" style="display: block; margin: auto;" />
@@ -347,7 +338,13 @@ dens_plot
 ```
 
 <img src="measurement_files/figure-html/unnamed-chunk-22-1.png" width="70%" style="display: block; margin: auto;" />
-which can be combined with a [geom_rug](https://www.rdocumentation.org/packages/ggplot2/topics/geom_rug) to create a rug plot, which puts small lines on the axis to represent the value of each observation. It can be combined with a scatter or density plot to add extra detail. Adjust the `alpha` to modify the color transparency of the rug and address overplotting.
+
+which can be combined with a [geom_rug](https://www.rdocumentation.org/packages/ggplot2/topics/geom_rug) to create a rug
+plot, which puts small lines on the axis to represent the value of each
+observation. It can be combined with a scatter or density plot to add extra
+detail. Adjust the `alpha` to modify the color transparency of the rug and
+address overplotting.
+
 
 ```r
 dens_plot + geom_rug(alpha = .2)
@@ -367,8 +364,6 @@ ggplot(afghan, aes(x = age)) +
 ```
 
 <img src="measurement_files/figure-html/unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" />
-
-
 
 ### Boxplot
 
@@ -419,7 +414,6 @@ afghan %>%
 
 An alternatives to the traditional boxplot:
 
-
 The Tufte boxplot:
 
 ```r
@@ -456,20 +450,14 @@ ggplot(afghan, aes(y = educ.years, x = province)) +
 
 <img src="measurement_files/figure-html/unnamed-chunk-30-1.png" width="70%" style="display: block; margin: auto;" />
 
-
 ### Printing and saving graphics
 
 Use the function `rdoc ("ggplot2", "ggsave")` to save [ggplot2](https://cran.r-project.org/package=ggplot2) graphics.
 Also, R Markdown files have their own means of creating and saving plots created by code-chunks.
 
-
-
-
 ## Survey Sampling
 
-
 ### The Role of Randomization
-
 
 
 ```r
@@ -514,8 +502,6 @@ ggplot(afghan.village, aes(colour = factor(village.surveyed,
 ```
 
 <img src="measurement_files/figure-html/unnamed-chunk-34-1.png" width="70%" style="display: block; margin: auto;" />
-
-
 
 ### Non-response and other sources of bias
 
@@ -572,7 +558,6 @@ afghan %>%
 #> 5             4       0  24.0       0
 ```
 
-
 ## Measuring Political Polarization
 
 
@@ -628,8 +613,6 @@ q + scale_colour_parties
 <img src="measurement_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" />
 
 
-
-
 ```r
 congress %>%
   ggplot(aes(x = dwnom1, y = dwnom2, colour = party)) +
@@ -639,7 +622,7 @@ congress %>%
   scale_y_continuous("racial liberalism/conservatism",
                      limits = c(-2, 2)) +
   scale_x_continuous("economic liberalism/conservatism",
-                     limits = c(-2, 2)) 
+                     limits = c(-2, 2))
   #scale_colour_parties
 ```
 
@@ -677,7 +660,7 @@ party_endpoints <-
   filter(congress %in% c(min(congress), max(congress))) %>%
   mutate(label = str_c(party, congress, sep = " - "))
 
-ggplot(party_means, 
+ggplot(party_means,
          aes(x = dwnom1, y = dwnom2, color = party,
              group = party)) +
   geom_point() +
@@ -691,8 +674,6 @@ ggplot(party_means,
 ```
 
 <img src="measurement_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
-
-
 
 ### Correlation
 
@@ -749,7 +730,6 @@ ggplot(party_polarization, aes(x = congress, y = polarization)) +
 
 <img src="measurement_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" />
 
-
 ### Quantile-Quantile Plot
 
 
@@ -790,7 +770,6 @@ party_qtiles
 #> # ... with 95 more rows
 ```
 
-
 The plot looks different than the one in the text since the x- and y-scales are in the original values instead of z-scores (see the next section).
 
 
@@ -804,9 +783,7 @@ party_qtiles %>%
 
 <img src="measurement_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" />
 
-
 ## Clustering
-
 
 ### Matrices
 
@@ -815,11 +792,9 @@ implementing algorithms, generally keeping data in data frames is more convenien
 
 See [R for Data Science](http://r4ds.had.co.nz/) chapter [Vectors](http://r4ds.had.co.nz/vectors.html).
 
-
 ### Lists
 
 See [R for Data Science](http://r4ds.had.co.nz/) chapters [Vectors](http://r4ds.had.co.nz/vectors.html) and [Iteration](http://r4ds.had.co.nz/iteration.html), as well as the [purrr](https://cran.r-project.org/package=purrr) package for more powerful methods of computing on lists.
-
 
 ### k-means algorithms
 

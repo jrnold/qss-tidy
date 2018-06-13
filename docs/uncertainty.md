@@ -1,11 +1,11 @@
 
 ---
 output: html_document
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
-# Uncertainty
 
+# Uncertainty
 
 ## Prerequisites {-}
 
@@ -21,9 +21,7 @@ library("broom")
 library("purrr")
 ```
 
-
 ## Estimation
-
 
 ### Unbiasedness and Consistency
 
@@ -51,7 +49,6 @@ SATE
 #> [1] 0.952
 ```
 
-
 Simulations of RCTs. Write a function that takes the sample as an input `smpl`, then randomly assigns the treatment to each individual:
 
 ```r
@@ -72,7 +69,12 @@ sim_treat <- function(smpl) {
            est_error = diff_mean - SATE)
 }
 ```
-This returns a data frame with columns: `Y0_mean` (mean $Y$ for observations not receiving the treatment), `Y1_mean` (mean $Y$ for observations receiving the treatment), `diff` (difference in mean values between the two groups), and `est_error` (difference between the estimated difference and the known SATE):
+
+This returns a data frame with columns: `Y0_mean` (mean $Y$ for observations
+not receiving the treatment), `Y1_mean` (mean $Y$ for observations receiving
+the treatment), `diff` (difference in mean values between the two groups), and
+`est_error` (difference between the estimated difference and the known SATE):
+
 
 ```r
 sim_treat(smpl)
@@ -95,7 +97,9 @@ Simulate the PATE:
 
 ```r
 PATE <- mu1 - mu0
+```
 
+```r
 sim_pate <- function(n, mu0, mu1, sd0, sd1) {
   smpl <- tibble(Y0 = rnorm(n, mean = mu0, sd = sd0),
                  Y1 = rnorm(n, mean = mu1, sd = sd1),
@@ -133,7 +137,6 @@ summary(pate_sims[["est_error"]])
 #>  -0.677  -0.135  -0.004  -0.003   0.129   0.853
 ```
 
-
 ### Standard Error
 
 Plot of the sampling distribution of the difference-in-means estimator:
@@ -146,7 +149,7 @@ ggplot(pate_sims, aes(x = diff_mean, y = ..density..)) +
   labs(x = "Difference-in-means estimator")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -209,7 +212,6 @@ mean(pate_sims_se[["se"]])
 #> [1] 0.2
 ```
 
-
 ### Confidence Intervals
 
 Calculate a $p\%$ confidence interval for the binomial distribution:
@@ -235,9 +237,9 @@ tibble(level = levels) %>%
 #> # A tibble: 3 x 3
 #>   level ci_lower ci_upper
 #>   <dbl>    <dbl>    <dbl>
-#> 1 0.990    0.560    0.640
-#> 2 0.950    0.570    0.630
-#> 3 0.900    0.575    0.625
+#> 1  0.99    0.560    0.640
+#> 2  0.95    0.570    0.630
+#> 3  0.9     0.575    0.625
 ```
 
 Calculate the coverage ratio of the 95% confidence interval in the PATE simulations.
@@ -290,7 +292,7 @@ alpha <- 0.05
 sims <- 5000
 ```
 
-Define a function that samples from a Bernoulli distribution, calculates its standard error, and returns a logical value as to whether it contains the true value: 
+Define a function that samples from a Bernoulli distribution, calculates its standard error, and returns a logical value as to whether it contains the true value:
 
 ```r
 binom_ci_contains <- function(n, p, alpha = 0.05) {
@@ -338,8 +340,6 @@ tibble(n = c(10L, 100L, 1000L)) %>%
 #> 3  1000    0.948
 ```
 
-
-
 ### Margin of Error and Sample Size Calculation in Polls
 
 Write a function to calculate the sample size needed for a given proportion.
@@ -352,14 +352,14 @@ moe_pop_prop <- function(MoE) {
 }
 moe_pop_prop(0.01)
 #> # A tibble: 99 x 3
-#>        p     n    MoE
-#>    <dbl> <dbl>  <dbl>
-#> 1 0.0100   380 0.0100
-#> 2 0.0200   753 0.0100
-#> 3 0.0300  1118 0.0100
-#> 4 0.0400  1475 0.0100
-#> 5 0.0500  1825 0.0100
-#> 6 0.0600  2167 0.0100
+#>       p     n   MoE
+#>   <dbl> <dbl> <dbl>
+#> 1  0.01  380.  0.01
+#> 2  0.02  753.  0.01
+#> 3  0.03 1118.  0.01
+#> 4  0.04 1475.  0.01
+#> 5  0.05 1825.  0.01
+#> 6  0.06 2167.  0.01
 #> # ... with 93 more rows
 ```
 Then use [map_df](https://www.rdocumentation.org/packages/purrr/topics/map_df) to call this function for different margins of error, and return the entire thing as a data frame with columns: `n`, `p`, and `MoE`.
@@ -379,7 +379,7 @@ ggplot(props, aes(x = p, y = n, colour = factor(MoE))) +
   theme(legend.position = "bottom")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-30-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" />
 [read_csv](https://www.rdocumentation.org/packages/readr/topics/read_csv) already recognizes the date columns, so we don't need to convert them.
 The 2008 election was on Nov 11, 2008, so we'll store that in a variable.
 
@@ -434,12 +434,12 @@ poll_pred
 #> # A tibble: 51 x 7
 #>   state Obama     se ci_lwr ci_upr actual covers
 #>   <chr> <dbl>  <dbl>  <dbl>  <dbl>  <dbl> <lgl> 
-#> 1 AK    0.390 0.0154  0.360  0.420  0.380 T     
-#> 2 AL    0.360 0.0152  0.330  0.390  0.390 F     
-#> 3 AR    0.440 0.0157  0.409  0.471  0.390 F     
-#> 4 AZ    0.465 0.0158  0.434  0.496  0.450 T     
-#> 5 CA    0.600 0.0155  0.570  0.630  0.610 T     
-#> 6 CO    0.520 0.0158  0.489  0.551  0.540 T     
+#> 1 AK    0.39  0.0154  0.360  0.420   0.38 TRUE  
+#> 2 AL    0.36  0.0152  0.330  0.390   0.39 FALSE 
+#> 3 AR    0.44  0.0157  0.409  0.471   0.39 FALSE 
+#> 4 AZ    0.465 0.0158  0.434  0.496   0.45 TRUE  
+#> 5 CA    0.6   0.0155  0.570  0.630   0.61 TRUE  
+#> 6 CO    0.52  0.0158  0.489  0.551   0.54 TRUE  
 #> # ... with 45 more rows
 ```
 
@@ -458,7 +458,7 @@ ggplot(poll_pred, aes(x = actual, y = Obama,
   theme(legend.position = "bottom")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-35-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" />
 
 Proportion of polls with confidence intervals that include the election outcome?
 
@@ -490,7 +490,6 @@ poll_pred %>%
 #>               <dbl>
 #> 1             0.765
 ```
-
 
 ### Analysis of Randomized Controlled Trials
 
@@ -544,9 +543,9 @@ star_estimates
 #> # A tibble: 3 x 6
 #>   classtype                  n   est    se   lwr   upr
 #>   <fct>                  <int> <dbl> <dbl> <dbl> <dbl>
-#> 1 small class              726   723  1.91   720   727
-#> 2 regular class            836   720  1.84   716   723
-#> 3 regular class with aid   791   721  1.86   717   724
+#> 1 small class              726  723.  1.91  720.  727.
+#> 2 regular class            836  720.  1.84  716.  723.
+#> 3 regular class with aid   791  721.  1.86  717.  724.
 
 star_estimates %>%
   filter(classtype %in% c("small class", "regular class")) %>%
@@ -564,7 +563,7 @@ star_estimates %>%
 #> 1  2.65  3.50  -1.70  8.70
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" />
 
 Use we could use [spread](https://www.rdocumentation.org/packages/tidyr/topics/spread) and [gather](https://www.rdocumentation.org/packages/tidyr/topics/gather):
 
@@ -588,9 +587,8 @@ star_ate
 #> # A tibble: 1 x 8
 #>   est_regular est_small se_regular se_small ate_est ate_se ci_lwr ci_upr
 #>         <dbl>     <dbl>      <dbl>    <dbl>   <dbl>  <dbl>  <dbl>  <dbl>
-#> 1         720       723       1.84     1.91    3.50   2.65  -1.70   8.70
+#> 1        720.      723.       1.84     1.91    3.50   2.65  -1.70   8.70
 ```
-
 
 ### Analysis Based on Student's t-Distribution
 
@@ -629,9 +627,7 @@ t.test(g4reading ~ classtype,
 #>                         723                         720
 ```
 
-
 ## Hypothesis Testing
-
 
 ### Tea-Testing Experiment
 
@@ -648,11 +644,11 @@ true
 #> # A tibble: 5 x 3
 #>   correct     n   prob
 #>     <dbl> <dbl>  <dbl>
-#> 1    0     1.00 0.0143
-#> 2    2.00 16.0  0.229 
-#> 3    4.00 36.0  0.514 
-#> 4    6.00 16.0  0.229 
-#> 5    8.00  1.00 0.0143
+#> 1       0     1 0.0143
+#> 2       2    16 0.229 
+#> 3       4    36 0.514 
+#> 4       6    16 0.229 
+#> 5       8     1 0.0143
 
 sims <- 1000
 guess <- tibble(guess = c("M", "T", "T", "M", "M", "T", "T", "M"))
@@ -674,13 +670,12 @@ left_join(select(approx, correct, prob_sim = prob),
 #> # A tibble: 5 x 4
 #>   correct prob_sim prob_exact     diff
 #>     <dbl>    <dbl>      <dbl>    <dbl>
-#> 1    0      0.0110     0.0143 -0.00329
-#> 2    2.00   0.234      0.229   0.00543
-#> 3    4.00   0.486      0.514  -0.0283 
-#> 4    6.00   0.253      0.229   0.0244 
-#> 5    8.00   0.0160     0.0143  0.00171
+#> 1       0    0.011     0.0143 -0.00329
+#> 2       2    0.234     0.229   0.00543
+#> 3       4    0.486     0.514  -0.0283 
+#> 4       6    0.253     0.229   0.0244 
+#> 5       8    0.016     0.0143  0.00171
 ```
-
 
 ### The General Framework
 
@@ -747,18 +742,17 @@ fisher.test(select(spread(y, Truth, Number), -Guess))
 #>       6.41
 ```
 
-
 ### One-Sample Tests
 
 
 ```r
 n <- 1018
-x.bar <- 550 / n
+x_bar <- 550 / n
 se <- sqrt(0.5 * 0.5 / n) # standard deviation of sampling distribution
 # upper red area in the figure
-upper <- pnorm(x.bar, mean = 0.5, sd = se, lower.tail = FALSE)
+upper <- pnorm(x_bar, mean = 0.5, sd = se, lower.tail = FALSE)
 # lower red area in the figure; identical to the upper area
-lower <- pnorm(0.5 - (x.bar - 0.5), mean = 0.5, sd = se)
+lower <- pnorm(0.5 - (x_bar - 0.5), mean = 0.5, sd = se)
 # two side p value
 upper + lower
 #> [1] 0.0102
@@ -767,18 +761,18 @@ upper + lower
 # one sided p value
 upper
 #> [1] 0.00508
-z.score <- (x.bar - 0.5) / se
-z.score
+z_score <- (x_bar - 0.5) / se
+z_score
 #> [1] 2.57
-pnorm(z.score, lower.tail = FALSE) # one-sided p-value
+pnorm(z_score, lower.tail = FALSE) # one-sided p-value
 #> [1] 0.00508
-2 * pnorm(z.score, lower.tail = FALSE) # two-sided p-value
+2 * pnorm(z_score, lower.tail = FALSE) # two-sided p-value
 #> [1] 0.0102
 # 99% confidence interval contains 0.5
-c(x.bar - qnorm(0.995) * se, x.bar + qnorm(0.995) * se)
+c(x_bar - qnorm(0.995) * se, x_bar + qnorm(0.995) * se)
 #> [1] 0.500 0.581
 # 95% confidence interval does not contain 0.5
-c(x.bar - qnorm(0.975) * se, x.bar + qnorm(0.975) * se)
+c(x_bar - qnorm(0.975) * se, x_bar + qnorm(0.975) * se)
 #> [1] 0.510 0.571
 # no continuity correction to get the same p-value as above
 prop.test(550, n = n, p = 0.5, correct = FALSE)
@@ -836,7 +830,6 @@ t.test(STAR$g4reading, mu = 710)
 #> mean of x 
 #>       721
 ```
-
 
 ### Two-sample tests
 
@@ -920,7 +913,7 @@ Assign sample sizes and proportions, then calculate point estimates, standard er
 n0 <- sum(resume$race == "black")
 n1 <- sum(resume$race == "white")
 
-p <- mean(resume$call) 
+p <- mean(resume$call)
 p0 <- mean(filter(resume, race == "black")$call)
 p1 <- mean(filter(resume, race == "white")$call)
 
@@ -944,47 +937,154 @@ The only thing that changed is using [filter](https://www.rdocumentation.org/pac
 
 ### Power Analysis
 
+Set the parameters: the sample size,
 
 ```r
-# set the parameters
 n <- 250
-p.star <- 0.48 # data generating process
-p <- 0.5 # null value
+```
+the population proportional under the alternative data generating process,
+
+```r
+p_star <- 0.48
+```
+the null hypothesis,
+
+```r
+p <- 0.5
+```
+the p-value,
+
+```r
 alpha <- 0.05
-# critical value
-cr.value <- qnorm(1 - alpha / 2)
-# standard errors under the hypothetical data generating process
-se.star <- sqrt(p.star * (1 - p.star) / n)
-# standard error under the null
+```
+and
+
+```r
+cr_value <- qnorm(1 - alpha / 2)
+```
+The standard errors under the hypothetical data generating process is
+
+```r
+se_star <- sqrt(p_star * (1 - p_star) / n)
+```
+and the standard error under the null is
+
+```r
 se <- sqrt(p * (1 - p) / n)
-# power
-pnorm(p - cr.value * se, mean = p.star, sd = se.star) +
-    pnorm(p + cr.value * se, mean = p.star, sd = se.star, lower.tail = FALSE)
-# parameters
-n1 <- 500
-n0 <- 500
-p1.star <- 0.05
-p0.star <- 0.1
-# overall call back rate as a weighted average
-p <- (n1 * p1.star + n0 * p0.star) / (n1 + n0)
-# standard error under the null
-se <- sqrt(p * (1 - p) * (1 / n1 + 1 / n0))
-# standard error under the hypothetical data generating process
-se.star <- sqrt(p1.star * (1 - p1.star) / n1 + p0.star * (1 - p0.star) / n0)
-pnorm(-cr.value * se, mean = p1.star - p0.star, sd = se.star) +
-    pnorm(cr.value * se, mean = p1.star - p0.star, sd = se.star,
+```
+The power for this test is
+
+```r
+pnorm(p - cr_value * se, mean = p_star, sd = se_star) +
+    pnorm(p + cr_value * se, mean = p_star, sd = se_star,
           lower.tail = FALSE)
-power.prop.test(n = 500, p1 = 0.05, p2 = 0.1, sig.level = 0.05)
-power.prop.test(p1 = 0.05, p2 = 0.1, sig.level = 0.05, power = 0.9)
-power.t.test(n = 100, delta = 0.25, sd = 1, type = "one.sample")
-power.t.test(power = 0.9, delta = 0.25, sd = 1, type = "one.sample")
-power.t.test(delta = 0.25, sd = 1, type = "two.sample",
-             alternative = "one.sided", power = 0.9)
+#> [1] 0.0967
 ```
 
+The parameters (sample sizes and proportions) are
+
+```r
+n1 <- 500
+n0 <- 500
+p1_star <- 0.05
+p0_star <- 0.1
+```
+Calculate the overall call back rate as a weighted average,
+
+```r
+p <- (n1 * p1_star + n0 * p0_star) / (n1 + n0)
+```
+the standard error under the null,
+
+```r
+se <- sqrt(p * (1 - p) * (1 / n1 + 1 / n0))
+```
+the standard error under the hypothetical data generating process,
+
+```r
+se.star <- sqrt(p1_star * (1 - p1_star) / n1 + p0_star * (1 - p0_star) / n0)
+```
+
+```r
+pnorm(-cr_value * se, mean = p1_star - p0_star, sd = se.star) +
+    pnorm(cr_value * se, mean = p1_star - p0_star, sd = se.star,
+          lower.tail = FALSE)
+#> [1] 0.852
+```
+
+```r
+power.prop.test(n = 500, p1 = 0.05, p2 = 0.1, sig.level = 0.05)
+#> 
+#>      Two-sample comparison of proportions power calculation 
+#> 
+#>               n = 500
+#>              p1 = 0.05
+#>              p2 = 0.1
+#>       sig.level = 0.05
+#>           power = 0.852
+#>     alternative = two.sided
+#> 
+#> NOTE: n is number in *each* group
+```
+
+```r
+power.prop.test(p1 = 0.05, p2 = 0.1, sig.level = 0.05, power = 0.9)
+#> 
+#>      Two-sample comparison of proportions power calculation 
+#> 
+#>               n = 581
+#>              p1 = 0.05
+#>              p2 = 0.1
+#>       sig.level = 0.05
+#>           power = 0.9
+#>     alternative = two.sided
+#> 
+#> NOTE: n is number in *each* group
+```
+
+```r
+power.t.test(n = 100, delta = 0.25, sd = 1, type = "one.sample")
+#> 
+#>      One-sample t test power calculation 
+#> 
+#>               n = 100
+#>           delta = 0.25
+#>              sd = 1
+#>       sig.level = 0.05
+#>           power = 0.697
+#>     alternative = two.sided
+```
+
+```r
+power.t.test(power = 0.9, delta = 0.25, sd = 1, type = "one.sample")
+#> 
+#>      One-sample t test power calculation 
+#> 
+#>               n = 170
+#>           delta = 0.25
+#>              sd = 1
+#>       sig.level = 0.05
+#>           power = 0.9
+#>     alternative = two.sided
+```
+
+```r
+power.t.test(delta = 0.25, sd = 1, type = "two.sample",
+             alternative = "one.sided", power = 0.9)
+#> 
+#>      Two-sample t test power calculation 
+#> 
+#>               n = 275
+#>           delta = 0.25
+#>              sd = 1
+#>       sig.level = 0.05
+#>           power = 0.9
+#>     alternative = one.sided
+#> 
+#> NOTE: n is number in *each* group
+```
 
 ## Linear Regression Model with Uncertainty
-
 
 ### Linear Regression as a Generative Model
 
@@ -1030,13 +1130,10 @@ fit_minwage1
 #>        -0.0352         -0.0908         -0.1045
 gather_predictions(slice(minwage, 1), fit_minwage, fit_minwage1) %>%
   select(model, pred)
-#> # A tibble: 2 x 2
-#>   model         pred
-#>   <chr>        <dbl>
-#> 1 fit_minwage  0.271
+#>          model  pred
+#> 1  fit_minwage 0.271
 #> 2 fit_minwage1 0.271
 ```
-
 
 ### Inference about coefficients
 
@@ -1108,7 +1205,6 @@ tidy(fit_minwage, conf.int = TRUE)
 #> 6       chainroys  -0.1522    0.1832    -0.831 0.40664 -0.51238    0.2080
 #> 7     chainwendys  -0.1659    0.1853    -0.895 0.37115 -0.53031    0.1985
 ```
-
 
 ### Inference about predictions
 
@@ -1191,7 +1287,7 @@ ggplot() +
   labs(x = "Margin of vitory", y = "log net wealth")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-63-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="uncertainty_files/figure-html/unnamed-chunk-81-1.png" width="70%" style="display: block; margin: auto;" />
 
 ```r
 tory_y1 <- augment(tory_fit1, newdata = tibble(margin = 0))
@@ -1261,9 +1357,9 @@ CI <- c(diff_est - se_diff * qnorm(0.975),
 CI
 #> [1] -1.2134 -0.0859
 # hypothesis test
-z.score <- diff_est / se_diff
+z_score <- diff_est / se_diff
 # two sided p value
-p.value <- 2 * pnorm(abs(z.score), lower.tail = FALSE)
-p.value
+p_value <- 2 * pnorm(abs(z_score), lower.tail = FALSE)
+p_value
 #> [1] 0.0239
 ```

@@ -5,27 +5,27 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>QSS Tidyverse Code</title>
-  <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
+  <title>Quantatitive Social Science: The R Tidyverse Code</title>
+  <meta name="description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
-  <meta property="og:title" content="QSS Tidyverse Code" />
+  <meta property="og:title" content="Quantatitive Social Science: The R Tidyverse Code" />
   <meta property="og:type" content="book" />
+  <meta property="og:url" content="http://jrnold.github.io/qss-tidy" />
   
-  
-  
+  <meta property="og:description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>" />
   <meta name="github-repo" content="jrnold/qss-tidy" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="QSS Tidyverse Code" />
+  <meta name="twitter:title" content="Quantatitive Social Science: The R Tidyverse Code" />
   
-  
+  <meta name="twitter:description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>" />
   
 
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-02-18">
+<meta name="date" content="2018-06-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -99,6 +99,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
+<li><strong><a href="./">QSS Tidyverse Code</a></strong></li>
+
+<li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#colophon"><i class="fa fa-check"></i>Colophon</a></li>
 </ul></li>
@@ -259,7 +262,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">QSS Tidyverse Code</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Quantatitive Social Science: The R Tidyverse Code</a>
           </h1>
         </div>
 
@@ -271,9 +274,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">5</span> Discovery</h1>
 <p>The idea of tidy data and the common feature of tidyverse packages is that data should be stored in data frames with certain conventions. This works well with naturally tabular data, the type which has been common in social science applications. But there are other domains in which other data structures are more appropriate because they more naturally model the data or processes, or for computational reasons. The three applications in this chapter: text, networks, and spatial data are examples where the tidy data structure is less of an advantage. I will still rely on <strong>ggplot2</strong> for plotting, and use tidy verse compatible packages where appropriate.</p>
 <ul>
-<li>Textual data: <a href="https://cran.r-project.org/package=tidytext">tidytext</a></li>
-<li>Network data: <a href="https://cran.r-project.org/package=igraph">igraph</a> for network computation, as in the chapter. But several <strong>ggplot2</strong>2 extension packages for plotting the networks.</li>
-<li>Spatial data: <a href="https://cran.r-project.org/package=ggplot2">ggplot2</a> has some built-in support for maps. The <a href="https://cran.r-project.org/package=map">map</a> package provides map data.</li>
+<li><p>Textual data: <a href="https://cran.r-project.org/package=tidytext">tidytext</a></p></li>
+<li><p>Network data: <a href="https://cran.r-project.org/package=igraph">igraph</a> for network computation, as in the chapter. But several <strong>ggplot2</strong>2 extension packages for plotting the networks.</p></li>
+<li><p>Spatial data: <a href="https://cran.r-project.org/package=ggplot2">ggplot2</a> has some built-in support for maps. The <a href="https://cran.r-project.org/package=map">map</a> package provides map data.</p></li>
 </ul>
 <p>See the <a href="http://r4ds.had.co.nz/">R for Data Science</a> section <a href="http://r4ds.had.co.nz/tidy-data.html#non-tidy-data">12.7 Non-tidy data</a> and this post on <a href="http://simplystatistics.org/2016/02/17/non-tidy-data/">Non-tidy data</a> by Jeff Leek for more on non-tidy data.</p>
 <div id="textual-data" class="section level2">
@@ -821,8 +824,10 @@ test <span class="op">%&gt;%</span>
 </ul>
 <p>See this <a href="http://curleylab.psych.columbia.edu/netviz/netviz1.html#/12">presentation</a> for an overview of some of those packages for data visualization.</p>
 <p>Examples: <a href="https://cran.r-project.org/web/packages/ggCompNet/vignettes/examples-from-paper.html">Network Visualization Examples with the ggplot2 Package</a></p>
+<!-- lint disable no-duplicate-headings -->
 <div id="prerequisites-5" class="section level3 unnumbered">
 <h3>Prerequisites</h3>
+<!-- lint enable no-duplicate-headings -->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;lubridate&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;stringr&quot;</span>)
@@ -883,7 +888,6 @@ scale_shape_parties &lt;-<span class="st"> </span><span class="kw">scale_shape_m
                                                               <span class="dt">D =</span> <span class="dv">17</span>,
                                                               <span class="dt">I =</span> <span class="dv">4</span>))
 
-
 senator <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">closeness_in =</span> igraph<span class="op">::</span><span class="kw">closeness</span>(twitter_adj, <span class="dt">mode =</span> <span class="st">&quot;in&quot;</span>),
          <span class="dt">closeness_out =</span> igraph<span class="op">::</span><span class="kw">closeness</span>(twitter_adj, <span class="dt">mode =</span> <span class="st">&quot;out&quot;</span>)) <span class="op">%&gt;%</span>
@@ -893,7 +897,11 @@ senator <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span>scale_colour_parties <span class="op">+</span>
 <span class="st">  </span>scale_shape_parties <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">main =</span> <span class="st">&quot;Closeness&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Incoming path&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Outgoing path&quot;</span>)</code></pre></div>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">main =</span> <span class="st">&quot;Closeness&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Incoming path&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Outgoing path&quot;</span>)
+<span class="co">#&gt; Warning in igraph::closeness(twitter_adj, mode = &quot;in&quot;): At centrality.c:</span>
+<span class="co">#&gt; 2784 :closeness centrality is not well-defined for disconnected graphs</span>
+<span class="co">#&gt; Warning in igraph::closeness(twitter_adj, mode = &quot;out&quot;): At centrality.c:</span>
+<span class="co">#&gt; 2784 :closeness centrality is not well-defined for disconnected graphs</span></code></pre></div>
 <p><img src="discovery_files/figure-html/unnamed-chunk-40-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>What does the reference line indicate? What does that say about senators twitter networks?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">senator <span class="op">%&gt;%</span>
@@ -916,7 +924,7 @@ senator <span class="op">%&gt;%</span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">senator &lt;-<span class="st"> </span><span class="kw">mutate</span>(senator, <span class="dt">page_rank =</span> <span class="kw">page_rank</span>(twitter_adj)[[<span class="st">&quot;vector&quot;</span>]])
 <span class="kw">ggnet</span>(twitter_adj, <span class="dt">mode =</span> <span class="st">&quot;target&quot;</span>)</code></pre></div>
 <p><img src="discovery_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<!-- 
+<!--
 remove network packages
 -->
 </div>
@@ -925,14 +933,17 @@ remove network packages
 <h2><span class="header-section-number">5.3</span> Spatial Data</h2>
 <p>Some resources on plotting spatial data in R:</p>
 <ul>
-<li><p><a href="https://cran.r-project.org/package=ggplot2">ggplot2</a> has several map-related functions</p></li>
+<li><p><a href="https://cran.r-project.org/package=ggplot2">ggplot2</a> has several map-related functions</p>
+<ul>
 <li><a href="http://docs.ggplot2.org/current/borders.html">borders</a></li>
 <li><a href="http://docs.ggplot2.org/current/fortify.map.html">fortify.map</a></li>
-<li><p><a href="http://docs.ggplot2.org/current/map_data.html">map_data</a></p></li>
-<li><p><a href="https://cran.r-project.org/package=ggmap">ggmap</a> allows ggplot to us a map from Google Maps, OpenStreet Maps or similar as a background for the plot.</p></li>
-<li>David Kahle and Hadley Wickham. 2013. <a href="https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf">ggmap: Spatial Visualization with ggplot2</a>. <em>Journal of Statistical Software</em></li>
-<li><p>Github <a href="https://github.com/dkahle/ggmap">dkahle/ggmamp</a></p></li>
-<li><a href="https://cran.r-project.org/package=tmap">tmap</a> is not built on ggplot2 but uses a ggplot2-like API for network data.</li>
+<li><a href="http://docs.ggplot2.org/current/map_data.html">map_data</a></li>
+</ul></li>
+<li><p><a href="https://cran.r-project.org/package=ggmap">ggmap</a> allows ggplot to us a map from Google Maps, OpenStreet Maps or similar as a background for the plot.</p>
+<ul>
+<li>David Kahle and Hadley Wickham. 2013. <a href="https://journal.r-project.org/archive/2013-1/kahle-wickhm.pdf">ggmap: Spatial Visualization with ggplot2</a>. <em>Journal of Statistical Software</em> - Github <a href="https://github.com/dkahle/ggmap">dkahle/ggmamp</a></li>
+</ul></li>
+<li><p><a href="https://cran.r-project.org/package=tmap">tmap</a> is not built on ggplot2 but uses a ggplot2-like API for network data.</p></li>
 <li><p><a href="https://cran.r-project.org/package=leaflet">leaflet</a> is an R interface to a popular javascript mapping library.</p></li>
 </ul>
 <p>Here are few tutorials on plotting spatial data in ggplot2:</p>
@@ -941,8 +952,10 @@ remove network packages
 <li><a href="https://www.r-bloggers.com/r-beginners-plotting-locations-on-to-a-world-map/">Plotting Data on a World Map</a></li>
 <li><a href="https://rpubs.com/m_dev/Intro-to-Spatial-Data-and-ggplot2">Introduction to Spatial Data and ggplot2</a></li>
 </ul>
+<!-- lint disable no-duplicate-headings -->
 <div id="prerequisites-6" class="section level3 unnumbered">
 <h3>Prerequisites</h3>
+<!-- lint enable no-duplicate-headings -->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;lubridate&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;stringr&quot;</span>)
@@ -1189,7 +1202,7 @@ gitbook.start({
 "link": "https://github.com/jrnold/qss-tidy/edit/master/discovery.Rmd",
 "text": "Edit"
 },
-"download": null,
+"download": ["qss-tidy.pdf"],
 "toc": {
 "collapse": "section"
 }

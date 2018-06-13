@@ -22,3 +22,4 @@ tmp-pdfcrop-*
 # Remove downloaded files
 UNpop.dta
 UNpop.csv
+node_modules

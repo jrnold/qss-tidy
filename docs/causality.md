@@ -1,7 +1,7 @@
 
 ---
 output: html_document
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 # Causality
@@ -62,7 +62,7 @@ However, this can be done easily with the **dplyr** package using grouping and s
 Use `group_by()` to identify each combination of `race` and `call`, and then `count()` the observations:
 
 ```r
-race_call_tab <- 
+race_call_tab <-
   resume %>%
   group_by(race, call) %>%
   count()
@@ -80,7 +80,7 @@ race_call_tab
 If we want to calculate callback rates by race, we can use the `mutate()` function from **dplyr**.
 
 ```r
-race_call_rate <- 
+race_call_rate <-
   race_call_tab %>%
   group_by(race) %>%
   mutate(call_rate =  n / sum(n)) %>%
@@ -106,7 +106,6 @@ resume %>%
 ```
 
 ## Subsetting Data in R
-
 
 ### Subsetting
 
@@ -137,8 +136,7 @@ resumeB %>%
 #> 1    0.0645
 ```
 
-
-You can combine the `filter()` and `select()` functions with multiple conditions. 
+You can combine the `filter()` and `select()` functions with multiple conditions.
 For example, to keep the call and first name variables for female individuals with stereotypically black names:
 
 ```r
@@ -221,9 +219,9 @@ resume %>%
 
 For more information on a way to do this using the [spread](https://www.rdocumentation.org/packages/tidyr/topics/spread) and [gather](https://www.rdocumentation.org/packages/tidyr/topics/gather) functions from [tidyr](https://cran.r-project.org/package=tidyr) package, see the [R for Data Science](http://r4ds.had.co.nz/) chapter ["Tidy Data"](http://r4ds.had.co.nz/tidy-data.html).
 
-**WARNING** The function [ungroup](https://www.rdocumentation.org/packages/dplyr/topics/ungroup) removes the groupings  in [group_by](https://www.rdocumentation.org/packages/dplyr/topics/group_by). 
+**WARNING** The function [ungroup](https://www.rdocumentation.org/packages/dplyr/topics/ungroup) removes the groupings  in [group_by](https://www.rdocumentation.org/packages/dplyr/topics/group_by).
 The function `spread` will not allow a grouping variable to be reshaped.
-Since many **dplyr** functions work differently depending on  whether the data frame is grouped or not, I find that I can encounter many errors due to forgetting that a data frame is grouped. 
+Since many **dplyr** functions work differently depending on  whether the data frame is grouped or not, I find that I can encounter many errors due to forgetting that a data frame is grouped.
 As such, I tend to `ungroup` data frames as soon as I am no longer are using the groupings.
 
 Alternatively, we could have used `summarise` and the `diff` function:
@@ -244,7 +242,6 @@ resume %>%
 I find the `spread` code preferable since the individual race callback rates are
 retained in the data, and since there is no natural ordering of the `race` variable
 (unlike if it were a time-series), it is not obvious from reading the code  whether `call_diff` is `black - white` or `white - black`.
-
 
 ### Simple conditional statements
 
@@ -270,7 +267,7 @@ resume %>%
 ```
 
 **Warning** The function `if_else` is more strict about the variable types than `ifelse`.
-While most R functions are forgiving about variables types, and will automatically convert 
+While most R functions are forgiving about variables types, and will automatically convert
 integers to numeric or vice-versa, they are distinct. For example, these examples
 will produce errors:
 
@@ -306,7 +303,6 @@ class(as.integer(c(1, 2, 3)))
 #> [1] "integer"
 ```
 
-
 ### Factor Variables
 
 For more on factors see the [R for Data Science](http://r4ds.had.co.nz/) chapter ["Factors"](http://r4ds.had.co.nz/factors.html) and the package [forcats](https://cran.r-project.org/package=forcats).
@@ -341,7 +337,6 @@ The condition is on the left-hand side of the formula. The value to assign
 to observations meeting that condition is on the right-hand side.
 Observations are given the value of the first matching condition, so the order
 of these can matter.
-
 
 The `case_when` function also supports a default value by using a condition `TRUE`
 as the last condition. This will match anything not already matched. For example,
@@ -428,15 +423,10 @@ resume %>%
 #> # ... with 30 more rows
 ```
 
-
-
 **Tip:** General advice for working (or not) with factors:
 
-- Use character vectors instead of factors. They are easier to manipulate with string functions.
-- Use factor vectors only when you need a specific ordering of string values in a variable, e.g. in a model or a plot.
-
-
-
+-   Use character vectors instead of factors. They are easier to manipulate with string functions.
+-   Use factor vectors only when you need a specific ordering of string values in a variable, e.g. in a model or a plot.
 
 ## Causal Affects and the Counterfactual
 
@@ -526,8 +516,6 @@ social %>%
 #> 3 Hawthorne        0.403  49.7   2.18
 #> 4 Neighbors        0.407  49.9   2.19
 ```
-
-
 
 ## Observational Studies
 
@@ -622,7 +610,7 @@ minwage %>%
 Create a variable for the proportion of full-time employees in NJ and PA after the increase:
 
 ```r
-minwage <- 
+minwage <-
   minwage %>%
   mutate(totalAfter = fullAfter + partAfter,
         fullPropAfter = fullAfter / totalAfter)
@@ -631,7 +619,7 @@ minwage <-
 Now calculate the average proportion of full-time employees for each state:
 
 ```r
-full_prop_by_state <- 
+full_prop_by_state <-
   minwage %>%
   group_by(state) %>%
   summarise(fullPropAfter = mean(fullPropAfter))
@@ -660,8 +648,6 @@ spread(full_prop_by_state, state, fullPropAfter) %>%
 #>   <dbl> <dbl>  <dbl>
 #> 1 0.320 0.272 0.0481
 ```
-
-
 
 ### Confounding Bias
 
@@ -738,8 +724,6 @@ full_prop_by_state_chain %>%
 #> 4 wendys     0.260 0.248 0.0117
 ```
 
-
-
 ### Before and After and Difference-in-Difference Designs
 
 To compute the estimates in the before and after design first create an additional variable for the proportion of full-time employees before the minimum wage increase.
@@ -788,10 +772,10 @@ full_prop_by_state
 #> # A tibble: 4 x 3
 #>   state period fullProp
 #>   <chr>  <dbl>    <dbl>
-#> 1 NJ      1.00    0.320
-#> 2 PA      1.00    0.272
-#> 3 NJ      0       0.297
-#> 4 PA      0       0.310
+#> 1 NJ         1    0.320
+#> 2 PA         1    0.272
+#> 3 NJ         0    0.297
+#> 4 PA         0    0.310
 ```
 
 Now plot this new dataset:
@@ -804,9 +788,6 @@ ggplot(full_prop_by_state, aes(x = period, y = fullProp, colour = state)) +
 ```
 
 <img src="causality_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" />
-
-
-
 
 ## Descriptive Statistics for a Single Variable
 
@@ -836,8 +817,8 @@ minwage %>%
 #> # A tibble: 2 x 3
 #>   state wageAfter wageBefore
 #>   <chr>     <dbl>      <dbl>
-#> 1 NJ        0          0.620
-#> 2 PA        0.575      0.750
+#> 1 NJ        0           0.62
+#> 2 PA        0.575       0.75
 ```
 
 Calculate the variance and standard deviation of `wageAfter` and `wageBefore` for each state:

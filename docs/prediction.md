@@ -6,7 +6,6 @@ editor_options:
 ---
 # Prediction
 
-
 ## Prerequisites {-}
 
 
@@ -27,10 +26,8 @@ library("modelr")
 
 ### Loops in R
 
-
 RStudio provides many features to help debugging, which will be useful in
 for loops and function: see  [this](https://support.rstudio.com/hc/en-us/articles/205612627-Debugging-with-RStudio) article for an example.
-
 
 
 ```r
@@ -57,7 +54,7 @@ In general, avoid using for loops when there is a *vectorized* function.
 
 But sticking with the for loop, there are several things that could be improved.
 
-Avoid using the idiom `1:n` in for loops. 
+Avoid using the idiom `1:n` in for loops.
 To see why, look what happens when values are empty:
 
 ```r
@@ -90,7 +87,7 @@ for (i in seq_along(values)) {
 print(results)
 #> logical(0)
 ```
-or 
+or
 
 ```r
 values <- c()
@@ -115,12 +112,11 @@ class(results)
 #> [1] "numeric"
 ```
 
-
-Often loops can be rewritten to use a map function. 
+Often loops can be rewritten to use a map function.
 Read the [R for Data Science](http://r4ds.had.co.nz/) chapter [Iteration](http://r4ds.had.co.nz/data-visualisation.html) before proceeding.
 
 To do so, we first write a function that will be applied to each element of the vector.
-When converting from a `for` loop to a function, this is usually simply the body of the `for` loop, though you 
+When converting from a `for` loop to a function, this is usually simply the body of the `for` loop, though you
 may need to add arguments for any variables defined outside the body of the for loop.
 In this case,
 
@@ -154,9 +150,9 @@ print(results)
 ```
 This can be useful if the body of a for loop is many lines long.
 
-However, this loop is still unwieldy code. We have to remember to define an empty vector `results` that is the same size as `values` to hold the results, and then correctly loop over all the values. 
-We already saw how these steps have possibilities for errors. 
-Functionals like `map`, apply a function to each element of a vector. 
+However, this loop is still unwieldy code. We have to remember to define an empty vector `results` that is the same size as `values` to hold the results, and then correctly loop over all the values.
+We already saw how these steps have possibilities for errors.
+Functionals like `map`, apply a function to each element of a vector.
 
 ```r
 results <- map(values, mult_by_two)
@@ -171,7 +167,7 @@ results
 #> [1] 12
 ```
 
-The values of each element are correct, but `map` returns a list vector, not a numeric vector like we may have been expecting. 
+The values of each element are correct, but `map` returns a list vector, not a numeric vector like we may have been expecting.
 If we want a numeric vector, use `map_dbl`,
 
 ```r
@@ -199,7 +195,6 @@ This is for parsimony and convenience; in the background, these functions are cr
 
 *QSS* discusses several debugging strategies. The functional approach lends itself to easier debugging because the function can be tested with input values independently of the loop.
 
-
 ### General Conditional Statements in R
 
 See the *R for Data Science* section [Conditional Execution](http://r4ds.had.co.nz/functions.html#conditional-execution) for a more complete discussion of conditional execution.
@@ -207,7 +202,7 @@ See the *R for Data Science* section [Conditional Execution](http://r4ds.had.co.
 If you are using conditional statements to assign values for data frame,
 see the **dplyr** functions [if_else](https://www.rdocumentation.org/packages/dplyr/topics/if_else), [recode](https://www.rdocumentation.org/packages/dplyr/topics/recode), and [case_when](https://www.rdocumentation.org/packages/dplyr/topics/case_when)
 
-The following code which uses a for loop, 
+The following code which uses a for loop,
 
 ```r
 values <- 1:5
@@ -263,8 +258,6 @@ map_dbl(values, function(x) {
 })
 #> [1]  1  4  9  8 25
 ```
-
-
 
 ### Poll Predictions
 
@@ -384,8 +377,7 @@ last_polls
 #> #   error <int>
 ```
 
-
-**Challenge:** Instead of using the last poll, use the average of polls in the last week? Last month? How do the margins on the polls change over the election period?
+Challenge: Instead of using the last poll, use the average of polls in the last week? Last month? How do the margins on the polls change over the election period?
 
 To simplify things for later, let's define a function `rmse` which calculates the root mean squared error, as defined in the book.
 See the [R for Data Science](http://r4ds.had.co.nz/) chapter [Functions](http://r4ds.had.co.nz/functions.html) for more on writing functions.
@@ -415,7 +407,6 @@ mean(last_polls$error)
 #> [1] 1.08
 ```
 
-
 This is slightly different than what is in the book due to the difference in the poll used as the final poll; many states have many polls on the last day.
 
 I'll choose bin widths of 1%, since that is fairly interpretable:
@@ -436,9 +427,9 @@ ggplot(last_polls, aes(x = error)) +
 
 <img src="prediction_files/figure-html/unnamed-chunk-32-1.png" width="70%" style="display: block; margin: auto;" />
 
-**Challenge:** What other ways could you visualize the results? How would you show all states? What about plotting the absolute or squared errors instead of the errors?
+Challenge: What other ways could you visualize the results? How would you show all states? What about plotting the absolute or squared errors instead of the errors?
 
-**Challenge:** What happens to prediction error if you average polls?
+Challenge: What happens to prediction error if you average polls?
 Consider averaging back over time?
 What happens if you take the averages of the state poll average and average of **all** polls - does that improve prediction?
 
@@ -523,7 +514,6 @@ last_polls %>%
 ```
 
 
-
 ```r
 data("pollsUS08", package = "qss")
 ```
@@ -572,13 +562,13 @@ poll_ma <- function(date, .data, days = 7) {
   mutate(date = !!date)
 }
 ```
-The code above uses `!!`. 
+The code above uses `!!`.
 This tells `filter` that `days` refers to a variable `days` in the calling environment,
-and not a column named `days` in the data frame. 
+and not a column named `days` in the data frame.
 In this case, there wouldn't be any ambiguities since there is not a column named `days`, but in general
 there can be ambiguities in the dplyr functions as to whether the names refer to columns in the data frame
 or variables in the environment calling the function.
-Read [Programming with dplyr](http://dplyr.tidyverse.org/articles/programming.html) for an in-depth 
+Read [Programming with dplyr](http://dplyr.tidyverse.org/articles/programming.html) for an in-depth
 discussion of this.
 
 This returns a one row data frame with the moving average for McCain and Obama on  Nov 1, 2008.
@@ -597,8 +587,8 @@ poll_ma(as.Date("2008-11-01"), polls08, days = 3)
 #> 1  50.6   45.4 2008-11-01
 ```
 Now use a functional to execute that function with all dates for which we want moving averages.
-The function `poll_ma` returns a data frame, and our ideal output is a data frame that 
-stacks those data frames row-wise. 
+The function `poll_ma` returns a data frame, and our ideal output is a data frame that
+stacks those data frames row-wise.
 So we will use the `map_df` function,
 
 ```r
@@ -634,17 +624,16 @@ ggplot(pop_vote_avg_tidy, aes(x = date, y = share,
 
 <img src="prediction_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" />
 
-
-**Challenge** read [R for Data Science](http://r4ds.had.co.nz/) chapter [Iteration](http://r4ds.had.co.nz/iteration.html#the-map-functions) and use the function [map_df](https://www.rdocumentation.org/packages/purrr/topics/map_df) to create the object `poll_vote_avg` as above instead of a for loop.
+Challenge: read [R for Data Science](http://r4ds.had.co.nz/) chapter [Iteration](http://r4ds.had.co.nz/iteration.html#the-map-functions) and use the function [map_df](https://www.rdocumentation.org/packages/purrr/topics/map_df) to create the object `poll_vote_avg` as above instead of a for loop.
 
 The 7-day average is similar to the simple method used by [Real Clear Politics](http://www.realclearpolitics.com/epolls/2016/president/us/general_election_trump_vs_clinton-5491.html).
 The RCP average is simply the average of all polls in their data for the last seven days.
 Sites like [538](https://fivethirtyeight.com) and the [Huffpost Pollster](http://elections.huffingtonpost.com/pollster), on the other hand, also use what amounts to averaging polls, but using more sophisticated statistical methods to assign different weights to different polls.
 
-**Challenge** Why do we need to use different polls for the popular vote data? Why not simply average all the state polls?
-What would you have to do?
-Would the overall popular vote be useful in predicting state-level polling, or vice-versa? How would you use them?
-
+Challenge: Why do we need to use different polls for the popular vote data? Why
+not simply average all the state polls? What would you have to do? Would the
+overall popular vote be useful in predicting state-level polling, or
+vice-versa? How would you use them?
 
 ## Linear Regression
 
@@ -685,7 +674,6 @@ ggplot(face, aes(x = d.comp, y = diff.share, colour = w.party)) +
 cor(face$d.comp, face$diff.share)
 #> [1] 0.433
 ```
-
 
 ### Least Squares
 
@@ -744,7 +732,6 @@ augment(fit) %>% head()
 #> 6     -0.941
 ```
 
-
 We can plot the results of the bivariate linear regression as follows:
 
 ```r
@@ -800,7 +787,6 @@ ggplot() +
 <img src="prediction_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" />
 This method is more complicated than the `geom_abline` method for a bivariate regression, but will work for more complicated models, while the `geom_abline` method won't.
 
-
 Note that [geom_smooth](http://docs.ggplot2.org/current/geom_smooth.html) can be used to add a regression line to a data-set.
 
 ```r
@@ -832,9 +818,9 @@ full_join(pres08, pres12, by = "state")
 ```
 However, since there are duplicate names, `.x` and `.y` are appended.
 
-**Challenge** What would happen if `by = "state"` was dropped? 
+Challenge: What would happen if `by = "state"` was dropped?
 
-To avoid the duplicate names, or change them, you can rename before merging, 
+To avoid the duplicate names, or change them, you can rename before merging,
 
 ```r
 full_join(select(pres08, state, Obama_08 = Obama, McCain_08 = McCain,
@@ -1073,10 +1059,7 @@ ggplot() +
 <img src="prediction_files/figure-html/unnamed-chunk-74-1.png" width="70%" style="display: block; margin: auto;" />
 See [Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html#label) in *R for Data Science* on labels and annotations in plots.
 
-
-
 ## Regression and Causation
-
 
 ### Randomized Experiments
 
@@ -1274,8 +1257,8 @@ social %>%
 Linear regression without intercept.
 
 ```r
-fit.noint <- lm(primary2006 ~ -1 + messages, data = social)
-fit.noint
+fit_noint <- lm(primary2006 ~ -1 + messages, data = social)
+fit_noint
 #> 
 #> Call:
 #> lm(formula = primary2006 ~ -1 + messages, data = social)
@@ -1291,10 +1274,10 @@ Calculating the regression average effect is also easier if we make the control 
 Use [fct_relevel](https://www.rdocumentation.org/packages/forcats/topics/fct_relevel) to make "Control"
 
 ```r
-fit.control <-
- mutate(social, messages = fct_relevel(messages, "Control")) %>%
- lm(primary2006 ~ messages, data = .)
-fit.control
+fit_control <-
+  mutate(social, messages = fct_relevel(messages, "Control")) %>%
+  lm(primary2006 ~ messages, data = .)
+fit_control
 #> 
 #> Call:
 #> lm(formula = primary2006 ~ messages, data = .)
@@ -1335,7 +1318,6 @@ glance(fit)[["adj.r.squared"]]
 #> [1] 0.00327
 ```
 
-
 ### Heterogeneous Treatment Effects
 
 Average treatment effect (ate) among those who voted in 2004 primary
@@ -1364,18 +1346,17 @@ diff(ate$ate_Neighbors)
 ```
 
 
-
 ```r
-social.neighbor <- social %>%
+social_neighbor <- social %>%
   filter( (messages == "Control") | (messages == "Neighbors"))
 
-fit.int <- lm(primary2006 ~ primary2004 + messages + primary2004:messages,
-              data = social.neighbor)
-fit.int
+fit_int <- lm(primary2006 ~ primary2004 + messages + primary2004:messages,
+              data = social_neighbor)
+fit_int
 #> 
 #> Call:
 #> lm(formula = primary2006 ~ primary2004 + messages + primary2004:messages, 
-#>     data = social.neighbor)
+#>     data = social_neighbor)
 #> 
 #> Coefficients:
 #>                   (Intercept)                    primary2004  
@@ -1386,10 +1367,10 @@ fit.int
 
 
 ```r
-lm(primary2006 ~ primary2004 * messages, data = social.neighbor)
+lm(primary2006 ~ primary2004 * messages, data = social_neighbor)
 #> 
 #> Call:
-#> lm(formula = primary2006 ~ primary2004 * messages, data = social.neighbor)
+#> lm(formula = primary2006 ~ primary2004 * messages, data = social_neighbor)
 #> 
 #> Coefficients:
 #>                   (Intercept)                    primary2004  
@@ -1400,19 +1381,19 @@ lm(primary2006 ~ primary2004 * messages, data = social.neighbor)
 
 
 ```r
-social.neighbor <-
-  social.neighbor %>%
+social_neighbor <-
+  social_neighbor %>%
   mutate(age = 2008 - yearofbirth)
 
-summary(social.neighbor$age)
+summary(social_neighbor$age)
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #>    22.0    43.0    52.0    51.8    61.0   108.0
 
-fit.age <- lm(primary2006 ~ age * messages, data = social.neighbor)
+fit.age <- lm(primary2006 ~ age * messages, data = social_neighbor)
 fit.age
 #> 
 #> Call:
-#> lm(formula = primary2006 ~ age * messages, data = social.neighbor)
+#> lm(formula = primary2006 ~ age * messages, data = social_neighbor)
 #> 
 #> Coefficients:
 #>           (Intercept)                    age      messagesNeighbors  
@@ -1434,10 +1415,10 @@ ate.age
 #> # A tibble: 4 x 4
 #>     age Control Neighbors   diff
 #>   <dbl>   <dbl>     <dbl>  <dbl>
-#> 1  25.0   0.189     0.254 0.0643
-#> 2  45.0   0.269     0.346 0.0768
-#> 3  65.0   0.349     0.439 0.0894
-#> 4  85.0   0.429     0.531 0.102
+#> 1    25   0.189     0.254 0.0643
+#> 2    45   0.269     0.346 0.0768
+#> 3    65   0.349     0.439 0.0894
+#> 4    85   0.429     0.531 0.102
 ```
 
 You can use [poly](https://www.rdocumentation.org/packages/base/topics/poly) function to calculate polynomials instead of adding each term, `age + I(age ^ 2)`.
@@ -1446,11 +1427,11 @@ However, you really shouldn't interpret the coefficients directly anyways, so th
 
 ```r
 fit.age2 <- lm(primary2006 ~ poly(age, 2) * messages,
-               data = social.neighbor)
+               data = social_neighbor)
 fit.age2
 #> 
 #> Call:
-#> lm(formula = primary2006 ~ poly(age, 2) * messages, data = social.neighbor)
+#> lm(formula = primary2006 ~ poly(age, 2) * messages, data = social_neighbor)
 #> 
 #> Coefficients:
 #>                     (Intercept)                    poly(age, 2)1  
@@ -1465,7 +1446,7 @@ Create a data frame of combinations of ages and messages using [data_grid](https
 
 ```r
 y.hat <-
-  data_grid(social.neighbor, age, messages) %>%
+  data_grid(social_neighbor, age, messages) %>%
   add_predictions(fit.age2)
 ```
 
@@ -1494,7 +1475,6 @@ y.hat %>%
 ```
 
 <img src="prediction_files/figure-html/unnamed-chunk-102-1.png" width="70%" style="display: block; margin: auto;" />
-
 
 ### Regression Discontinuity Design
 
@@ -1581,7 +1561,6 @@ spread_predictions(data_frame(margin = 0),
 #>    <dbl>     <dbl>     <dbl>  <dbl>
 #> 1      0      12.5      13.2  0.650
 ```
-
 
 
 ```r

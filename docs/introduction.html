@@ -5,27 +5,27 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>QSS Tidyverse Code</title>
-  <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
+  <title>Quantatitive Social Science: The R Tidyverse Code</title>
+  <meta name="description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
-  <meta property="og:title" content="QSS Tidyverse Code" />
+  <meta property="og:title" content="Quantatitive Social Science: The R Tidyverse Code" />
   <meta property="og:type" content="book" />
+  <meta property="og:url" content="http://jrnold.github.io/qss-tidy" />
   
-  
-  
+  <meta property="og:description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>" />
   <meta name="github-repo" content="jrnold/qss-tidy" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="QSS Tidyverse Code" />
+  <meta name="twitter:title" content="Quantatitive Social Science: The R Tidyverse Code" />
   
-  
+  <meta name="twitter:description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>" />
   
 
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-02-18">
+<meta name="date" content="2018-06-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -99,6 +99,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
+<li><strong><a href="./">QSS Tidyverse Code</a></strong></li>
+
+<li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#colophon"><i class="fa fa-check"></i>Colophon</a></li>
 </ul></li>
@@ -259,7 +262,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">QSS Tidyverse Code</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Quantatitive Social Science: The R Tidyverse Code</a>
           </h1>
         </div>
 
@@ -272,28 +275,25 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="prerequisites" class="section level2 unnumbered">
 <h2>Prerequisites</h2>
 <p>In this and other chapters we will make use of data from the <code>qss</code> package, which is available on github. Install it using the <code>install_github()</code> function from the library <code>devtools</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;kosukeimai/qss-package&quot;</span>)
-<span class="co">#&gt; Using GitHub PAT from envvar GITHUB_PAT</span>
-<span class="co">#&gt; Skipping install of &#39;qss&#39; from a github remote, the SHA1 (898fffb4) has not changed since last install.</span>
-<span class="co">#&gt;   Use `force = TRUE` to force installation</span>
-<span class="kw">library</span>(<span class="st">&quot;qss&quot;</span>)</code></pre></div>
-<p>In the prerequisites section of each chapter, we’ll load any packages needed for the chapter, and possibly define some functions or load data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;kosukeimai/qss-package&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;qss&quot;</span>)</code></pre></div>
+<p>In the prerequisites section of each chapter, we’ll load any packages needed for the chapter, possibly define some functions, and possibly load data. It is good practice to load necessary libraries at the start of an R markdown file or script.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</code></pre></div>
 <p>We also load the <strong>readr</strong> package to load <code>csv</code> files,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)</code></pre></div>
 <p>the <strong>haven</strong> package to load Stata <code>dta</code> files,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;haven&quot;</span>)</code></pre></div>
-<p>and the <strong>rio</strong> package to load multiple types of files.</p>
+<p>and the <strong>rio</strong> package to load multiple types of files</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;rio&quot;</span>)</code></pre></div>
 </div>
 <div id="overview-of-the-book" class="section level2">
 <h2><span class="header-section-number">1.1</span> Overview of the Book</h2>
 <!-- define all sections so that numbering matches that of the book -->
-<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
+<p>This sections contains no code to translate – see <em>QSS</em> text.</p>
 </div>
 <div id="how-to-use-the-book" class="section level2">
 <h2><span class="header-section-number">1.2</span> How to use the Book</h2>
-<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
+<p>This sections contains no code to translate – see <em>QSS</em> text.</p>
 </div>
 <div id="introduction-to-r" class="section level2">
 <h2><span class="header-section-number">1.3</span> Introduction to R</h2>
@@ -306,34 +306,30 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul>
 <div id="arithmetic-operations" class="section level3">
 <h3><span class="header-section-number">1.3.1</span> Arithmetic Operations</h3>
-<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
+<p>This sections contains no code to translate—see <em>QSS</em> text.</p>
 </div>
 <div id="objects" class="section level3">
 <h3><span class="header-section-number">1.3.2</span> Objects</h3>
-<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
+<p>This sections contains no code to translate—see <em>QSS</em> text.</p>
 <p>Also see <a href="http://r4ds.had.co.nz/workflow-basics.html">R4DS: Workflow basics</a>.</p>
 </div>
 <div id="vectors" class="section level3">
 <h3><span class="header-section-number">1.3.3</span> Vectors</h3>
-<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
+<p>This sections contains no code to translate—see <em>QSS</em> text.</p>
 <p>Also see <a href="http://r4ds.had.co.nz/vectors.html">R4DS: Vectors</a>. In <em>R for Data Science</em> vectors are introduced much later, after data frames.</p>
 </div>
 <div id="functions" class="section level3">
 <h3><span class="header-section-number">1.3.4</span> Functions</h3>
-<p><em>This sections contains no code to translate – see</em>QSS* text.*</p>
+<p>This sections contains no code to translate—see <em>QSS</em> text.</p>
 <p>Also see <a href="http://r4ds.had.co.nz/functions.html">R4DS: Functions</a>.</p>
 </div>
 <div id="data-files" class="section level3">
 <h3><span class="header-section-number">1.3.5</span> Data Files</h3>
 <p>Rather than using <code>setwd()</code> in scripts, data analysis should be organized in projects. Read the introduction on RStudio projects in <a href="http://r4ds.had.co.nz/workflow-projects.html">R4DS</a>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
 <p>Datasets used in R are accessed in two ways.</p>
-<ul>
-<li>Datasets can be distributed with R packages. These are often smaller datasets used in examples and tutorials in packages. These are loaded with the <code>data()</code> function. For example you can load UN data on demographic statistics from the <strong>qss</strong> library, which distributes the data sets used in the <em>QSS</em> textbook. (The function <code>data()</code> called without any arguments will list all the datasets distributed with installed packages.)</li>
-</ul>
+<p>First, datasets can be distributed with R packages. These are often smaller datasets used in examples and tutorials in packages. These are loaded with the <code>data()</code> function. For example you can load UN data on demographic statistics from the <strong>qss</strong> library, which distributes the data sets used in the <em>QSS</em> textbook. (The function <code>data()</code> called without any arguments will list all the datasets distributed with installed packages.)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;UNpop&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
-<ul>
-<li>Datasets can be loaded from external files including both stored R objects (<code>.RData</code>, <code>.rda</code>) and other formats (<code>.csv</code>, <code>.dta</code>, <code>.sav</code>). To read a <a href="https://en.wikipedia.org/wiki/Comma-separated_values">csv</a> file into R use the <code>read_csv</code> function from the <strong>readr</strong> library, part of the tidyverse.</li>
-</ul>
+<p>Second, datasets can be loaded from external files including both stored R objects (<code>.RData</code>, <code>.rda</code>) and other formats (<code>.csv</code>, <code>.dta</code>, <code>.sav</code>). To read a <a href="https://en.wikipedia.org/wiki/Comma-separated_values">csv</a> file into R use the <code>read_csv</code> function from the <strong>readr</strong> library, part of the tidyverse.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UNpop_URL &lt;-<span class="st"> &quot;https://raw.githubusercontent.com/kosukeimai/qss/master/INTRO/UNpop.csv&quot;</span>
 UNpop &lt;-<span class="st"> </span><span class="kw">read_csv</span>(UNpop_URL)
 <span class="co">#&gt; Parsed with column specification:</span>
@@ -478,16 +474,16 @@ UNpop
 <span class="co">#&gt; # A tibble: 7 x 2</span>
 <span class="co">#&gt;    year world_pop</span>
 <span class="co">#&gt;   &lt;dbl&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  1950      2526</span>
-<span class="co">#&gt; 2  1960      3026</span>
-<span class="co">#&gt; 3  1970      3691</span>
-<span class="co">#&gt; 4  1980      4449</span>
-<span class="co">#&gt; 5  1990      5321</span>
-<span class="co">#&gt; 6  2000      6128</span>
+<span class="co">#&gt; 1  1950     2526.</span>
+<span class="co">#&gt; 2  1960     3026.</span>
+<span class="co">#&gt; 3  1970     3691.</span>
+<span class="co">#&gt; 4  1980     4449.</span>
+<span class="co">#&gt; 5  1990     5321.</span>
+<span class="co">#&gt; 6  2000     6128.</span>
 <span class="co">#&gt; # ... with 1 more row</span></code></pre></div>
 <p>There is also the equivalent <code>write_dta()</code> function to create Stata datasets.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write_dta</span>(UNpop, <span class="st">&quot;UNpop.dta&quot;</span>)</code></pre></div>
-<p>While Stata and SPSS data sets are quite similar to data frames, they differ slightly in definitions of acceptable data types of columns and what metadata they store with the data. +Be careful when reading and writing from these formats to ensure that information is not lost.</p>
+<p>While Stata and SPSS data sets are quite similar to data frames, they differ slightly in definitions of acceptable data types of columns and what metadata they store with the data. Be careful when reading and writing from these formats to ensure that information is not lost.</p>
 <p>Also see the <a href="https://cran.r-project.org/package=rio">rio</a> package which makes loading data even easier with smart defaults.</p>
 <p>You can use the <code>import()</code> function to load many types of files:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">import</span>(<span class="st">&quot;https://github.com/kosukeimai/qss/raw/master/INTRO/UNpop.csv&quot;</span>)
@@ -525,9 +521,9 @@ UNpop
 <h3><span class="header-section-number">1.3.8</span> Style Guide</h3>
 <p>Following a consistent coding style is important for your code to be readable by you and others. The preferred style is the <a href="http://style.tidyverse.org/">tidyverse style guide</a>, which differs slightly from <a href="http://style.tidyverse.org/">Google’s R style guide</a>.</p>
 <ul>
-<li>The <a href="https://cran.r-project.org/package=lintr">lintr</a> package will check files for style errors.</li>
-<li>The <a href="https://cran.r-project.org/package=styler">styler</a> package provides functions for automatically formatting R code according to style guides.</li>
-<li>In RStudio, go to the <code>Tools &gt; Global Options &gt; Code &gt; Diagnostics</code> pane and check the box to activate style warnings. On this pane, there are other options that can be set in order to increase or decrease the amount of warnings while writing R code in RStudio.</li>
+<li><p>The <a href="https://cran.r-project.org/package=lintr">lintr</a> package will check files for style errors.</p></li>
+<li><p>The <a href="https://cran.r-project.org/package=styler">styler</a> package provides functions for automatically formatting R code according to style guides.</p></li>
+<li><p>In RStudio, go to the <code>Tools &gt; Global Options &gt; Code &gt; Diagnostics</code> pane and check the box to activate style warnings. On this pane, there are other options that can be set in order to increase or decrease the amount of warnings while writing R code in RStudio.</p></li>
 </ul>
 
 </div>
@@ -537,7 +533,7 @@ UNpop
 <hr />
 <ol start="1">
 <li id="fn1"><p>For more on using projects read <a href="https://www.tidyverse.org/articles/2017/12/workflow-vs-script/">Project-oriented workflow</a>.<a href="introduction.html#fnref1">↩</a></p></li>
-<li id="fn2"><p>See the discussion in <a href="http://r4ds.had.co.nz/tibbles.html#tibbles-vs.data.frame">R for Data Science</a> on how <code>tibble</code> objects differ from base <code>data.frame</code> objects in how <code>[</code> is handled.<a href="introduction.html#fnref2">↩</a></p></li>
+<li id="fn2"><p>See the discussion in <a href="http://r4ds.had.co.nz/tibbles.html#tibbles-vs.data.frame">R for DataScience</a> on how <code>tibble</code> objects differ from base <code>data.frame</code> objects in how the single bracket <code>[</code> is handled.<a href="introduction.html#fnref2">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -569,7 +565,7 @@ gitbook.start({
 "link": "https://github.com/jrnold/qss-tidy/edit/master/introduction.Rmd",
 "text": "Edit"
 },
-"download": null,
+"download": ["qss-tidy.pdf"],
 "toc": {
 "collapse": "section"
 }

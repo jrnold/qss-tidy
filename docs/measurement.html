@@ -5,27 +5,27 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>QSS Tidyverse Code</title>
-  <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
+  <title>Quantatitive Social Science: The R Tidyverse Code</title>
+  <meta name="description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
-  <meta property="og:title" content="QSS Tidyverse Code" />
+  <meta property="og:title" content="Quantatitive Social Science: The R Tidyverse Code" />
   <meta property="og:type" content="book" />
+  <meta property="og:url" content="http://jrnold.github.io/qss-tidy" />
   
-  
-  
+  <meta property="og:description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>" />
   <meta name="github-repo" content="jrnold/qss-tidy" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="QSS Tidyverse Code" />
+  <meta name="twitter:title" content="Quantatitive Social Science: The R Tidyverse Code" />
   
-  
+  <meta name="twitter:description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>" />
   
 
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-02-18">
+<meta name="date" content="2018-06-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -99,6 +99,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
+<li><strong><a href="./">QSS Tidyverse Code</a></strong></li>
+
+<li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#colophon"><i class="fa fa-check"></i>Colophon</a></li>
 </ul></li>
@@ -259,7 +262,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">QSS Tidyverse Code</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Quantatitive Social Science: The R Tidyverse Code</a>
           </h1>
         </div>
 
@@ -482,8 +485,7 @@ violent_exp_prop
            <span class="dt">y =</span> <span class="fl">0.2</span>, <span class="dt">label =</span> <span class="st">&quot;median&quot;</span>, <span class="dt">hjust =</span> <span class="dv">0</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Distribution of respondent&#39;s education&quot;</span>,
        <span class="dt">x =</span> <span class="st">&quot;Years of education&quot;</span>,
-       <span class="dt">y =</span> <span class="st">&quot;Density&quot;</span>)
-  </code></pre></div>
+       <span class="dt">y =</span> <span class="st">&quot;Density&quot;</span>)</code></pre></div>
 <p><img src="measurement_files/figure-html/unnamed-chunk-21-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>There are several alternatives to the histogram.</p>
 <p>Density plots (<a href="https://www.rdocumentation.org/packages/ggplot2/topics/geom_density">geom_density</a>):</p>
@@ -493,7 +495,8 @@ violent_exp_prop
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Distribution of respondent&#39;s age&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Age&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Density&quot;</span>)
 dens_plot</code></pre></div>
-<p><img src="measurement_files/figure-html/unnamed-chunk-22-1.png" width="70%" style="display: block; margin: auto;" /> which can be combined with a <a href="https://www.rdocumentation.org/packages/ggplot2/topics/geom_rug">geom_rug</a> to create a rug plot, which puts small lines on the axis to represent the value of each observation. It can be combined with a scatter or density plot to add extra detail. Adjust the <code>alpha</code> to modify the color transparency of the rug and address overplotting.</p>
+<p><img src="measurement_files/figure-html/unnamed-chunk-22-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>which can be combined with a <a href="https://www.rdocumentation.org/packages/ggplot2/topics/geom_rug">geom_rug</a> to create a rug plot, which puts small lines on the axis to represent the value of each observation. It can be combined with a scatter or density plot to add extra detail. Adjust the <code>alpha</code> to modify the color transparency of the rug and address overplotting.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dens_plot <span class="op">+</span><span class="st"> </span><span class="kw">geom_rug</span>(<span class="dt">alpha =</span> .<span class="dv">2</span>)</code></pre></div>
 <p><img src="measurement_files/figure-html/unnamed-chunk-23-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Frequency polygons (<a href="https://www.rdocumentation.org/packages/ggplot2/topics/geom_freqpoly">geom_freqpoly</a>): See <a href="http://r4ds.had.co.nz/">R for Data Science</a> <a href="http://r4ds.had.co.nz/exploratory-data-analysis.html">EDA</a>.</p>
@@ -677,7 +680,7 @@ q <span class="op">+</span><span class="st"> </span>scale_colour_parties</code><
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;racial liberalism/conservatism&quot;</span>,
                      <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;economic liberalism/conservatism&quot;</span>,
-                     <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>)) 
+                     <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>))
   <span class="co">#scale_colour_parties</span></code></pre></div>
 <p><img src="measurement_files/figure-html/unnamed-chunk-42-1.png" width="100%" height="100%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">congress <span class="op">%&gt;%</span>
@@ -704,7 +707,7 @@ party_endpoints &lt;-
 <span class="st">  </span><span class="kw">filter</span>(congress <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="kw">min</span>(congress), <span class="kw">max</span>(congress))) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">label =</span> <span class="kw">str_c</span>(party, congress, <span class="dt">sep =</span> <span class="st">&quot; - &quot;</span>))
 
-<span class="kw">ggplot</span>(party_means, 
+<span class="kw">ggplot</span>(party_means,
          <span class="kw">aes</span>(<span class="dt">x =</span> dwnom1, <span class="dt">y =</span> dwnom2, <span class="dt">color =</span> party,
              <span class="dt">group =</span> party)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
@@ -932,7 +935,7 @@ gitbook.start({
 "link": "https://github.com/jrnold/qss-tidy/edit/master/measurement.Rmd",
 "text": "Edit"
 },
-"download": null,
+"download": ["qss-tidy.pdf"],
 "toc": {
 "collapse": "section"
 }

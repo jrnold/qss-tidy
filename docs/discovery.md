@@ -7,9 +7,12 @@ But there are other domains in which other data structures are more appropriate 
 The three applications in this chapter: text, networks, and spatial data are examples where the tidy data structure is less of an advantage.
 I will still rely on **ggplot2** for plotting, and use tidy verse compatible packages where appropriate.
 
-- Textual data: [tidytext](https://cran.r-project.org/package=tidytext)
-- Network data: [igraph](https://cran.r-project.org/package=igraph) for network computation, as in the chapter. But several **ggplot2**2 extension packages for plotting the networks.
-- Spatial data: [ggplot2](https://cran.r-project.org/package=ggplot2) has some built-in support for maps. The [map](https://cran.r-project.org/package=map) package provides map data.
+-   Textual data: [tidytext](https://cran.r-project.org/package=tidytext)
+
+-   Network data: [igraph](https://cran.r-project.org/package=igraph) for network computation, as in the chapter. But several **ggplot2**2 extension packages for plotting the networks.
+
+-   Spatial data: [ggplot2](https://cran.r-project.org/package=ggplot2) has some built-in support for maps.
+    The [map](https://cran.r-project.org/package=map) package provides map data.
 
 See the [R for Data Science](http://r4ds.had.co.nz/) section [12.7 Non-tidy data](http://r4ds.had.co.nz/tidy-data.html#non-tidy-data) and this post on [Non-tidy data](http://simplystatistics.org/2016/02/17/non-tidy-data/) by Jeff Leek for more on non-tidy data.
 
@@ -29,7 +32,6 @@ library("SnowballC")
 library("tidytext")
 library("wordcloud")
 ```
-
 
 
 
@@ -113,7 +115,6 @@ tokens
 #> # ... with 2.021e+05 more rows
 ```
 
-
 The `unnest_tokens` function uses the [tokenizers](https://cran.r-project.org/package=tokenizers) package to tokenize the text.
 By default, it uses the  function which removes punctuation, and lowercases the words.
 I set the tokenizer to  to stem the word, using the [SnowballC](https://cran.r-project.org/package=SnowballC) package.
@@ -124,7 +125,6 @@ We can remove stop-words with an [anti_join](https://www.rdocumentation.org/pack
 data("stop_words", package = "tidytext")
 tokens <- anti_join(tokens, stop_words, by = "word")
 ```
-
 
 ### Document-Term Matrix
 
@@ -148,9 +148,7 @@ head(dtm)
 #> 6        1 act            1
 ```
 
-
 ### Topic Discovery
-
 
 Plot the word-clouds for essays 12 and 24:
 
@@ -169,7 +167,6 @@ filter(dtm, document == 24) %>% {
 ```
 
 <img src="discovery_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" />
-
 
 Use the function [bind_tf_idf](https://www.rdocumentation.org/packages/tidytext/topics/bind_tf_idf) to add a column with the tf-idf to the data frame.
 
@@ -338,8 +335,6 @@ enframe(km_out$cluster, "document", "cluster") %>%
        3  74                                                                                                                                                                            
        4  65, 81, 82, 83                                                                                                                                                                
 
-
-
 ### Authorship Prediction
 
 We'll create a data-frame with the known
@@ -354,7 +349,6 @@ known_essays <- bind_rows(tibble(document = MADISON_ESSAYS,
                           tibble(document = JAY_ESSAYS,
                                  author = "Jay"))
 ```
-
 
 
 ```r
@@ -441,7 +435,6 @@ These coefficients are a little different, probably due to differences in the
 tokenization procedure, and in particular, the document size normalization.
 
 ### Cross-Validation
-
 
 **tidyverse:** For cross-validation, I rely on the [modelr](https://cran.r-project.org/package=modelr) package function `RDoc("modelr::crossv_kfold")`. See the tutorial [Cross validation of linear regression with modelr](https://rpubs.com/dgrtwo/cv-modelr) for more on using **modelr** for cross validation or [k-fold cross-validation with modelr and broom](https://drsimonj.svbtle.com/k-fold-cross-validation-with-modelr-and-broom).
 
@@ -533,7 +526,6 @@ author_data %>%
        63   -0.184  Madison     
 
 
-
 ```r
 disputed_essays <- filter(author_data, is.na(author))$document
 
@@ -558,9 +550,7 @@ ggplot(mutate(author_data,
 <!-- detach extraneous packages -->
 
 
-
-
-## Network data 
+## Network data
 
 The [igraph](https://cran.r-project.org/package=igraph), [sna](https://cran.r-project.org/package=sna), and [network](https://cran.r-project.org/package=network) packages are the best in class.
 See the Social Network Analysis section of the [Social Sciences Task View](https://cran.r-project.org/web/views/SocialSciences.html).
@@ -568,19 +558,21 @@ See this tutorial by Katherin Ognyanova, [Static and dynamic network visualizati
 
 There are several packages that plot networks in ggplot2.
 
-- [ggnetwork](https://cran.r-project.org/package=ggnetwork)
-- [ggraph](https://cran.r-project.org/package=ggraph)
-- [geomnet](https://cran.r-project.org/package=geomnet)
-- [GGally](https://cran.r-project.org/package=GGally) functions [ggnet](https://ggobi.github.io/ggally/rd.html#ggnet), `ggnet2`, and `ggnetworkmap`.
-- [ggCompNet](https://cran.r-project.org/package=ggCompNet) compares the speed of various network plotting packages in R.
+-   [ggnetwork](https://cran.r-project.org/package=ggnetwork)
+-   [ggraph](https://cran.r-project.org/package=ggraph)
+-   [geomnet](https://cran.r-project.org/package=geomnet)
+-   [GGally](https://cran.r-project.org/package=GGally) functions [ggnet](https://ggobi.github.io/ggally/rd.html#ggnet), `ggnet2`, and `ggnetworkmap`.
+-   [ggCompNet](https://cran.r-project.org/package=ggCompNet) compares the speed of various network plotting packages in R.
 
 See this [presentation](http://curleylab.psych.columbia.edu/netviz/netviz1.html#/12) for an overview of some of those packages for data visualization.
 
 Examples: [Network Visualization Examples with the ggplot2 Package](https://cran.r-project.org/web/packages/ggCompNet/vignettes/examples-from-paper.html)
 
-
+<!-- lint disable no-duplicate-headings -->
 
 ### Prerequisites {-}
+
+<!-- lint enable no-duplicate-headings -->
 
 
 ```r
@@ -592,7 +584,6 @@ library("igraph")
 library("intergraph")
 library("GGally")
 ```
-
 
 
 
@@ -673,8 +664,6 @@ top_n(senator, 3, outdegree) %>%
 ```
 
 
-
-
 ```r
 # Define scales to reuse for the plots
 scale_colour_parties <- scale_colour_manual("Party", values = c(R = "red",
@@ -683,7 +672,6 @@ scale_colour_parties <- scale_colour_manual("Party", values = c(R = "red",
 scale_shape_parties <- scale_shape_manual("Party", values = c(R = 16,
                                                               D = 17,
                                                               I = 4))
-
 
 senator %>%
   mutate(closeness_in = igraph::closeness(twitter_adj, mode = "in"),
@@ -695,13 +683,16 @@ senator %>%
   scale_colour_parties +
   scale_shape_parties +
   labs(main = "Closeness", x = "Incoming path", y = "Outgoing path")
+#> Warning in igraph::closeness(twitter_adj, mode = "in"): At centrality.c:
+#> 2784 :closeness centrality is not well-defined for disconnected graphs
+#> Warning in igraph::closeness(twitter_adj, mode = "out"): At centrality.c:
+#> 2784 :closeness centrality is not well-defined for disconnected graphs
 ```
 
 <img src="discovery_files/figure-html/unnamed-chunk-40-1.png" width="70%" style="display: block; margin: auto;" />
 
 What does the reference line indicate? What does that say about senators twitter
 networks?
-
 
 
 ```r
@@ -720,7 +711,6 @@ senator %>%
 
 <img src="discovery_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" />
 
-
 We've covered three different methods of calculating the importance of a node in a network: degree, closeness, and centrality.
 But what do they mean? What's the "best" measure of importance?
 The answer to the the former is "it depends on the question".
@@ -728,8 +718,7 @@ There are probably other papers out there on this, but Borgatti (2005) is a good
 discussion:
 
 > Borgatti, Stephen. 2005. "Centrality and Network Flow". *Social Networks*.
-  [DOI](https://dx.doi.org/doi:10.1016/j.socnet.2004.11.008)
-
+> [DOI](https://dx.doi.org/doi:10.1016/j.socnet.2004.11.008)
 
 Add and plot page-rank:
 
@@ -740,39 +729,44 @@ ggnet(twitter_adj, mode = "target")
 
 <img src="discovery_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" />
 
-
-<!-- 
+<!--
 remove network packages
 -->
-
 
 
 ## Spatial Data
 
 Some resources on plotting spatial data in R:
 
-- [ggplot2](https://cran.r-project.org/package=ggplot2) has several map-related functions
+-   [ggplot2](https://cran.r-project.org/package=ggplot2) has several map-related functions
 
-  - [borders](http://docs.ggplot2.org/current/borders.html)
-  - [fortify.map](http://docs.ggplot2.org/current/fortify.map.html)
-  - [map_data](http://docs.ggplot2.org/current/map_data.html)
+    -   [borders](http://docs.ggplot2.org/current/borders.html)
+    -   [fortify.map](http://docs.ggplot2.org/current/fortify.map.html)
+    -   [map_data](http://docs.ggplot2.org/current/map_data.html)
 
-- [ggmap](https://cran.r-project.org/package=ggmap) allows ggplot to us a map from Google Maps, OpenStreet Maps or similar as a background for the plot.
+-   [ggmap](https://cran.r-project.org/package=ggmap) allows ggplot to us a map from Google Maps, OpenStreet Maps or similar as a background for the plot.
 
-  - David Kahle and Hadley Wickham. 2013. [ggmap: Spatial Visualization with ggplot2](https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf). *Journal of Statistical Software*
-  - Github [dkahle/ggmamp](https://github.com/dkahle/ggmap)
+    -   David Kahle and Hadley Wickham. 2013. [ggmap: Spatial   Visualization
+        with
+        ggplot2](https://journal.r-project.org/archive/2013-1/kahle-wickhm.pdf).
+        *Journal of Statistical Software* - Github
+        [dkahle/ggmamp](https://github.com/dkahle/ggmap)
 
-- [tmap](https://cran.r-project.org/package=tmap) is not built on ggplot2 but uses a ggplot2-like API for network data.
-- [leaflet](https://cran.r-project.org/package=leaflet) is an R interface to a popular javascript mapping library.
+-   [tmap](https://cran.r-project.org/package=tmap) is not built on ggplot2 but uses a ggplot2-like API for network data.
+
+-   [leaflet](https://cran.r-project.org/package=leaflet) is an R interface to a popular javascript mapping library.
 
 Here are few tutorials on plotting spatial data in ggplot2:
 
-- [Making Maps with R](http://eriqande.github.io/rep-res-web/lectures/making-maps-with-R.html)
-- [Plotting Data on a World Map](https://www.r-bloggers.com/r-beginners-plotting-locations-on-to-a-world-map/)
-- [Introduction to Spatial Data and ggplot2](https://rpubs.com/m_dev/Intro-to-Spatial-Data-and-ggplot2)
+-   [Making Maps with R](http://eriqande.github.io/rep-res-web/lectures/making-maps-with-R.html)
+-   [Plotting Data on a World Map](https://www.r-bloggers.com/r-beginners-plotting-locations-on-to-a-world-map/)
+-   [Introduction to Spatial Data and ggplot2](https://rpubs.com/m_dev/Intro-to-Spatial-Data-and-ggplot2)
 
+<!-- lint disable no-duplicate-headings -->
 
 ### Prerequisites {-}
+
+<!-- lint enable no-duplicate-headings -->
 
 
 ```r
@@ -783,7 +777,6 @@ library("forcats")
 library("modelr")
 library("ggrepel")
 ```
-
 
 ### Spatial Data in R
 
@@ -838,27 +831,24 @@ ggplot() +
 
 <img src="discovery_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" />
 
-
-
 ### Colors in R
 
 For more resources on using colors in R
 
-- `R4DS` chapter [Graphics for Communication](http://r4ds.had.co.nz/graphics-for-communication.html#replacing-a-scale)
-- ggplot2 book Chapter "Scales"
-- Jenny Bryan [Using colors in R](https://www.stat.ubc.ca/~jenny/STAT545A/block14_colors.html)
-- Achim Zeileis, Kurt Hornik, Paul Murrell (2009). Escaping RGBland: Selecting Colors for Statistical Graphics. Computational Statistics & Data Analysis [DOI](http://dx.doi.org/10.1016/j.csda.2008.11.033)
-- [colorspace vignette](https://cran.r-project.org/web/packages/colorspace/vignettes/hcl-colors.pdf)
-- Maureen Stone [Choosing Colors for Data Visualization](https://www.perceptualedge.com/articles/b-eye/choosing_colors.pdf)
-- [ColorBrewer](http://colorbrewer2.org) A website with a variety of palettes, primarily designed for maps, but also useful in data viz.
-- Stephen Few [Practical Rules for Using Color in Charts](http://www.perceptualedge.com/articles/visual_business_intelligence/rules_for_using_color.pdf)
-- [Why Should Engineers and Scientists by Worried About Color?](http://www.research.ibm.com/people/l/lloydt/color/color.HTM)
-- [A Better Default Colormap for Matplotlib](https://www.youtube.com/watch?v=xAoljeRJ3lU) A SciPy 2015 talk that describes how the [viridis](https://cran.r-project.org/package=viridis) was created.
-- [Evaluation of Artery Visualizations for Heart Disease Diagnosis](http://www.eecs.harvard.edu/~kgajos/papers/2011/borkin11-infoviz.pdf) Using the wrong color scale can be deadly ... literally.
-- The python package matplotlib has a good discussion of [colormaps](http://matplotlib.org/users/colormaps.html).
-- Peter Kovesi [Good Color Maps: How to Design Them](https://arxiv.org/pdf/1509.03700v1.pdf).
-- See the [viridis](https://cran.r-project.org/package=viridis), [ggthemes](https://cran.r-project.org/package=ggthemes), [dichromat](https://cran.r-project.org/package=dichromat), and [pals](https://cran.r-project.org/package=pals) packages for color palettes.
-
+-   `R4DS` chapter [Graphics for Communication](http://r4ds.had.co.nz/graphics-for-communication.html#replacing-a-scale)
+-   ggplot2 book Chapter "Scales"
+-   Jenny Bryan [Using colors in R](https://www.stat.ubc.ca/~jenny/STAT545A/block14_colors.html)
+-   Achim Zeileis, Kurt Hornik, Paul Murrell (2009). Escaping RGBland: Selecting Colors for Statistical Graphics. Computational Statistics & Data Analysis [DOI](http://dx.doi.org/10.1016/j.csda.2008.11.033)
+-   [colorspace vignette](https://cran.r-project.org/web/packages/colorspace/vignettes/hcl-colors.pdf)
+-   Maureen Stone [Choosing Colors for Data Visualization](https://www.perceptualedge.com/articles/b-eye/choosing_colors.pdf)
+-   [ColorBrewer](http://colorbrewer2.org) A website with a variety of palettes, primarily designed for maps, but also useful in data viz.
+-   Stephen Few [Practical Rules for Using Color in Charts](http://www.perceptualedge.com/articles/visual_business_intelligence/rules_for_using_color.pdf)
+-   [Why Should Engineers and Scientists by Worried About Color?](http://www.research.ibm.com/people/l/lloydt/color/color.HTM)
+-   [A Better Default Colormap for Matplotlib](https://www.youtube.com/watch?v=xAoljeRJ3lU) A SciPy 2015 talk that describes how the [viridis](https://cran.r-project.org/package=viridis) was created.
+-   [Evaluation of Artery Visualizations for Heart Disease Diagnosis](http://www.eecs.harvard.edu/~kgajos/papers/2011/borkin11-infoviz.pdf) Using the wrong color scale can be deadly ... literally.
+-   The python package matplotlib has a good discussion of [colormaps](http://matplotlib.org/users/colormaps.html).
+-   Peter Kovesi [Good Color Maps: How to Design Them](https://arxiv.org/pdf/1509.03700v1.pdf).
+-   See the [viridis](https://cran.r-project.org/package=viridis), [ggthemes](https://cran.r-project.org/package=ggthemes), [dichromat](https://cran.r-project.org/package=dichromat), and [pals](https://cran.r-project.org/package=pals) packages for color palettes.
 
 Use [scale_identity](http://docs.ggplot2.org/current/scale_identity.html) for the color and alpha scales since the values
 of the variables are the values of the scale itself (the color names, and the
@@ -878,7 +868,6 @@ ggplot(tibble(x = rep(1:4, each = 2),
 ```
 
 <img src="discovery_files/figure-html/color_red_black-1.png" width="70%" style="display: block; margin: auto;" />
-
 
 ### United States Presidential Elections
 
@@ -994,7 +983,6 @@ ggplot(states) +
 
 <img src="discovery_files/figure-html/unnamed-chunk-53-1.png" width="70%" style="display: block; margin: auto;" />
 
-
 ### Expansion of Walmart
 
 We don't need to do the direct mapping since
@@ -1018,7 +1006,6 @@ ggplot() +
 We don't need to worry about colors since `ggplot` handles that.
 I use [guides](http://docs.ggplot2.org/current/guides.html) to so that the colors or not transparent
 in the legend (see *R for Data Science* chapter[Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html)).
-
 
 To make a plot showing all Walmart stores opened up through that year, I write a function, that takes the year and dataset as parameters.
 
@@ -1044,7 +1031,6 @@ walk(years, ~ print(map_walmart(.x, walmart)))
 ```
 
 <img src="discovery_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-55-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-55-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-55-4.png" width="70%" style="display: block; margin: auto;" />
-
 
 ### Animation in R
 

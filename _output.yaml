@@ -2,10 +2,16 @@ bookdown::gitbook:
   config:
     toc:
       collapse: section
+      before: |
+        <li><strong><a href="./">QSS Tidyverse Code</a></strong></li>
     edit:
       link: https://github.com/jrnold/qss-tidy/edit/master/%s
       text: "Edit"
     sharing: no
+  md_extensions: "+native_divs"
+  download: ["pdf"]
 
 bookdown::pdf_book:
   latex_engine: "xelatex"
+  keep_tex: yes
+  md_extensions: "+fenced_divs"

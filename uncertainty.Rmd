@@ -1,10 +1,10 @@
 ---
 output: html_document
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
-# Uncertainty
 
+# Uncertainty
 
 ## Prerequisites {-}
 
@@ -19,9 +19,7 @@ library("broom")
 library("purrr")
 ```
 
-
 ## Estimation
-
 
 ### Unbiasedness and Consistency
 
@@ -46,7 +44,6 @@ SATE <- mean(smpl[["tau"]])
 SATE
 ```
 
-
 Simulations of RCTs. Write a function that takes the sample as an input `smpl`, then randomly assigns the treatment to each individual:
 ```{r}
 sim_treat <- function(smpl) {
@@ -66,7 +63,12 @@ sim_treat <- function(smpl) {
            est_error = diff_mean - SATE)
 }
 ```
-This returns a data frame with columns: `Y0_mean` (mean $Y$ for observations not receiving the treatment), `Y1_mean` (mean $Y$ for observations receiving the treatment), `diff` (difference in mean values between the two groups), and `est_error` (difference between the estimated difference and the known SATE):
+
+This returns a data frame with columns: `Y0_mean` (mean $Y$ for observations
+not receiving the treatment), `Y1_mean` (mean $Y$ for observations receiving
+the treatment), `diff` (difference in mean values between the two groups), and
+`est_error` (difference between the estimated difference and the known SATE):
+
 ```{r}
 sim_treat(smpl)
 ```
@@ -80,7 +82,8 @@ summary(sate_sims[["est_error"]])
 Simulate the PATE:
 ```{r}
 PATE <- mu1 - mu0
-
+```
+```{r}
 sim_pate <- function(n, mu0, mu1, sd0, sd1) {
   smpl <- tibble(Y0 = rnorm(n, mean = mu0, sd = sd0),
                  Y1 = rnorm(n, mean = mu1, sd = sd1),
@@ -109,7 +112,6 @@ pate_sims <-
   map_df(seq_len(sims), ~ sim_pate(n, mu0, mu1, sd0, sd1))
 summary(pate_sims[["est_error"]])
 ```
-
 
 ### Standard Error
 
@@ -170,7 +172,6 @@ Mean of standard errors,
 mean(pate_sims_se[["se"]])
 ```
 
-
 ### Confidence Intervals
 
 Calculate a $p\%$ confidence interval for the binomial distribution:
@@ -224,7 +225,7 @@ alpha <- 0.05
 sims <- 5000
 ```
 
-Define a function that samples from a Bernoulli distribution, calculates its standard error, and returns a logical value as to whether it contains the true value: 
+Define a function that samples from a Bernoulli distribution, calculates its standard error, and returns a logical value as to whether it contains the true value:
 ```{r}
 binom_ci_contains <- function(n, p, alpha = 0.05) {
   x <- rbinom(n, size = 1, prob = p)
@@ -258,8 +259,6 @@ Use `binom_ci_coverage` to calculate CI coverage for multiple values of the samp
 tibble(n = c(10L, 100L, 1000L)) %>%
   mutate(coverage = map_dbl(n, binom_ci_coverage, p = !!p, sims = !!sims))
 ```
-
-
 
 ### Margin of Error and Sample Size Calculation in Polls
 
@@ -369,7 +368,6 @@ poll_pred %>%
   summarise(mean(covers_bc))
 ```
 
-
 ### Analysis of Randomized Controlled Trials
 
 Load the `STAR` data from the **qss** package,
@@ -448,7 +446,6 @@ star_ate <-
 star_ate
 ```
 
-
 ### Analysis Based on Student's t-Distribution
 
 Use `r rdoc("dplyr", "filter")` to subset.
@@ -462,9 +459,7 @@ t.test(g4reading ~ classtype,
        data = filter(STAR, classtype %in% c("small class", "regular class")))
 ```
 
-
 ## Hypothesis Testing
-
 
 ### Tea-Testing Experiment
 
@@ -497,7 +492,6 @@ left_join(select(approx, correct, prob_sim = prob),
   mutate(diff = prob_sim - prob_exact)
 ```
 
-
 ### The General Framework
 
 The test functions like `r rdoc("stat", "fisher.test")` do not work particularly well with data frames, and expect vectors or matrices as input, so tidyverse functions are less directly applicable
@@ -521,30 +515,29 @@ fisher.test(select(spread(x, Truth, Number), -Guess),
 fisher.test(select(spread(y, Truth, Number), -Guess))
 ```
 
-
 ### One-Sample Tests
 
 ```{r}
 n <- 1018
-x.bar <- 550 / n
+x_bar <- 550 / n
 se <- sqrt(0.5 * 0.5 / n) # standard deviation of sampling distribution
 # upper red area in the figure
-upper <- pnorm(x.bar, mean = 0.5, sd = se, lower.tail = FALSE)
+upper <- pnorm(x_bar, mean = 0.5, sd = se, lower.tail = FALSE)
 # lower red area in the figure; identical to the upper area
-lower <- pnorm(0.5 - (x.bar - 0.5), mean = 0.5, sd = se)
+lower <- pnorm(0.5 - (x_bar - 0.5), mean = 0.5, sd = se)
 # two side p value
 upper + lower
 2 * upper
 # one sided p value
 upper
-z.score <- (x.bar - 0.5) / se
-z.score
-pnorm(z.score, lower.tail = FALSE) # one-sided p-value
-2 * pnorm(z.score, lower.tail = FALSE) # two-sided p-value
+z_score <- (x_bar - 0.5) / se
+z_score
+pnorm(z_score, lower.tail = FALSE) # one-sided p-value
+2 * pnorm(z_score, lower.tail = FALSE) # two-sided p-value
 # 99% confidence interval contains 0.5
-c(x.bar - qnorm(0.995) * se, x.bar + qnorm(0.995) * se)
+c(x_bar - qnorm(0.995) * se, x_bar + qnorm(0.995) * se)
 # 95% confidence interval does not contain 0.5
-c(x.bar - qnorm(0.975) * se, x.bar + qnorm(0.975) * se)
+c(x_bar - qnorm(0.975) * se, x_bar + qnorm(0.975) * se)
 # no continuity correction to get the same p-value as above
 prop.test(550, n = n, p = 0.5, correct = FALSE)
 # with continuity correction
@@ -556,7 +549,6 @@ prop.test(550, n = n, p = 0.5, conf.level = 0.99)
 # two-sided one-sample t-test
 t.test(STAR$g4reading, mu = 710)
 ```
-
 
 ### Two-sample tests
 
@@ -593,7 +585,7 @@ Assign sample sizes and proportions, then calculate point estimates, standard er
 n0 <- sum(resume$race == "black")
 n1 <- sum(resume$race == "white")
 
-p <- mean(resume$call) 
+p <- mean(resume$call)
 p0 <- mean(filter(resume, race == "black")$call)
 p1 <- mean(filter(resume, race == "white")$call)
 
@@ -613,46 +605,82 @@ The only thing that changed is using `r rdoc("dplyr", "filter")` for selecting t
 
 ### Power Analysis
 
-```{r eval=FALSE}
-# set the parameters
+Set the parameters: the sample size,
+```{r}
 n <- 250
-p.star <- 0.48 # data generating process
-p <- 0.5 # null value
+```
+the population proportional under the alternative data generating process,
+```{r}
+p_star <- 0.48
+```
+the null hypothesis,
+```{r}
+p <- 0.5
+```
+the p-value,
+```{r}
 alpha <- 0.05
-# critical value
-cr.value <- qnorm(1 - alpha / 2)
-# standard errors under the hypothetical data generating process
-se.star <- sqrt(p.star * (1 - p.star) / n)
-# standard error under the null
+```
+and
+```{r}
+cr_value <- qnorm(1 - alpha / 2)
+```
+The standard errors under the hypothetical data generating process is
+```{r}
+se_star <- sqrt(p_star * (1 - p_star) / n)
+```
+and the standard error under the null is
+```{r}
 se <- sqrt(p * (1 - p) / n)
-# power
-pnorm(p - cr.value * se, mean = p.star, sd = se.star) +
-    pnorm(p + cr.value * se, mean = p.star, sd = se.star, lower.tail = FALSE)
-# parameters
+```
+The power for this test is
+```{r}
+pnorm(p - cr_value * se, mean = p_star, sd = se_star) +
+    pnorm(p + cr_value * se, mean = p_star, sd = se_star,
+          lower.tail = FALSE)
+```
+
+The parameters (sample sizes and proportions) are
+```{r}
 n1 <- 500
 n0 <- 500
-p1.star <- 0.05
-p0.star <- 0.1
-# overall call back rate as a weighted average
-p <- (n1 * p1.star + n0 * p0.star) / (n1 + n0)
-# standard error under the null
+p1_star <- 0.05
+p0_star <- 0.1
+```
+Calculate the overall call back rate as a weighted average,
+```{r}
+p <- (n1 * p1_star + n0 * p0_star) / (n1 + n0)
+```
+the standard error under the null,
+```{r}
 se <- sqrt(p * (1 - p) * (1 / n1 + 1 / n0))
-# standard error under the hypothetical data generating process
-se.star <- sqrt(p1.star * (1 - p1.star) / n1 + p0.star * (1 - p0.star) / n0)
-pnorm(-cr.value * se, mean = p1.star - p0.star, sd = se.star) +
-    pnorm(cr.value * se, mean = p1.star - p0.star, sd = se.star,
+```
+the standard error under the hypothetical data generating process,
+```{r}
+se.star <- sqrt(p1_star * (1 - p1_star) / n1 + p0_star * (1 - p0_star) / n0)
+```
+```{r}
+pnorm(-cr_value * se, mean = p1_star - p0_star, sd = se.star) +
+    pnorm(cr_value * se, mean = p1_star - p0_star, sd = se.star,
           lower.tail = FALSE)
+```{r}
 power.prop.test(n = 500, p1 = 0.05, p2 = 0.1, sig.level = 0.05)
+```
+```{r}
 power.prop.test(p1 = 0.05, p2 = 0.1, sig.level = 0.05, power = 0.9)
+```
+```{r}
 power.t.test(n = 100, delta = 0.25, sd = 1, type = "one.sample")
+```
+```{r}
 power.t.test(power = 0.9, delta = 0.25, sd = 1, type = "one.sample")
+```
+```{r}
 power.t.test(delta = 0.25, sd = 1, type = "two.sample",
              alternative = "one.sided", power = 0.9)
 ```
 
-
 ## Linear Regression Model with Uncertainty
-
 
 ### Linear Regression as a Generative Model
 
@@ -677,7 +705,6 @@ gather_predictions(slice(minwage, 1), fit_minwage, fit_minwage1) %>%
   select(model, pred)
 ```
 
-
 ### Inference about coefficients
 
 Use the `r rdoc("broom", "tidy")` function to return the coefficients, including confidence intervals, as a data frame:
@@ -693,7 +720,6 @@ You need to set `conf.int = TRUE` for `r rdoc("broom", "tidy.lm", "tidy")` to in
 summary(fit_minwage)
 tidy(fit_minwage, conf.int = TRUE)
 ```
-
 
 ### Inference about predictions
 
@@ -780,8 +806,8 @@ CI <- c(diff_est - se_diff * qnorm(0.975),
         diff_est + se_diff * qnorm(0.975))
 CI
 # hypothesis test
-z.score <- diff_est / se_diff
+z_score <- diff_est / se_diff
 # two sided p value
-p.value <- 2 * pnorm(abs(z.score), lower.tail = FALSE)
-p.value
+p_value <- 2 * pnorm(abs(z_score), lower.tail = FALSE)
+p_value
 ```

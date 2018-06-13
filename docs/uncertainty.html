@@ -5,27 +5,27 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>QSS Tidyverse Code</title>
-  <meta name="description" content="QSS Tidyverse Code">
-  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
+  <title>Quantatitive Social Science: The R Tidyverse Code</title>
+  <meta name="description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
-  <meta property="og:title" content="QSS Tidyverse Code" />
+  <meta property="og:title" content="Quantatitive Social Science: The R Tidyverse Code" />
   <meta property="og:type" content="book" />
+  <meta property="og:url" content="http://jrnold.github.io/qss-tidy" />
   
-  
-  
+  <meta property="og:description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>" />
   <meta name="github-repo" content="jrnold/qss-tidy" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="QSS Tidyverse Code" />
+  <meta name="twitter:title" content="Quantatitive Social Science: The R Tidyverse Code" />
   
-  
+  <meta name="twitter:description" content="<p>This supplement for Kosuke Imai’s “Quantitative Social Science: An Introduction” contains Tidyverse R code versions of the code in the original text.</p>" />
   
 
 <meta name="author" content="Jeffrey B. Arnold">
 
 
-<meta name="date" content="2018-02-18">
+<meta name="date" content="2018-06-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -99,6 +99,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
+<li><strong><a href="./">QSS Tidyverse Code</a></strong></li>
+
+<li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#colophon"><i class="fa fa-check"></i>Colophon</a></li>
 </ul></li>
@@ -259,7 +262,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">QSS Tidyverse Code</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Quantatitive Social Science: The R Tidyverse Code</a>
           </h1>
         </div>
 
@@ -331,9 +334,8 @@ sate_sims &lt;-<span class="st"> </span><span class="kw">map_df</span>(<span cla
 <span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
 <span class="co">#&gt;  -0.484  -0.087  -0.002  -0.001   0.085   0.414</span></code></pre></div>
 <p>Simulate the PATE:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">PATE &lt;-<span class="st"> </span>mu1 <span class="op">-</span><span class="st"> </span>mu0
-
-sim_pate &lt;-<span class="st"> </span><span class="cf">function</span>(n, mu0, mu1, sd0, sd1) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">PATE &lt;-<span class="st"> </span>mu1 <span class="op">-</span><span class="st"> </span>mu0</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim_pate &lt;-<span class="st"> </span><span class="cf">function</span>(n, mu0, mu1, sd0, sd1) {
   smpl &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">Y0 =</span> <span class="kw">rnorm</span>(n, <span class="dt">mean =</span> mu0, <span class="dt">sd =</span> sd0),
                  <span class="dt">Y1 =</span> <span class="kw">rnorm</span>(n, <span class="dt">mean =</span> mu1, <span class="dt">sd =</span> sd1),
                  <span class="dt">tau =</span> Y1 <span class="op">-</span><span class="st"> </span>Y0)
@@ -370,7 +372,7 @@ sim_pate &lt;-<span class="st"> </span><span class="cf">function</span>(n, mu0, 
 <span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> PATE, <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Sampling distribution&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Difference-in-means estimator&quot;</span>)</code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sd</span>(pate_sims[[<span class="st">&quot;diff_mean&quot;</span>]])
 <span class="co">#&gt; [1] 0.196</span></code></pre></div>
 <p>Simulate PATE with a standard error:</p>
@@ -432,9 +434,9 @@ levels &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">
 <span class="co">#&gt; # A tibble: 3 x 3</span>
 <span class="co">#&gt;   level ci_lower ci_upper</span>
 <span class="co">#&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 0.990    0.560    0.640</span>
-<span class="co">#&gt; 2 0.950    0.570    0.630</span>
-<span class="co">#&gt; 3 0.900    0.575    0.625</span></code></pre></div>
+<span class="co">#&gt; 1  0.99    0.560    0.640</span>
+<span class="co">#&gt; 2  0.95    0.570    0.630</span>
+<span class="co">#&gt; 3  0.9     0.575    0.625</span></code></pre></div>
 <p>Calculate the coverage ratio of the 95% confidence interval in the PATE simulations.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">level &lt;-<span class="st"> </span><span class="fl">0.95</span>
 pate_sims_se <span class="op">%&gt;%</span>
@@ -514,14 +516,14 @@ sims &lt;-<span class="st"> </span><span class="dv">5000</span></code></pre></di
 }
 <span class="kw">moe_pop_prop</span>(<span class="fl">0.01</span>)
 <span class="co">#&gt; # A tibble: 99 x 3</span>
-<span class="co">#&gt;        p     n    MoE</span>
-<span class="co">#&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 0.0100   380 0.0100</span>
-<span class="co">#&gt; 2 0.0200   753 0.0100</span>
-<span class="co">#&gt; 3 0.0300  1118 0.0100</span>
-<span class="co">#&gt; 4 0.0400  1475 0.0100</span>
-<span class="co">#&gt; 5 0.0500  1825 0.0100</span>
-<span class="co">#&gt; 6 0.0600  2167 0.0100</span>
+<span class="co">#&gt;       p     n   MoE</span>
+<span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  0.01  380.  0.01</span>
+<span class="co">#&gt; 2  0.02  753.  0.01</span>
+<span class="co">#&gt; 3  0.03 1118.  0.01</span>
+<span class="co">#&gt; 4  0.04 1475.  0.01</span>
+<span class="co">#&gt; 5  0.05 1825.  0.01</span>
+<span class="co">#&gt; 6  0.06 2167.  0.01</span>
 <span class="co">#&gt; # ... with 93 more rows</span></code></pre></div>
 <p>Then use <a href="https://www.rdocumentation.org/packages/purrr/topics/map_df">map_df</a> to call this function for different margins of error, and return the entire thing as a data frame with columns: <code>n</code>, <code>p</code>, and <code>MoE</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MoE &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.03</span>, <span class="fl">0.05</span>)
@@ -533,7 +535,7 @@ props &lt;-<span class="st"> </span><span class="kw">map_df</span>(MoE, moe_pop_
        <span class="dt">x =</span> <span class="st">&quot;population proportion&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;sample size&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-30-1.png" width="70%" style="display: block; margin: auto;" /> <a href="https://www.rdocumentation.org/packages/readr/topics/read_csv">read_csv</a> already recognizes the date columns, so we don’t need to convert them. The 2008 election was on Nov 11, 2008, so we’ll store that in a variable.</p>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" /> <a href="https://www.rdocumentation.org/packages/readr/topics/read_csv">read_csv</a> already recognizes the date columns, so we don’t need to convert them. The 2008 election was on Nov 11, 2008, so we’ll store that in a variable.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ELECTION_DATE &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="dv">20081104</span>)</code></pre></div>
 <p>Load the final vote shares,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;pres08&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;qss&quot;</span>)</code></pre></div>
@@ -571,12 +573,12 @@ poll_pred
 <span class="co">#&gt; # A tibble: 51 x 7</span>
 <span class="co">#&gt;   state Obama     se ci_lwr ci_upr actual covers</span>
 <span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt; </span>
-<span class="co">#&gt; 1 AK    0.390 0.0154  0.360  0.420  0.380 T     </span>
-<span class="co">#&gt; 2 AL    0.360 0.0152  0.330  0.390  0.390 F     </span>
-<span class="co">#&gt; 3 AR    0.440 0.0157  0.409  0.471  0.390 F     </span>
-<span class="co">#&gt; 4 AZ    0.465 0.0158  0.434  0.496  0.450 T     </span>
-<span class="co">#&gt; 5 CA    0.600 0.0155  0.570  0.630  0.610 T     </span>
-<span class="co">#&gt; 6 CO    0.520 0.0158  0.489  0.551  0.540 T     </span>
+<span class="co">#&gt; 1 AK    0.39  0.0154  0.360  0.420   0.38 TRUE  </span>
+<span class="co">#&gt; 2 AL    0.36  0.0152  0.330  0.390   0.39 FALSE </span>
+<span class="co">#&gt; 3 AR    0.44  0.0157  0.409  0.471   0.39 FALSE </span>
+<span class="co">#&gt; 4 AZ    0.465 0.0158  0.434  0.496   0.45 TRUE  </span>
+<span class="co">#&gt; 5 CA    0.6   0.0155  0.570  0.630   0.61 TRUE  </span>
+<span class="co">#&gt; 6 CO    0.52  0.0158  0.489  0.551   0.54 TRUE  </span>
 <span class="co">#&gt; # ... with 45 more rows</span></code></pre></div>
 <p>In the plot, color the point ranges by whether they include the election day outcome.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(poll_pred, <span class="kw">aes</span>(<span class="dt">x =</span> actual, <span class="dt">y =</span> Obama,
@@ -589,7 +591,7 @@ poll_pred
 <span class="st">  </span><span class="kw">scale_colour_discrete</span>(<span class="st">&quot;CI includes result?&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_fixed</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-35-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Proportion of polls with confidence intervals that include the election outcome?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">poll_pred <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="kw">mean</span>(covers))
@@ -655,9 +657,9 @@ star_estimates
 <span class="co">#&gt; # A tibble: 3 x 6</span>
 <span class="co">#&gt;   classtype                  n   est    se   lwr   upr</span>
 <span class="co">#&gt;   &lt;fct&gt;                  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 small class              726   723  1.91   720   727</span>
-<span class="co">#&gt; 2 regular class            836   720  1.84   716   723</span>
-<span class="co">#&gt; 3 regular class with aid   791   721  1.86   717   724</span>
+<span class="co">#&gt; 1 small class              726  723.  1.91  720.  727.</span>
+<span class="co">#&gt; 2 regular class            836  720.  1.84  716.  723.</span>
+<span class="co">#&gt; 3 regular class with aid   791  721.  1.86  717.  724.</span>
 
 star_estimates <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(classtype <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;small class&quot;</span>, <span class="st">&quot;regular class&quot;</span>)) <span class="op">%&gt;%</span>
@@ -673,7 +675,7 @@ star_estimates <span class="op">%&gt;%</span>
 <span class="co">#&gt;      se   est ci_lwr ci_up</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  2.65  3.50  -1.70  8.70</span></code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Use we could use <a href="https://www.rdocumentation.org/packages/tidyr/topics/spread">spread</a> and <a href="https://www.rdocumentation.org/packages/tidyr/topics/gather">gather</a>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">star_ate &lt;-
 <span class="st">  </span>star_estimates <span class="op">%&gt;%</span>
@@ -693,7 +695,7 @@ star_ate
 <span class="co">#&gt; # A tibble: 1 x 8</span>
 <span class="co">#&gt;   est_regular est_small se_regular se_small ate_est ate_se ci_lwr ci_upr</span>
 <span class="co">#&gt;         &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1         720       723       1.84     1.91    3.50   2.65  -1.70   8.70</span></code></pre></div>
+<span class="co">#&gt; 1        720.      723.       1.84     1.91    3.50   2.65  -1.70   8.70</span></code></pre></div>
 </div>
 <div id="analysis-based-on-students-t-distribution" class="section level3">
 <h3><span class="header-section-number">7.1.6</span> Analysis Based on Student’s t-Distribution</h3>
@@ -742,11 +744,11 @@ true
 <span class="co">#&gt; # A tibble: 5 x 3</span>
 <span class="co">#&gt;   correct     n   prob</span>
 <span class="co">#&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1    0     1.00 0.0143</span>
-<span class="co">#&gt; 2    2.00 16.0  0.229 </span>
-<span class="co">#&gt; 3    4.00 36.0  0.514 </span>
-<span class="co">#&gt; 4    6.00 16.0  0.229 </span>
-<span class="co">#&gt; 5    8.00  1.00 0.0143</span>
+<span class="co">#&gt; 1       0     1 0.0143</span>
+<span class="co">#&gt; 2       2    16 0.229 </span>
+<span class="co">#&gt; 3       4    36 0.514 </span>
+<span class="co">#&gt; 4       6    16 0.229 </span>
+<span class="co">#&gt; 5       8     1 0.0143</span>
 
 sims &lt;-<span class="st"> </span><span class="dv">1000</span>
 guess &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">guess =</span> <span class="kw">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;T&quot;</span>, <span class="st">&quot;T&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;T&quot;</span>, <span class="st">&quot;T&quot;</span>, <span class="st">&quot;M&quot;</span>))
@@ -768,11 +770,11 @@ approx &lt;-
 <span class="co">#&gt; # A tibble: 5 x 4</span>
 <span class="co">#&gt;   correct prob_sim prob_exact     diff</span>
 <span class="co">#&gt;     &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1    0      0.0110     0.0143 -0.00329</span>
-<span class="co">#&gt; 2    2.00   0.234      0.229   0.00543</span>
-<span class="co">#&gt; 3    4.00   0.486      0.514  -0.0283 </span>
-<span class="co">#&gt; 4    6.00   0.253      0.229   0.0244 </span>
-<span class="co">#&gt; 5    8.00   0.0160     0.0143  0.00171</span></code></pre></div>
+<span class="co">#&gt; 1       0    0.011     0.0143 -0.00329</span>
+<span class="co">#&gt; 2       2    0.234     0.229   0.00543</span>
+<span class="co">#&gt; 3       4    0.486     0.514  -0.0283 </span>
+<span class="co">#&gt; 4       6    0.253     0.229   0.0244 </span>
+<span class="co">#&gt; 5       8    0.016     0.0143  0.00171</span></code></pre></div>
 </div>
 <div id="the-general-framework" class="section level3">
 <h3><span class="header-section-number">7.2.2</span> The General Framework</h3>
@@ -839,12 +841,12 @@ y
 <div id="one-sample-tests" class="section level3">
 <h3><span class="header-section-number">7.2.3</span> One-Sample Tests</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n &lt;-<span class="st"> </span><span class="dv">1018</span>
-x.bar &lt;-<span class="st"> </span><span class="dv">550</span> <span class="op">/</span><span class="st"> </span>n
+x_bar &lt;-<span class="st"> </span><span class="dv">550</span> <span class="op">/</span><span class="st"> </span>n
 se &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">/</span><span class="st"> </span>n) <span class="co"># standard deviation of sampling distribution</span>
 <span class="co"># upper red area in the figure</span>
-upper &lt;-<span class="st"> </span><span class="kw">pnorm</span>(x.bar, <span class="dt">mean =</span> <span class="fl">0.5</span>, <span class="dt">sd =</span> se, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)
+upper &lt;-<span class="st"> </span><span class="kw">pnorm</span>(x_bar, <span class="dt">mean =</span> <span class="fl">0.5</span>, <span class="dt">sd =</span> se, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)
 <span class="co"># lower red area in the figure; identical to the upper area</span>
-lower &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>(x.bar <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>), <span class="dt">mean =</span> <span class="fl">0.5</span>, <span class="dt">sd =</span> se)
+lower &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>(x_bar <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>), <span class="dt">mean =</span> <span class="fl">0.5</span>, <span class="dt">sd =</span> se)
 <span class="co"># two side p value</span>
 upper <span class="op">+</span><span class="st"> </span>lower
 <span class="co">#&gt; [1] 0.0102</span>
@@ -853,18 +855,18 @@ upper <span class="op">+</span><span class="st"> </span>lower
 <span class="co"># one sided p value</span>
 upper
 <span class="co">#&gt; [1] 0.00508</span>
-z.score &lt;-<span class="st"> </span>(x.bar <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>) <span class="op">/</span><span class="st"> </span>se
-z.score
+z_score &lt;-<span class="st"> </span>(x_bar <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>) <span class="op">/</span><span class="st"> </span>se
+z_score
 <span class="co">#&gt; [1] 2.57</span>
-<span class="kw">pnorm</span>(z.score, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) <span class="co"># one-sided p-value</span>
+<span class="kw">pnorm</span>(z_score, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) <span class="co"># one-sided p-value</span>
 <span class="co">#&gt; [1] 0.00508</span>
-<span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">pnorm</span>(z.score, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) <span class="co"># two-sided p-value</span>
+<span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">pnorm</span>(z_score, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) <span class="co"># two-sided p-value</span>
 <span class="co">#&gt; [1] 0.0102</span>
 <span class="co"># 99% confidence interval contains 0.5</span>
-<span class="kw">c</span>(x.bar <span class="op">-</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="fl">0.995</span>) <span class="op">*</span><span class="st"> </span>se, x.bar <span class="op">+</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="fl">0.995</span>) <span class="op">*</span><span class="st"> </span>se)
+<span class="kw">c</span>(x_bar <span class="op">-</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="fl">0.995</span>) <span class="op">*</span><span class="st"> </span>se, x_bar <span class="op">+</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="fl">0.995</span>) <span class="op">*</span><span class="st"> </span>se)
 <span class="co">#&gt; [1] 0.500 0.581</span>
 <span class="co"># 95% confidence interval does not contain 0.5</span>
-<span class="kw">c</span>(x.bar <span class="op">-</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="fl">0.975</span>) <span class="op">*</span><span class="st"> </span>se, x.bar <span class="op">+</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="fl">0.975</span>) <span class="op">*</span><span class="st"> </span>se)
+<span class="kw">c</span>(x_bar <span class="op">-</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="fl">0.975</span>) <span class="op">*</span><span class="st"> </span>se, x_bar <span class="op">+</span><span class="st"> </span><span class="kw">qnorm</span>(<span class="fl">0.975</span>) <span class="op">*</span><span class="st"> </span>se)
 <span class="co">#&gt; [1] 0.510 0.571</span>
 <span class="co"># no continuity correction to get the same p-value as above</span>
 <span class="kw">prop.test</span>(<span class="dv">550</span>, <span class="dt">n =</span> n, <span class="dt">p =</span> <span class="fl">0.5</span>, <span class="dt">correct =</span> <span class="ot">FALSE</span>)
@@ -986,7 +988,7 @@ x
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n0 &lt;-<span class="st"> </span><span class="kw">sum</span>(resume<span class="op">$</span>race <span class="op">==</span><span class="st"> &quot;black&quot;</span>)
 n1 &lt;-<span class="st"> </span><span class="kw">sum</span>(resume<span class="op">$</span>race <span class="op">==</span><span class="st"> &quot;white&quot;</span>)
 
-p &lt;-<span class="st"> </span><span class="kw">mean</span>(resume<span class="op">$</span>call) 
+p &lt;-<span class="st"> </span><span class="kw">mean</span>(resume<span class="op">$</span>call)
 p0 &lt;-<span class="st"> </span><span class="kw">mean</span>(<span class="kw">filter</span>(resume, race <span class="op">==</span><span class="st"> &quot;black&quot;</span>)<span class="op">$</span>call)
 p1 &lt;-<span class="st"> </span><span class="kw">mean</span>(<span class="kw">filter</span>(resume, race <span class="op">==</span><span class="st"> &quot;white&quot;</span>)<span class="op">$</span>call)
 
@@ -1008,40 +1010,97 @@ zstat
 </div>
 <div id="power-analysis" class="section level3">
 <h3><span class="header-section-number">7.2.5</span> Power Analysis</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># set the parameters</span>
-n &lt;-<span class="st"> </span><span class="dv">250</span>
-p.star &lt;-<span class="st"> </span><span class="fl">0.48</span> <span class="co"># data generating process</span>
-p &lt;-<span class="st"> </span><span class="fl">0.5</span> <span class="co"># null value</span>
-alpha &lt;-<span class="st"> </span><span class="fl">0.05</span>
-<span class="co"># critical value</span>
-cr.value &lt;-<span class="st"> </span><span class="kw">qnorm</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)
-<span class="co"># standard errors under the hypothetical data generating process</span>
-se.star &lt;-<span class="st"> </span><span class="kw">sqrt</span>(p.star <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p.star) <span class="op">/</span><span class="st"> </span>n)
-<span class="co"># standard error under the null</span>
-se &lt;-<span class="st"> </span><span class="kw">sqrt</span>(p <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p) <span class="op">/</span><span class="st"> </span>n)
-<span class="co"># power</span>
-<span class="kw">pnorm</span>(p <span class="op">-</span><span class="st"> </span>cr.value <span class="op">*</span><span class="st"> </span>se, <span class="dt">mean =</span> p.star, <span class="dt">sd =</span> se.star) <span class="op">+</span>
-<span class="st">    </span><span class="kw">pnorm</span>(p <span class="op">+</span><span class="st"> </span>cr.value <span class="op">*</span><span class="st"> </span>se, <span class="dt">mean =</span> p.star, <span class="dt">sd =</span> se.star, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)
-<span class="co"># parameters</span>
-n1 &lt;-<span class="st"> </span><span class="dv">500</span>
-n0 &lt;-<span class="st"> </span><span class="dv">500</span>
-p1.star &lt;-<span class="st"> </span><span class="fl">0.05</span>
-p0.star &lt;-<span class="st"> </span><span class="fl">0.1</span>
-<span class="co"># overall call back rate as a weighted average</span>
-p &lt;-<span class="st"> </span>(n1 <span class="op">*</span><span class="st"> </span>p1.star <span class="op">+</span><span class="st"> </span>n0 <span class="op">*</span><span class="st"> </span>p0.star) <span class="op">/</span><span class="st"> </span>(n1 <span class="op">+</span><span class="st"> </span>n0)
-<span class="co"># standard error under the null</span>
-se &lt;-<span class="st"> </span><span class="kw">sqrt</span>(p <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p) <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">/</span><span class="st"> </span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span>n0))
-<span class="co"># standard error under the hypothetical data generating process</span>
-se.star &lt;-<span class="st"> </span><span class="kw">sqrt</span>(p1.star <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p1.star) <span class="op">/</span><span class="st"> </span>n1 <span class="op">+</span><span class="st"> </span>p0.star <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p0.star) <span class="op">/</span><span class="st"> </span>n0)
-<span class="kw">pnorm</span>(<span class="op">-</span>cr.value <span class="op">*</span><span class="st"> </span>se, <span class="dt">mean =</span> p1.star <span class="op">-</span><span class="st"> </span>p0.star, <span class="dt">sd =</span> se.star) <span class="op">+</span>
-<span class="st">    </span><span class="kw">pnorm</span>(cr.value <span class="op">*</span><span class="st"> </span>se, <span class="dt">mean =</span> p1.star <span class="op">-</span><span class="st"> </span>p0.star, <span class="dt">sd =</span> se.star,
+<p>Set the parameters: the sample size,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n &lt;-<span class="st"> </span><span class="dv">250</span></code></pre></div>
+<p>the population proportional under the alternative data generating process,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p_star &lt;-<span class="st"> </span><span class="fl">0.48</span></code></pre></div>
+<p>the null hypothesis,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="fl">0.5</span></code></pre></div>
+<p>the p-value,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></code></pre></div>
+<p>and</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cr_value &lt;-<span class="st"> </span><span class="kw">qnorm</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)</code></pre></div>
+<p>The standard errors under the hypothetical data generating process is</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">se_star &lt;-<span class="st"> </span><span class="kw">sqrt</span>(p_star <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_star) <span class="op">/</span><span class="st"> </span>n)</code></pre></div>
+<p>and the standard error under the null is</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">se &lt;-<span class="st"> </span><span class="kw">sqrt</span>(p <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p) <span class="op">/</span><span class="st"> </span>n)</code></pre></div>
+<p>The power for this test is</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pnorm</span>(p <span class="op">-</span><span class="st"> </span>cr_value <span class="op">*</span><span class="st"> </span>se, <span class="dt">mean =</span> p_star, <span class="dt">sd =</span> se_star) <span class="op">+</span>
+<span class="st">    </span><span class="kw">pnorm</span>(p <span class="op">+</span><span class="st"> </span>cr_value <span class="op">*</span><span class="st"> </span>se, <span class="dt">mean =</span> p_star, <span class="dt">sd =</span> se_star,
           <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)
-<span class="kw">power.prop.test</span>(<span class="dt">n =</span> <span class="dv">500</span>, <span class="dt">p1 =</span> <span class="fl">0.05</span>, <span class="dt">p2 =</span> <span class="fl">0.1</span>, <span class="dt">sig.level =</span> <span class="fl">0.05</span>)
-<span class="kw">power.prop.test</span>(<span class="dt">p1 =</span> <span class="fl">0.05</span>, <span class="dt">p2 =</span> <span class="fl">0.1</span>, <span class="dt">sig.level =</span> <span class="fl">0.05</span>, <span class="dt">power =</span> <span class="fl">0.9</span>)
-<span class="kw">power.t.test</span>(<span class="dt">n =</span> <span class="dv">100</span>, <span class="dt">delta =</span> <span class="fl">0.25</span>, <span class="dt">sd =</span> <span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;one.sample&quot;</span>)
-<span class="kw">power.t.test</span>(<span class="dt">power =</span> <span class="fl">0.9</span>, <span class="dt">delta =</span> <span class="fl">0.25</span>, <span class="dt">sd =</span> <span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;one.sample&quot;</span>)
-<span class="kw">power.t.test</span>(<span class="dt">delta =</span> <span class="fl">0.25</span>, <span class="dt">sd =</span> <span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;two.sample&quot;</span>,
-             <span class="dt">alternative =</span> <span class="st">&quot;one.sided&quot;</span>, <span class="dt">power =</span> <span class="fl">0.9</span>)</code></pre></div>
+<span class="co">#&gt; [1] 0.0967</span></code></pre></div>
+<p>The parameters (sample sizes and proportions) are</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n1 &lt;-<span class="st"> </span><span class="dv">500</span>
+n0 &lt;-<span class="st"> </span><span class="dv">500</span>
+p1_star &lt;-<span class="st"> </span><span class="fl">0.05</span>
+p0_star &lt;-<span class="st"> </span><span class="fl">0.1</span></code></pre></div>
+<p>Calculate the overall call back rate as a weighted average,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span>(n1 <span class="op">*</span><span class="st"> </span>p1_star <span class="op">+</span><span class="st"> </span>n0 <span class="op">*</span><span class="st"> </span>p0_star) <span class="op">/</span><span class="st"> </span>(n1 <span class="op">+</span><span class="st"> </span>n0)</code></pre></div>
+<p>the standard error under the null,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">se &lt;-<span class="st"> </span><span class="kw">sqrt</span>(p <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p) <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">/</span><span class="st"> </span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span>n0))</code></pre></div>
+<p>the standard error under the hypothetical data generating process,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">se.star &lt;-<span class="st"> </span><span class="kw">sqrt</span>(p1_star <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p1_star) <span class="op">/</span><span class="st"> </span>n1 <span class="op">+</span><span class="st"> </span>p0_star <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p0_star) <span class="op">/</span><span class="st"> </span>n0)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pnorm</span>(<span class="op">-</span>cr_value <span class="op">*</span><span class="st"> </span>se, <span class="dt">mean =</span> p1_star <span class="op">-</span><span class="st"> </span>p0_star, <span class="dt">sd =</span> se.star) <span class="op">+</span>
+<span class="st">    </span><span class="kw">pnorm</span>(cr_value <span class="op">*</span><span class="st"> </span>se, <span class="dt">mean =</span> p1_star <span class="op">-</span><span class="st"> </span>p0_star, <span class="dt">sd =</span> se.star,
+          <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)
+<span class="co">#&gt; [1] 0.852</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">power.prop.test</span>(<span class="dt">n =</span> <span class="dv">500</span>, <span class="dt">p1 =</span> <span class="fl">0.05</span>, <span class="dt">p2 =</span> <span class="fl">0.1</span>, <span class="dt">sig.level =</span> <span class="fl">0.05</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt;      Two-sample comparison of proportions power calculation </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;               n = 500</span>
+<span class="co">#&gt;              p1 = 0.05</span>
+<span class="co">#&gt;              p2 = 0.1</span>
+<span class="co">#&gt;       sig.level = 0.05</span>
+<span class="co">#&gt;           power = 0.852</span>
+<span class="co">#&gt;     alternative = two.sided</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span><span class="al">NOTE</span><span class="co">: n is number in *each* group</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">power.prop.test</span>(<span class="dt">p1 =</span> <span class="fl">0.05</span>, <span class="dt">p2 =</span> <span class="fl">0.1</span>, <span class="dt">sig.level =</span> <span class="fl">0.05</span>, <span class="dt">power =</span> <span class="fl">0.9</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt;      Two-sample comparison of proportions power calculation </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;               n = 581</span>
+<span class="co">#&gt;              p1 = 0.05</span>
+<span class="co">#&gt;              p2 = 0.1</span>
+<span class="co">#&gt;       sig.level = 0.05</span>
+<span class="co">#&gt;           power = 0.9</span>
+<span class="co">#&gt;     alternative = two.sided</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span><span class="al">NOTE</span><span class="co">: n is number in *each* group</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">power.t.test</span>(<span class="dt">n =</span> <span class="dv">100</span>, <span class="dt">delta =</span> <span class="fl">0.25</span>, <span class="dt">sd =</span> <span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;one.sample&quot;</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt;      One-sample t test power calculation </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;               n = 100</span>
+<span class="co">#&gt;           delta = 0.25</span>
+<span class="co">#&gt;              sd = 1</span>
+<span class="co">#&gt;       sig.level = 0.05</span>
+<span class="co">#&gt;           power = 0.697</span>
+<span class="co">#&gt;     alternative = two.sided</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">power.t.test</span>(<span class="dt">power =</span> <span class="fl">0.9</span>, <span class="dt">delta =</span> <span class="fl">0.25</span>, <span class="dt">sd =</span> <span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;one.sample&quot;</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt;      One-sample t test power calculation </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;               n = 170</span>
+<span class="co">#&gt;           delta = 0.25</span>
+<span class="co">#&gt;              sd = 1</span>
+<span class="co">#&gt;       sig.level = 0.05</span>
+<span class="co">#&gt;           power = 0.9</span>
+<span class="co">#&gt;     alternative = two.sided</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">power.t.test</span>(<span class="dt">delta =</span> <span class="fl">0.25</span>, <span class="dt">sd =</span> <span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;two.sample&quot;</span>,
+             <span class="dt">alternative =</span> <span class="st">&quot;one.sided&quot;</span>, <span class="dt">power =</span> <span class="fl">0.9</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt;      Two-sample t test power calculation </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;               n = 275</span>
+<span class="co">#&gt;           delta = 0.25</span>
+<span class="co">#&gt;              sd = 1</span>
+<span class="co">#&gt;       sig.level = 0.05</span>
+<span class="co">#&gt;           power = 0.9</span>
+<span class="co">#&gt;     alternative = one.sided</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span><span class="al">NOTE</span><span class="co">: n is number in *each* group</span></code></pre></div>
 </div>
 </div>
 <div id="linear-regression-model-with-uncertainty" class="section level2">
@@ -1082,10 +1141,8 @@ fit_minwage1
 <span class="co">#&gt;        -0.0352         -0.0908         -0.1045</span>
 <span class="kw">gather_predictions</span>(<span class="kw">slice</span>(minwage, <span class="dv">1</span>), fit_minwage, fit_minwage1) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(model, pred)
-<span class="co">#&gt; # A tibble: 2 x 2</span>
-<span class="co">#&gt;   model         pred</span>
-<span class="co">#&gt;   &lt;chr&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 fit_minwage  0.271</span>
+<span class="co">#&gt;          model  pred</span>
+<span class="co">#&gt; 1  fit_minwage 0.271</span>
 <span class="co">#&gt; 2 fit_minwage1 0.271</span></code></pre></div>
 </div>
 <div id="inference-about-coefficients" class="section level3">
@@ -1213,7 +1270,7 @@ tory_y1 &lt;-<span class="st"> </span><span class="kw">augment</span>(tory_fit2,
               <span class="dt">data =</span> tory_y1, <span class="dt">alpha =</span> <span class="fl">0.3</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> margin, <span class="dt">y =</span> .fitted), <span class="dt">data =</span> tory_y1) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Margin of vitory&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;log net wealth&quot;</span>)</code></pre></div>
-<p><img src="uncertainty_files/figure-html/unnamed-chunk-63-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="uncertainty_files/figure-html/unnamed-chunk-81-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tory_y1 &lt;-<span class="st"> </span><span class="kw">augment</span>(tory_fit1, <span class="dt">newdata =</span> <span class="kw">tibble</span>(<span class="dt">margin =</span> <span class="dv">0</span>))
 tory_y1
 <span class="co">#&gt;   margin .fitted .se.fit</span>
@@ -1277,10 +1334,10 @@ CI &lt;-<span class="st"> </span><span class="kw">c</span>(diff_est <span class=
 CI
 <span class="co">#&gt; [1] -1.2134 -0.0859</span>
 <span class="co"># hypothesis test</span>
-z.score &lt;-<span class="st"> </span>diff_est <span class="op">/</span><span class="st"> </span>se_diff
+z_score &lt;-<span class="st"> </span>diff_est <span class="op">/</span><span class="st"> </span>se_diff
 <span class="co"># two sided p value</span>
-p.value &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">abs</span>(z.score), <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)
-p.value
+p_value &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">abs</span>(z_score), <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)
+p_value
 <span class="co">#&gt; [1] 0.0239</span></code></pre></div>
 
 </div>
@@ -1322,7 +1379,7 @@ gitbook.start({
 "link": "https://github.com/jrnold/qss-tidy/edit/master/uncertainty.Rmd",
 "text": "Edit"
 },
-"download": null,
+"download": ["qss-tidy.pdf"],
 "toc": {
 "collapse": "section"
 }

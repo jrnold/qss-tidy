@@ -7,7 +7,6 @@ editor_options:
 
 # Probability
 
-
 ## Prerequisites {-}
 
 
@@ -18,8 +17,11 @@ library("stringr")
 library("broom")
 ```
 
+<!-- lint disable no-duplicate-headings -->
 
 ## Probability
+
+<!-- lint enable no-duplicate-headings -->
 
 ### Frequentist vs. Bayesian
 
@@ -37,7 +39,7 @@ birthday <- function(k) {
 }
 
 bday <- tibble(k = 1:50, pr = birthday(k))
-               
+
 ggplot(bday, aes(x = k, y = pr)) +
   geom_hline(yintercept = 0.5, colour = "white", size = 2) +
   geom_line() +
@@ -53,8 +55,7 @@ ggplot(bday, aes(x = k, y = pr)) +
 **Note:** The logarithm is used for numerical stability. Basically,  "floating-point" numbers are approximations of numbers. If you perform arithmetic with numbers that are very large, very small, or vary differently in magnitudes, you could have problems. Logarithms help with some of those issues.
 See "Falling Into the Floating Point Trap" in [The R Inferno](http://www.burns-stat.com/pages/Tutor/R_inferno.pdf) for a summary of floating point numbers.
 See these John Fox posts [1](http://www.johndcook.com/blog/2008/09/26/comparing-three-methods-of-computing-standard-deviation/) [2](http://www.johndcook.com/blog/2008/09/28/theoretical-explanation-for-numerical-results/) for an example of numerical stability gone wrong.
-Also see: http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/.
-
+Also see this article on the [log sum of exponentials](http://andrewgelman.com/2016/06/11/log-sum-of-exponentials/).
 
 ### Sampling without replacement
 
@@ -85,9 +86,9 @@ inputs before repeating it for many inputs.
 It is more difficult to debug functions that produce random outputs, but some sanity checks
 are that the function:
 
-- returns a logical vector of length one (`TRUE` or `FALSE`)
-- always returns `FALSE` when `k = 1` since there can never be a duplicates with one person
-- always returns `TRUE` when `k > 365` by the [pidgeonhole principle](https://en.wikipedia.org/wiki/Pigeonhole_principle).
+-   returns a logical vector of length one (`TRUE` or `FALSE`)
+-   always returns `FALSE` when `k = 1` since there can never be a duplicates with one person
+-   always returns `TRUE` when `k > 365` by the [pidgeonhole principle](https://en.wikipedia.org/wiki/Pigeonhole_principle).
 
 
 ```r
@@ -117,8 +118,6 @@ rerun(sims, sim_bdays(k)) %>%
 #> [1] 0.477
 ```
 
-
-
 ### Combinations
 
 The function for $84\choose{6}$ is:
@@ -133,7 +132,6 @@ However, due to the the larges values that the binomial coefficient, it is almos
 lchoose(84, 6)
 #> [1] 19.8
 ```
-
 
 ## Conditional Probability
 
@@ -160,7 +158,8 @@ dim(FLVoters)
 #> [1] 9113    6
 ```
 
-*Note the difference between `glimpse()` and `dim()` - what is different in how they handle NA observations?*
+Note the difference between `glimpse()` and `dim()`.
+What is different in how they handle NA observations?
 
 Instead of using [prop.base](https://www.rdocumentation.org/packages/base/topics/prop.base), we calculate the probabilities
 with a data frame.
@@ -326,7 +325,6 @@ margin_age
 #> 4 > 60       3198 0.351
 ```
 
-
 Calculate the probabilities that each group is in a given age group, and show
 $P(\text{black} \land \text{female} \land \text{age} > 60)$: (*Note: the symbol $\land$ is the logical symbol for 'and', implying the joint probability.*)
 
@@ -393,7 +391,6 @@ filter(condprob_race, gender == "f", age_group == "> 60", race == "black")
 #> 1 > 60      f      black    0.0977
 ```
 
-
 ### Independence
 
 Create a table with the products of margins of race and age.
@@ -436,7 +433,6 @@ ggplot(race_gender_indep,
 
 <img src="probability_files/figure-html/unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" />
 
-
 While the original code only calculates joint-independence value for values of
 age > 60, and female, this calculates the joint probabilities for all combinations
 of the three variables, and facets by age and gender.
@@ -463,7 +459,6 @@ ggplot(joint_indep, aes(x = prob, y = indep_prob, colour = race)) +
 ```
 
 <img src="probability_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" />
-
 
 While code in *QSS* only calculates the conditional independence given female,
 the following code calculates conditional independence for all values of `gender`:
@@ -517,8 +512,7 @@ inner_join(select(indep_cond_gender, race, age_group, gender, indep_prob),
 
 <img src="probability_files/figure-html/unnamed-chunk-23-1.png" width="70%" style="display: block; margin: auto;" />
 
-
-**Monty-hall problem**
+#### Monty-hall problem
 
 The `for` loop approach in *QSS* is valid code, but here we provide a more
 functional approach to solving the problem.
@@ -558,10 +552,7 @@ map_df(seq_len(sims), choose_door) %>%
 #> 1   0.648
 ```
 
-
 ### Bayes' Rule
-
-
 
 ### Predicting Race Using Surname and Residence Location
 
@@ -580,7 +571,6 @@ glimpse(cnames)
 #> $ pcthispanic <dbl> 1.56, 1.50, 1.60, 1.64, 1.44, 1.43, 1.58, 90.82, 9...
 #> $ pctothers   <dbl> 2.48, 2.73, 2.79, 2.69, 2.79, 1.94, 2.52, 1.09, 0....
 ```
-
 
 For each surname, `cnames` contains variables with the probability that it belongs to an individual of a given race (`pctwhite`, `pctblack`, ...).
 We want to find the most-likely race for a given surname, by finding the race with the maximum proportion.
@@ -683,8 +673,8 @@ FLVoters %>%
 #> # A tibble: 5 x 2
 #>   race_pred    fp
 #>   <chr>     <dbl>
-#> 1 api       1.00 
-#> 2 others    1.00 
+#> 1 api       1    
+#> 2 others    1    
 #> 3 black     0.329
 #> 4 hispanic  0.227
 #> 5 white     0.197
@@ -791,9 +781,7 @@ pres08 %>%
 #> 1  352 269 16.4
 ```
 
-
 ## Random Variables and Probability Distributions
-
 
 ### Bernoulli and Uniform Distributions
 
@@ -813,7 +801,7 @@ sims <- 1000
 p <- 0.5
 ```
 
-A Bernoulli distribution is a discrete distribution which randomly samples from 0 and 1. 
+A Bernoulli distribution is a discrete distribution which randomly samples from 0 and 1.
 A random variable $X$ with a Bernoulli distribution with probability parameter $p$ has the distribution,
 $$
 \begin{aligned}
@@ -840,19 +828,15 @@ mean(y)
 
 A second method to sample $n$ values from a Bernoulli distribution that has a probability parameter $p$ is,
 
-1. Take a sample of $n$ values from a uniform distribution. Call this vector $x$.
-2. To generate a sample $y$ taking values of 0 and 1 from this vector $x$, set $y_i = 1$ if $x_i >= p$, and $y_i = 0$ if $x_i < p$.
+1.  Take a sample of $n$ values from a uniform distribution. Call this vector $x$.
+1.  To generate a sample $y$ taking values of 0 and 1 from this vector $x$, set $y_i = 1$ if $x_i >= p$, and $y_i = 0$ if $x_i < p$.
 
-Note how this method works. Given a value $p$ between 0 and 1, in a sample from Uniform distribution, in expectation a fraction of $p$ values will be less than $p$, and in expectation a fraction of $1 - p$ values will be greater than $p$.
-These are exactly the probabilities of sampling 1 and 0 in the probability mass of the Uniform distribution:
-
-```r
-y <- as.integer(runif(n, min = 0, max = 1) <= p)
-head(y)
-#> [1] 1 1 1 0 1 1
-mean(y)
-#> [1] 0.64
-```
+Note how this method works. Given a value $p$ between 0 and 1, in a sample from
+Uniform distribution, in expectation a fraction of $p$ values will be less than
+$p$, and in expectation a fraction of $1 - p$ values will be greater than $p$.
+These are exactly the probabilities of sampling 1 and 0 in the probability mass
+of the Uniform distribution: ```{r} y <- as.integer(runif(n, min = 0, max = 1) <=
+p) head(y) mean(y) ```ß
 
 Third, note that the Bernoulli distribution is a special case of the binomial distribution (discussed in the next section), where $size = 1$.
 Thus, we can use the `rbinom` function to sample from a binomial distribution.
@@ -860,11 +844,10 @@ Thus, we can use the `rbinom` function to sample from a binomial distribution.
 ```r
 y <- rbinom(n, size = 1, prob = p)
 head(y)
-#> [1] 0 0 0 1 1 1
+#> [1] 1 1 1 0 1 1
 mean(y)
-#> [1] 0.6
+#> [1] 0.64
 ```
-
 
 Since the R functions for the Binomial distribution don't exist here are examples of how you would write them as examples of writing functions to sample and calculate the PDF or PMF, CDF, and quantile functions of a distribution.
 Sample from the distribution:
@@ -943,8 +926,6 @@ dbernoulli <- function(x, prob = 0.5, ...) {
 }
 ```
 
-
-
 ### Binomial distribution
 
 
@@ -990,7 +971,6 @@ normal_pm_sigma(2, mu = 5, sd = 2)
 ```
 
 
-
 ```r
 data("pres08", package = "qss")
 data("pres12", package = "qss")
@@ -1029,7 +1009,7 @@ ggplot(err, aes(x = err_std)) +
                      breaks = -3:3, limits = c(-3, 3))
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" />
 
 
 ```r
@@ -1041,7 +1021,7 @@ ggplot(err, aes(sample = err_std)) +
   scale_x_continuous("Theoretical quantiles", limits = c(-3, 3))
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" />
 
 Alternatively, you can use the `augment` function from **broom** which returns the residuals for each observation in the `.resid` column.
 
@@ -1056,8 +1036,7 @@ augment(fit1) %>%
                      breaks = -3:3, limits = c(-3, 3))
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" />
-
+<img src="probability_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" />
 
 Obama's vote shares in 2008 and 2012.
 
@@ -1087,7 +1066,7 @@ predict(fit1, newdata = tibble(Obama_2008_z = CA_2008))
 #>     1 
 #> 0.858
 ```
-Now calculate 
+Now calculate
 
 ```r
 pnorm(CA_2008, mean = CA_mean_2012, sd = err_sd,
@@ -1103,7 +1082,7 @@ pres_gt_2008 <- augment(fit1) %>%
                            lower.tail = FALSE))
 ```
 
-Plotting these results, we can observe regression to the mean. 
+Plotting these results, we can observe regression to the mean.
 States with larger (smaller) 2008 vote shares had a lower (higher) probability that the 2012 vote share will exceed them.
 
 ```r
@@ -1115,9 +1094,7 @@ ggplot(pres_gt_2008, aes(x = Obama_2008_z, y = p_greater)) +
        y = "Pr. 2012 vote share greater than 2008")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-65-1.png" width="70%" style="display: block; margin: auto;" />
-
-
+<img src="probability_files/figure-html/unnamed-chunk-64-1.png" width="70%" style="display: block; margin: auto;" />
 
 ### Expectation and Variance
 
@@ -1134,7 +1111,6 @@ y <- sample(c(0, 1), size = 1000, replace = TRUE, prob = c(p, 1 - p))
 var(y)
 #> [1] 0.25
 ```
-
 
 ### Predicting Election Outcomes with Uncertainty
 
@@ -1162,7 +1138,7 @@ This function returns the electoral votes for Obama for a single simulation:
 
 ```r
 sim_election(pres08)
-#> [1] 364
+#> [1] 353
 ```
 
 Run this simulation `sims` times, saving the electoral votes of Obama in each simulation:
@@ -1192,7 +1168,7 @@ ggplot(tibble(Obama_EV = Obama_EV_sims),
   labs(title = "Prediction of election outcomes")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-71-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="probability_files/figure-html/unnamed-chunk-70-1.png" width="70%" style="display: block; margin: auto;" />
 
 Summarize the simulations:
 
@@ -1244,9 +1220,7 @@ sqrt(Obama_EV_var)
 #> [1] 16.4
 ```
 
-
 ## Large Sample Theorems
-
 
 ### Law of Large Numbers
 
@@ -1291,7 +1265,6 @@ ggplot() +
 <img src="probability_files/figure-html/plot_lln_sim_unif-1.png" width="70%" style="display: block; margin: auto;" />
 
 ### Central Limit Theorem
-
 
 The population mean of the binomial distribution is $\mu = p n$ and the variance is $\sigma^2 = p (1 - p) n$.
 

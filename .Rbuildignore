@@ -1,2 +1,15 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+
+^_bookdown_files$
+^.*\.R$
+^.*\.Rmd$
+^docs$
+^_main\.rds$
+^UNpop\..*$
+^render.*\.rds$
+^WORDLIST$
+^.*\.ya?ml$
+^bookdown[a-f0-9]+$
+^style\.md$
+^images$

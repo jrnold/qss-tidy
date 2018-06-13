@@ -152,7 +152,7 @@ dtm_hamilton <- filter(dtm, document %in% HAMILTON_ESSAYS)
 
 The `r rdoc("stats", "kmeans")` function expects the input to be rows for observations and columns for each variable: in our case that would be documents as rows, and words as columns, with the tf-idf as the cell values.
 We could use `spread` to do this, but that would be a large matrix.
-```{r}
+```{r warning=FALSE}
 CLUSTERS <- 4
 km_out <-
   kmeans(cast_dtm(dtm_hamilton, document, word, tf_idf), centers = CLUSTERS,
@@ -163,7 +163,7 @@ km_out$iter
 Data frame with the unique terms used by Hamilton. I extract these from the
 column names of the DTM after `cast_dtm` to ensure that the order is the same as the
 k-means results.
-```{r}
+```{r warning=FALSE}
 hamilton_words <-
   tibble(word = colnames(cast_dtm(dtm_hamilton, document, word, tf_idf)))
 ```
@@ -395,9 +395,10 @@ library("forcats")
 library("igraph")
 library("intergraph")
 library("GGally")
+library("network")
 ```
 
-```{r include=FALSE}
+```{r include=FALSE,message=FALSE}
 network_pkg <- c(
   "igraph",
   "intergraph",
@@ -480,7 +481,7 @@ senator %>%
 What does the reference line indicate? What does that say about senators twitter
 networks?
 
-```{r}
+```{r warning=FALSE}
 senator %>%
   mutate(betweenness_dir = igraph::betweenness(twitter_adj, directed = TRUE),
          betweenness_undir = igraph::betweenness(twitter_adj,
@@ -781,7 +782,7 @@ For easy animation with `r pkg("ggplot2")`, use the [gganimate](https://github.c
 Note that the **gganimate** package is not on CRAN, so you have to install it with the `r pkg("devtools")` package:
 ```{r eval=FALSE}
 install.packages("cowplot")
-devtools::install_github("dgrtwo/animate")
+devtools::install_github("dgrtwo/gganimate")
 ```
 ```{r message=FALSE}
 library("gganimate")

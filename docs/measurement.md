@@ -229,7 +229,9 @@ ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
   ggtitle("Civilian Victimization by the ISAF")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-17-1} \end{center}
 
 
 ```r
@@ -246,7 +248,9 @@ ggplot(afghan, aes(x = violent.exp.ISAF.fct, y = ..prop.., group = 1)) +
   ggtitle("Civilian Victimization by the Taliban")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-18-1} \end{center}
 
 Instead of creating two separate box-plots, create a single plot facetted by ISAF and Taliban:
 
@@ -267,7 +271,9 @@ select(afghan, violent.exp.ISAF, violent.exp.taliban) %>%
   ggtitle("Civilian Victimization")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-19-1} \end{center}
 
 This plot could improved by plotting the two values simultaneously to be able to better compare them.
 This will require creating a data frame that has the following columns: perpetrator (`ISAF`, `Taliban`) and response (`No Harm`, `Harm`, `No response`).
@@ -290,7 +296,9 @@ ggplot(violent_exp, aes(x = prop, y = response, color = perpetrator)) +
   scale_color_manual(values = c(ISAF = "green", Taliban = "black"))
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-20-1} \end{center}
 
 Black was chosen for the Taliban, and Green for ISAF because they are the colors of their respective [flags](https://en.wikipedia.org/wiki/International_Security_Assistance_Force).
 
@@ -307,7 +315,9 @@ ggplot(afghan, aes(x = age, y = ..density..)) +
        y = "Age", x = "Density")
 ```
 
-<img src="measurement_files/figure-html/hist_age-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/hist_age-1} \end{center}
 
 
 ```r
@@ -322,7 +332,9 @@ ggplot(afghan, aes(x = educ.years, y = ..density..)) +
        y = "Density")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-21-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-21-1} \end{center}
 
 There are several alternatives to the histogram.
 
@@ -337,7 +349,9 @@ dens_plot <- ggplot(afghan, aes(x = age)) +
 dens_plot
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-22-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-22-1} \end{center}
 
 which can be combined with a [geom_rug](https://www.rdocumentation.org/packages/ggplot2/topics/geom_rug) to create a rug
 plot, which puts small lines on the axis to represent the value of each
@@ -350,7 +364,9 @@ address overplotting.
 dens_plot + geom_rug(alpha = .2)
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-23-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-23-1} \end{center}
 
 Frequency polygons ([geom_freqpoly](https://www.rdocumentation.org/packages/ggplot2/topics/geom_freqpoly)): See [R for Data Science](http://r4ds.had.co.nz/) [EDA](http://r4ds.had.co.nz/exploratory-data-analysis.html).
 
@@ -363,7 +379,9 @@ ggplot(afghan, aes(x = age)) +
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-24-1} \end{center}
 
 ### Boxplot
 
@@ -377,7 +395,9 @@ ggplot(afghan, aes(x = 1, y = age)) +
   labs(y = "Age", x = "", title = "Distribution of Age")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-25-1} \end{center}
 
 
 ```r
@@ -388,7 +408,9 @@ ggplot(afghan, aes(y = educ.years, x = province)) +
        title = "Education by Province")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-26-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-26-1} \end{center}
 Helmand and Uruzgan have much lower levels of education than the other
 provinces, and also report higher levels of violence.
 
@@ -425,7 +447,9 @@ ggplot(afghan, aes(y = educ.years, x = province)) +
        title = "Education by Province")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-28-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-28-1} \end{center}
 Dot plot with jitter and adjusted alpha to avoid overplotting:
 
 ```r
@@ -437,7 +461,9 @@ ggplot(afghan, aes(y = educ.years, x = province)) +
        title = "Education by Province")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-29-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-29-1} \end{center}
 A violin plot:
 
 ```r
@@ -448,7 +474,9 @@ ggplot(afghan, aes(y = educ.years, x = province)) +
        title = "Education by Province")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-30-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-30-1} \end{center}
 
 ### Printing and saving graphics
 
@@ -475,7 +503,9 @@ ggplot(afghan.village, aes(x = factor(village.surveyed,
   coord_flip()
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-32-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-32-1} \end{center}
 
 Box plots log-population values of sampled and non-sampled
 
@@ -488,7 +518,9 @@ ggplot(afghan.village, aes(x = factor(village.surveyed,
   coord_flip()
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-33-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-33-1} \end{center}
 
 You can also compare these distributions by plotting their densities:
 
@@ -501,7 +533,9 @@ ggplot(afghan.village, aes(colour = factor(village.surveyed,
   labs(x = "log(population)", colour = "")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-34-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-34-1} \end{center}
 
 ### Non-response and other sources of bias
 
@@ -551,11 +585,11 @@ afghan %>%
 #> # Groups:   list.response [5]
 #>   list.response control  ISAF taliban
 #>           <int>   <dbl> <dbl>   <dbl>
-#> 1             0     188 174         0
-#> 2             1     265 278       433
-#> 3             2     265 260       287
-#> 4             3     200 182       198
-#> 5             4       0  24.0       0
+#> 1             0     188   174       0
+#> 2             1     265   278     433
+#> 3             2     265   260     287
+#> 4             3     200   182     198
+#> 5             4       0    24       0
 ```
 
 ## Measuring Political Polarization
@@ -596,7 +630,9 @@ q <-
 q
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-40-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-40-1} \end{center}
 
 However, since there are colors associated with Democrats (blue) and Republicans (blue), we should use them rather than the defaults.
 There's some evidence that using semantically-resonant colors can help decoding data visualizations (See [Lin, et al. 2013](http://vis.stanford.edu/files/2013-SemanticColor-EuroVis.pdf)).
@@ -610,7 +646,9 @@ scale_colour_parties <-
 q + scale_colour_parties
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-41-1} \end{center}
 
 
 ```r
@@ -626,7 +664,9 @@ congress %>%
   #scale_colour_parties
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-42-1.png" width="100%" height="100%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=1\linewidth,height=1\textheight]{measurement_files/figure-latex/unnamed-chunk-42-1} \end{center}
 
 
 ```r
@@ -642,7 +682,9 @@ congress %>%
        colour = "Party")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-43-1} \end{center}
 
 Alternatively, you can plot the mean DW-Nominate scores for each party and congress over time. This plot uses color for parties and lets the points and labels for the first and last congresses (80 and 112) to convey progress through time.
 
@@ -673,7 +715,9 @@ ggplot(party_means,
   scale_colour_parties
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-44-1} \end{center}
 
 ### Correlation
 
@@ -692,7 +736,9 @@ ggplot(USGini, aes(x = year, y = gini)) +
   ggtitle("Income Inequality")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-46-1} \end{center}
 
 To calculate a measure of party polarization take the code used in the plot of Republican and Democratic party median ideal points and adapt it to calculate the difference in the party medians:
 
@@ -726,9 +772,83 @@ ggplot(party_polarization, aes(x = congress, y = polarization)) +
   geom_line() +
   ggtitle("Political Polarization") +
   labs(x = "Year", y = "Republican median − Democratic median")
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <e2>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <88>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <92>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <e2>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <88>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <92>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <e2>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <88>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <92>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <e2>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <88>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <92>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <e2>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <88>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <92>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <e2>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <88>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <92>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <e2>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <88>
+#> Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <92>
+#> Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <e2>
+#> Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <88>
+#> Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x,
+#> x$y, : conversion failure on 'Republican median − Democratic median' in
+#> 'mbcsToSbcs': dot substituted for <92>
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-48-1} \end{center}
 
 ### Quantile-Quantile Plot
 
@@ -742,7 +862,9 @@ congress %>%
   labs(x = "racial liberalism/conservatism dimension")
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-49-1} \end{center}
 
 The package *ggplot2* includes a function `stat_qq` which can be used to create qq-plots but it is more suited to comparing a sample distribution with a theoretical distribution, usually the normal one.
 However, we can calculate one by hand, which may give more insight into exactly what the qq-plot is doing.
@@ -759,14 +881,14 @@ party_qtiles <- tibble(
 )
 party_qtiles
 #> # A tibble: 101 x 3
-#>    probs Democrat Republican
-#>    <dbl>    <dbl>      <dbl>
-#> 1 0        -0.925     -1.38 
-#> 2 0.0100   -0.672     -0.720
-#> 3 0.0200   -0.619     -0.566
-#> 4 0.0300   -0.593     -0.526
-#> 5 0.0400   -0.567     -0.468
-#> 6 0.0500   -0.560     -0.436
+#>   probs Democrat Republican
+#>   <dbl>    <dbl>      <dbl>
+#> 1  0      -0.925     -1.38 
+#> 2  0.01   -0.672     -0.720
+#> 3  0.02   -0.619     -0.566
+#> 4  0.03   -0.593     -0.526
+#> 5  0.04   -0.567     -0.468
+#> 6  0.05   -0.560     -0.436
 #> # ... with 95 more rows
 ```
 
@@ -781,7 +903,9 @@ party_qtiles %>%
   coord_fixed()
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-51-1} \end{center}
 
 ## Clustering
 
@@ -846,7 +970,9 @@ ggplot() +
   geom_point(data = k80two.clusters, mapping = aes(x = x1, y = x2))
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-56-1} \end{center}
 
 
 ```r
@@ -882,7 +1008,9 @@ ggplot() +
              mapping = aes(x = x1, y = x2))
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-58-1} \end{center}
 
 Number of observations from each party in each cluster:
 
@@ -894,9 +1022,9 @@ congress112 %>%
 #> # Groups:   party, cluster2 [3]
 #>   party      cluster2     n
 #>   <chr>      <fct>    <int>
-#> 1 Democrat   1          200
-#> 2 Republican 1            1
-#> 3 Republican 2          242
+#> 1 Democrat   2          200
+#> 2 Republican 1          242
+#> 3 Republican 2            1
 ```
 
 Now repeat the same with four clusters on the 80th congress:
@@ -917,7 +1045,9 @@ ggplot() +
              mapping = aes(x = x1, y = x2), size = 3)
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-60-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-60-1} \end{center}
 and on the 112th congress:
 
 ```r
@@ -936,4 +1066,6 @@ ggplot() +
              mapping = aes(x = x1, y = x2), size = 3)
 ```
 
-<img src="measurement_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{measurement_files/figure-latex/unnamed-chunk-61-1} \end{center}

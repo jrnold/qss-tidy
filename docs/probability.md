@@ -50,7 +50,9 @@ ggplot(bday, aes(x = k, y = pr)) +
   labs(x = "Number of people")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{probability_files/figure-latex/unnamed-chunk-3-1} \end{center}
 
 **Note:** The logarithm is used for numerical stability. Basically,  "floating-point" numbers are approximations of numbers. If you perform arithmetic with numbers that are very large, very small, or vary differently in magnitudes, you could have problems. Logarithms help with some of those issues.
 See "Falling Into the Floating Point Trap" in [The R Inferno](http://www.burns-stat.com/pages/Tutor/R_inferno.pdf) for a summary of floating point numbers.
@@ -431,7 +433,9 @@ ggplot(race_gender_indep,
        y = expression(P("race and gender")))
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{probability_files/figure-latex/unnamed-chunk-19-1} \end{center}
 
 While the original code only calculates joint-independence value for values of
 age > 60, and female, this calculates the joint probabilities for all combinations
@@ -458,7 +462,9 @@ ggplot(joint_indep, aes(x = prob, y = indep_prob, colour = race)) +
        title = "Joint Independence")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{probability_files/figure-latex/unnamed-chunk-20-1} \end{center}
 
 While code in *QSS* only calculates the conditional independence given female,
 the following code calculates conditional independence for all values of `gender`:
@@ -510,7 +516,9 @@ inner_join(select(indep_cond_gender, race, age_group, gender, indep_prob),
        title = "Marginal independence")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-23-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{probability_files/figure-latex/unnamed-chunk-23-1} \end{center}
 
 #### Monty-hall problem
 
@@ -755,7 +763,9 @@ ggplot(sim_results, aes(x = EV, y = ..density..)) +
   labs(x = "Electoral Votes", y = "density")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{probability_files/figure-latex/unnamed-chunk-36-1} \end{center}
 Simulation mean, variance, and standard deviations:
 
 ```r
@@ -1009,7 +1019,9 @@ ggplot(err, aes(x = err_std)) +
                      breaks = -3:3, limits = c(-3, 3))
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{probability_files/figure-latex/unnamed-chunk-55-1} \end{center}
 
 
 ```r
@@ -1021,7 +1033,9 @@ ggplot(err, aes(sample = err_std)) +
   scale_x_continuous("Theoretical quantiles", limits = c(-3, 3))
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{probability_files/figure-latex/unnamed-chunk-56-1} \end{center}
 
 Alternatively, you can use the `augment` function from **broom** which returns the residuals for each observation in the `.resid` column.
 
@@ -1036,7 +1050,9 @@ augment(fit1) %>%
                      breaks = -3:3, limits = c(-3, 3))
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{probability_files/figure-latex/unnamed-chunk-57-1} \end{center}
 
 Obama's vote shares in 2008 and 2012.
 
@@ -1094,7 +1110,9 @@ ggplot(pres_gt_2008, aes(x = Obama_2008_z, y = p_greater)) +
        y = "Pr. 2012 vote share greater than 2008")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-64-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{probability_files/figure-latex/unnamed-chunk-64-1} \end{center}
 
 ### Expectation and Variance
 
@@ -1156,6 +1174,11 @@ OBAMA_EV <- 364
 
 ```r
 library("glue")
+#> 
+#> Attaching package: 'glue'
+#> The following object is masked from 'package:dplyr':
+#> 
+#>     collapse
 ggplot(tibble(Obama_EV = Obama_EV_sims),
        aes(x = Obama_EV, y = ..density..)) +
   geom_histogram(binwidth = 10, boundary = 0, fill = "gray60") +
@@ -1168,7 +1191,9 @@ ggplot(tibble(Obama_EV = Obama_EV_sims),
   labs(title = "Prediction of election outcomes")
 ```
 
-<img src="probability_files/figure-html/unnamed-chunk-70-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{probability_files/figure-latex/unnamed-chunk-70-1} \end{center}
 
 Summarize the simulations:
 
@@ -1262,7 +1287,9 @@ ggplot() +
   labs(x = "Sample Size", y = "Sample Mean")
 ```
 
-<img src="probability_files/figure-html/plot_lln_sim_unif-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{probability_files/figure-latex/plot_lln_sim_unif-1} \end{center}
 
 ### Central Limit Theorem
 
@@ -1344,4 +1371,6 @@ clt_plot(1000)
 clt_plot(100)
 ```
 
-<img src="probability_files/figure-html/clt_plot-1.png" width="70%" style="display: block; margin: auto;" /><img src="probability_files/figure-html/clt_plot-2.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{probability_files/figure-latex/clt_plot-1} \includegraphics[width=0.7\linewidth]{probability_files/figure-latex/clt_plot-2} \end{center}

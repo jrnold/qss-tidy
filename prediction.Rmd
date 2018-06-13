@@ -31,8 +31,8 @@ values <- c(2, 3, 6)
 n <- length(values)
 results <- rep(NA, n)
 for (i in 1:n) {
-  results[i] <- values[i] * 2
-  cat(values[i], "times 2 is equal to", results[i], "\n")
+  results[[i]] <- values[[i]] * 2
+  cat(values[[i]], "times 2 is equal to", results[[i]], "\n")
 }
 ```
 
@@ -47,7 +47,7 @@ But sticking with the for loop, there are several things that could be improved.
 
 Avoid using the idiom `1:n` in for loops.
 To see why, look what happens when values are empty:
-```{r}
+```{r error=TRUE}
 values <- c()
 n <- length(values)
 results <- rep(NA, n)

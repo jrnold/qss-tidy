@@ -149,7 +149,9 @@ ggplot(pate_sims, aes(x = diff_mean, y = ..density..)) +
   labs(x = "Difference-in-means estimator")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{uncertainty_files/figure-latex/unnamed-chunk-12-1} \end{center}
 
 
 ```r
@@ -379,7 +381,9 @@ ggplot(props, aes(x = p, y = n, colour = factor(MoE))) +
   theme(legend.position = "bottom")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{uncertainty_files/figure-latex/unnamed-chunk-31-1} \end{center}
 [read_csv](https://www.rdocumentation.org/packages/readr/topics/read_csv) already recognizes the date columns, so we don't need to convert them.
 The 2008 election was on Nov 11, 2008, so we'll store that in a variable.
 
@@ -458,7 +462,9 @@ ggplot(poll_pred, aes(x = actual, y = Obama,
   theme(legend.position = "bottom")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{uncertainty_files/figure-latex/unnamed-chunk-36-1} \end{center}
 
 Proportion of polls with confidence intervals that include the election outcome?
 
@@ -563,7 +569,9 @@ star_estimates %>%
 #> 1  2.65  3.50  -1.70  8.70
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{uncertainty_files/figure-latex/unnamed-chunk-42-1} \end{center}
 
 Use we could use [spread](https://www.rdocumentation.org/packages/tidyr/topics/spread) and [gather](https://www.rdocumentation.org/packages/tidyr/topics/gather):
 
@@ -1287,7 +1295,9 @@ ggplot() +
   labs(x = "Margin of vitory", y = "log net wealth")
 ```
 
-<img src="uncertainty_files/figure-html/unnamed-chunk-81-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{uncertainty_files/figure-latex/unnamed-chunk-81-1} \end{center}
 
 ```r
 tory_y1 <- augment(tory_fit1, newdata = tibble(margin = 0))

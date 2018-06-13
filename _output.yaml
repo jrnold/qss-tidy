@@ -14,4 +14,4 @@ bookdown::gitbook:
 bookdown::pdf_book:
   latex_engine: "xelatex"
   keep_tex: yes
-  md_extensions: "+fenced_divs"
+  md_extensions: ""

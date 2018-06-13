@@ -291,8 +291,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 n &lt;-<span class="st"> </span><span class="kw">length</span>(values)
 results &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, n)
 <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n) {
-  results[i] &lt;-<span class="st"> </span>values[i] <span class="op">*</span><span class="st"> </span><span class="dv">2</span>
-  <span class="kw">cat</span>(values[i], <span class="st">&quot;times 2 is equal to&quot;</span>, results[i], <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
+  results[[i]] &lt;-<span class="st"> </span>values[[i]] <span class="op">*</span><span class="st"> </span><span class="dv">2</span>
+  <span class="kw">cat</span>(values[[i]], <span class="st">&quot;times 2 is equal to&quot;</span>, results[[i]], <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
 }
 <span class="co">#&gt; 2 times 2 is equal to 4 </span>
 <span class="co">#&gt; 3 times 2 is equal to 6 </span>
@@ -312,10 +312,8 @@ results &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="o
   results[i] &lt;-<span class="st"> </span>values[i] <span class="op">*</span><span class="st"> </span><span class="dv">2</span>
   <span class="kw">cat</span>(values[i], <span class="st">&quot;times 2 is equal to&quot;</span>, results[i], <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
 }
-<span class="co">#&gt; i =  1 </span>
-<span class="co">#&gt;  times 2 is equal to NA </span>
-<span class="co">#&gt; i =  0 </span>
-<span class="co">#&gt;  times 2 is equal to</span></code></pre></div>
+<span class="co">#&gt; i =  1</span>
+<span class="co">#&gt; Error in results[i] &lt;- values[i] * 2: replacement has length zero</span></code></pre></div>
 <p>Instead of not running a loop, as you would expect, it runs two loops, where <code>i = 1</code>, then <code>i = 0</code>. This edge case occurs more than you may think, especially if you are writing functions where you don’t know the length of the vector is <em>ex ante</em>.</p>
 <p>The way to avoid this is to use either <code>rdoc(&quot;base&quot;, &quot;seq_len&quot;)</code> or <code>rdoc(&quot;base&quot;, &quot;seq_along&quot;)</code>, which will handle 0-length vectors correctly.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>()

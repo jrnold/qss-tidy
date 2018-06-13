@@ -35,8 +35,8 @@ values <- c(2, 3, 6)
 n <- length(values)
 results <- rep(NA, n)
 for (i in 1:n) {
-  results[i] <- values[i] * 2
-  cat(values[i], "times 2 is equal to", results[i], "\n")
+  results[[i]] <- values[[i]] * 2
+  cat(values[[i]], "times 2 is equal to", results[[i]], "\n")
 }
 #> 2 times 2 is equal to 4 
 #> 3 times 2 is equal to 6 
@@ -66,10 +66,8 @@ for (i in 1:n) {
   results[i] <- values[i] * 2
   cat(values[i], "times 2 is equal to", results[i], "\n")
 }
-#> i =  1 
-#>  times 2 is equal to NA 
-#> i =  0 
-#>  times 2 is equal to
+#> i =  1
+#> Error in results[i] <- values[i] * 2: replacement has length zero
 ```
 Instead of not running a loop, as you would expect, it runs two loops, where `i = 1`, then `i = 0`.
 This edge case occurs more than you may think, especially if you are writing functions
@@ -365,12 +363,12 @@ last_polls <-
 last_polls
 #> # A tibble: 51 x 9
 #> # Groups:   state [51]
-#>   state Pollster      Obama McCain middate    margin `ELECTION_DAY - midd…
+#>   state Pollster      Obama McCain middate    margin `ELECTION_DAY - midd~
 #>   <chr> <chr>         <int>  <int> <date>      <int> <time>               
-#> 1 AK    Research 200…    39     58 2008-10-29    -19 6                    
+#> 1 AK    Research 200~    39     58 2008-10-29    -19 6                    
 #> 2 AL    SurveyUSA-2      36     61 2008-10-27    -25 8                    
-#> 3 AR    ARG-4            44     51 2008-10-29    - 7 6                    
-#> 4 AZ    ARG-3            46     50 2008-10-29    - 4 6                    
+#> 3 AR    ARG-4            44     51 2008-10-29     -7 6                    
+#> 4 AZ    ARG-3            46     50 2008-10-29     -4 6                    
 #> 5 CA    SurveyUSA-3      60     36 2008-10-30     24 5                    
 #> 6 CO    ARG-3            52     45 2008-10-29      7 6                    
 #> # ... with 45 more rows, and 2 more variables: elec_margin <int>,
@@ -416,7 +414,9 @@ ggplot(last_polls, aes(x = error)) +
   geom_histogram(binwidth = 1, boundary = 0)
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-31-1} \end{center}
 
 The text uses bin widths of 5%:
 
@@ -425,7 +425,9 @@ ggplot(last_polls, aes(x = error)) +
   geom_histogram(binwidth = 5, boundary = 0)
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-32-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-32-1} \end{center}
 
 Challenge: What other ways could you visualize the results? How would you show all states? What about plotting the absolute or squared errors instead of the errors?
 
@@ -446,7 +448,9 @@ ggplot(last_polls, aes(x = margin, y = elec_margin, label = state)) +
   labs(x = "Poll Results", y = "Actual Election Results")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-33-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-33-1} \end{center}
 
 We can create a confusion matrix as follows.
 Create a new column `classification` which shows how the poll's classification was related to the actual election outcome ("true positive", "false positive", "true negative", "false negative").
@@ -622,7 +626,9 @@ ggplot(pop_vote_avg_tidy, aes(x = date, y = share,
                       values = c(Obama = "blue", McCain = "red"))
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-46-1} \end{center}
 
 Challenge: read [R for Data Science](http://r4ds.had.co.nz/) chapter [Iteration](http://r4ds.had.co.nz/iteration.html#the-map-functions) and use the function [map_df](https://www.rdocumentation.org/packages/purrr/topics/map_df) to create the object `poll_vote_avg` as above instead of a for loop.
 
@@ -665,7 +671,9 @@ ggplot(face, aes(x = d.comp, y = diff.share, colour = w.party)) +
        y = "Democratic margin in vote share")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-47-1} \end{center}
 
 ### Correlation and Scatter Plots
 
@@ -753,7 +761,9 @@ ggplot() +
   ggtitle("Facial compotence and vote share")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-53-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-53-1} \end{center}
 
 A more general way to plot the predictions of the model against the data
 is to use the methods described in [Ch 23.3.3](http://r4ds.had.co.nz/model-basics.html#visualising-models) of R4DS.
@@ -768,7 +778,7 @@ head(grid)
 #> # A tibble: 6 x 2
 #>   d.comp   pred
 #>    <dbl>  <dbl>
-#> 1 0.0640 -0.270
+#> 1 0.064  -0.270
 #> 2 0.0847 -0.256
 #> 3 0.0893 -0.253
 #> 4 0.115  -0.237
@@ -784,7 +794,9 @@ ggplot() +
             colour = "red")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-55-1} \end{center}
 This method is more complicated than the `geom_abline` method for a bivariate regression, but will work for more complicated models, while the `geom_abline` method won't.
 
 Note that [geom_smooth](http://docs.ggplot2.org/current/geom_smooth.html) can be used to add a regression line to a data-set.
@@ -795,7 +807,9 @@ ggplot(data = face, mapping = aes(x = d.comp, y = diff.share)) +
   geom_smooth(method = "lm", se = FALSE)
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-56-1} \end{center}
 The argument `method = "lm"` specifies that the function `lm` is to be used to generate fitted values.
 It is equivalent to running the regression `lm(y ~ x)` and plotting the regression line, where `y` and `x` are the aesthetics specified by the mappings.
 The argument `se = FALSE` tells the function not to plot the confidence interval of the regression (discussed later).
@@ -871,7 +885,9 @@ ggplot(pres, aes(x = Obama2008_z, y = Obama2012_z, label = state)) +
                      limits = c(-4, 4))
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-61-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-61-1} \end{center}
 
 To calculate the bottom and top quartiles
 
@@ -956,7 +972,9 @@ fit2_resid_plot <-
 fit2_resid_plot
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-67-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-67-1} \end{center}
 Note, we use the function [geom_refline](https://www.rdocumentation.org/packages/modelr/topics/geom_refline) to add a reference line at 0.
 
 Let's add some labels to points, who is that outlier?
@@ -966,7 +984,9 @@ fit2_resid_plot +
   geom_label(aes(label = county))
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-68-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-68-1} \end{center}
 
 The outlier county is "Palm Beach"
 
@@ -1022,7 +1042,9 @@ florida_pb %>%
   labs(x = "Fitted values", y = "residuals")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-72-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-72-1} \end{center}
 
 Create predictions for both models using [data_grid](https://www.rdocumentation.org/packages/modelr/topics/data_grid) and [gather_predictions](https://www.rdocumentation.org/packages/modelr/topics/gather_predictions):
 
@@ -1056,7 +1078,9 @@ ggplot() +
   theme(legend.position = "none")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-74-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-74-1} \end{center}
 See [Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html#label) in *R for Data Science* on labels and annotations in plots.
 
 ## Regression and Causation
@@ -1079,7 +1103,7 @@ women %>%
 #>   reserved prop_female
 #>      <int>       <dbl>
 #> 1        0      0.0748
-#> 2        1      1.00
+#> 2        1      1
 ```
 
 The diff in means estimator:
@@ -1459,7 +1483,9 @@ ggplot(y.hat, aes(x = age, y = pred,
   theme(legend.position = "bottom")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-101-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-101-1} \end{center}
 
 
 ```r
@@ -1474,7 +1500,9 @@ y.hat %>%
   ylim(0, 0.1)
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-102-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-102-1} \end{center}
 
 ### Regression Discontinuity Design
 
@@ -1532,7 +1560,9 @@ ggplot() +
        title = "labour")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-105-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-105-1} \end{center}
 
 We can actually produce this plot easily without running the regressions, by using `geom_smooth`:
 
@@ -1547,7 +1577,9 @@ ggplot(mutate(MPs, winner = (margin > 0)),
   labs(x = "margin of victory", y = "log net wealth at death")
 ```
 
-<img src="prediction_files/figure-html/unnamed-chunk-106-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{prediction_files/figure-latex/unnamed-chunk-106-1} \end{center}
 
 In the previous code, I didn't directly compute the the average net wealth at 0, so I'll need to do that here.
 I'll use [gather_predictions](https://www.rdocumentation.org/packages/modelr/topics/gather_predictions) to add predictions for multiple models:

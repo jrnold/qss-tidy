@@ -260,10 +260,10 @@ resume %>%
 #> # Groups:   BlackFemale, race, sex [4]
 #>   BlackFemale race  sex        n
 #>         <dbl> <chr> <chr>  <int>
-#> 1        0    black male     549
-#> 2        0    white female  1860
-#> 3        0    white male     575
-#> 4        1.00 black female  1886
+#> 1           0 black male     549
+#> 2           0 white female  1860
+#> 3           0 white male     575
+#> 4           1 black female  1886
 ```
 
 **Warning** The function `if_else` is more strict about the variable types than `ifelse`.
@@ -669,7 +669,9 @@ ggplot(chains_by_state, aes(x = chain, y = prop, colour = state)) +
   coord_flip()
 ```
 
-<img src="causality_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{causality_files/figure-latex/unnamed-chunk-42-1} \end{center}
 
 In the *QSS* text, only Burger King restaurants are compared.
 However, **dplyr** makes comparing all restaurants not much more complicated than comparing two.
@@ -707,7 +709,9 @@ ggplot(full_prop_by_state_chain,
   labs(x = "chains")
 ```
 
-<img src="causality_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{causality_files/figure-latex/unnamed-chunk-44-1} \end{center}
 
 To calculate the difference between states in the proportion of full-time employees after the change:
 
@@ -787,7 +791,9 @@ ggplot(full_prop_by_state, aes(x = period, y = fullProp, colour = state)) +
   scale_x_continuous(breaks = c(0, 1), labels = c("Before", "After"))
 ```
 
-<img src="causality_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{causality_files/figure-latex/unnamed-chunk-50-1} \end{center}
 
 ## Descriptive Statistics for a Single Variable
 

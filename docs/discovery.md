@@ -67,12 +67,12 @@ corpus_tidy
 #> # A tibble: 85 x 8
 #>   author datetimestamp       description heading id       language origin
 #>   <lgl>  <dttm>              <lgl>       <lgl>   <chr>    <chr>    <lgl> 
-#> 1 NA     2018-02-08 03:01:45 NA          NA      fp01.txt en       NA    
-#> 2 NA     2018-02-08 03:01:45 NA          NA      fp02.txt en       NA    
-#> 3 NA     2018-02-08 03:01:45 NA          NA      fp03.txt en       NA    
-#> 4 NA     2018-02-08 03:01:45 NA          NA      fp04.txt en       NA    
-#> 5 NA     2018-02-08 03:01:45 NA          NA      fp05.txt en       NA    
-#> 6 NA     2018-02-08 03:01:45 NA          NA      fp06.txt en       NA    
+#> 1 NA     2018-06-12 23:35:31 NA          NA      fp01.txt en       NA    
+#> 2 NA     2018-06-12 23:35:31 NA          NA      fp02.txt en       NA    
+#> 3 NA     2018-06-12 23:35:31 NA          NA      fp03.txt en       NA    
+#> 4 NA     2018-06-12 23:35:31 NA          NA      fp04.txt en       NA    
+#> 5 NA     2018-06-12 23:35:31 NA          NA      fp05.txt en       NA    
+#> 6 NA     2018-06-12 23:35:31 NA          NA      fp06.txt en       NA    
 #> # ... with 79 more rows, and 1 more variable: text <chr>
 ```
 
@@ -158,7 +158,9 @@ filter(dtm, document == 12) %>% {
   }
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-11-1} \end{center}
 
 ```r
 filter(dtm, document == 24) %>% {
@@ -166,7 +168,9 @@ filter(dtm, document == 24) %>% {
   }
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-12-1} \end{center}
 
 Use the function [bind_tf_idf](https://www.rdocumentation.org/packages/tidytext/topics/bind_tf_idf) to add a column with the tf-idf to the data frame.
 
@@ -309,13 +313,19 @@ gather(hamilton_words, cluster, value, -word) %>%
 ```
 
 
-
-cluster   top_words                                                                       
---------  --------------------------------------------------------------------------------
-1         presid, appoint, senat, claus, expir, fill, recess, session, unfound, vacanc    
-2         offic, presid, tax, land, revenu, armi, militia, senat, taxat, claus            
-3         sedit, guilt, chief, clemenc, impun, plead, crime, pardon, treason, conniv      
-4         court, jurisdict, inferior, suprem, trial, tribun, cogniz, juri, impeach, appel 
+\begin{tabular}{l|l}
+\hline
+cluster & top\_words\\
+\hline
+1 & presid, appoint, senat, claus, expir, fill, recess, session, unfound, vacanc\\
+\hline
+2 & offic, presid, tax, land, revenu, armi, militia, senat, taxat, claus\\
+\hline
+3 & sedit, guilt, chief, clemenc, impun, plead, crime, pardon, treason, conniv\\
+\hline
+4 & court, jurisdict, inferior, suprem, trial, tribun, cogniz, juri, impeach, appel\\
+\hline
+\end{tabular}
 
 Or to print out the documents in each cluster,
 
@@ -327,13 +337,19 @@ enframe(km_out$cluster, "document", "cluster") %>%
 ```
 
 
-
- cluster  documents                                                                                                                                                                     
---------  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-       1  67                                                                                                                                                                            
-       2  1, 6, 7, 8, 9, 11, 12, 13, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 59, 60, 61, 66, 68, 69, 70, 71, 72, 73, 75, 76, 77, 78, 79, 80, 84, 85 
-       3  74                                                                                                                                                                            
-       4  65, 81, 82, 83                                                                                                                                                                
+\begin{tabular}{r|l}
+\hline
+cluster & documents\\
+\hline
+1 & 67\\
+\hline
+2 & 1, 6, 7, 8, 9, 11, 12, 13, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 59, 60, 61, 66, 68, 69, 70, 71, 72, 73, 75, 76, 77, 78, 79, 80, 84, 85\\
+\hline
+3 & 74\\
+\hline
+4 & 65, 81, 82, 83\\
+\hline
+\end{tabular}
 
 ### Authorship Prediction
 
@@ -387,19 +403,31 @@ hm_tfm %>%
 ```
 
 
-
-word            Hamilton     Jay   Madison
--------------  ---------  ------  --------
-although           0.012   0.543     0.206
-always             0.522   0.929     0.154
-commonly           0.184   0.129     0.000
-consequently       0.018   0.469     0.344
-considerable       0.377   0.081     0.123
-enough             0.274   0.000     0.000
-there              3.065   0.954     0.849
-upon               3.054   0.112     0.152
-while              0.255   0.192     0.000
-whilst             0.005   0.000     0.292
+\begin{tabular}{l|r|r|r}
+\hline
+word & Hamilton & Jay & Madison\\
+\hline
+although & 0.012 & 0.543 & 0.206\\
+\hline
+always & 0.522 & 0.929 & 0.154\\
+\hline
+commonly & 0.184 & 0.129 & 0.000\\
+\hline
+consequently & 0.018 & 0.469 & 0.344\\
+\hline
+considerable & 0.377 & 0.081 & 0.123\\
+\hline
+enough & 0.274 & 0.000 & 0.000\\
+\hline
+there & 3.065 & 0.954 & 0.849\\
+\hline
+upon & 3.054 & 0.112 & 0.152\\
+\hline
+while & 0.255 & 0.192 & 0.000\\
+\hline
+whilst & 0.005 & 0.000 & 0.292\\
+\hline
+\end{tabular}
 
 
 ```r
@@ -448,8 +476,8 @@ author_data %>%
 #> # A tibble: 2 x 2
 #>   author   `Proportion Correct`
 #>   <chr>                   <dbl>
-#> 1 Hamilton                 1.00
-#> 2 Madison                  1.00
+#> 1 Hamilton                    1
+#> 2 Madison                     1
 ```
 
 Create the cross-validation data-sets using .
@@ -491,7 +519,7 @@ test %>%
 #> # A tibble: 2 x 2
 #>   author   `mean(correct)`
 #>   <chr>              <dbl>
-#> 1 Hamilton           1.00 
+#> 1 Hamilton           1    
 #> 2 Madison            0.786
 ```
 
@@ -507,23 +535,39 @@ author_data %>%
 ```
 
 
-
- document     pred  pred_author 
----------  -------  ------------
-       18   -0.360  Madison     
-       19   -0.587  Madison     
-       20   -0.055  Madison     
-       49   -0.966  Madison     
-       50   -0.003  Madison     
-       51   -1.520  Madison     
-       52   -0.195  Madison     
-       53   -0.506  Madison     
-       54   -0.521  Madison     
-       55    0.094  Hamilton    
-       56   -0.550  Madison     
-       57   -1.221  Madison     
-       62   -0.946  Madison     
-       63   -0.184  Madison     
+\begin{tabular}{r|r|l}
+\hline
+document & pred & pred\_author\\
+\hline
+18 & -0.360 & Madison\\
+\hline
+19 & -0.587 & Madison\\
+\hline
+20 & -0.055 & Madison\\
+\hline
+49 & -0.966 & Madison\\
+\hline
+50 & -0.003 & Madison\\
+\hline
+51 & -1.520 & Madison\\
+\hline
+52 & -0.195 & Madison\\
+\hline
+53 & -0.506 & Madison\\
+\hline
+54 & -0.521 & Madison\\
+\hline
+55 & 0.094 & Hamilton\\
+\hline
+56 & -0.550 & Madison\\
+\hline
+57 & -1.221 & Madison\\
+\hline
+62 & -0.946 & Madison\\
+\hline
+63 & -0.184 & Madison\\
+\hline
+\end{tabular}
 
 
 ```r
@@ -545,7 +589,9 @@ ggplot(mutate(author_data,
        y = "Federalist Papers", x = "Predicted values")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-30-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-30-1} \end{center}
 
 <!-- detach extraneous packages -->
 
@@ -583,6 +629,7 @@ library("forcats")
 library("igraph")
 library("intergraph")
 library("GGally")
+library("network")
 ```
 
 
@@ -628,12 +675,10 @@ Now find the senators with the 3 greatest in-degrees
 arrange(senator, desc(indegree)) %>%
   slice(1:3) %>%
   select(name, party, state, indegree, outdegree)
-#> # A tibble: 3 x 5
-#>   name              party state indegree outdegree
-#>   <chr>             <chr> <chr>    <dbl>     <dbl>
-#> 1 Tom Cotton        R     AR        64.0      15.0
-#> 2 Richard J. Durbin D     IL        60.0      87.0
-#> 3 John Barrasso     R     WY        58.0      79.0
+#>                name party state indegree outdegree
+#> 1        Tom Cotton     R    AR       64        15
+#> 2 Richard J. Durbin     D    IL       60        87
+#> 3     John Barrasso     R    WY       58        79
 ```
 or using the  function:
 
@@ -689,7 +734,9 @@ senator %>%
 #> 2784 :closeness centrality is not well-defined for disconnected graphs
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-40-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-40-1} \end{center}
 
 What does the reference line indicate? What does that say about senators twitter
 networks?
@@ -709,7 +756,9 @@ senator %>%
   labs(main = "Betweenness", x = "Directed", y = "Undirected")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-41-1} \end{center}
 
 We've covered three different methods of calculating the importance of a node in a network: degree, closeness, and centrality.
 But what do they mean? What's the "best" measure of importance?
@@ -727,7 +776,9 @@ senator <- mutate(senator, page_rank = page_rank(twitter_adj)[["vector"]])
 ggnet(twitter_adj, mode = "target")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-42-1} \end{center}
 
 <!--
 remove network packages
@@ -797,6 +848,11 @@ glimpse(us.cities)
 
 ```r
 usa_map <- map_data("usa")
+#> 
+#> Attaching package: 'maps'
+#> The following object is masked from 'package:purrr':
+#> 
+#>     map
 capitals <- filter(us.cities,
                    capital == 2,
                    !country.etc %in% c("HI", "AK"))
@@ -813,7 +869,9 @@ ggplot() +
        size = "Population")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-46-1} \end{center}
 
 
 ```r
@@ -829,7 +887,9 @@ ggplot() +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-47-1} \end{center}
 
 ### Colors in R
 
@@ -867,7 +927,9 @@ ggplot(tibble(x = rep(1:4, each = 2),
   theme(panel.grid = element_blank())
 ```
 
-<img src="discovery_files/figure-html/color_red_black-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/color_red_black-1} \end{center}
 
 ### United States Presidential Elections
 
@@ -888,7 +950,9 @@ ggplot() +
   theme_void()
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-48-1} \end{center}
 
 
 ```r
@@ -902,7 +966,9 @@ ggplot() +
   theme_void()
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-49-1} \end{center}
 
 
 ```r
@@ -948,7 +1014,9 @@ ggplot(states) +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-51-1} \end{center}
 
 For plotting the purple states, I use  since the `color` column contains the RGB values to use in the plot:
 
@@ -962,7 +1030,9 @@ ggplot(states) +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-52-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-52-1} \end{center}
 
 However, plotting purple states is not a good data visualization.
 Even though the colors are a proportional mixture of red and blue, human visual perception doesn't work that way.
@@ -981,7 +1051,9 @@ ggplot(states) +
   labs(x = "", y = "")
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-53-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-53-1} \end{center}
 
 ### Expansion of Walmart
 
@@ -1002,7 +1074,9 @@ ggplot() +
   theme_void()
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-54-1.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-54-1} \end{center}
 We don't need to worry about colors since `ggplot` handles that.
 I use [guides](http://docs.ggplot2.org/current/guides.html) to so that the colors or not transparent
 in the legend (see *R for Data Science* chapter[Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html)).
@@ -1030,7 +1104,9 @@ years <- c(1975, 1985, 1995, 2005)
 walk(years, ~ print(map_walmart(.x, walmart)))
 ```
 
-<img src="discovery_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-55-2.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-55-3.png" width="70%" style="display: block; margin: auto;" /><img src="discovery_files/figure-html/unnamed-chunk-55-4.png" width="70%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-55-1} \includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-55-2} \includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-55-3} \includegraphics[width=0.7\linewidth]{discovery_files/figure-latex/unnamed-chunk-55-4} \end{center}
 
 ### Animation in R
 
@@ -1039,7 +1115,7 @@ Note that the **gganimate** package is not on CRAN, so you have to install it wi
 
 ```r
 install.packages("cowplot")
-devtools::install_github("dgrtwo/animate")
+devtools::install_github("dgrtwo/gganimate")
 ```
 
 ```r

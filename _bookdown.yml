@@ -11,3 +11,4 @@ rmd_files:
 before_chapter_script: "_common.R"
 output_dir: docs
 book_filename: "qss-tidy.Rmd"
+delete_merged_file: true

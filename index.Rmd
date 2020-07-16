@@ -8,12 +8,14 @@ author: "Jeffrey B. Arnold"
 twitter: jrnld
 github-repo: "jrnold/qss-tidy"
 url: 'http\://jrnold.github.io/qss-tidy'
-date: "`r Sys.Date()`"
+date: 2020-07-15
 site: "bookdown::bookdown_site"
 documentclass: book
 ---
 
 # Preface {-}
+
+**This is no longer maintained**
 
 This is tidyverse R code to supplement the book, [Quantitative Social Science: An Introduction](http://press.princeton.edu/titles/11025.html), by Kosuke Imai.
 
@@ -31,10 +33,18 @@ It often uses the topics in *QSS* to delve deeper into data science, data visual
 
 I wrote this code while teaching course that employed both texts in order to make the excellent examples and statistical material in *QSS* more compatible with the modern data science using R approach in *R4DS*.
 
+## License {-}
+
+This work by [Jeffrey Arnold](http://jrnold.me) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0)
+<img style="height:22px!important;margin-left: 3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg/?ref=chooser-v1" />
+<img  style="height:22px!important;margin-left: 3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg/?ref=chooser-v1" /></a></p>
+
+Code is licensed under [MIT license](https://opensource.org/licenses/MIT).
+
 ## Colophon {-}
 
 To install the R packages used in this work run the following code, installs the **qsstidy** package which contains no code or data, but will install the needed dependencies.
-```{r eval=FALSE}
+```{r,eval=FALSE}
 install.packages("devtools")
 install_github("jrnold/qss-tidy")
 ```
@@ -43,6 +53,6 @@ Additionally, the `r pkg("gganimate")` package requires installing [ffmpeg](http
 
 The source of the book is available [here](https://github.com/jrnold/qsstidy) and was built with versions of packages below:
 
-```{r colophon, echo = FALSE}
+```{r colophon,echo = FALSE}
 devtools::session_info()
 ```
